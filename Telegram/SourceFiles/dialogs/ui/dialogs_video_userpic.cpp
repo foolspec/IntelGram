@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "dialogs/ui/dialogs_video_userpic.h"
 
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "core/file_location.h"
 #include "data/data_peer.h"
 #include "data/data_photo.h"
@@ -165,7 +166,7 @@ void PaintUserpic(
 		int outerWidth,
 		int size,
 		bool paused) {
-	if (videoUserpic) {
+	if (videoUserpic && !Ayu::LocalProfileUserpicActive(peer)) {
 		videoUserpic->paintLeft(p, view, x, y, outerWidth, size, paused);
 	} else {
 		peer->paintUserpicLeft(p, view, x, y, outerWidth, size);

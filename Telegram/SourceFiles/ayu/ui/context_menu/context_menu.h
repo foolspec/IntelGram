@@ -42,6 +42,7 @@ void AddDeleteOwnMessagesAction(PeerData *peerData,
 								const Window::PeerMenuCallback &addCallback);
 
 void AddHistoryAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
+void AddVaultMomentAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
 void AddHideMessageAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
 void AddUserMessagesAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
 void AddMessageDetailsAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);

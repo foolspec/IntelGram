@@ -29,6 +29,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/text/format_values.h"
 #include "ui/widgets/menu/menu_add_action_callback.h"
 #include "window/window_session_controller.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "styles/style_info.h"
 #include "styles/style_menu_icons.h"
 
@@ -78,6 +79,7 @@ void GenerateImage(
 void ProcessUserpic(
 		not_null<PeerData*> peer,
 		not_null<UserpicState*> state) {
+	const auto local = Ayu::LocalProfileUserpicActive(peer);
 	state->current.videoDocument = nullptr;
 	state->userpicKey = peer->userpicUniqueKey(state->userpicView);
 	if (!state->userpicView.cloud) {
@@ -100,8 +102,10 @@ void ProcessUserpic(
 		state->waitingLoad = true;
 		return;
 	}
-	GenerateImage(state, *state->userpicView.cloud, true);
-	state->current.photoLoadingProgress = peer->userpicPhotoId() ? 0. : 1.;
+	GenerateImage(state, *state->userpicView.cloud, !local);
+	state->current.photoLoadingProgress = local
+		? 1.
+		: (peer->userpicPhotoId() ? 0. : 1.);
 	state->photoView = nullptr;
 }
 
@@ -214,30 +218,34 @@ void ProcessFullPhoto(
 			| UpdateFlag::ContactNote)
 	) | rpl::map([=] {
 		const auto user = peer->asUser();
-		const auto username = peer->username();
-		const auto channelId = user ? user->personalChannelId() : 0;
-		const auto channel = channelId
-			? user->owner().channel(channelId).get()
+		const auto username = Ayu::LocalProfileUsername(peer);
+		const auto localUsername = Ayu::LocalProfileUsernameActive(peer);
+		const auto channel = user
+			? Ayu::LocalProfilePersonalChannel(user)
 			: nullptr;
 		const auto channelUsername = channel
 			? channel->username()
 			: QString();
 		const auto hasChannel = !channelUsername.isEmpty();
 		return PeerShortInfoFields{
-			.name = peer->name(),
+			.name = Ayu::LocalProfileName(peer),
 			.channelName = hasChannel ? channel->name() : QString(),
 			.channelLink = (hasChannel
 				? channel->session().createInternalLinkFull(channelUsername)
 				: QString()),
-			.phone = user ? Ui::FormatPhone(user->phone()) : QString(),
+			.phone = user
+				? Ui::FormatPhone(Ayu::LocalProfilePhone(user))
+				: QString(),
 			.link = ((user || username.isEmpty())
 				? QString()
 				: peer->session().createInternalLinkFull(username)),
-			.about = Info::Profile::AboutWithEntities(peer, peer->about()),
+			.about = Info::Profile::AboutWithEntities(
+				peer,
+				Ayu::LocalProfileAbout(peer)),
 			.username = ((user && !username.isEmpty())
 				? ('@' + username)
 				: QString()),
-			.usernameLink = ((user && !username.isEmpty())
+			.usernameLink = ((user && !username.isEmpty() && !localUsername)
 				? Info::Profile::UsernameUrl(peer, username, true)
 				: QString()),
 			.birthday = user ? user->birthday() : Data::Birthday(),
@@ -323,6 +331,18 @@ void ValidatePhotoId(
 bool ProcessCurrent(
 		not_null<PeerData*> peer,
 		not_null<UserpicState*> state) {
+	if (Ayu::LocalProfileUserpicActive(peer)) {
+		state->current.index = 0;
+		state->current.count = 1;
+		state->current.additionalStatus = QString();
+		state->userSlice.reset();
+		state->photoId = PeerData::kUnknownPhotoId;
+		state->photoView = nullptr;
+		state->waitingFull = false;
+		state->waitingLoad = false;
+		ProcessUserpic(peer, state);
+		return true;
+	}
 	const auto userpicPhotoId = peer->userpicPhotoId();
 	const auto userpicPhoto = (userpicPhotoId
 		&& (userpicPhotoId != PeerData::kUnknownPhotoId)

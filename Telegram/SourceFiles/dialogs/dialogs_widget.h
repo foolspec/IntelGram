@@ -195,6 +195,7 @@ private:
 		not_null<SearchProcessState*> process,
 		bool cacheResults = false);
 	void peerSearchReceived(Api::PeerSearchResult result);
+	void appendLocalPeerSearchResult(PeerData *peer);
 	void escape();
 	void submit();
 	void cancelSearchRequest();

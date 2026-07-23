@@ -23,6 +23,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "calls/calls_instance.h"
 #include "chat_helpers/stickers_lottie.h"
 #include "core/application.h"
+#include "core/local_url_handlers.h"
 #include "core/shortcuts.h"
 #include "data/components/recent_shared_media_gifts.h"
 #include "data/data_changes.h"
@@ -107,6 +108,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include <QtGui/QGuiApplication>
 
 // AyuGram includes
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "ayu/utils/telegram_helpers.h"
 
 
@@ -415,8 +417,35 @@ TopBar::TopBar(
 			std::move(badgeUpdates),
 			_badge->updated());
 
-		_badge->setPremiumClickCallback([controller, peer = _peer] {
-			::Settings::ShowEmojiStatusPremium(controller, peer);
+		_badge->setPremiumClickCallback([=, peer = _peer] {
+			if (_localCollectible) {
+				const auto references = Ayu::LocalProfileGiftReferences(peer);
+				const auto referenceMatches = ranges::any_of(
+					references,
+					[&](const QString &reference) {
+						return reference.compare(
+							_localCollectible->slug,
+							Qt::CaseInsensitive) == 0;
+					});
+				const auto locallyPresented = peer->isSelf()
+					&& (Ayu::LocalProfileCloneUser(peer)
+						|| referenceMatches
+						|| ranges::contains(
+							_localProfileGiftIds,
+							_localCollectible->id));
+				if (locallyPresented) {
+					Core::ResolveAndShowUniqueGiftForLocalProfile(
+						controller->uiShow(),
+						_localCollectible->slug,
+						peer);
+				} else {
+					Core::ResolveAndShowUniqueGift(
+						controller->uiShow(),
+						_localCollectible->slug);
+				}
+			} else {
+				::Settings::ShowEmojiStatusPremium(controller, peer);
+			}
 		});
 	}
 	if (_verified) {
@@ -430,12 +459,7 @@ TopBar::TopBar(
 			_botVerify->updated());
 	}
 	if (_exteraBadge) {
-		const auto isCustomBadge = isCustomBadgePeer(getBareID(_peer));
-		const auto isExtera = isExteraPeer(getBareID(_peer));
-		const auto isSupporter = isSupporterPeer(getBareID(_peer));
-		if (isExtera || isSupporter || isCustomBadge) {
-			_exteraBadge->setPremiumClickCallback(badgeClickHandler(_peer));
-		}
+		_exteraBadge->setPremiumClickCallback(badgeClickHandler(_peer));
 		badgeUpdates = rpl::merge(
 			std::move(badgeUpdates),
 			_exteraBadge->updated());
@@ -475,6 +499,7 @@ TopBar::TopBar(
 
 	rpl::merge(
 		style::PaletteChanged(),
+		Ayu::LocalProfileGiftReferencesValue(_peer) | rpl::to_empty,
 		_peer->session().data().giftUpdates() | rpl::filter([=](
 				const Data::GiftUpdate &update) {
 			if (update.action == Data::GiftUpdate::Action::Pin) {
@@ -1409,8 +1434,9 @@ void TopBar::setupUniqueBadgeTooltip() {
 		if (_badgeCollectibleId == id) {
 			return;
 		}
+		_badgeCollectibleId = id;
 		hideBadgeTooltip();
-		if (!collectible || _localCollectible) {
+		if (!collectible) {
 			return;
 		}
 		_badgeTooltip = std::make_unique<BadgeTooltip>(
@@ -1489,17 +1515,29 @@ void TopBar::setPatternEmojiId(std::optional<DocumentId> patternEmojiId) {
 
 void TopBar::setLocalEmojiStatusId(EmojiStatusId emojiStatusId) {
 	_localCollectible = emojiStatusId.collectible;
-	_badgeContent = Badge::Content{ BadgeType::Premium, emojiStatusId };
-	updateCollectibleStatus();
+	if (emojiStatusId) {
+		_badgeContent = Badge::Content{ BadgeType::Premium, emojiStatusId };
+		updateCollectibleStatus();
+	} else {
+		BadgeContentForPeer(
+			_peer
+		) | rpl::take(1) | rpl::on_next([=](Badge::Content content) {
+			_badgeContent = std::move(content);
+			updateCollectibleStatus();
+		}, lifetime());
+	}
 }
 
 std::optional<Data::ColorProfileSet> TopBar::effectiveColorProfile() const {
-	return _localColorProfileIndex
-		? _peer->session().api().peerColors().colorProfileFor(
-			*_localColorProfileIndex)
-		: _source == Source::Preview
-		? std::nullopt
-		: _peer->session().api().peerColors().colorProfileFor(_peer);
+	if (_localColorProfileIndex) {
+		return _peer->session().api().peerColors().colorProfileFor(
+			*_localColorProfileIndex);
+	} else if (_source == Source::Preview) {
+		return std::nullopt;
+	} else if (const auto clone = Ayu::LocalProfileCloneUser(_peer)) {
+		return _peer->session().api().peerColors().colorProfileFor(clone);
+	}
+	return _peer->session().api().peerColors().colorProfileFor(_peer);
 }
 
 auto TopBar::effectiveCollectible() const
@@ -1508,7 +1546,7 @@ auto TopBar::effectiveCollectible() const
 		? _localCollectible
 		: _localColorProfileIndex
 		? nullptr
-		: _peer->emojiStatusId().collectible;
+		: Ayu::LocalProfileEmojiStatusId(_peer).collectible;
 }
 
 void TopBar::paintEdges(QPainter &p, const QBrush &brush) const {
@@ -2360,14 +2398,63 @@ void TopBar::setupPinnedToTopGifts(
 		updateCollectibleStatus();
 		setupNewGifts(controller, gifts);
 	});
-	_peer->session().recentSharedGifts().request(_peer, requestDone, true);
+	const auto appendLocal = crl::guard(this, [=](
+			std::vector<Data::SavedStarGift> gifts) mutable {
+		const auto references = Ayu::LocalProfileGiftReferences(_peer);
+		_localProfileGiftIds.clear();
+		Ayu::ResolveLocalProfileGifts(
+			&_peer->session(),
+			references,
+			crl::guard(this, [=, gifts = std::move(gifts)](
+					std::vector<std::shared_ptr<Data::StarGift>> local) mutable {
+				if (references != Ayu::LocalProfileGiftReferences(_peer)) {
+					return;
+				}
+				for (const auto &gift : local) {
+					if (gift && gift->unique) {
+						_localProfileGiftIds.push_back(gift->unique->id);
+					}
+				}
+				auto status = Ayu::LocalProfileEmojiStatusId(_peer);
+				if (!local.empty() && local.front() && local.front()->unique) {
+					status = _peer->owner().emojiStatuses().fromUniqueGift(
+						*local.front()->unique);
+				}
+				setLocalEmojiStatusId(status);
+				for (auto i = local.size(); i != 0; --i) {
+					const auto &gift = local[i - 1];
+					if (!gift || !gift->unique) {
+						continue;
+					}
+					const auto duplicate = ranges::any_of(
+						gifts,
+						[&](const auto &entry) {
+							return entry.info.unique
+								&& entry.info.unique->id == gift->unique->id;
+						});
+					if (!duplicate) {
+						gifts.insert(gifts.begin(), Data::SavedStarGift{
+							.info = *gift,
+							.pinned = true,
+						});
+					}
+				}
+				requestDone(std::move(gifts));
+			}));
+	});
+	const auto clone = Ayu::LocalProfileCloneUser(_peer);
+	_peer->session().recentSharedGifts().request(
+		clone ? static_cast<PeerData*>(clone) : _peer.get(),
+		appendLocal,
+		true);
 }
 
 void TopBar::setupNewGifts(
 		not_null<Window::SessionController*> controller,
 		const std::vector<Data::SavedStarGift> &gifts) {
-	const auto emojiStatusId = _peer->emojiStatusId().collectible
-		? _peer->emojiStatusId().collectible->id
+	const auto collectible = effectiveCollectible();
+	const auto emojiStatusId = collectible
+		? collectible->id
 		: CollectibleId(0);
 	auto filteredGifts = std::vector<Data::SavedStarGift>();
 	const auto subtract = emojiStatusId ? 1 : 0;
@@ -2440,8 +2527,39 @@ void TopBar::setupNewGifts(
 		}());
 		entry.button->show();
 
-		entry.button->setClickedCallback([=, giftData = gift, peer = _peer] {
-			::Settings::ShowSavedStarGiftBox(controller, peer, giftData);
+		const auto references = Ayu::LocalProfileGiftReferences(_peer);
+		const auto referenceMatches = gift.info.unique
+			&& ranges::any_of(references, [&](const QString &reference) {
+				return reference.compare(
+					gift.info.unique->slug,
+					Qt::CaseInsensitive) == 0;
+			});
+		const auto locallyPresented = _peer->isSelf()
+			&& (Ayu::LocalProfileCloneUser(_peer)
+				|| referenceMatches
+				|| (gift.info.unique
+					&& ranges::contains(
+						_localProfileGiftIds,
+						gift.info.unique->id)));
+		entry.button->setClickedCallback([
+				=,
+				giftData = gift,
+				peer = _peer] {
+			if (locallyPresented && giftData.info.unique) {
+				Core::ResolveAndShowUniqueGiftForLocalProfile(
+					controller->uiShow(),
+					giftData.info.unique->slug,
+					peer);
+			} else if (!giftData.manageId && giftData.info.unique) {
+				Core::ResolveAndShowUniqueGift(
+					controller->uiShow(),
+					giftData.info.unique->slug);
+			} else {
+				::Settings::ShowSavedStarGiftBox(
+					controller,
+					peer,
+					giftData);
+			}
 		});
 
 		_pinnedToTopGifts.push_back(std::move(entry));

@@ -129,6 +129,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 // AyuGram includes
 #include "ayu/ayu_settings.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 
 
 namespace Window {
@@ -217,7 +218,7 @@ private:
 			? QString()
 			: owner->session().createInternalLinkFull(entity)),
 		.ownerUserpic = Ui::MakeUserpicThumbnail(owner, true),
-		.ownerName = owner->name(),
+		.ownerName = Ayu::LocalProfileName(owner),
 		.cryptoAmount = data.vcrypto_amount().v,
 		.amount = data.vamount().v,
 		.cryptoCurrency = qs(data.vcrypto_currency()),

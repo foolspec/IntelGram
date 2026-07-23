@@ -284,6 +284,7 @@ private:
 	};
 	bool _pinnedToTopGiftsFirstTimeShowed = false;
 	std::vector<PinnedToTopGiftEntry> _pinnedToTopGifts;
+	std::vector<CollectibleId> _localProfileGiftIds;
 	std::unique_ptr<Ui::Animations::Simple> _giftsAppearing;
 	std::unique_ptr<Ui::Animations::Simple> _giftsHiding;
 	rpl::lifetime _giftsLoadingLifetime;

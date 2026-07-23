@@ -49,6 +49,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/basic_click_handlers.h" // UrlClickHandler::Open.
 #include "ui/boxes/boost_box.h" // StartFireworks.
 #include "ui/boxes/confirm_box.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "ui/controls/userpic_button.h"
 #include "ui/controls/table_rows.h"
 #include "ui/effects/credits_graphics.h"
@@ -1734,17 +1735,17 @@ void AddStarGiftTable(
 				? (original.message.empty()
 					? tr::lng_gift_unique_info_sender(
 						lt_from,
-						rpl::single(tr::link(from->name(), 2)),
+						rpl::single(tr::link(Ayu::LocalProfileName(from), 2)),
 						lt_recipient,
-						rpl::single(tr::link(to->name(), 1)),
+						rpl::single(tr::link(Ayu::LocalProfileName(to), 1)),
 						lt_date,
 						rpl::single(dateText),
 						tr::marked)
 					: tr::lng_gift_unique_info_sender_comment(
 						lt_from,
-						rpl::single(tr::link(from->name(), 2)),
+						rpl::single(tr::link(Ayu::LocalProfileName(from), 2)),
 						lt_recipient,
-						rpl::single(tr::link(to->name(), 1)),
+						rpl::single(tr::link(Ayu::LocalProfileName(to), 1)),
 						lt_date,
 						rpl::single(dateText),
 						lt_text,
@@ -1753,13 +1754,13 @@ void AddStarGiftTable(
 				: (original.message.empty()
 					? tr::lng_gift_unique_info_reciever(
 						lt_recipient,
-						rpl::single(tr::link(to->name(), 1)),
+						rpl::single(tr::link(Ayu::LocalProfileName(to), 1)),
 						lt_date,
 						rpl::single(dateText),
 						tr::marked)
 					: tr::lng_gift_unique_info_reciever_comment(
 						lt_recipient,
-						rpl::single(tr::link(to->name(), 1)),
+						rpl::single(tr::link(Ayu::LocalProfileName(to), 1)),
 						lt_date,
 						rpl::single(dateText),
 						lt_text,

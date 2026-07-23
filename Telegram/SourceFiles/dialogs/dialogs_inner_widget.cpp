@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "dialogs/dialogs_inner_widget.h"
 
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "dialogs/dialogs_three_state_icon.h"
 #include "dialogs/ui/chat_search_empty.h"
 #include "dialogs/ui/chat_search_in.h"
@@ -1604,10 +1605,10 @@ void InnerWidget::paintPeerSearchResult(
 	}
 	QRect rectForName(nameleft, context.st->nameTop, namewidth, st::semiboldFont->height);
 
-	if (result->name.isEmpty()) {
+	if (result->name.isEmpty() || peer->isSelf()) {
 		result->name.setText(
 			st::semiboldTextStyle,
-			peer->name(),
+			Ayu::LocalProfileName(peer),
 			Ui::NameTextOptions());
 	}
 
@@ -4627,7 +4628,9 @@ void InnerWidget::updateSearchIn() {
 		? Ui::MakeUserpicThumbnail(_searchFromShown)
 		: nullptr;
 	const auto fromName = _searchFromShown
-		? _searchFromShown->shortName()
+		? (Ayu::LocalProfileNameActive(_searchFromShown)
+			? Ayu::LocalProfileName(_searchFromShown)
+			: _searchFromShown->shortName())
 		: QString();
 	_searchIn->apply({
 		{ ChatSearchTab::ThisTopic, topicIcon },

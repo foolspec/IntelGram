@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "info/profile/info_profile_badge.h"
 
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "data/data_changes.h"
 #include "data/data_emoji_statuses.h"
 #include "data/data_peer.h"
@@ -334,16 +335,26 @@ rpl::producer<Badge::Content> VerifiedContentForPeer(
 
 rpl::producer<Badge::Content> BotVerifyBadgeForPeer(
 		not_null<PeerData*> peer) {
-	return peer->session().changes().peerFlagsValue(
-		peer,
-		Data::PeerUpdate::Flag::VerifyInfo
-	) | rpl::map([=] {
-		const auto info = peer->botVerifyDetails();
-		return Badge::Content{
-			.badge = info ? BadgeType::BotVerified : BadgeType::None,
-			.emojiStatusId = { info ? info->iconId : DocumentId() },
-		};
-	});
+	const auto sourceValue = [=](
+			not_null<PeerData*> source) -> rpl::producer<Badge::Content> {
+		return source->session().changes().peerFlagsValue(
+			source,
+			Data::PeerUpdate::Flag::VerifyInfo
+		) | rpl::map([=] {
+			const auto info = source->botVerifyDetails();
+			return Badge::Content{
+				.badge = info ? BadgeType::BotVerified : BadgeType::None,
+				.emojiStatusId = { info ? info->iconId : DocumentId() },
+			};
+		});
+	};
+	if (!peer->isSelf()) {
+		return sourceValue(peer);
+	}
+	return Ayu::LocalProfileCloneIdValue(peer) | rpl::map([=](const QString &) {
+		const auto clone = Ayu::LocalProfileCloneUser(peer);
+		return sourceValue(clone ? clone : peer.get());
+	}) | rpl::flatten_latest();
 }
 
 } // namespace Info::Profile

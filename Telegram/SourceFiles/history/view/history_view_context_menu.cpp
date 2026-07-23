@@ -112,8 +112,11 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 // AyuGram includes
 #include "ayu/ayu_settings.h"
+#include "ayu/data/intelgram_export.h"
+#include "ayu/data/intelgram_vault.h"
 #include "ayu/features/forward/ayu_forward.h"
 #include "ayu/ui/context_menu/context_menu.h"
+#include "ayu/utils/telegram_helpers.h"
 
 
 namespace HistoryView {
@@ -1050,6 +1053,83 @@ void AddSelectionAction(
 	}
 }
 
+void AddIntelGramExportAction(
+		not_null<Ui::PopupMenu*> menu,
+		const ContextMenuRequest &request,
+		not_null<ListWidget*> list) {
+	auto ids = request.overSelection && !request.selectedItems.empty()
+		? ExtractIdsList(request.selectedItems)
+		: request.item
+		? MessageIdsList{ 1, request.item->fullId() }
+		: MessageIdsList();
+	if (ids.empty()) {
+		return;
+	}
+	const auto controller = list->controller();
+	const auto first = controller->session().data().message(ids.front());
+	if (!first || !first->isRegular() || first->isLocal()) {
+		return;
+	}
+	const auto peer = first->history()->peer;
+	ids.erase(
+		ranges::remove_if(ids, [&](FullMsgId id) {
+			const auto item = controller->session().data().message(id);
+			return !item
+				|| !item->isRegular()
+				|| item->isLocal()
+				|| item->history()->peer != peer;
+		}),
+		ids.end());
+	if (ids.empty()) {
+		return;
+	}
+	auto messageIds = std::vector<int>();
+	messageIds.reserve(ids.size());
+	for (const auto id : ids) {
+		messageIds.push_back(id.msg.bare);
+	}
+	const auto accountId = controller->session().userId().bare & PeerId::kChatTypeMask;
+	const auto dialogId = getDialogIdFromPeer(peer);
+	const auto weak = base::make_weak(list);
+	menu->addAction(
+		tr::ayu_VaultExportSelectedMessages(tr::now),
+		crl::guard(controller, [=] {
+			for (const auto id : ids) {
+				if (const auto item = controller->session().data().message(id)) {
+					IntelGram::Vault::IndexMessage(item);
+				}
+			}
+			FileDialog::GetFolder(
+				controller->window().widget().get(),
+				tr::ayu_VaultChooseFolder(tr::now),
+				QString(),
+				crl::guard(controller, [=](QString &&directory) {
+					if (directory.isEmpty()) {
+						return;
+					}
+					const auto result = IntelGram::Export::Create(
+						accountId,
+						directory,
+						IntelGram::Export::Options{
+							.dialogId = dialogId,
+							.messageIds = messageIds,
+						});
+					if (!result.ok) {
+						controller->showToast(result.error);
+						return;
+					}
+					if (const auto strong = weak.get()) {
+						strong->cancelSelection();
+					}
+					controller->showToast(tr::ayu_VaultExportComplete(tr::now));
+					if (!result.files.empty()) {
+						File::ShowInFolder(result.files.front());
+					}
+				}));
+		}),
+		&st::menuIconExport);
+}
+
 void AddTopMessageActions(
 		not_null<Ui::PopupMenu*> menu,
 		const ContextMenuRequest &request,
@@ -1065,8 +1145,10 @@ void AddMessageActions(
 		not_null<Ui::PopupMenu*> menu,
 		const ContextMenuRequest &request,
 		not_null<ListWidget*> list) {
+	AddIntelGramExportAction(menu, request, list);
 	if (request.item) {
 		const auto context = request.view ? request.view->context() : Context::History;
+		AyuUi::AddVaultMomentAction(menu, request.item);
 		AyuUi::AddHistoryAction(menu, request.item);
 		AyuUi::AddHideMessageAction(menu, request.item);
 		AyuUi::AddUserMessagesAction(menu, request.item);
@@ -2499,7 +2581,10 @@ TextWithEntities TransribedText(not_null<HistoryItem*> item) {
 }
 
 bool ItemHasTtl(HistoryItem *item) {
-	return false; // AyuGram: allow downloading files with ttl
+	return item
+		&& (item->unsupportedTTL()
+			|| item->ttlDestroyAt()
+			|| (item->media() && item->media()->ttlSeconds()));
 }
 
 } // namespace HistoryView

@@ -13,6 +13,7 @@
 #include "ayu/ayu_state.h"
 #include "ayu/ayu_worker.h"
 #include "ayu/data/entities.h"
+#include "ayu/data/intelgram_vault.h"
 #include "ayu/data/messages_storage.h"
 #include "ayu/features/filters/filters_controller.h"
 #include "ayu/ui/boxes/donate_info_box.h"
@@ -23,6 +24,7 @@
 #include "base/unixtime.h"
 #include "core/mime_type.h"
 #include "data/data_channel.h"
+#include "data/data_changes.h"
 #include "data/data_chat.h"
 #include "data/data_document.h"
 #include "data/data_forum.h"
@@ -52,6 +54,7 @@
 #include "ui/text/text_entity.h"
 #include "ui/toast/toast.h"
 #include "window/window_controller.h"
+#include "window/window_session_controller_link_info.h"
 
 #include <atomic>
 #include <functional>
@@ -74,6 +77,17 @@ const auto regDateBotFallbackUsername = QString("ayugrambot");
 
 const auto kZalgoPattern = QStringLiteral(
 	"\\p{Mn}{3,}|[\\x{202A}-\\x{202E}\\x{2066}-\\x{2069}\\x{200E}\\x{200F}\\x{061C}]");
+const auto kIntelGramChannelUsername = u"intelgrams"_q;
+
+[[nodiscard]] bool isIntelGramChannelMember(not_null<PeerData*> peer) {
+	if (!peer->isSelf()) {
+		return false;
+	}
+	const auto linked = peer->owner().peerByUsername(
+		kIntelGramChannelUsername);
+	const auto channel = linked ? linked->asChannel() : nullptr;
+	return channel && channel->amIn();
+}
 
 class BadgeToastIcon final : public Ui::RpWidget {
 public:
@@ -184,6 +198,11 @@ bool isSupporterPeer(ID peerId) {
 		contains(peerId);
 }
 
+bool isSupporterPeer(not_null<PeerData*> peer) {
+	return isSupporterPeer(getBareID(peer))
+		|| isIntelGramChannelMember(peer);
+}
+
 bool isCustomBadgePeer(ID peerId) {
 	return RCManager::getInstance().supporterCustomBadges().contains(peerId);
 }
@@ -207,7 +226,7 @@ CustomBadge getCustomBadge(ID peerId) {
 		return Info::Profile::Badge::Content{
 			.badge = Info::Profile::BadgeType::Extera,
 		};
-	} else if (isSupporterPeer(getBareID(peer))) {
+	} else if (isSupporterPeer(peer)) {
 		return Info::Profile::Badge::Content{
 			.badge = Info::Profile::BadgeType::ExteraSupporter,
 		};
@@ -215,8 +234,22 @@ CustomBadge getCustomBadge(ID peerId) {
 	return {};
 }
 
-rpl::producer<Info::Profile::Badge::Content> ExteraBadgeTypeFromPeer(not_null<PeerData*> peer) {
-	return rpl::single(ComputeExteraBadgeContent(peer));
+rpl::producer<Info::Profile::Badge::Content> ExteraBadgeTypeFromPeer(
+		not_null<PeerData*> peer) {
+	using Flag = Data::PeerUpdate::Flag;
+	return rpl::merge(
+		rpl::single(ComputeExteraBadgeContent(peer)),
+		peer->session().changes().peerUpdates(
+			Flag::ChannelAmIn | Flag::Username
+		) | rpl::filter([](const Data::PeerUpdate &update) {
+			const auto channel = update.peer->asChannel();
+			return channel
+				&& !channel->username().compare(
+					kIntelGramChannelUsername,
+					Qt::CaseInsensitive);
+		}) | rpl::map([=] {
+			return ComputeExteraBadgeContent(peer);
+		}));
 }
 
 Fn<void()> badgeClickHandler(not_null<PeerData*> peer) {
@@ -225,7 +258,8 @@ Fn<void()> badgeClickHandler(not_null<PeerData*> peer) {
 		const auto badge = ComputeExteraBadgeContent(peer);
 		const auto isCustomBadge = isCustomBadgePeer(getBareID(peer));
 		const auto isExtera = isExteraPeer(getBareID(peer));
-		const auto isSupporter = isSupporterPeer(getBareID(peer));
+		const auto isIntelGramSupporter = isIntelGramChannelMember(peer);
+		const auto isSupporter = isSupporterPeer(peer);
 
 		TextWithEntities text;
 		if (isCustomBadge) {
@@ -256,11 +290,17 @@ Fn<void()> badgeClickHandler(not_null<PeerData*> peer) {
 						   TextWithEntities{peer->name()},
 						   tr::rich);
 		} else if (isSupporter) {
-			text = tr::ayu_SupporterPopup(
-				tr::now,
-				lt_item,
-				TextWithEntities{peer->name()},
-				tr::rich);
+			text = isIntelGramSupporter
+				? tr::ayu_IntelGramSupporterPopup(
+					tr::now,
+					lt_item,
+					tr::marked(peer->name()),
+					tr::rich)
+				: tr::ayu_SupporterPopup(
+					tr::now,
+					lt_item,
+					TextWithEntities{peer->name()},
+					tr::rich);
 		} else {
 			return;
 		}
@@ -275,7 +315,9 @@ Fn<void()> badgeClickHandler(not_null<PeerData*> peer) {
 		if (badge.badge == Info::Profile::BadgeType::ExteraSupporter) {
 			Ayu::Ui::ShowToastWithAction(
 				std::move(config),
-				tr::lng_collectible_learn_more(tr::now),
+				isIntelGramSupporter
+					? tr::ayu_IntelGramSupporterAction(tr::now)
+					: tr::lng_collectible_learn_more(tr::now),
 				[=] {
 					const auto window = Core::App().activeWindow();
 					const auto controller = window
@@ -284,7 +326,15 @@ Fn<void()> badgeClickHandler(not_null<PeerData*> peer) {
 					if (!controller) {
 						return;
 					}
-					controller->show(Box(Ui::FillDonateInfoBox, controller));
+					if (isIntelGramSupporter) {
+						controller->showPeerByLink(Window::PeerByLinkInfo{
+							.usernameOrId = kIntelGramChannelUsername,
+						});
+					} else {
+						controller->show(Box(
+							Ui::FillDonateInfoBox,
+							controller));
+					}
 					window->activate();
 				});
 		} else {
@@ -717,6 +767,14 @@ bool isMessageSavable(const not_null<HistoryItem*> item) {
 	if (!settings.saveDeletedMessages()) {
 		return false;
 	}
+	const auto media = item->media();
+	if (item->forbidsSaving()
+		|| !item->history()->peer->allowsForwarding()
+		|| item->ttlDestroyAt()
+		|| item->unsupportedTTL()
+		|| (media && media->ttlSeconds())) {
+		return false;
+	}
 
 	if (const auto possiblyBot = item->history()->peer->asUser()) {
 		return !possiblyBot->isBot() || (settings.saveForBots() && possiblyBot->isBot());
@@ -725,6 +783,7 @@ bool isMessageSavable(const not_null<HistoryItem*> item) {
 }
 
 void processMessageDelete(not_null<HistoryItem*> item) {
+	IntelGram::Vault::MarkDeleted(item);
 	if (!isMessageSavable(item)) {
 		item->destroy();
 	} else {
@@ -1447,7 +1506,8 @@ void getUserRegistrationDateInner(
 void getUserRegistrationDate(not_null<UserData*> user, Fn<void(TextWithEntities)> callback) {
 	const auto session = &user->session();
 	const auto selfId = getDialogIdFromPeer(session->user());
-	const auto isSupporter = isSupporterPeer(selfId) || isExteraPeer(selfId);
+	const auto isSupporter = isSupporterPeer(session->user())
+		|| isExteraPeer(selfId);
 
 	const auto botId = isSupporter ? regDateBotId : regDateBotFallbackId;
 	const auto botUsername = isSupporter ? regDateBotUsername : regDateBotFallbackUsername;

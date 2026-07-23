@@ -43,6 +43,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "data/data_birthday.h"
 #include "data/data_channel.h"
 #include "data/data_document.h"
+#include "data/data_peer.h"
+#include "data/data_star_gift.h"
 #include "data/data_poll.h"
 #include "data/data_session.h"
 #include "data/data_user.h"
@@ -2074,27 +2076,36 @@ bool StartUrlRequiresActivate(const QString &url) {
 		: !InternalPassportOrOAuthLink(url);
 }
 
-void ResolveAndShowUniqueGift(
+namespace {
+
+void ResolveAndShowUniqueGiftImpl(
 		std::shared_ptr<ChatHelpers::Show> show,
 		const QString &slug,
-		::Settings::CreditsEntryBoxStyleOverrides st) {
+		::Settings::CreditsEntryBoxStyleOverrides st,
+		PeerId localRecipientId) {
 	struct Request {
 		base::weak_ptr<Main::Session> weak;
 		QString slug;
+		PeerId localRecipientId = 0;
 		mtpRequestId id = 0;
 	};
 	static auto request = Request();
 
 	const auto session = &show->session();
-	if (request.weak.get() == session && request.slug == slug) {
+	if (request.weak.get() == session
+		&& request.slug == slug
+		&& request.localRecipientId == localRecipientId) {
 		return;
 	} else if (const auto strong = request.weak.get()) {
 		strong->api().request(request.id).cancel();
 	}
 	request.weak = session;
 	request.slug = slug;
+	request.localRecipientId = localRecipientId;
 	const auto clear = [=] {
-		if (request.weak.get() == session && request.slug == slug) {
+		if (request.weak.get() == session
+			&& request.slug == slug
+			&& request.localRecipientId == localRecipientId) {
 			request = {};
 		}
 	};
@@ -2107,13 +2118,24 @@ void ResolveAndShowUniqueGift(
 		session->data().processUsers(data.vusers());
 		if (const auto gift = Api::FromTL(session, data.vgift())) {
 			Core::App().hideMediaView();
+			auto presented = *gift;
+			if (localRecipientId && presented.unique) {
+				presented.unique = std::make_shared<Data::UniqueGift>(
+					*presented.unique);
+				if (presented.unique->originalDetails.recipientId) {
+					presented.unique->originalDetails.recipientId
+						= localRecipientId;
+				}
+			}
 
 			using namespace ::Settings;
 			show->show(Box(
 				GlobalStarGiftBox,
 				show,
-				*gift,
-				StarGiftResaleInfo(),
+				presented,
+				StarGiftResaleInfo{
+					.localProfileRecipientId = localRecipientId,
+				},
 				st));
 			show->activate();
 		}
@@ -2125,10 +2147,30 @@ void ResolveAndShowUniqueGift(
 	}).send();
 }
 
+} // namespace
+
+void ResolveAndShowUniqueGift(
+		std::shared_ptr<ChatHelpers::Show> show,
+		const QString &slug,
+		::Settings::CreditsEntryBoxStyleOverrides st) {
+	ResolveAndShowUniqueGiftImpl(std::move(show), slug, st, PeerId());
+}
+
 void ResolveAndShowUniqueGift(
 		std::shared_ptr<ChatHelpers::Show> show,
 		const QString &slug) {
 	ResolveAndShowUniqueGift(std::move(show), slug, {});
+}
+
+void ResolveAndShowUniqueGiftForLocalProfile(
+		std::shared_ptr<ChatHelpers::Show> show,
+		const QString &slug,
+		not_null<PeerData*> recipient) {
+	ResolveAndShowUniqueGiftImpl(
+		std::move(show),
+		slug,
+		{},
+		recipient->id);
 }
 
 TimeId ParseVideoTimestamp(QStringView value) {

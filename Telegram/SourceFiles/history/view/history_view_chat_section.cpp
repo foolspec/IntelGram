@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "history/view/history_view_chat_section.h"
 
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "history/view/controls/history_view_compose_controls.h"
 #include "history/view/controls/history_view_compose_search.h"
 #include "history/view/controls/history_view_draft_options.h"
@@ -118,9 +119,10 @@ rpl::producer<Ui::MessageBarContent> RootViewContent(
 		const auto sender = (item && item->discussionPostOriginalSender())
 			? item->discussionPostOriginalSender()
 			: history->peer.get();
-		content.title = sender->name().isEmpty()
+		const auto senderName = Ayu::LocalProfileName(sender);
+		content.title = senderName.isEmpty()
 			? "Message"
-			: sender->name();
+			: senderName;
 		return std::move(content);
 	});
 }

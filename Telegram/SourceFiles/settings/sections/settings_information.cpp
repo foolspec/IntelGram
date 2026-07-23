@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "settings/sections/settings_information.h"
 
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "settings/sections/settings_main.h"
 #include "settings/settings_builder.h"
 #include "settings/settings_common_session.h"
@@ -560,7 +561,7 @@ void SetupRows(
 	}
 
 	const auto copyPhone = [=] {
-		QGuiApplication::clipboard()->setText(self->phone());
+		QGuiApplication::clipboard()->setText(Ayu::LocalProfilePhone(self));
 		controller->showToast(tr::lng_text_copied(tr::now), 500);
 	};
 	const auto phoneButton = AddRow(
@@ -609,6 +610,10 @@ void SetupRows(
 		tr::lng_context_copy_mention(tr::now),
 		[=] {
 			if (controller->showFrozenError()) {
+				return;
+			}
+			if (Ayu::LocalProfileUsernameActive(self)) {
+				Ayu::ShowLocalProfileUsernameEditor(controller, self);
 				return;
 			}
 			const auto box = controller->show(
@@ -776,13 +781,7 @@ void SetupAccountsWrap(
 	const auto session = &account->session();
 	const auto user = session->user();
 
-	auto text = rpl::single(
-		user->name()
-	) | rpl::then(session->changes().realtimeNameUpdates(
-		user
-	) | rpl::map([=] {
-		return user->name();
-	}));
+	auto text = Ayu::LocalProfileNameValue(user);
 	auto result = object_ptr<Ui::SettingsButton>(
 		parent,
 		rpl::duplicate(text),

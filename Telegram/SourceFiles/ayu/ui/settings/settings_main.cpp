@@ -6,31 +6,38 @@
 // Copyright @Radolyn, 2026
 #include "ayu/ui/settings/settings_main.h"
 
-#include "settings/sections/settings_main.h"
-#include "lang_auto.h"
-#include "ayu/ayu_settings.h"
-#include "ayu/ui/ayu_logo.h"
 #include "ayu/ui/settings/settings_appearance.h"
 #include "ayu/ui/settings/settings_ayu.h"
 #include "ayu/ui/settings/settings_chats.h"
 #include "ayu/ui/settings/settings_filters.h"
 #include "ayu/ui/settings/settings_general.h"
 #include "ayu/ui/settings/settings_other.h"
+#include "ayu/ui/settings/settings_vault.h"
+#include "ayu/ui/ayu_logo.h"
+#include "ayu/ayu_settings.h"
+#include "boxes/abstract_box.h"
 #include "core/version.h"
+#include "lang/lang_text_entity.h"
+#include "settings/sections/settings_main.h"
 #include "settings/settings_builder.h"
 #include "settings/settings_common.h"
+#include "ui/layers/generic_box.h"
+#include "ui/widgets/buttons.h"
+#include "ui/widgets/labels.h"
+#include "ui/wrap/vertical_layout.h"
+#include "ui/painter.h"
+#include "ui/vertical_list.h"
+#include "window/window_session_controller.h"
+#include "window/window_session_controller_link_info.h"
+#include "lang_auto.h"
+
 #include "styles/style_ayu_settings.h"
 #include "styles/style_layers.h"
 #include "styles/style_menu_icons.h"
 #include "styles/style_settings.h"
-#include "ui/painter.h"
-#include "ui/widgets/buttons.h"
-#include "ui/widgets/labels.h"
-#include "ui/wrap/vertical_layout.h"
-#include "window/window_session_controller.h"
-#include "window/window_session_controller_link_info.h"
 
 #include <QDesktopServices>
+#include <QUrl>
 
 namespace Settings {
 
@@ -126,10 +133,55 @@ void BuildCategories(SectionBuilder &builder) {
 		.icon = { &st::menuIconChatBubble },
 	});
 	builder.addSectionButton({
+		.title = tr::ayu_VaultTitle(),
+		.targetSection = AyuVault::Id(),
+		.icon = { &st::menuIconArchive },
+	});
+	builder.addSectionButton({
 		.title = tr::ayu_CategoryOther(),
 		.targetSection = AyuOther::Id(),
 		.icon = { &st::menuIconFave },
 	});
+}
+
+void ShowIntelGramUpdateLog(
+		not_null<Window::SessionController*> controller) {
+	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
+		box->setWidth(st::boxWideWidth);
+		box->setNoContentMargin(true);
+		box->setTitle(tr::ayu_IntelGramUpdateLogTitle());
+		const auto content = box->verticalLayout();
+
+		Ui::AddSubsectionTitle(
+			content,
+			tr::ayu_IntelGramUpdateLogCurrentTitle());
+		Ui::AddDividerText(
+			content,
+			tr::ayu_IntelGramUpdateLogCurrent(tr::rich));
+		Ui::AddSubsectionTitle(
+			content,
+			tr::ayu_IntelGramUpdateLogFeaturesTitle());
+		Ui::AddDividerText(
+			content,
+			tr::ayu_IntelGramUpdateLogFeatures(tr::rich));
+		Ui::AddSubsectionTitle(
+			content,
+			tr::ayu_IntelGramUpdateLogPrivacyTitle());
+		Ui::AddDividerText(
+			content,
+			tr::ayu_IntelGramUpdateLogPrivacy(tr::rich));
+		Ui::AddDividerText(
+			content,
+			tr::ayu_IntelGramUpdateLogCredit());
+
+		box->addButton(tr::ayu_IntelGramUpdateLogFull(), [=] {
+			QDesktopServices::openUrl(QUrl(
+				u"https://github.com/foolspec/IntelGram/blob/main/CHANGELOG.md"_q));
+		});
+		box->addButton(tr::lng_box_done(), [=] {
+			box->closeBox();
+		});
+	}));
 }
 
 void BuildLinks(SectionBuilder &builder) {
@@ -137,52 +189,61 @@ void BuildLinks(SectionBuilder &builder) {
 	builder.addDivider();
 	builder.addSkip();
 
-	builder.addSubsectionTitle(tr::ayu_LinksHeader());
+	builder.addSubsectionTitle(tr::ayu_IntelGramLinksHeader());
 
 	const auto controller = builder.controller();
 
 	builder.addButton({
-		.id = u"ayu/channel"_q,
-		.title = tr::ayu_LinksChannel(),
+		.id = u"intelgram/telegram"_q,
+		.title = tr::ayu_IntelGramLinksTelegram(),
 		.icon = { &st::menuIconChannel },
-		.label = rpl::single(QString("@ayugram")),
+		.label = rpl::single(u"@intelgrams"_q),
 		.onClick = [=] {
 			controller->showPeerByLink(Window::PeerByLinkInfo{
-				.usernameOrId = QString("ayugram"),
+				.usernameOrId = u"intelgrams"_q,
 			});
 		},
 	});
 	builder.addButton({
-		.id = u"ayu/chat"_q,
-		.title = tr::ayu_LinksChats(),
-		.icon = { &st::menuIconChats },
-		.label = rpl::single(QString("@ayugramchat")),
+		.id = u"intelgram/updateLog"_q,
+		.title = tr::ayu_IntelGramLinksUpdateLog(),
+		.icon = { &st::menuIconInfo },
+		.label = tr::ayu_IntelGramUpdateLogLabel(),
 		.onClick = [=] {
-			controller->showPeerByLink(Window::PeerByLinkInfo{
-				.usernameOrId = QString("ayugramchat"),
-			});
+			ShowIntelGramUpdateLog(controller);
 		},
 	});
 	builder.addButton({
-		.id = u"ayu/crowdin"_q,
-		.title = tr::ayu_LinksTranslate(),
-		.icon = { &st::menuIconTranslate },
-		.label = rpl::single(QString("Crowdin")),
-		.onClick = [=] {
-			QDesktopServices::openUrl(
-				QString("https://translate.ayugram.one"));
-		},
-	});
-	builder.addButton({
-		.id = u"ayu/website"_q,
-		.title = tr::ayu_LinksDocumentation(),
+		.id = u"intelgram/github"_q,
+		.title = tr::ayu_IntelGramLinksGitHub(),
 		.icon = { &st::menuIconIpAddress },
-		.label = rpl::single(QString("docs.ayugram.one")),
+		.label = rpl::single(u"foolspec/IntelGram"_q),
 		.onClick = [=] {
-			QDesktopServices::openUrl(
-				QString("https://docs.ayugram.one"));
+			QDesktopServices::openUrl(QUrl(
+				u"https://github.com/foolspec/IntelGram"_q));
 		},
 	});
+	builder.addButton({
+		.id = u"intelgram/changelog"_q,
+		.title = tr::ayu_IntelGramLinksChangelog(),
+		.icon = { &st::menuIconShowAll },
+		.label = rpl::single(u"CHANGELOG.md"_q),
+		.onClick = [=] {
+			QDesktopServices::openUrl(QUrl(
+				u"https://github.com/foolspec/IntelGram/blob/main/CHANGELOG.md"_q));
+		},
+	});
+	builder.addButton({
+		.id = u"intelgram/technicalChangelog"_q,
+		.title = tr::ayu_IntelGramLinksTechnicalChangelog(),
+		.icon = { &st::menuIconChats },
+		.label = rpl::single(u"TECHNICAL_CHANGELOG.md"_q),
+		.onClick = [=] {
+			QDesktopServices::openUrl(QUrl(
+				u"https://github.com/foolspec/IntelGram/blob/main/TECHNICAL_CHANGELOG.md"_q));
+		},
+	});
+	builder.addDividerText(tr::ayu_IntelGramLinksDescription());
 
 	builder.addSkip();
 }

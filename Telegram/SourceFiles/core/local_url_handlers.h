@@ -15,6 +15,8 @@ namespace ChatHelpers {
 class Show;
 } // namespace ChatHelpers
 
+class PeerData;
+
 namespace Settings {
 struct CreditsEntryBoxStyleOverrides;
 } // namespace Settings
@@ -53,6 +55,10 @@ void ResolveAndShowUniqueGift(
 void ResolveAndShowUniqueGift(
 	std::shared_ptr<ChatHelpers::Show> show,
 	const QString &slug);
+void ResolveAndShowUniqueGiftForLocalProfile(
+	std::shared_ptr<ChatHelpers::Show> show,
+	const QString &slug,
+	not_null<PeerData*> recipient);
 
 [[nodiscard]] TimeId ParseVideoTimestamp(QStringView value);
 

@@ -1215,12 +1215,12 @@ QSize OverlayWidget::flipSizeByRotation(QSize size) const {
 
 bool OverlayWidget::hasCopyMediaRestriction(bool skipPremiumCheck) const {
 	if (const auto story = _stories ? _stories->story() : nullptr) {
-		if (story->call()) {
+		if (story->call() || story->forbidsForward()) {
 			return true;
 		}
 	}
-	// AyuGram: removed; allow downloading any stories
-	return false;
+	return (_message && _message->forbidsSaving())
+		|| (_history && !_history->peer->allowsForwarding());
 }
 
 bool OverlayWidget::showCopyMediaRestriction(bool skipPRemiumCheck) {

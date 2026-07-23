@@ -88,6 +88,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 // AyuGram includes
 #include "ayu/ayu_settings.h"
+#include "ayu/data/intelgram_vault.h"
 #include "ayu/data/messages_storage.h"
 #include "ayu/features/filters/filters_controller.h"
 #include "ayu/utils/telegram_helpers.h"
@@ -2737,14 +2738,17 @@ void Session::updateEditedMessage(const MTPMessage &data) {
 		goto proceed;
 	}
 	edit = HistoryMessageEdition(_session, data.c_message());
-	if (settings.saveMessagesHistory() && !existing->isLocal() && !existing->author()->isSelf() && !edit.isEditHide) {
+	if (!existing->isLocal() && !edit.isEditHide) {
 		const auto msg = existing->originalText();
 
 		if (edit.textWithEntities == msg || msg.empty()) {
 			goto proceed;
 		}
 
-		AyuMessages::addEditedMessage(existing);
+		IntelGram::Vault::RecordRevision(existing);
+		if (settings.saveMessagesHistory() && !existing->author()->isSelf()) {
+			AyuMessages::addEditedMessage(existing);
+		}
 	}
 
 	FiltersController::invalidate(existing);
@@ -2760,6 +2764,7 @@ proceed:
 	}, [&](const auto &data) {
 		existing->applyEdition(HistoryMessageEdition(_session, data));
 	});
+	IntelGram::Vault::IndexMessage(existing);
 }
 
 void Session::processMessages(
@@ -3198,6 +3203,11 @@ HistoryItem *Session::addNewMessage(
 		data,
 		localFlags,
 		type);
+	if (result) {
+		IntelGram::Vault::IndexMessage(
+			result,
+			type == NewMessageType::Unread);
+	}
 	if (type == NewMessageType::Unread) {
 		CheckForSwitchInlineButton(result);
 	}

@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "ui/controls/table_rows.h"
 
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "base/event_filter.h"
 #include "base/timer_rpl.h"
 #include "boxes/peers/prepare_short_info_box.h"
@@ -160,7 +161,9 @@ object_ptr<RpWidget> MakePeerTableValue(
 	const auto userpic = CreateChild<UserpicButton>(raw, peer, st);
 	const auto label = CreateChild<FlatLabel>(
 		raw,
-		(button && handler) ? peer->shortName() : peer->name(),
+		(button && handler && !Ayu::LocalProfileNameActive(peer))
+			? peer->shortName()
+			: Ayu::LocalProfileName(peer),
 		table->st().defaultValue);
 
 	raw->widthValue() | rpl::on_next([=](int width) {

@@ -62,6 +62,7 @@ ID getBareID(not_null<PeerData*> peer);
 
 bool isExteraPeer(ID peerId);
 bool isSupporterPeer(ID peerId);
+bool isSupporterPeer(not_null<PeerData*> peer);
 bool isCustomBadgePeer(ID peerId);
 CustomBadge getCustomBadge(ID peerId);
 

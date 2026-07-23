@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "info/profile/info_profile_values.h"
 
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "api/api_chat_participants.h"
 #include "apiwrap.h"
 #include "info/profile/info_profile_phone_menu.h"
@@ -43,21 +44,11 @@ namespace {
 using UpdateFlag = Data::PeerUpdate::Flag;
 
 auto PlainAboutValue(not_null<PeerData*> peer) {
-	return peer->session().changes().peerFlagsValue(
-		peer,
-		UpdateFlag::About
-	) | rpl::map([=] {
-		return peer->about();
-	});
+	return Ayu::LocalProfileAboutValue(peer);
 }
 
 auto PlainUsernameValue(not_null<PeerData*> peer) {
-	return rpl::merge(
-		peer->session().changes().peerFlagsValue(peer, UpdateFlag::Username),
-		peer->session().changes().peerFlagsValue(peer, UpdateFlag::Usernames)
-	) | rpl::map([=] {
-		return peer->username();
-	});
+	return Ayu::LocalProfileUsernameValue(peer);
 }
 
 auto PlainPrimaryUsernameValue(not_null<PeerData*> peer) {
@@ -96,10 +87,7 @@ rpl::producer<QString> NameValue(not_null<PeerData*> peer) {
 	if (const auto broadcast = peer->monoforumBroadcast()) {
 		return NameValue(broadcast);
 	}
-	return peer->session().changes().peerFlagsValue(
-		peer,
-		UpdateFlag::Name
-	) | rpl::map([=] { return peer->name(); });
+	return Ayu::LocalProfileNameValue(peer);
 }
 
 rpl::producer<QString> TitleValue(not_null<Data::ForumTopic*> topic) {
@@ -126,11 +114,9 @@ rpl::producer<int32> ColorIdValue(not_null<Data::ForumTopic*> topic) {
 rpl::producer<TextWithEntities> PhoneValue(not_null<UserData*> user) {
 	return rpl::merge(
 		Countries::Instance().updated(),
-		user->session().changes().peerFlagsValue(
-			user,
-			UpdateFlag::PhoneNumber) | rpl::to_empty
+		Ayu::LocalProfilePhoneValue(user) | rpl::to_empty
 	) | rpl::map([=] {
-		return tr::marked(Ui::FormatPhone(user->phone()));
+		return tr::marked(Ui::FormatPhone(Ayu::LocalProfilePhone(user)));
 	});
 }
 
@@ -147,9 +133,12 @@ rpl::producer<TextWithEntities> PhoneOrHiddenValue(not_null<UserData*> user) {
 			const QString &hidden) {
 		if (phone.text.isEmpty() && username.isEmpty() && about.isEmpty()) {
 			return tr::marked(hidden);
-		} else if (IsCollectiblePhone(user)) {
+		} else if (Ayu::LocalProfilePhoneActive(user)
+			|| IsCollectiblePhone(user)) {
 			return tr::link(phone, u"internal:collectible_phone/"_q
-				+ user->phone() + '@' + QString::number(user->id.value));
+				+ Ayu::LocalProfilePhone(user)
+				+ '@'
+				+ QString::number(user->id.value));
 		} else {
 			return phone;
 		}
@@ -173,7 +162,8 @@ QString UsernameUrl(
 		not_null<PeerData*> peer,
 		const QString &username,
 		bool link) {
-	const auto type = !peer->isUsernameEditable(username)
+	const auto type = (Ayu::LocalProfileUsernameActive(peer)
+		|| !peer->isUsernameEditable(username))
 		? u"collectible_username"_q
 		: link
 		? u"username_link"_q
@@ -195,21 +185,11 @@ rpl::producer<std::vector<TextWithEntities>> UsernamesValue(
 			return tr::link(u, UsernameUrl(peer, u));
 		}) | ranges::to_vector;
 	};
-	auto value = rpl::merge(
-		peer->session().changes().peerFlagsValue(peer, UpdateFlag::Username),
-		peer->session().changes().peerFlagsValue(peer, UpdateFlag::Usernames)
-	);
-	if (const auto user = peer->asUser()) {
-		return std::move(value) | rpl::map([=] {
-			return map(user->usernames());
-		});
-	} else if (const auto channel = peer->asChannel()) {
-		return std::move(value) | rpl::map([=] {
-			return map(channel->usernames());
-		});
-	} else {
-		return rpl::single(std::vector<TextWithEntities>());
-	}
+	return Ayu::LocalProfileUsernamesValue(
+		peer
+	) | rpl::map([=](std::vector<QString> usernames) {
+		return map(usernames);
+	});
 }
 
 TextWithEntities AboutWithEntities(
@@ -705,7 +685,7 @@ rpl::producer<BadgeType> BadgeValueFromFlags(Peer peer) {
 	});
 }
 
-rpl::producer<BadgeType> BadgeValue(not_null<PeerData*> peer) {
+rpl::producer<BadgeType> BadgeValueForPeer(not_null<PeerData*> peer) {
 	if (const auto user = peer->asUser()) {
 		return BadgeValueFromFlags<UserDataFlag>(user);
 	} else if (const auto channel = peer->asChannel()) {
@@ -714,14 +694,26 @@ rpl::producer<BadgeType> BadgeValue(not_null<PeerData*> peer) {
 	return rpl::single(BadgeType::None);
 }
 
+rpl::producer<BadgeType> BadgeValue(not_null<PeerData*> peer) {
+	if (!peer->isSelf()) {
+		return BadgeValueForPeer(peer);
+	}
+	return Ayu::LocalProfileCloneIdValue(peer) | rpl::map([=](const QString &) {
+		const auto clone = Ayu::LocalProfileCloneUser(peer);
+		return BadgeValueForPeer(clone ? clone : peer.get());
+	}) | rpl::flatten_latest();
+}
+
 rpl::producer<EmojiStatusId> EmojiStatusIdValue(not_null<PeerData*> peer) {
 	if (peer->isChat()) {
 		return rpl::single(EmojiStatusId());
 	}
-	return peer->session().changes().peerFlagsValue(
-		peer,
-		Data::PeerUpdate::Flag::EmojiStatus
-	) | rpl::map([=] { return peer->emojiStatusId(); });
+	return rpl::merge(
+		peer->session().changes().peerFlagsValue(
+			peer,
+			Data::PeerUpdate::Flag::EmojiStatus) | rpl::to_empty,
+		Ayu::LocalProfileCloneIdValue(peer) | rpl::to_empty
+	) | rpl::map([=] { return Ayu::LocalProfileEmojiStatusId(peer); });
 }
 
 rpl::producer<QString> BirthdayLabelText(

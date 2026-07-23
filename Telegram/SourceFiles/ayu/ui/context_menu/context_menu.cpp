@@ -13,6 +13,7 @@
 #include "ayu/ayu_settings.h"
 #include "ayu/ayu_state.h"
 #include "ayu/data/messages_storage.h"
+#include "ayu/data/intelgram_vault.h"
 #include "ayu/features/filters/filters_controller.h"
 #include "ayu/features/forward/ayu_forward.h"
 #include "ayu/ui/context_menu/menu_item_subtext.h"
@@ -48,6 +49,15 @@
 namespace AyuUi {
 
 namespace {
+
+[[nodiscard]] bool IsProtectedContent(HistoryItem *item) {
+	return item
+		&& (item->forbidsSaving()
+			|| !item->history()->peer->allowsForwarding()
+			|| item->ttlDestroyAt()
+			|| item->unsupportedTTL()
+			|| (item->media() && item->media()->ttlSeconds()));
+}
 
 Fn<void()> ClearDeletedMessagesHandler(not_null<Window::SessionController*> controller, not_null<PeerData*> peer, ID topicId) {
 	return [=] {
@@ -461,7 +471,7 @@ void AddDeleteOwnMessagesAction(PeerData *peerData,
 }
 
 void AddHistoryAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item) {
-	if (item->hideEditedBadge()) {
+	if (!item || IsProtectedContent(item) || item->hideEditedBadge()) {
 		return;
 	}
 
@@ -485,6 +495,29 @@ void AddHistoryAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item) {
 			}
 		},
 		&st::ayuEditsHistoryIcon);
+}
+
+void AddVaultMomentAction(
+		not_null<Ui::PopupMenu*> menu,
+		HistoryItem *item) {
+	if (!item || !item->isRegular()) {
+		return;
+	}
+	menu->addAction(
+		tr::ayu_VaultSaveMoment(tr::now),
+		[=] {
+			const auto id = IntelGram::Vault::AddMoment(
+				item,
+				tr::ayu_VaultMomentDefault(tr::now),
+				QString(),
+				QString());
+			if (const auto controller = item->history()->session().tryResolveWindow()) {
+				controller->showToast(id
+					? tr::ayu_VaultMomentSaved(tr::now)
+					: tr::ayu_VaultMomentFailed(tr::now));
+			}
+		},
+		&st::menuIconFave);
 }
 
 void AddHideMessageAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item) {
@@ -929,7 +962,7 @@ void AddCreateFilterAction(not_null<Ui::PopupMenu*> menu,
 		return;
 	}
 
-	if (!item || selectedText.isEmpty()) {
+	if (!item || selectedText.isEmpty() || IsProtectedContent(item)) {
 		return;
 	}
 

@@ -83,6 +83,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 // AyuGram includes
 #include "ayu/ayu_settings.h"
 #include "ayu/utils/telegram_helpers.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "boxes/abstract_box.h"
 #include "ayu/features/streamer_mode/streamer_mode.h"
 #include "styles/style_ayu_icons.h"
@@ -358,6 +359,19 @@ MainMenu::MainMenu(
 	setupArchive();
 	setupMenu();
 
+	Ayu::LocalProfileNameValue(
+		_controller->session().user()
+	) | rpl::on_next([=](const QString &name) {
+		const auto user = _controller->session().user();
+		_nameVersion = user->nameVersion();
+		_name.setText(
+			st::semiboldTextStyle,
+			name,
+			Ui::NameTextOptions());
+		moveBadge();
+		update();
+	}, lifetime());
+
 	const auto shadow = Ui::CreateChild<Ui::PlainShadow>(this);
 	widthValue(
 	) | rpl::on_next([=](int width) {
@@ -424,15 +438,8 @@ MainMenu::MainMenu(
 	_badge->setPremiumClickCallback([=] {
 		chooseEmojiStatus();
 	});
-	{
-		const auto user = controller->session().user();
-		const auto isCustomBadge = isCustomBadgePeer(getBareID(user));
-		const auto isExtera = isExteraPeer(getBareID(user));
-		const auto isSupporter = isSupporterPeer(getBareID(user));
-		if (isExtera || isSupporter || isCustomBadge) {
-			_exteraBadge->setPremiumClickCallback(badgeClickHandler(user));
-		}
-	}
+	_exteraBadge->setPremiumClickCallback(
+		badgeClickHandler(controller->session().user()));
 
 	_controller->session().downloaderTaskFinished(
 	) | rpl::on_next([=] {
@@ -1009,7 +1016,7 @@ void MainMenu::drawName(Painter &p) {
 		_nameVersion = user->nameVersion();
 		_name.setText(
 			st::semiboldTextStyle,
-			user->name(),
+			Ayu::LocalProfileName(user),
 			Ui::NameTextOptions());
 		moveBadge();
 	}

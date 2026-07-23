@@ -45,8 +45,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include <QtGui/QScreen>
 
 // AyuGram includes
-#include "ayu/utils/telegram_helpers.h"
+#include "ayu/data/intelgram_vault.h"
 #include "ayu/features/streamer_mode/streamer_mode.h"
+#include "ayu/utils/telegram_helpers.h"
 
 
 namespace Window {
@@ -368,6 +369,9 @@ void Manager::removeWidget(internal::Widget *remove) {
 }
 
 void Manager::doShowNotification(NotificationFields &&fields) {
+	if (IntelGram::Vault::SuppressNotification(fields.item)) {
+		return;
+	}
 	_queuedNotifications.emplace_back(std::move(fields));
 	showNextFromQueue();
 }

@@ -38,6 +38,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "api/api_premium.h"
 #include "api/api_user_names.h"
 #include "api/api_websites.h"
+#include "ayu/data/intelgram_vault.h"
 #include "data/business/data_shortcut_messages.h"
 #include "data/components/scheduled_messages.h"
 #include "data/notify/data_notify_settings.h"
@@ -2001,6 +2002,9 @@ void ApiWrap::sendNotifySettingsUpdates() {
 }
 
 void ApiWrap::saveDraftToCloudDelayed(not_null<Data::Thread*> thread) {
+	if (IntelGram::Vault::KeepDraftLocal(thread)) {
+		return;
+	}
 	_draftsSaveRequestIds.emplace(base::make_weak(thread), 0);
 	if (!_draftsSaveTimer.isActive()) {
 		_draftsSaveTimer.callOnce(kSaveCloudDraftTimeout);
@@ -2205,6 +2209,9 @@ void ApiWrap::saveDraftsToCloud() {
 		const auto weak = i->first;
 		const auto thread = weak.get();
 		if (!thread) {
+			i = _draftsSaveRequestIds.erase(i);
+			continue;
+		} else if (IntelGram::Vault::KeepDraftLocal(thread)) {
 			i = _draftsSaveRequestIds.erase(i);
 			continue;
 		} else if (i->second) {

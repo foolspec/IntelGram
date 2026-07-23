@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "history/view/history_view_about_view.h"
 
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "api/api_peer_colors.h"
 #include "api/api_premium.h"
 #include "api/api_sending.h"
@@ -999,7 +1000,7 @@ void AboutView::setItem(AdminLog::OwnedItem item, DocumentData *sticker) {
 AdminLog::OwnedItem AboutView::makeNewPeerInfo(not_null<UserData*> user) {
 	_commonGroupsStale = false;
 
-	const auto text = user->name();
+	const auto text = Ayu::LocalProfileName(user);
 	const auto item = _history->makeMessage({
 		.id = _history->nextNonHistoryEntryId(),
 		.flags = (MessageFlag::FakeAboutView
@@ -1180,12 +1181,12 @@ AdminLog::OwnedItem AboutView::makeManagedBotInfo(
 	const auto managerId = user->botManagerId();
 	const auto managerUser = user->owner().userLoaded(managerId);
 	const auto parentName = managerUser
-		? managerUser->name()
+		? Ayu::LocalProfileName(managerUser)
 		: QString();
 	auto text = tr::lng_managed_bot_ready(
 		tr::now,
 		lt_name,
-		tr::bold(user->name()),
+		tr::bold(Ayu::LocalProfileName(user)),
 		lt_parent,
 		tr::bold(parentName),
 		tr::rich);

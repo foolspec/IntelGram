@@ -7,11 +7,13 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "data/data_auto_download.h"
 
+#include "ayu/data/intelgram_vault.h"
+#include "data/data_document.h"
 #include "data/data_peer.h"
 #include "data/data_photo.h"
-#include "data/data_document.h"
 
 #include <QtCore/QBuffer>
+#include <QtNetwork/QNetworkInterface>
 
 namespace Data {
 namespace AutoDownload {
@@ -21,6 +23,23 @@ constexpr auto kDefaultMaxSize = 12 * int64(1024 * 1024);
 constexpr auto kDefaultAutoPlaySize = 50 * int64(1024 * 1024);
 constexpr auto kVersion1 = char(1);
 constexpr auto kVersion = char(2);
+
+[[nodiscard]] bool IsUnmeteredConnection() {
+	for (const auto &interface : QNetworkInterface::allInterfaces()) {
+		const auto flags = interface.flags();
+		if (!flags.testFlag(QNetworkInterface::IsUp)
+			|| !flags.testFlag(QNetworkInterface::IsRunning)
+			|| flags.testFlag(QNetworkInterface::IsLoopBack)) {
+			continue;
+		}
+		const auto type = interface.type();
+		if (type == QNetworkInterface::Ethernet
+			|| type == QNetworkInterface::Wifi) {
+			return true;
+		}
+	}
+	return false;
+}
 
 template <typename Enum>
 auto enums_view(int from, int till) {
@@ -278,6 +297,14 @@ bool Should(
 		const Full &data,
 		not_null<PeerData*> peer,
 		not_null<DocumentData*> document) {
+	const auto mode = IntelGram::Vault::DownloadMode(peer);
+	if (mode == 1) {
+		return document->sticker();
+	} else if (mode == 2 && !IsUnmeteredConnection()) {
+		return document->sticker();
+	} else if (mode == 3) {
+		return true;
+	}
 	return Should(data, SourceFromPeer(peer), document);
 }
 
@@ -296,6 +323,14 @@ bool Should(
 		const Full &data,
 		not_null<PeerData*> peer,
 		not_null<PhotoData*> photo) {
+	const auto mode = IntelGram::Vault::DownloadMode(peer);
+	if (mode == 1) {
+		return false;
+	} else if (mode == 2 && !IsUnmeteredConnection()) {
+		return false;
+	} else if (mode == 3) {
+		return true;
+	}
 	return data.shouldDownload(
 		SourceFromPeer(peer),
 		Type::Photo,
@@ -306,6 +341,14 @@ bool ShouldAutoPlay(
 		const Full &data,
 		not_null<PeerData*> peer,
 		not_null<DocumentData*> document) {
+	const auto mode = IntelGram::Vault::DownloadMode(peer);
+	if (mode == 1) {
+		return false;
+	} else if (mode == 2 && !IsUnmeteredConnection()) {
+		return false;
+	} else if (mode == 3) {
+		return true;
+	}
 	return document->sticker() || data.shouldDownload(
 		SourceFromPeer(peer),
 		AutoPlayTypeFromDocument(document),
@@ -316,6 +359,14 @@ bool ShouldAutoPlay(
 		const Full &data,
 		not_null<PeerData*> peer,
 		not_null<PhotoData*> photo) {
+	const auto mode = IntelGram::Vault::DownloadMode(peer);
+	if (mode == 1) {
+		return false;
+	} else if (mode == 2 && !IsUnmeteredConnection()) {
+		return false;
+	} else if (mode == 3) {
+		return photo->hasVideo();
+	}
 	const auto source = SourceFromPeer(peer);
 	const auto size = photo->videoByteSize(PhotoSize::Large);
 	return photo->hasVideo()

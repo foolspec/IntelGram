@@ -7,9 +7,10 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "boxes/peers/edit_peer_color_box.h"
 
-#include "apiwrap.h"
 #include "api/api_peer_colors.h"
 #include "api/api_peer_photo.h"
+#include "apiwrap.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "base/unixtime.h"
 #include "boxes/peers/replace_boost_box.h"
 #include "boxes/background_box.h"
@@ -2558,10 +2559,7 @@ void SetupPeerColorSample(
 	) | rpl::map([=] {
 		return peer->emojiStatusId();
 	});
-	auto name = peer->session().changes().peerFlagsValue(
-		peer,
-		Data::PeerUpdate::Flag::Name
-	) | rpl::map([=] { return peer->shortName(); });
+	auto name = Ayu::LocalProfileNameValue(peer);
 
 	const auto sampleSize = st::settingsColorSampleSize;
 

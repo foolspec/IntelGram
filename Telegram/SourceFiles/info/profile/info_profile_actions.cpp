@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "info/profile/info_profile_actions.h"
 
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "api/api_blocked_peers.h"
 #include "api/api_chat_participants.h"
 #include "api/api_credits.h"
@@ -1766,7 +1767,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
 			st::infoProfileLabeledButtonQr);
 		qrButton->setAccessibleName(tr::lng_group_invite_context_qr(tr::now));
 		UsernamesValue(_peer) | rpl::on_next([=](const auto &u) {
-			qrButton->setVisible(!u.empty());
+			qrButton->setVisible(
+				!u.empty() && !Ayu::LocalProfileUsernameActive(_peer));
 		}, qrButton->lifetime());
 		const auto rightSkip = st::infoProfileLabeledButtonQrRightSkip;
 		fitLabelToButton(qrButton, usernameLine.text, rightSkip);
@@ -2009,12 +2011,12 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 	const auto window = _controller->parentController();
 	const auto duration = st::slideWrapDuration;
 
-	result->toggleOn(PersonalChannelValue(
+	result->toggleOn(Ayu::LocalProfilePersonalChannelValue(
 		user
 	) | rpl::map(rpl::mappers::_1 != nullptr));
 	result->finishAnimating();
 
-	auto channel = PersonalChannelValue(
+	auto channel = Ayu::LocalProfilePersonalChannelValue(
 		user
 	) | rpl::start_spawning(result->lifetime());
 
@@ -2045,6 +2047,9 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 		base::install_event_filter(container, [=](
 				not_null<QEvent*> e) {
 			if (e->type() == QEvent::ContextMenu) {
+				if (Ayu::LocalProfileCloneUser(user)) {
+					return base::EventFilterResult::Cancel;
+				}
 				const auto ce = static_cast<QContextMenuEvent*>(e.get());
 				state->menu = base::make_unique_q<Ui::PopupMenu>(
 					container,
@@ -2068,8 +2073,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 				container,
 				object_ptr<Ui::VerticalLayout>(container)));
 		onlyChannelWrap->toggleOn(rpl::duplicate(channel) | rpl::map([=] {
-			return user->personalChannelId()
-				&& !user->personalChannelMessageId();
+			return Ayu::LocalProfilePersonalChannel(user)
+				&& !Ayu::LocalProfilePersonalChannelMessageId(user);
 		}));
 		onlyChannelWrap->finishAnimating();
 
@@ -2092,8 +2097,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 		line.text->setClickHandlerFilter([=](
 				const ClickHandlerPtr &handler,
 				Qt::MouseButton button) {
-			if (const auto channelId = user->personalChannelId()) {
-				window->showPeerInfo(peerFromChannel(channelId));
+			if (const auto channel = Ayu::LocalProfilePersonalChannel(user)) {
+				window->showPeerInfo(channel->id);
 			}
 			return false;
 		});
@@ -2113,8 +2118,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 				object_ptr<Ui::VerticalLayout>(container)));
 		messageChannelWrap->setDuration(duration);
 		messageChannelWrap->toggleOn(rpl::duplicate(channel) | rpl::map([=] {
-			return user->personalChannelId()
-				&& user->personalChannelMessageId();
+			return Ayu::LocalProfilePersonalChannel(user)
+				&& Ayu::LocalProfilePersonalChannelMessageId(user);
 		}));
 		messageChannelWrap->finishAnimating();
 		messageChannelWrap->toggledValue(
@@ -2291,16 +2296,25 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 			if (!channel) {
 				return;
 			}
+			const auto messageId = Ayu::LocalProfilePersonalChannelMessageId(user);
+			if (!messageId) {
+				return;
+			}
 			const auto id = FullMsgId(
 				channel->id,
-				user->personalChannelMessageId());
+				messageId);
 			if (const auto item = user->session().data().message(id)) {
 				return rebuild(item, anim::type::instant);
 			}
 			user->session().api().requestMessageData(
 				channel,
-				user->personalChannelMessageId(),
+				messageId,
 				crl::guard(container, [=] {
+					if (Ayu::LocalProfilePersonalChannel(user) != channel
+						|| Ayu::LocalProfilePersonalChannelMessageId(user)
+							!= messageId) {
+						return;
+					}
 					if (const auto i = user->session().data().message(id)) {
 						rebuild(i, anim::type::normal);
 					}

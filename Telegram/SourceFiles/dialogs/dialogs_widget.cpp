@@ -168,6 +168,31 @@ struct IdSearchQuery {
 	return {};
 }
 
+[[nodiscard]] QString ParsePhoneSearchQuery(const QString &query) {
+	const auto value = query.trimmed();
+	auto result = QString();
+	for (auto i = 0; i != value.size(); ++i) {
+		const auto ch = value[i];
+		if (ch.isDigit()) {
+			result.append(ch);
+			continue;
+		} else if (ch == u'+' && i == 0) {
+			continue;
+		}
+		const auto separator = (ch == u' ')
+			|| (ch == u'-')
+			|| (ch == u'(')
+			|| (ch == u')')
+			|| (ch == u'.');
+		if (!separator || (ch == u'-' && i == 0)) {
+			return {};
+		}
+	}
+	return (result.size() >= 5 && result.size() <= 15)
+		? result
+		: QString();
+}
+
 base::options::toggle OptionForumHideChatsList({
 	.id = kOptionForumHideChatsList,
 	.name = "Hide chat list in forums",
@@ -2683,6 +2708,15 @@ bool Widget::search(bool inCache, SearchRequestDelay delay) {
 		.start = true,
 		.peer = (inPeer != nullptr),
 	};
+	const auto isGlobalSearch = !inPeer;
+	const auto idQuery = ParseIdSearchQuery(query);
+	const auto phoneQuery = ParsePhoneSearchQuery(query);
+	const auto localPeerSearch = isGlobalSearch
+		&& peerSearchRequired()
+		&& !fromPeer
+		&& inTags.empty()
+		&& (tab == ChatSearchTab::MyMessages)
+		&& ((idQuery.type != IdSearchType::None) || !phoneQuery.isEmpty());
 	if (trimmed.isEmpty() && !fromPeer && inTags.empty()) {
 		cancelSearchRequest();
 
@@ -2706,6 +2740,72 @@ bool Widget::search(bool inCache, SearchRequestDelay delay) {
 		_peerSearch.clear();
 		_api.request(base::take(_topicSearchRequest)).cancel();
 		peerSearchReceived({});
+		return true;
+	} else if (localPeerSearch) {
+		const auto stateChanged = (_searchQuery != query)
+			|| (_searchQueryFrom != fromPeer)
+			|| (_searchQueryTags != inTags)
+			|| (_searchQueryTab != tab)
+			|| (_searchQueryFilter != filter);
+		if (stateChanged) {
+			const auto process = currentSearchProcess();
+			_searchQuery = query;
+			_searchQueryFrom = fromPeer;
+			_searchQueryTags = inTags;
+			_searchQueryTab = tab;
+			_searchQueryFilter = filter;
+			process->nextRate = 0;
+			process->full = true;
+			_migratedProcess.full = true;
+			cancelSearchRequest();
+			_peerSearch.clear();
+			peerSearchReceived({});
+			_api.request(base::take(_topicSearchRequest)).cancel();
+			_topicSearchQuery.clear();
+			_topicSearchFull = true;
+			_inner->searchRequested(true);
+		}
+
+		if (_idSearchQuery != query) {
+			_idSearchResults.clear();
+			_inner->idSearchReceived({});
+			_idSearchQuery = query;
+
+			appendLocalPeerSearchResult(
+				phoneQuery.isEmpty()
+					? nullptr
+					: session().data().userByPhone(phoneQuery));
+
+			const auto weak = base::make_weak(this);
+			const auto currentQuery = query;
+			const auto id = idQuery.id;
+			const auto searchType = idQuery.type;
+			if (searchType == IdSearchType::UserOnly
+				|| searchType == IdSearchType::Both) {
+				searchUserById(id, &session(), [=](
+						const QString &,
+						PeerData *peer) {
+					crl::on_main(weak, [=] {
+						if (_idSearchQuery == currentQuery) {
+							appendLocalPeerSearchResult(peer);
+						}
+					});
+				});
+			}
+			if (searchType == IdSearchType::ChatOnly
+				|| searchType == IdSearchType::Both) {
+				searchChatById(id, &session(), [=](
+						const QString &,
+						PeerData *peer) {
+					crl::on_main(weak, [=] {
+						if (_idSearchQuery == currentQuery) {
+							appendLocalPeerSearchResult(peer);
+						}
+					});
+				});
+			}
+		}
+		_inner->searchRequested(false);
 		return true;
 	} else if (inCache) {
 		const auto success = _singleMessageSearch.lookup(query, [=] {
@@ -2838,53 +2938,10 @@ bool Widget::search(bool inCache, SearchRequestDelay delay) {
 		_topicSearchFull = true;
 	}
 
-	const auto isGlobalSearch = !inPeer;
-	const auto idQuery = ParseIdSearchQuery(query);
-	const auto shouldIdSearch = isGlobalSearch && (idQuery.type != IdSearchType::None);
-
-	if (!isGlobalSearch || _idSearchQuery != query) {
-		if (!_idSearchResults.empty() || !_idSearchQuery.isEmpty()) {
-			_idSearchResults.clear();
-			_idSearchQuery.clear();
-			_inner->idSearchReceived({});
-		}
-	}
-
-	if (shouldIdSearch && !inCache && _idSearchQuery != query) {
-		const auto weak = base::make_weak(this);
-		const auto currentQuery = query;
-		const auto id = idQuery.id;
-		const auto searchType = idQuery.type;
-
-		_idSearchQuery = currentQuery;
-
-		if (searchType == IdSearchType::UserOnly || searchType == IdSearchType::Both) {
-			searchUserById(id, &session(), [=](const QString &, PeerData *peer) {
-				crl::on_main(weak, [=] {
-					if (_idSearchQuery != currentQuery) {
-						return;
-					}
-					if (peer && !ranges::contains(_idSearchResults, not_null{ peer })) {
-						_idSearchResults.push_back(peer);
-						_inner->idSearchReceived(_idSearchResults);
-					}
-				});
-			});
-		}
-
-		if (searchType == IdSearchType::ChatOnly || searchType == IdSearchType::Both) {
-			searchChatById(id, &session(), [=](const QString &, PeerData *peer) {
-				crl::on_main(weak, [=] {
-					if (_idSearchQuery != currentQuery) {
-						return;
-					}
-					if (peer && !ranges::contains(_idSearchResults, not_null{ peer })) {
-						_idSearchResults.push_back(peer);
-						_inner->idSearchReceived(_idSearchResults);
-					}
-				});
-			});
-		}
+	if (!_idSearchResults.empty() || !_idSearchQuery.isEmpty()) {
+		_idSearchResults.clear();
+		_idSearchQuery.clear();
+		_inner->idSearchReceived({});
 	}
 
 	return result;
@@ -3332,6 +3389,18 @@ void Widget::peerSearchReceived(Api::PeerSearchResult result) {
 	_inner->peerSearchReceived(std::move(result));
 	listScrollUpdated();
 	update();
+}
+
+void Widget::appendLocalPeerSearchResult(PeerData *peer) {
+	if (!peer) {
+		return;
+	}
+	const auto result = not_null{ peer };
+	if (ranges::contains(_idSearchResults, result)) {
+		return;
+	}
+	_idSearchResults.push_back(result);
+	_inner->idSearchReceived(_idSearchResults);
 }
 
 void Widget::searchApplyEmpty(

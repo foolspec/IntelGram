@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "history/view/history_view_message.h"
 
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "api/api_suggest_post.h"
 #include "api/api_transcribes.h"
 #include "base/qt/qt_key_modifiers.h"
@@ -1278,9 +1279,10 @@ void Message::draw(Painter &p, const PaintContext &context) const {
 		context.highlightPathCache->clear();
 	}
 	if (bubble) {
+		const auto from = item->displayFrom();
 		if (displayFromName()
-			&& item->displayFrom()
-			&& (_fromNameVersion < item->displayFrom()->nameVersion())) {
+			&& from
+			&& (from->isSelf() || (_fromNameVersion < from->nameVersion()))) {
 			fromNameUpdated(g.width());
 		}
 		Ui::PaintBubble(
@@ -4208,11 +4210,11 @@ void Message::validateFromNameText(PeerData *from) const {
 		return;
 	}
 	const auto version = from->nameVersion();
-	if (_fromNameVersion < version) {
+	if (from->isSelf() || (_fromNameVersion < version)) {
 		_fromNameVersion = version;
 		_fromName.setText(
 			st::msgNameStyle,
-			from->name(),
+			Ayu::LocalProfileName(from),
 			Ui::NameTextOptions());
 	}
 	if (from->isPremium()

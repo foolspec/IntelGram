@@ -11,6 +11,7 @@
 #include "ayu/ayu_ui_settings.h"
 #include "ayu/ayu_worker.h"
 #include "ayu/ui/ayu_logo.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "core/application.h"
 #include "features/filters/filters_cache_controller.h"
 #include "features/translator/ayu_translator.h"
@@ -681,6 +682,112 @@ void AyuSettings::setLocalPremium(bool val) {
 	save();
 }
 
+void AyuSettings::setLocalProfileNameEnabled(bool val) {
+	if (_localProfileNameEnabled.current() == val) return;
+	_localProfileNameEnabled = val;
+	save();
+}
+
+void AyuSettings::setLocalProfileName(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalProfileName(val);
+	if (_localProfileName.current() == normalized) return;
+	_localProfileName = normalized;
+	save();
+}
+
+void AyuSettings::setLocalProfileIdEnabled(bool val) {
+	if (_localProfileIdEnabled.current() == val) return;
+	_localProfileIdEnabled = val;
+	save();
+}
+
+void AyuSettings::setLocalProfileId(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalProfileId(val);
+	if (_localProfileId.current() == normalized) return;
+	_localProfileId = normalized;
+	save();
+}
+
+void AyuSettings::setLocalProfileUsernameEnabled(bool val) {
+	if (_localProfileUsernameEnabled.current() == val) return;
+	_localProfileUsernameEnabled = val;
+	save();
+}
+
+void AyuSettings::setLocalProfileUsername(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalProfileUsername(val);
+	if (_localProfileUsername.current() == normalized) return;
+	_localProfileUsername = normalized;
+	save();
+}
+
+void AyuSettings::setLocalProfileUsernames(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalProfileUsernames(val);
+	if (_localProfileUsernames.current() == normalized) return;
+	_localProfileUsernames = normalized;
+	save();
+}
+
+void AyuSettings::setLocalProfilePhoneEnabled(bool val) {
+	if (_localProfilePhoneEnabled.current() == val) return;
+	_localProfilePhoneEnabled = val;
+	save();
+}
+
+void AyuSettings::setLocalProfilePhone(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalProfilePhone(val);
+	if (_localProfilePhone.current() == normalized) return;
+	_localProfilePhone = normalized;
+	save();
+}
+
+void AyuSettings::setLocalProfileAboutEnabled(bool val) {
+	if (_localProfileAboutEnabled.current() == val) return;
+	_localProfileAboutEnabled = val;
+	save();
+}
+
+void AyuSettings::setLocalProfileAbout(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalProfileAbout(val);
+	if (_localProfileAbout.current() == normalized) return;
+	_localProfileAbout = normalized;
+	save();
+}
+
+void AyuSettings::setLocalProfilePhoto(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalProfilePhoto(val);
+	if (_localProfilePhoto.current() == normalized) return;
+	_localProfilePhoto = normalized;
+	save();
+}
+
+void AyuSettings::setLocalProfileCloneId(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalProfileCloneId(val);
+	if (_localProfileCloneId.current() == normalized) return;
+	_localProfileCloneId = normalized;
+	save();
+}
+
+void AyuSettings::setLocalProfileGiftEnabled(bool val) {
+	if (_localProfileGiftEnabled.current() == val) return;
+	_localProfileGiftEnabled = val;
+	save();
+}
+
+void AyuSettings::setLocalProfileGift(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalProfileGift(val);
+	if (_localProfileGift.current() == normalized) return;
+	_localProfileGift = normalized;
+	save();
+}
+
+void AyuSettings::setLocalProfileGifts(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalProfileGifts(val);
+	if (_localProfileGifts.current() == normalized) return;
+	_localProfileGifts = normalized;
+	save();
+}
+
 void AyuSettings::setShowChannelReactions(bool val) {
 	if (_showChannelReactions.current() == val) return;
 	_showChannelReactions = val;
@@ -1083,6 +1190,22 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
 		{"removeMessageTail", s._removeMessageTail.current()},
 		{"disableNotificationsDelay", s._disableNotificationsDelay.current()},
 		{"localPremium", s._localPremium.current()},
+		{"localProfileNameEnabled", s._localProfileNameEnabled.current()},
+		{"localProfileName", s._localProfileName.current()},
+		{"localProfileIdEnabled", s._localProfileIdEnabled.current()},
+		{"localProfileId", s._localProfileId.current()},
+		{"localProfileUsernameEnabled", s._localProfileUsernameEnabled.current()},
+		{"localProfileUsername", s._localProfileUsername.current()},
+		{"localProfileUsernames", s._localProfileUsernames.current()},
+		{"localProfilePhoneEnabled", s._localProfilePhoneEnabled.current()},
+		{"localProfilePhone", s._localProfilePhone.current()},
+		{"localProfileAboutEnabled", s._localProfileAboutEnabled.current()},
+		{"localProfileAbout", s._localProfileAbout.current()},
+		{"localProfilePhoto", s._localProfilePhoto.current()},
+		{"localProfileCloneId", s._localProfileCloneId.current()},
+		{"localProfileGiftEnabled", s._localProfileGiftEnabled.current()},
+		{"localProfileGift", s._localProfileGift.current()},
+		{"localProfileGifts", s._localProfileGifts.current()},
 		{"showChannelReactions", s._showChannelReactions.current()},
 		{"showGroupReactions", s._showGroupReactions.current()},
 		{"showPrivateChatReactions", s._showPrivateChatReactions.current()},
@@ -1183,6 +1306,22 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
 	s._removeMessageTail = j.value("removeMessageTail", defaults._removeMessageTail.current());
 	s._disableNotificationsDelay = j.value("disableNotificationsDelay", defaults._disableNotificationsDelay.current());
 	s._localPremium = j.value("localPremium", defaults._localPremium.current());
+	s._localProfileNameEnabled = j.value("localProfileNameEnabled", defaults._localProfileNameEnabled.current());
+	s._localProfileName = Ayu::NormalizeLocalProfileName(j.value("localProfileName", defaults._localProfileName.current()));
+	s._localProfileIdEnabled = j.value("localProfileIdEnabled", defaults._localProfileIdEnabled.current());
+	s._localProfileId = Ayu::NormalizeLocalProfileId(j.value("localProfileId", defaults._localProfileId.current()));
+	s._localProfileUsernameEnabled = j.value("localProfileUsernameEnabled", defaults._localProfileUsernameEnabled.current());
+	s._localProfileUsername = Ayu::NormalizeLocalProfileUsername(j.value("localProfileUsername", defaults._localProfileUsername.current()));
+	s._localProfileUsernames = Ayu::NormalizeLocalProfileUsernames(j.value("localProfileUsernames", defaults._localProfileUsernames.current()));
+	s._localProfilePhoneEnabled = j.value("localProfilePhoneEnabled", defaults._localProfilePhoneEnabled.current());
+	s._localProfilePhone = Ayu::NormalizeLocalProfilePhone(j.value("localProfilePhone", defaults._localProfilePhone.current()));
+	s._localProfileAboutEnabled = j.value("localProfileAboutEnabled", defaults._localProfileAboutEnabled.current());
+	s._localProfileAbout = Ayu::NormalizeLocalProfileAbout(j.value("localProfileAbout", defaults._localProfileAbout.current()));
+	s._localProfilePhoto = Ayu::NormalizeLocalProfilePhoto(j.value("localProfilePhoto", defaults._localProfilePhoto.current()));
+	s._localProfileCloneId = Ayu::NormalizeLocalProfileCloneId(j.value("localProfileCloneId", defaults._localProfileCloneId.current()));
+	s._localProfileGiftEnabled = j.value("localProfileGiftEnabled", defaults._localProfileGiftEnabled.current());
+	s._localProfileGift = Ayu::NormalizeLocalProfileGift(j.value("localProfileGift", defaults._localProfileGift.current()));
+	s._localProfileGifts = Ayu::NormalizeLocalProfileGifts(j.value("localProfileGifts", defaults._localProfileGifts.current()));
 	s._showChannelReactions = j.value("showChannelReactions", defaults._showChannelReactions.current());
 	s._showGroupReactions = j.value("showGroupReactions", defaults._showGroupReactions.current());
 	s._showPrivateChatReactions = j.value("showPrivateChatReactions", defaults._showPrivateChatReactions.current());

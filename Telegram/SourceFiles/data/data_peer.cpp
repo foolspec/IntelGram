@@ -57,6 +57,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 // AyuGram includes
 #include "ayu/ui/ayu_userpic.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 
 
 namespace {
@@ -402,6 +403,18 @@ void PeerData::setUserpicPhoto(const MTPPhoto &data) {
 }
 
 QImage *PeerData::userpicCloudImage(Ui::PeerUserpicView &view) const {
+	const auto self = const_cast<PeerData*>(this);
+	if (const auto clone = Ayu::LocalProfileCloneUser(self)) {
+		return clone->userpicCloudImage(view);
+	}
+	if (const auto local = Ayu::LocalProfilePhotoImage(self)) {
+		if (view.cloud != local) {
+			view.cloud = local;
+			view.cached = QImage();
+			view.empty = {};
+		}
+		return local.get();
+	}
 	if (!_userpic.isCurrentView(view.cloud)) {
 		if (!_userpic.empty()) {
 			view.cloud = _userpic.createView();
@@ -427,6 +440,11 @@ void PeerData::paintUserpic(
 		QPainter &p,
 		Ui::PeerUserpicView &view,
 		PaintUserpicContext context) const {
+	if (const auto clone = Ayu::LocalProfileCloneUser(
+			const_cast<PeerData*>(this))) {
+		clone->paintUserpic(p, view, context);
+		return;
+	}
 	if (const auto broadcast = monoforumBroadcast()) {
 		if (context.shape == Ui::PeerUserpicShape::Auto) {
 			context.shape = Ui::PeerUserpicShape::Monoforum;
@@ -454,18 +472,44 @@ void PeerData::paintUserpic(
 }
 
 void PeerData::loadUserpic() {
+	if (const auto clone = Ayu::LocalProfileCloneUser(this)) {
+		clone->loadUserpic();
+		return;
+	}
+	if (Ayu::LocalProfilePhotoActive(this)) {
+		return;
+	}
 	_userpic.load(&session(), userpicOrigin());
 }
 
 bool PeerData::hasUserpic() const {
+	const auto self = const_cast<PeerData*>(this);
+	if (const auto clone = Ayu::LocalProfileCloneUser(self)) {
+		return clone->hasUserpic();
+	}
+	if (Ayu::LocalProfilePhotoActive(self)) {
+		return true;
+	}
 	return !_userpic.empty();
 }
 
 Ui::PeerUserpicView PeerData::activeUserpicView() {
+	if (const auto clone = Ayu::LocalProfileCloneUser(this)) {
+		return clone->activeUserpicView();
+	}
+	if (const auto local = Ayu::LocalProfilePhotoImage(this)) {
+		return { .cloud = local };
+	}
 	return { .cloud = _userpic.empty() ? nullptr : _userpic.activeView() };
 }
 
 Ui::PeerUserpicView PeerData::createUserpicView() {
+	if (const auto clone = Ayu::LocalProfileCloneUser(this)) {
+		return clone->createUserpicView();
+	}
+	if (const auto local = Ayu::LocalProfilePhotoImage(this)) {
+		return { .cloud = local };
+	}
 	if (_userpic.empty()) {
 		return {};
 	}
@@ -479,6 +523,17 @@ bool PeerData::useEmptyUserpic(Ui::PeerUserpicView &view) const {
 }
 
 InMemoryKey PeerData::userpicUniqueKey(Ui::PeerUserpicView &view) const {
+	const auto self = const_cast<PeerData*>(this);
+	if (const auto clone = Ayu::LocalProfileCloneUser(self)) {
+		return clone->userpicUniqueKey(view);
+	}
+	if (const auto local = Ayu::LocalProfilePhotoImage(self)) {
+		(void)userpicCloudImage(view);
+		return {
+			0x496E74656C477261ULL,
+			uint64(reinterpret_cast<uintptr_t>(local.get())),
+		};
+	}
 	return useEmptyUserpic(view)
 		? ensureEmptyUserpic()->uniqueKey()
 		: inMemoryKey(_userpic.location());
@@ -489,6 +544,9 @@ QImage PeerData::GenerateUserpicImage(
 		Ui::PeerUserpicView &view,
 		int size,
 		std::optional<int> radius) {
+	if (const auto clone = Ayu::LocalProfileCloneUser(peer)) {
+		return GenerateUserpicImage(clone, view, size, radius);
+	}
 	if (!radius) {
 		const auto shape = peer->isForum()
 			? Ui::PeerUserpicShape::Forum
@@ -557,6 +615,9 @@ PhotoId PeerData::userpicPhotoId() const {
 }
 
 bool PeerData::userpicHasVideo() const {
+	if (Ayu::LocalProfileUserpicActive(const_cast<PeerData*>(this))) {
+		return false;
+	}
 	return _userpicHasVideo != 0;
 }
 

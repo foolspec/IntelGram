@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "history/view/history_view_reply.h"
 
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "core/click_handler_types.h"
 #include "core/ui_integration.h"
 #include "data/stickers/data_custom_emoji.h"
@@ -584,6 +585,9 @@ QString Reply::senderName(
 QString Reply::senderName(
 		not_null<PeerData*> peer,
 		bool shorten) const {
+	if (Ayu::LocalProfileNameActive(peer)) {
+		return Ayu::LocalProfileName(peer);
+	}
 	const auto user = shorten ? peer->asUser() : nullptr;
 	return user ? user->firstName : peer->name();
 }
@@ -592,7 +596,7 @@ bool Reply::isNameUpdated(
 		not_null<const Element*> view,
 		not_null<HistoryMessageReply*> data) const {
 	if (const auto from = sender(view, data)) {
-		if (_nameVersion < from->nameVersion()) {
+		if (from->isSelf() || (_nameVersion < from->nameVersion())) {
 			updateName(view, data, from);
 			return true;
 		}
@@ -651,12 +655,12 @@ void Reply::updateName(
 	nameFull.append(name);
 	if (groupNameAdded) {
 		nameFull.append(' ').append(PeerEmoji(externalPeer));
-		nameFull.append(externalPeer->name());
+		nameFull.append(Ayu::LocalProfileName(externalPeer));
 	} else if (originalNameAdded) {
 		nameFull.append(' ').append(
 			st::historyReplyForward
 		).append(forwarded->originalSender
-			? forwarded->originalSender->name()
+			? Ayu::LocalProfileName(forwarded->originalSender)
 			: forwarded->originalHiddenSenderInfo->name);
 	}
 	if (!viaBotUsername.isEmpty()) {
@@ -1155,10 +1159,12 @@ TextWithEntities Reply::ComposePreviewName(
 	if (displayAsExternal && !groupNameAdded) {
 		nameFull.append(Reply::PeerEmoji(sender));
 	}
-	nameFull.append(shorten ? sender->shortName() : sender->name());
+	nameFull.append((shorten && !Ayu::LocalProfileNameActive(sender))
+		? sender->shortName()
+		: Ayu::LocalProfileName(sender));
 	if (groupNameAdded) {
 		nameFull.append(' ').append(Reply::PeerEmoji(toPeer));
-		nameFull.append(toPeer->name());
+		nameFull.append(Ayu::LocalProfileName(toPeer));
 	}
 	return (quote
 		? tr::lng_preview_reply_to_quote

@@ -215,23 +215,16 @@ void sendMedia(
 	}
 }
 
-bool isAyuForwardNeeded(const std::vector<not_null<HistoryItem*>> &items) {
-	const auto needAyuForward = [&](const auto &item)
-	{
-		return isAyuForwardNeeded(item);
-	};
-	return std::ranges::any_of(items, needAyuForward);
-}
-
-bool isAyuForwardNeeded(not_null<HistoryItem*> item) {
-	if (item->isDeleted() || item->isAyuNoForwards() || item->unsupportedTTL() || (item->media() && item->media()->ttlSeconds())) {
-		return true;
-	}
+bool isAyuForwardNeeded(const std::vector<not_null<HistoryItem*>> &) {
 	return false;
 }
 
-bool isFullAyuForwardNeeded(not_null<HistoryItem*> item) {
-	return item->from()->isAyuNoForwards() || item->history()->peer->isAyuNoForwards();
+bool isAyuForwardNeeded(not_null<HistoryItem*>) {
+	return false;
+}
+
+bool isFullAyuForwardNeeded(not_null<HistoryItem*>) {
+	return false;
 }
 
 struct ForwardChunk

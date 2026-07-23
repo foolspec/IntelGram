@@ -193,6 +193,7 @@ void CreditsPrizeBox(
 
 struct StarGiftResaleInfo {
 	PeerId recipientId;
+	PeerId localProfileRecipientId;
 	bool forceTon = false;
 };
 void GlobalStarGiftBox(

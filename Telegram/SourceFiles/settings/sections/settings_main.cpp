@@ -9,6 +9,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 #include "settings/settings_common_session.h"
 
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "api/api_cloud_password.h"
 #include "api/api_credits.h"
 #include "api/api_global_privacy.h"
@@ -230,12 +231,7 @@ Cover::Cover(
 			_badge.widget(),
 			_badge.sizeTag());
 	});
-	const auto isCustomBadge = isCustomBadgePeer(getBareID(_user));
-	const auto isExtera = isExteraPeer(getBareID(_user));
-	const auto isSupporter = isSupporterPeer(getBareID(_user));
-	if (isExtera || isSupporter || isCustomBadge) {
-		_exteraBadge.setPremiumClickCallback(badgeClickHandler(_user));
-	}
+	_exteraBadge.setPremiumClickCallback(badgeClickHandler(_user));
 	rpl::merge(
 		_badge.updated(),
 		_exteraBadge.updated()
@@ -251,7 +247,8 @@ Cover::Cover(
 	Info::Profile::UsernamesValue(
 		_user
 	) | rpl::on_next([=](const auto &usernames) {
-		_qrButton->setVisible(!usernames.empty());
+		_qrButton->setVisible(
+			!usernames.empty() && !Ayu::LocalProfileUsernameActive(_user));
 		refreshNameGeometry(width());
 		refreshQrButtonGeometry(width());
 	}, _qrButton->lifetime());
@@ -282,9 +279,11 @@ void Cover::initViewers() {
 		refreshNameGeometry(width());
 	}, lifetime());
 
-	rpl::single(
-		tr::marked(IDString(_user))
-	) | rpl::on_next([=](const TextWithEntities &value) {
+	Ayu::LocalProfileIdValue(
+		_user
+	) | rpl::map([](QString id) {
+		return tr::marked(std::move(id));
+	}) | rpl::on_next([=](const TextWithEntities &value) {
 		_idText = value.text;
 		updateIdText();
 	}, lifetime());
@@ -302,13 +301,10 @@ void Cover::initViewers() {
 		if (_controller->showFrozenError()) {
 			return;
 		}
-		const auto username = _user->username();
-		if (username.isEmpty()) {
-			_controller->show(Box(UsernamesBox, _user));
+		if (Ayu::LocalProfileUsernameActive(_user)) {
+			Ayu::ShowLocalProfileUsernameEditor(_controller, _user);
 		} else {
-			QGuiApplication::clipboard()->setText(
-				_user->session().createInternalLinkFull(username));
-			_controller->showToast(tr::lng_username_copied(tr::now));
+			_controller->show(Box(UsernamesBox, _user));
 		}
 	});
 }

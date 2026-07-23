@@ -2722,7 +2722,11 @@ void GlobalStarGiftBox(
 		CreditsEntryBoxStyleOverrides st) {
 	const auto selfId = show->session().userPeerId();
 	const auto ownerId = data.unique ? data.unique->ownerId.value : 0;
-	const auto hostId = data.unique ? data.unique->hostId.value : 0;
+	const auto hostId = resale.localProfileRecipientId
+		? resale.localProfileRecipientId.value
+		: data.unique
+		? data.unique->hostId.value
+		: 0;
 	Settings::GenericCreditsEntryBox(
 		box,
 		show,

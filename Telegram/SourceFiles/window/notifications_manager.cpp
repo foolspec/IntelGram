@@ -50,6 +50,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 // AyuGram includes
 #include "ayu/ayu_settings.h"
+#include "ayu/data/intelgram_vault.h"
 #include "ayu/utils/telegram_helpers.h"
 
 #if __has_include(<gio/gio.hpp>)
@@ -742,6 +743,10 @@ void System::showNext() {
 			}
 			++i;
 		}
+	}
+	if (alertThread
+		&& IntelGram::Vault::SuppressNotifications(alertThread)) {
+		alertThread = nullptr;
 	}
 	const auto &settings = Core::App().settings();
 	if (alertThread) {
@@ -1550,6 +1555,9 @@ void Manager::maybePlaySound(Fn<void()> playSound) {
 }
 
 void NativeManager::doShowNotification(NotificationFields &&fields) {
+	if (IntelGram::Vault::SuppressNotification(fields.item)) {
+		return;
+	}
 	const auto pollVote = !fields.pollVoteOption.isEmpty();
 	const auto type = fields.reactionFrom
 		? (pollVote

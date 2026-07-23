@@ -166,6 +166,8 @@ set(ayugram_files
         ayu/ui/settings/settings_main.h
         ayu/ui/settings/settings_other.cpp
         ayu/ui/settings/settings_other.h
+        ayu/ui/settings/settings_vault.cpp
+        ayu/ui/settings/settings_vault.h
         ayu/ui/settings/filters/settings_filters_list.cpp
         ayu/ui/settings/filters/settings_filters_list.h
         ayu/ui/settings/filters/per_dialog_filter.cpp
@@ -249,6 +251,10 @@ set(ayugram_files
         ayu/features/filters/filters_utils.h
         ayu/data/messages_storage.cpp
         ayu/data/messages_storage.h
+        ayu/data/intelgram_vault.cpp
+        ayu/data/intelgram_vault.h
+        ayu/data/intelgram_export.cpp
+        ayu/data/intelgram_export.h
         ayu/data/entities.h
         ayu/data/ayu_database.cpp
         ayu/data/ayu_database.h

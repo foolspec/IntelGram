@@ -85,6 +85,13 @@ void map(not_null<HistoryItem*> item, AyuMessageBase &message) {
 }
 
 void addEditedMessage(not_null<HistoryItem *> item) {
+	if (item->forbidsSaving()
+		|| !item->history()->peer->allowsForwarding()
+		|| item->ttlDestroyAt()
+		|| item->unsupportedTTL()
+		|| (item->media() && item->media()->ttlSeconds())) {
+		return;
+	}
 	EditedMessage message;
 	map(item, message);
 
@@ -112,6 +119,13 @@ bool hasRevisions(not_null<HistoryItem*> item) {
 }
 
 void addDeletedMessage(not_null<HistoryItem*> item) {
+	if (item->forbidsSaving()
+		|| !item->history()->peer->allowsForwarding()
+		|| item->ttlDestroyAt()
+		|| item->unsupportedTTL()
+		|| (item->media() && item->media()->ttlSeconds())) {
+		return;
+	}
 	DeletedMessage message;
 	map(item, message);
 

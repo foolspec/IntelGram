@@ -40,6 +40,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ayu/ayu_settings.h"
 #include "ayu/features/filters/filters_controller.h"
 #include "ayu/ui/ayu_userpic.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 
 
 namespace Dialogs {
@@ -773,15 +774,15 @@ void FakeRow::invalidateTopic() {
 }
 
 const Ui::Text::String &FakeRow::name() const {
-	if (_name.isEmpty()) {
-		const auto from = _searchInChat
-			&& !FiltersController::filtered(_item)
-			? _item->displayFrom()
-			: nullptr;
-		const auto peer = from ? from : _item->history()->peer.get();
+	const auto from = _searchInChat
+		&& !FiltersController::filtered(_item)
+		? _item->displayFrom()
+		: nullptr;
+	const auto peer = from ? from : _item->history()->peer.get();
+	if (_name.isEmpty() || peer->isSelf()) {
 		_name.setText(
 			st::semiboldTextStyle,
-			peer->name(),
+			Ayu::LocalProfileName(peer),
 			Ui::NameTextOptions());
 	}
 	return _name;

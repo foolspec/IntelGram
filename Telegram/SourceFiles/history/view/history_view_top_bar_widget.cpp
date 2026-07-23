@@ -74,6 +74,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 // AyuGram includes
 #include "ayu/ayu_settings.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "boxes/peers/edit_participants_box.h"
 #include "data/data_chat_filters.h"
 #include "history/admin_log/history_admin_log_section.h"
@@ -104,7 +105,9 @@ QString TopBarNameText(
 			return tr::lng_hidden_author_messages(tr::now);
 		}
 	}
-	return peer->topBarNameText();
+	return Ayu::LocalProfileNameActive(peer)
+		? Ayu::LocalProfileName(peer)
+		: peer->topBarNameText();
 }
 
 } // namespace
@@ -671,7 +674,8 @@ void TopBarWidget::paintTopBar(Painter &p) {
 			paintStatus(p, statusleft, statustop, statuswidth, width());
 		}
 	} else if (namePeer) {
-		if (_titleNameVersion < namePeer->nameVersion()) {
+		if (namePeer->isSelf()
+			|| (_titleNameVersion < namePeer->nameVersion())) {
 			_titleNameVersion = namePeer->nameVersion();
 			_title.setText(
 				st::msgNameStyle,
