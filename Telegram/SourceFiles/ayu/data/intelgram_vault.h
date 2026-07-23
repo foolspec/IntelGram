@@ -6,8 +6,6 @@
 // Copyright @Radolyn, 2026
 #pragma once
 
-#include "base/functional.h"
-
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 
