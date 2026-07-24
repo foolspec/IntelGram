@@ -53,6 +53,74 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - Never changes ownership, transfers, lists, purchases, upgrades, pins, or features a gift on Telegram.
 - Leaves real Telegram and on-chain gift ownership, sender, date, and transaction metadata untouched.
 
+## Universal Message Vault
+
+- Stores a private SQLite index under IntelGram's own work directory.
+- Uses SQLite FTS5 for local full-text search, with a compatible fallback when FTS5 is unavailable.
+- Indexes received message text, filenames, media types, and links across signed-in accounts.
+- Provides current-account search, all-account search, and a unified inbox with clear account labels.
+- Stores locally observed revisions before an edit is applied and records deletions only for messages this client had already received.
+- Shows protected messages only as metadata and jump-back references; their body, filename, link text, and cached media path are blank.
+- Can be turned off from **Vault & Tools** without changing Telegram history.
+
+## Chat Timeline Tools
+
+- Jump to a date in the currently open chat.
+- View indexed message, media, link, edit, deletion, and protected-reference counts.
+- Browse compact media history.
+- Browse locally observed message revision history.
+- Save and remove private moments with a title, note, and tags.
+- Open a result, revision, or moment back at its original Telegram message when it is still available.
+
+## Smart Folders And Multiple Accounts
+
+- **Unread from real people** filters unread incoming person-to-person messages.
+- **Work**, **High priority**, **Needs reply**, and **Spam review** use local tags and chat policy.
+- Unified search and inbox results carry the signed-in account's display name.
+- Rules and chat policies are account-scoped, so the same dialog ID on another account remains separate.
+
+## Private Contact Context
+
+- Attach private notes, tags, relationship/context text, and an optional reminder date to a loaded contact.
+- Keep a local history of note changes.
+- Show due reminders from the Vault & Tools page.
+- Capture opt-in identity snapshots containing only the public name, usernames, public badge flags, and shared-group count already visible to IntelGram.
+- Never fetch hidden profile fields or send notes to Telegram.
+
+## Local Rules And Anti-Spam
+
+- Match a keyword, any link, a photo, or a file on newly indexed messages.
+- Add a local tag, save a moment, add local activity, mute the chat locally, send the item to spam review, or queue an ordinary message for manual forwarding.
+- Forward queues always open Telegram's native confirmation picker and require `allowsForward()` at execution time.
+- Protected messages cannot enter a forward queue and remain reference-only.
+- Unknown non-bot senders and suspicious invite links can be routed to local review tags.
+- Telegram's existing report and block controls remain available from normal chat/profile menus.
+
+## Per-Chat Controls
+
+- Private tags and priority from 0 through 3.
+- Download modes: Telegram default, manual, Wi-Fi/Ethernet only, or always.
+- Local read-reminder preference.
+- Local-only draft preference that prevents that chat's draft from being uploaded by IntelGram.
+- Local notification mute without changing Telegram's server-side notification settings.
+
+## Theme Studio
+
+- Bundled Windows 93, Terminal, Classic Telegram, and true-black AMOLED themes.
+- Import an existing `.tdesktop-theme` or `.palette` file.
+- Keep the existing IntelGram app-icon chooser with pink character art and twelve color variants.
+
+## Export Center And Frozen Account Backup
+
+- Export the current chat or current account to HTML, PDF, Markdown, JSON, and ZIP.
+- Export selected messages directly from the message context menu.
+- Include permitted locally downloaded files inside ZIP archives without exposing host filesystem paths in JSON.
+- Include contacts already visible to the account, profile notes and history, identity snapshots, rules and activity, smart-folder policies, options, moments, and revisions in account exports.
+- Create one `.intelvault` file using AES-256-GCM with PBKDF2-HMAC-SHA256 and 250,000 iterations.
+- Stream ZIP creation and encryption instead of loading a complete backup into memory.
+- Avoid leaving plaintext export files behind when encrypted mode is selected.
+- Exclude authorization keys, Telegram session credentials, protected media, and self-destructing content.
+
 ## Render Coverage
 
 - Settings account cover and profile rows.
@@ -77,10 +145,12 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - Coexists with a normal AyuGram installation without overwriting it.
 - Automated clean-source patch verification, mutation-reference scan, launch smoke tests, checksums, and release packaging.
 
-## Network Boundary
+## Network And Protected-Content Boundary
 
-IntelGram's custom profile values stay local. Clone selection may issue Telegram's standard read-only full-profile refresh for the already-known source user. The collectible browser may issue read-only Telegram gift catalog/detail requests and a read-only TonAPI metadata lookup when resolving a raw TON NFT address. The supporter badge reads an already-known channel membership state and does not join a channel. IntelGram adds no Telegram account/profile update, contact import, collectible transaction, ownership mutation, or automatic channel join.
+IntelGram's custom profile values stay local. Clone selection may issue Telegram's standard read-only full-profile refresh for the already-known source user. The collectible browser may issue read-only Telegram gift catalog/detail requests and a read-only TonAPI metadata lookup when resolving a raw TON NFT address. The supporter badge reads an already-known channel membership state and does not join a channel. Vault rules run only after IntelGram receives a message.
+
+IntelGram adds no Telegram account/profile update, contact import, collectible transaction, ownership mutation, automatic channel join, or protected-content bypass. Restrict Saving Content and self-destruct flags are enforced in the vault, edit/deletion history, saved moments, rules, exports, cached-media packaging, media overlay, and legacy Ayu message storage.
 
 ## Credit
 
-IntelGram local profile and collectible tools by **fool**. Upstream AyuGram Desktop and Telegram Desktop attribution and licenses are preserved.
+IntelGram custom features by **fool**. Upstream AyuGram Desktop and Telegram Desktop attribution and licenses are preserved.

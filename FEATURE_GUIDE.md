@@ -55,3 +55,47 @@ Open **IntelGram Settings -> IntelGram -> Telegram**, then press Telegram's norm
 ## Where can I read the update log?
 
 Open **IntelGram Settings -> IntelGram -> Update log**. The bundled dialog summarizes the latest update, main IntelGram features, and the local-only privacy boundary. **View full changelog** opens the longer GitHub history when you need it.
+
+## Where is the message vault?
+
+Open **IntelGram Settings -> Vault & Tools**. **Search this account** searches the active account; **Search all accounts** and **Unified account inbox** label results with the account they belong to. IntelGram starts indexing messages as this build receives or loads them, so older history appears as it is loaded.
+
+## How do I use the timeline tools?
+
+Open a chat, then choose **Timeline & conversation stats**. From there you can inspect totals, jump to a date, browse compact media history and revisions, or open saved moments. Results return to the original message when it is still available.
+
+## How do I save a moment?
+
+Right-click a message and choose **Save as IntelGram moment**. Moments are private local bookmarks with optional notes and tags. Protected chats create a jump-back reference only.
+
+## How do I add private contact notes?
+
+Open a person's chat, then choose **Private note for current contact** under **Vault & Tools**. You can store a note, tags, relationship/context text, and an optional reminder date. **All private profile notes** shows the saved list and due reminders.
+
+## What does the identity inspector store?
+
+It takes an opt-in snapshot of public fields already visible to IntelGram: display name, usernames, public badge flags, and shared-group count. It does not query hidden fields or continuously monitor strangers.
+
+## How do local rules work?
+
+Choose **Rules & anti-spam**, select a trigger such as a keyword, link, photo, or file, then choose a local action. Rules can tag, save a moment, add an alert, mute locally, send to spam review, or queue an ordinary message for manual forwarding. A forward queue still opens Telegram's normal recipient picker and never accepts protected content.
+
+## How do I configure one chat?
+
+Open the chat and choose **Current chat tools**. Set tags, priority, download mode, read reminder, local-only draft preference, or local notification mute. These settings affect IntelGram on this device and do not rewrite the chat's server settings.
+
+## How do I export a chat or account?
+
+Open **Export Center** under **Vault & Tools** and choose the current chat or current account. IntelGram writes HTML, PDF, Markdown, JSON, and ZIP files to the folder you select. Select messages in a chat and use **Export selected messages** to export only that selection.
+
+## What is Frozen Account Backup?
+
+It creates one encrypted `.intelvault` archive containing IntelGram's structured local export and permitted cached files. Encryption uses the passphrase you enter; keep it safe because IntelGram does not upload or recover it. Telegram login keys and session credentials are deliberately excluded.
+
+## What happens in a restricted channel?
+
+IntelGram preserves Telegram's Restrict Saving Content and self-destruct rules. Search, moments, rules, exports, and backups keep only basic metadata and a jump-back reference. The protected message body and media are not copied, forwarded, or packaged.
+
+## How do I change themes?
+
+Open **Theme Studio** under **Vault & Tools** and choose Windows 93, Terminal, Classic Telegram, or AMOLED. You can also import a Telegram desktop theme file. App icons remain available under **Settings -> Appearance -> App Icon**.

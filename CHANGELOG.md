@@ -2,6 +2,37 @@
 
 All notable IntelGram custom-feature changes are recorded here.
 
+## IntelGram v6.7.8 Vault Suite - 2026-07-23
+
+### Added
+
+- An on-device SQLite message vault with FTS5 search across messages, media metadata, links, and filenames already received by IntelGram.
+- Current-account search, all-account search, and a unified inbox with account labels.
+- Chat jump-to-date, conversation statistics, compact media history, locally observed edit/deletion history, and private saved moments.
+- Smart folders for unread people, work, high priority, needs reply, and spam review.
+- Private contact notes, tags, relationship context, note history, reminders, and opt-in public identity snapshots.
+- A local rules engine for keyword, link, photo, and file triggers with tag, save, alert, local mute, spam-review, and confirmed ordinary-message forwarding actions.
+- Per-chat download behavior, read reminders, local-only draft preference, and local notification muting.
+- Theme Studio with Windows 93, Terminal, Classic Telegram, AMOLED, and custom theme import.
+- HTML, PDF, Markdown, JSON, and ZIP export for a selected message set, current chat, or current account.
+- AES-256-GCM Frozen Account Backup with streamed encryption and permitted cached-media packaging.
+- A dedicated **Vault & Tools** settings section and an updated in-app IntelGram log.
+- Cross-platform patch validation for the new feature hooks, Qt 6.2 compatibility, mutation boundaries, and protected-content handling.
+
+### Changed
+
+- The complete public patch now contains the original local-profile, profile-clone, UID/visible-phone search, collectible, profile-photo, badge, icon, and branding work plus the Vault Suite.
+- Rule forwarding is a confirmation queue that delegates to Telegram's native forward picker only when `allowsForward()` succeeds.
+- Wi-Fi-only media behavior uses the Qt 6.2-compatible active network-interface API.
+- Selected-message export indexes the loaded selection immediately, then scopes structured output, revisions, moments, and cached media to those message IDs.
+
+### Protected Content
+
+- Restored Telegram's no-forward flag and extended-media save restriction in the inherited Ayu paths.
+- Protected and self-destructing messages store only account/dialog/message/date metadata and a local jump-back reference.
+- Protected bodies, links, filenames, cached paths, revisions, rule payloads, and media never enter an export or backup.
+- IntelGram adds no restricted-content forwarding or saving bypass.
+
 ## IntelGram v6.7.8 Local Profile Update - 2026-07-19
 
 ### Added

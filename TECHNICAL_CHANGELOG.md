@@ -2,6 +2,77 @@
 
 This file records implementation-level changes to IntelGram's custom layer. Product-facing changes are summarized in [`CHANGELOG.md`](CHANGELOG.md).
 
+## IntelGram v6.7.8 Vault Suite - 2026-07-23
+
+### Source Baseline And Patch
+
+- Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
+- Source commit: `2abc8dc30` on the recovered local implementation branch.
+- Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
+- Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
+- Patch SHA-256: `566f49ca3979c62366bb8ebb4543d3cc7694037aa5781eaa4db031ec1b78b94d`.
+- Patch footprint: 63 files, 7,106 insertions, and 461 deletions relative to the pinned source.
+
+### Vault Storage And Indexing
+
+- `IntelGram::Vault` owns a WAL-enabled, `secure_delete` SQLite database under IntelGram's work directory.
+- `Data::Session::addNewMessage` indexes regular received/loaded messages; edited-message processing records the prior body before applying an edition and refreshes the current index row afterward.
+- FTS5 indexes body text, media filename, and links with a `LIKE` fallback when FTS5 is unavailable.
+- Account ID, signed dialog ID, message ID, sender, topic, date, media metadata, tags, unread state, and local deletion state form the structured message record.
+- Search, smart folders, media history, timeline statistics, moments, profile notes, note history, identity snapshots, rules, rule matches, chat policies, and options are accessed through one mutex-guarded API.
+
+### Protected-Content Enforcement
+
+- `IsProtected` checks `HistoryItem::forbidsSaving`, peer forwarding permission, TTL destruction, unsupported TTL, and media TTL.
+- Protected records persist empty body, links, media name, MIME type, and media path fields; only reference metadata remains.
+- Legacy Ayu edit/deletion storage rejects protected and self-destructing items.
+- Telegram's `Flag::NoForwards`, extended-media save restriction, media overlay checks, and TTL predicate are restored.
+- `AyuForward::isAyuForwardNeeded` and full-forward variants return false, disabling inherited copy/re-send forwarding paths.
+- Rule forward queues reject protected rows and re-check `HistoryItem::allowsForward()` before opening Telegram's native confirmation picker.
+- Selected-message, chat, account, ZIP, and encrypted exports all reuse the same protected-row representation and exclude protected cached media.
+
+### Timeline, Notes, Rules, And Chat Policy
+
+- `Settings::AyuVault` adds native sections for local search, unified account views, timelines, smart folders, contact context, rules, anti-spam review, per-chat policy, themes, and exports.
+- Saved moments use message references plus private title, note, and tags.
+- Profile notes keep current state and append-only local history with reminder timestamps.
+- Identity snapshots are explicit and record only public fields already present in `PeerData`.
+- Rules match keyword, link, photo, or file metadata and can tag, save, alert, mute locally, queue manual forwarding, or mark spam.
+- Chat policies supply tags, priority, download mode, read reminder, local-only draft preference, and local notification mute.
+- Draft upload hooks in `ApiWrap` drop cloud-save requests only for chats with the local-only preference.
+- Notification hooks suppress native and default notifications only when the local chat policy requests it.
+- Auto-download hooks use Qt 6.2-compatible `QNetworkInterface` types for manual, Wi-Fi/Ethernet, and always modes.
+
+### Export And Encryption
+
+- `IntelGram::Export` generates JSON, Markdown, HTML, PDF, and ZIP output for an account, chat, or explicit message ID selection.
+- The message context menu indexes the loaded selection, opens Telegram Desktop's native folder picker, and scopes records, revisions, moments, and cached media to the selection.
+- Account JSON includes locally visible contacts, notes and history, public identity snapshots, rules and activity, chat policy, options, moments, revisions, and message records.
+- JSON reports only whether permitted media is cached; host filesystem paths are not serialized.
+- ZIP packaging streams permitted local files in chunks under sanitized archive names.
+- Frozen Account Backup encrypts the ZIP stream using AES-256-GCM, a random 16-byte salt, a random 12-byte nonce, and PBKDF2-HMAC-SHA256 with 250,000 iterations.
+- Encrypted mode writes only `.intelvault` output and does not leave the normal plaintext export set in the destination.
+- Telegram authorization keys and session credentials are deliberately excluded.
+
+### Themes And Resources
+
+- Three validated `.tdesktop-theme` ZIP resources provide Windows 93, Terminal, and AMOLED palettes/backgrounds.
+- Classic Telegram maps to the existing bundled day-blue theme.
+- Theme Studio applies bundled resources or imports a user-selected Telegram theme without modifying account data.
+
+### Validation
+
+- `validate_intelgram_patch.py` checks required feature hooks, resources, Qt 6.2 compatibility, no-forward enforcement, protected media checks, and added-line mutation references on every platform.
+- `git diff --check`, localization-key uniqueness, QRC XML parsing, and all three theme ZIP integrity checks pass locally.
+- Both public patch names have the same SHA-256 and produce a byte-identical diff after clean application to the pinned official source.
+- The Linux compiler pass removed a stale `base/functional.h` include that is not present in the pinned source tree; `not_null` remains supplied by Telegram Desktop's standard precompiled header.
+- The full Linux diagnostic compile corrected the vault passphrase wrapper, pinned-revision menu icon names, and plural-count producer in `settings_vault.cpp`.
+- Cold-cache macOS dependency preparation is split into six bounded, cumulative cache stages before the independent application compile and launch-test job.
+- macOS and Windows dependency cache creation is serialized to stay within GitHub's repository cache quota, installed Qt source trees are removed after a verified install, and macOS can resume from a completed Qt-stage cache.
+- Every Windows dependency caller uses an explicit success-gated `always()` condition so a Windows-only run continues after the intentionally skipped macOS job instead of reporting a misleading success after stage one.
+- Completed macOS and Windows dependency-run IDs can be reused explicitly while their exact caches remain available; missing caches fail closed instead of silently building against a partial dependency tree.
+- The upstream `AGENTS.md` instruction to avoid a local full build is preserved; macOS, Windows, and Linux compiles and isolated launch tests run in GitHub Actions.
+
 ## IntelGram v6.7.8 Local Profile Update - 2026-07-19
 
 ### Source Baseline And Patch

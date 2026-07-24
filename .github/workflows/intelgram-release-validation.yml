@@ -13,8 +13,8 @@ permissions:
   contents: read
 
 env:
-  SOURCE_PATCH_SHA256: ae6e8dbdfc3c9daee6c565800e8ef55c840a8b29172d6dd0d5d55790b5415de7
-  RELEASE_PATCH_SHA256: ae6e8dbdfc3c9daee6c565800e8ef55c840a8b29172d6dd0d5d55790b5415de7
+  SOURCE_PATCH_SHA256: 566f49ca3979c62366bb8ebb4543d3cc7694037aa5781eaa4db031ec1b78b94d
+  RELEASE_PATCH_SHA256: 566f49ca3979c62366bb8ebb4543d3cc7694037aa5781eaa4db031ec1b78b94d
 
 jobs:
   verify-release:
@@ -40,7 +40,7 @@ jobs:
           tag="$(jq -r '.tag_name' <<<"$release")"
           test "$(jq -r '.draft' <<<"$release")" = "false"
           test "$(jq -r '.prerelease' <<<"$release")" = "false"
-          test "$(jq -r '.name' <<<"$release")" = "IntelGram v6.7.8 - macOS, Windows, Linux"
+          test "$(jq -r '.name' <<<"$release")" = "IntelGram v6.7.8 - Vault Suite"
 
           required_assets=(
             IntelGram-macOS-Apple-Silicon.dmg
@@ -60,6 +60,7 @@ jobs:
             intelgram-local-profile-render-overrides.patch
             ayugram-local-profile-render-overrides.patch
             build_intelgram_branding.py
+            validate_intelgram_patch.py
             IntelGram-branding-assets.zip
           )
           for asset in "${required_assets[@]}"; do

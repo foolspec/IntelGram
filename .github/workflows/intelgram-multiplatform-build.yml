@@ -29,6 +29,26 @@ on:
         required: false
         default: "1"
         type: string
+      macos_dependency_run_id:
+        description: Optional completed run ID containing the final macOS dependency cache
+        required: false
+        default: ""
+        type: string
+      macos_dependency_run_attempt:
+        description: Run attempt for the reusable macOS dependency cache
+        required: false
+        default: "1"
+        type: string
+      macos_stage5_run_id:
+        description: Optional run ID containing a completed macOS Qt-stage cache
+        required: false
+        default: ""
+        type: string
+      macos_stage5_run_attempt:
+        description: Run attempt for the reusable macOS Qt-stage cache
+        required: false
+        default: "1"
+        type: string
 
 concurrency:
   group: intelgram-multiplatform-build-${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'all' }}
@@ -40,18 +60,118 @@ permissions:
 
 env:
   SOURCE_TAG: v6.7.8
-  PATCH_SHA256: ae6e8dbdfc3c9daee6c565800e8ef55c840a8b29172d6dd0d5d55790b5415de7
+  PATCH_SHA256: 566f49ca3979c62366bb8ebb4543d3cc7694037aa5781eaa4db031ec1b78b94d
 
 jobs:
+  macos_dependencies_1:
+    name: macOS dependencies 1 of 6
+    if: ${{ (github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'macos') && inputs.macos_dependency_run_id == '' && inputs.macos_stage5_run_id == '' }}
+    uses: ./.github/workflows/intelgram-macos-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-macos26-libraries-stage-1-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-macos26-libraries-stage-1-${{ github.run_id }}-
+        intelgram-v6.7.8-macos26-libraries-stage-1-
+        ayugram-v6.7.8-macos26-libraries-final-v2
+        ayugram-v6.7.8-macos26-libraries-stage-2-v2
+        ayugram-v6.7.8-macos26-libraries-stage-1-v2
+      stages: patches xz zlib mozjpeg openssl3 opus rnnoise libiconv
+      completion_marker: macos-dependencies-stage-1.complete
+      stage_timeout_minutes: 300
+
+  macos_dependencies_2:
+    name: macOS dependencies 2 of 6
+    needs: macos_dependencies_1
+    uses: ./.github/workflows/intelgram-macos-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-macos26-libraries-stage-2-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-macos26-libraries-stage-2-${{ github.run_id }}-
+        intelgram-v6.7.8-macos26-libraries-stage-2-
+        intelgram-v6.7.8-macos26-libraries-stage-1-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-macos26-libraries-stage-1-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: macos-dependencies-stage-1.complete
+      stages: dav1d openh264 libavif libde265 libwebp libheif libjxl
+      completion_marker: macos-dependencies-stage-2.complete
+      stage_timeout_minutes: 300
+
+  macos_dependencies_3:
+    name: macOS dependencies 3 of 6
+    needs: macos_dependencies_2
+    uses: ./.github/workflows/intelgram-macos-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-macos26-libraries-stage-3-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-macos26-libraries-stage-3-${{ github.run_id }}-
+        intelgram-v6.7.8-macos26-libraries-stage-3-
+        intelgram-v6.7.8-macos26-libraries-stage-2-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-macos26-libraries-stage-2-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: macos-dependencies-stage-2.complete
+      stages: libvpx liblcms2 regex ffmpeg openal-soft
+      completion_marker: macos-dependencies-stage-3.complete
+      stage_timeout_minutes: 300
+
+  macos_dependencies_breakpad:
+    name: macOS dependencies 4 of 6 - Breakpad
+    needs: macos_dependencies_3
+    uses: ./.github/workflows/intelgram-macos-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-macos26-libraries-breakpad-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-macos26-libraries-breakpad-${{ github.run_id }}-
+        intelgram-v6.7.8-macos26-libraries-breakpad-
+        intelgram-v6.7.8-macos26-libraries-stage-3-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-macos26-libraries-stage-3-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: macos-dependencies-stage-3.complete
+      completion_marker: macos-dependencies-breakpad.complete
+      stage_timeout_minutes: 90
+      breakpad: true
+
+  macos_dependencies_final_1:
+    name: macOS dependencies 5 of 6 - Qt
+    needs: macos_dependencies_breakpad
+    uses: ./.github/workflows/intelgram-macos-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-macos26-libraries-final-1-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-macos26-libraries-final-1-${{ github.run_id }}-
+        intelgram-v6.7.8-macos26-libraries-final-1-
+        intelgram-v6.7.8-macos26-libraries-breakpad-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-macos26-libraries-breakpad-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: macos-dependencies-breakpad.complete
+      stages: crashpad qt_6.2.13
+      completion_marker: macos-dependencies-final-1.complete
+      stage_timeout_minutes: 300
+
+  macos_dependencies_final:
+    name: macOS dependencies 6 of 6 - complete
+    needs: macos_dependencies_final_1
+    if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'macos') && inputs.macos_dependency_run_id == '' && (inputs.macos_stage5_run_id != '' || needs.macos_dependencies_final_1.result == 'success') }}
+    uses: ./.github/workflows/intelgram-macos-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-macos26-libraries-final-v3-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-macos26-libraries-final-v3-${{ github.run_id }}-
+        intelgram-v6.7.8-macos26-libraries-final-v3-
+        intelgram-v6.7.8-macos26-libraries-final-1-${{ inputs.macos_stage5_run_id || github.run_id }}-${{ inputs.macos_stage5_run_id != '' && inputs.macos_stage5_run_attempt || github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-macos26-libraries-final-1-${{ inputs.macos_stage5_run_id || github.run_id }}-${{ inputs.macos_stage5_run_id != '' && inputs.macos_stage5_run_attempt || github.run_attempt }}
+      prerequisite_marker: macos-dependencies-final-1.complete
+      stages: tg_owt ada tde2e
+      completion_marker: macos-dependencies-final.complete
+      stage_timeout_minutes: 300
+
   macos:
     name: macOS Apple Silicon
-    if: ${{ github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'macos' }}
+    needs: macos_dependencies_final
+    if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'macos') && (inputs.macos_dependency_run_id != '' || needs.macos_dependencies_final.result == 'success') }}
     runs-on: macos-26
     timeout-minutes: 350
     env:
       HOMEBREW_NO_AUTO_UPDATE: "1"
       HOMEBREW_NO_INSTALL_CLEANUP: "1"
       CMAKE_BUILD_PARALLEL_LEVEL: "3"
+      MACOS_DEPENDENCY_RUN_ID: ${{ inputs.macos_dependency_run_id || github.run_id }}
+      MACOS_DEPENDENCY_RUN_ATTEMPT: ${{ inputs.macos_dependency_run_id != '' && inputs.macos_dependency_run_attempt || github.run_attempt }}
     steps:
       - uses: actions/checkout@v4
 
@@ -65,15 +185,36 @@ jobs:
           test "$(git -C tdesktop rev-parse HEAD)" = "b25513a06ff88be0b3f4c928252b56c3da39cec7"
           git -C tdesktop submodule status --recursive
 
+      - name: Wait for final macOS dependency cache
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREREQUISITE_CACHE_KEY: intelgram-v6.7.8-macos26-libraries-final-v3-${{ env.MACOS_DEPENDENCY_RUN_ID }}-${{ env.MACOS_DEPENDENCY_RUN_ATTEMPT }}
+        run: |
+          set -euo pipefail
+          deadline=$((SECONDS + 720))
+          while (( SECONDS < deadline )); do
+            encoded="$(python3 -c 'import os, urllib.parse; print(urllib.parse.quote(os.environ["PREREQUISITE_CACHE_KEY"], safe=""))')"
+            if gh api "repos/$GITHUB_REPOSITORY/actions/caches?key=$encoded" \
+              --jq '.actions_caches[].key' | grep -Fx "$PREREQUISITE_CACHE_KEY"; then
+              echo "Final dependency cache is visible: $PREREQUISITE_CACHE_KEY"
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "Final macOS dependency cache did not become visible: $PREREQUISITE_CACHE_KEY" >&2
+          exit 1
+
       - name: Restore dependencies
         id: macos-dependencies
         uses: actions/cache/restore@v4
         with:
-          path: Libraries
-          key: ayugram-v6.7.8-macos26-libraries-final-v2
-          restore-keys: |
-            ayugram-v6.7.8-macos26-libraries-stage-2-v2
-            ayugram-v6.7.8-macos26-libraries-stage-1-v2
+          path: |
+            Libraries
+            macos-dependencies-*.complete
+          key: intelgram-v6.7.8-macos26-libraries-final-v3-${{ env.MACOS_DEPENDENCY_RUN_ID }}-${{ env.MACOS_DEPENDENCY_RUN_ATTEMPT }}
+
+      - name: Verify final macOS dependency cache
+        run: test -f macos-dependencies-final.complete
 
       - name: Apply IntelGram changes
         run: |
@@ -91,6 +232,7 @@ jobs:
             echo "Unexpected Telegram channel join reference."
             exit 1
           fi
+          python3 validate_intelgram_patch.py tdesktop
           grep -n 'ayu_LocalProfileIdEnabled' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
           grep -n 'ShowLocalProfileUsernameEditor' tdesktop/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
           grep -n 'AddUsernameCheckLabel(container' tdesktop/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
@@ -118,67 +260,6 @@ jobs:
           grep -n 'QString("IntelGram Desktop v%1")' tdesktop/Telegram/SourceFiles/intro/intro_widget.cpp
           grep -n '"scale": 1.0' tdesktop/Telegram/Telegram/AppIcon-Default.icon/icon.json
           test -s tdesktop/Telegram/Telegram/AppIcon-Default.icon/Assets/app.png
-
-      - name: Prepare core dependencies
-        if: steps.macos-dependencies.outputs.cache-hit != 'true'
-        env:
-          MATCHED_CACHE_KEY: ${{ steps.macos-dependencies.outputs.cache-matched-key }}
-        run: |
-          set -euxo pipefail
-          if [[ "$MATCHED_CACHE_KEY" == "ayugram-v6.7.8-macos26-libraries-stage-1-v2" \
-            || "$MATCHED_CACHE_KEY" == "ayugram-v6.7.8-macos26-libraries-stage-2-v2" ]]; then
-            exit 0
-          fi
-          cd tdesktop
-          ./Telegram/build/prepare/mac.sh silent \
-            patches xz zlib mozjpeg openssl3 opus rnnoise libiconv \
-            dav1d openh264 libavif libde265 libwebp libheif libjxl \
-            libvpx liblcms2 regex ffmpeg openal-soft
-
-      - name: Save core dependencies
-        if: steps.macos-dependencies.outputs.cache-hit != 'true' && steps.macos-dependencies.outputs.cache-matched-key == ''
-        uses: actions/cache/save@v4
-        with:
-          path: Libraries
-          key: ayugram-v6.7.8-macos26-libraries-stage-1-v2
-
-      - name: Prepare Breakpad with bounded retries
-        if: steps.macos-dependencies.outputs.cache-hit != 'true' && steps.macos-dependencies.outputs.cache-matched-key != 'ayugram-v6.7.8-macos26-libraries-stage-2-v2'
-        run: |
-          set -euxo pipefail
-          cd tdesktop
-          perl -0pi -e 's/xcodebuild -project Breakpad\.xcodeproj/xcodebuild -jobs 3 -project Breakpad.xcodeproj/g' Telegram/build/prepare/prepare.py
-          grep -n 'xcodebuild -jobs 3 -project Breakpad.xcodeproj' Telegram/build/prepare/prepare.py
-          success=0
-          for attempt in 1 2 3; do
-            if gtimeout --signal=TERM --kill-after=30s 15m ./Telegram/build/prepare/mac.sh silent breakpad; then
-              success=1
-              break
-            fi
-            echo "Breakpad attempt $attempt did not finish; retrying cleanly."
-          done
-          test "$success" = 1
-
-      - name: Save core and Breakpad dependencies
-        if: steps.macos-dependencies.outputs.cache-hit != 'true' && steps.macos-dependencies.outputs.cache-matched-key != 'ayugram-v6.7.8-macos26-libraries-stage-2-v2'
-        uses: actions/cache/save@v4
-        with:
-          path: Libraries
-          key: ayugram-v6.7.8-macos26-libraries-stage-2-v2
-
-      - name: Prepare final dependencies
-        if: steps.macos-dependencies.outputs.cache-hit != 'true'
-        run: |
-          set -euxo pipefail
-          cd tdesktop
-          ./Telegram/build/prepare/mac.sh silent crashpad qt_6.2.13 tg_owt ada tde2e
-
-      - name: Save final dependencies
-        if: steps.macos-dependencies.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: Libraries
-          key: ayugram-v6.7.8-macos26-libraries-final-v2
 
       - name: Configure and build
         run: |
@@ -239,7 +320,8 @@ jobs:
 
   windows_dependencies_1:
     name: Windows dependencies 1 of 9
-    if: ${{ (github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'windows') && inputs.windows_dependency_run_id == '' }}
+    needs: macos
+    if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'windows') && inputs.windows_dependency_run_id == '' }}
     uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
     with:
       cache_key: intelgram-v6.7.8-windows2022-libraries-stage-1-${{ github.run_id }}-${{ github.run_attempt }}
@@ -253,6 +335,7 @@ jobs:
   windows_dependencies_2:
     name: Windows dependencies 2 of 9
     needs: windows_dependencies_1
+    if: ${{ always() && needs.windows_dependencies_1.result == 'success' }}
     uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
     with:
       cache_key: intelgram-v6.7.8-windows2022-libraries-stage-2-${{ github.run_id }}-${{ github.run_attempt }}
@@ -269,6 +352,7 @@ jobs:
   windows_dependencies_3:
     name: Windows dependencies 3 of 9
     needs: windows_dependencies_2
+    if: ${{ always() && needs.windows_dependencies_2.result == 'success' }}
     uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
     with:
       cache_key: intelgram-v6.7.8-windows2022-libraries-stage-3-${{ github.run_id }}-${{ github.run_attempt }}
@@ -285,6 +369,7 @@ jobs:
   windows_dependencies_4:
     name: Windows dependencies 4 of 9
     needs: windows_dependencies_3
+    if: ${{ always() && needs.windows_dependencies_3.result == 'success' }}
     uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
     with:
       cache_key: intelgram-v6.7.8-windows2022-libraries-stage-4-${{ github.run_id }}-${{ github.run_attempt }}
@@ -303,6 +388,7 @@ jobs:
   windows_dependencies_breakpad:
     name: Windows dependencies 5 of 9 - Breakpad
     needs: windows_dependencies_4
+    if: ${{ always() && needs.windows_dependencies_4.result == 'success' }}
     uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
     with:
       cache_key: intelgram-v6.7.8-windows2022-libraries-breakpad-${{ github.run_id }}-${{ github.run_attempt }}
@@ -319,6 +405,7 @@ jobs:
   windows_dependencies_angle:
     name: Windows dependencies 6 of 9 - ANGLE
     needs: windows_dependencies_breakpad
+    if: ${{ always() && needs.windows_dependencies_breakpad.result == 'success' }}
     uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
     with:
       cache_key: intelgram-v6.7.8-windows2022-libraries-angle-${{ github.run_id }}-${{ github.run_attempt }}
@@ -335,6 +422,7 @@ jobs:
   windows_dependencies_owt:
     name: Windows dependencies 7 of 9 - WebRTC
     needs: windows_dependencies_angle
+    if: ${{ always() && needs.windows_dependencies_angle.result == 'success' }}
     uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
     with:
       cache_key: intelgram-v6.7.8-windows2022-libraries-owt-${{ github.run_id }}-${{ github.run_attempt }}
@@ -351,6 +439,7 @@ jobs:
   windows_dependencies_final_libraries:
     name: Windows dependencies 8 of 9 - final libraries
     needs: windows_dependencies_owt
+    if: ${{ always() && needs.windows_dependencies_owt.result == 'success' }}
     uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
     with:
       cache_key: intelgram-v6.7.8-windows2022-libraries-final-libraries-${{ github.run_id }}-${{ github.run_attempt }}
@@ -367,6 +456,7 @@ jobs:
   windows_dependencies_complete:
     name: Windows dependencies 9 of 9 - complete
     needs: windows_dependencies_final_libraries
+    if: ${{ always() && needs.windows_dependencies_final_libraries.result == 'success' }}
     uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
     with:
       cache_key: intelgram-v6.7.8-windows2022-libraries-final-v2-${{ github.run_id }}-${{ github.run_attempt }}
@@ -455,6 +545,7 @@ jobs:
           $diff = git -C tdesktop diff --no-ext-diff
           if ($diff | Select-String -Pattern 'updateProfile|updateUsername|MTPaccount_|MTPusers_|account\.update|users\..*update') { throw "Unexpected Telegram profile mutation reference" }
           if ($diff | Select-String -Pattern 'MTPchannels_JoinChannel|channels\.joinChannel|JoinChannel') { throw "Unexpected Telegram channel join reference" }
+          python validate_intelgram_patch.py tdesktop
           Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp -Pattern ayu_LocalProfileIdEnabled
           Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp -Pattern ShowLocalProfileUsernameEditor
           Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp -SimpleMatch 'AddUsernameCheckLabel(container'
@@ -565,6 +656,7 @@ jobs:
             echo "Unexpected Telegram channel join reference."
             exit 1
           fi
+          python3 validate_intelgram_patch.py tdesktop
           grep -n 'ayu_LocalProfileIdEnabled' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
           grep -n 'ShowLocalProfileUsernameEditor' tdesktop/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
           grep -n 'AddUsernameCheckLabel(container' tdesktop/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
@@ -592,6 +684,12 @@ jobs:
       - name: Build with the documented Linux container
         run: |
           set -euxo pipefail
+          # shellcheck disable=SC2016
+          sed -i 's|cmake --build ../out --config "${CONFIG:-Release}"|cmake --build ../out --config "${CONFIG:-Release}" -- -k 0|' \
+            tdesktop/Telegram/build/docker/centos_env/build.sh
+          # shellcheck disable=SC2016
+          grep -F -- 'cmake --build ../out --config "${CONFIG:-Release}" -- -k 0' \
+            tdesktop/Telegram/build/docker/centos_env/build.sh
           docker pull ghcr.io/telegramdesktop/tdesktop/centos_env:latest
           docker run --rm \
             -u "$(id -u)" \
@@ -614,6 +712,7 @@ jobs:
           export INTELGRAM_LAUNCH_LOG="$GITHUB_WORKSPACE/launch-linux.log"
           export QT_OPENGL=software
           export LIBGL_ALWAYS_SOFTWARE=1
+          # shellcheck disable=SC2016
           xvfb-run -a -s "-screen 0 1280x800x24" bash -euo pipefail -c '
             "$INTELGRAM_BINARY" -workdir "$INTELGRAM_TEST_ROOT" > "$INTELGRAM_LAUNCH_LOG" 2>&1 &
             app_pid=$!
@@ -673,15 +772,16 @@ jobs:
           cp intelgram-local-profile-render-overrides.patch release-assets/
           cp intelgram-local-profile-render-overrides.patch release-assets/ayugram-local-profile-render-overrides.patch
           cp build_intelgram_branding.py release-assets/
+          cp validate_intelgram_patch.py release-assets/
           python3 -m zipfile -c release-assets/IntelGram-branding-assets.zip branding/icons generate_intelgram_character_icons.py
           find release-assets -maxdepth 1 -type f -print -exec ls -lh {} \;
           mapfile -d '' RELEASE_ASSETS < <(find release-assets -maxdepth 1 -type f ! -empty -print0)
           test "${#RELEASE_ASSETS[@]}" -gt 0
-          TAG="intelgram-v6.7.8-local-profile-${GITHUB_RUN_ID}"
+          TAG="intelgram-v6.7.8-vault-suite-${GITHUB_RUN_ID}"
           gh release create "$TAG" \
             --repo "$GITHUB_REPOSITORY" \
             --target "$TARGET_SHA" \
             --latest \
-            --title "IntelGram v6.7.8 - macOS, Windows, Linux" \
-            --notes "IntelGram is an AyuGram Desktop v6.7.8 build with grouped client-render-only profile controls, UID profile cloning with badge, emoji-status, and personal-channel fidelity, cached-peer search by UID or visible phone, a Telegram-style local username status row, a bundled update log, and fourteen platform-native app icon choices. Its native collectible gallery shows collection artwork, pages through exact numbered items inside IntelGram, accepts Getgems and TON links, and keeps Telegram's native collectible details. Local collectible Telegram links open the fully locally rendered self profile, including local photo, phone, usernames, bio, and personal channel. macOS icons use full-bleed artwork without a duplicate white frame. The name-color sample follows the local display name. Local profile and collectible override features by fool. No Telegram profile, photo, username, UID, phone number, bio, contact, emoji status, channel, gift ownership, or NFT mutation is included." \
+            --title "IntelGram v6.7.8 - Vault Suite" \
+            --notes "IntelGram's Vault Suite adds local full-text search, unified account views, timelines and statistics, saved moments, locally observed edit/deletion history, smart folders, private contact notes and reminders, opt-in public identity snapshots, local rules and anti-spam review, per-chat download/draft/notification controls, Theme Studio, selected-message exports, full account exports, and AES-256-GCM Frozen Account Backup. Existing client-render-only profile, clone, UID/visible-phone search, collectible gallery, local photo, badge, username, anonymous-number, and icon features remain included. Protected and self-destructing content is never copied: IntelGram stores only metadata and a jump-back reference. No Telegram profile, contact, channel membership, collectible ownership, or protected-content mutation is included." \
             "${RELEASE_ASSETS[@]}"

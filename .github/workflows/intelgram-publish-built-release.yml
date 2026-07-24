@@ -67,6 +67,7 @@ jobs:
           cp intelgram-local-profile-render-overrides.patch release-assets/
           cp intelgram-local-profile-render-overrides.patch release-assets/ayugram-local-profile-render-overrides.patch
           cp build_intelgram_branding.py release-assets/
+          cp validate_intelgram_patch.py release-assets/
           python3 -m zipfile -c release-assets/IntelGram-branding-assets.zip branding/icons generate_intelgram_character_icons.py
           for log in launch-macos.log launch-windows.log launch-windows-error.log launch-linux.log; do
             if [[ -f "release-assets/$log" && ! -s "release-assets/$log" ]]; then
@@ -87,12 +88,18 @@ jobs:
           mapfile -d '' RELEASE_ASSETS < <(find release-assets -maxdepth 1 -type f ! -empty -print0)
           test "${#RELEASE_ASSETS[@]}" -gt 0
           cat > release-notes.md <<'EOF'
-          ## IntelGram v6.7.8
+          ## IntelGram v6.7.8 Vault Suite
 
           This release contains launch-tested IntelGram packages for macOS Apple Silicon, Windows x64, and Linux x64.
 
           ### Main features
 
+          - Universal local full-text search across received messages, links, media metadata, and filenames, with a unified view across signed-in accounts.
+          - Chat timelines with jump-to-date, statistics, compact media history, saved moments, and locally observed edit/deletion history.
+          - Smart folders, private contact notes with reminders and history, opt-in public identity snapshots, local rules, and anti-spam review.
+          - Per-chat local tags, priority, download mode, read reminders, local-only draft preference, and local notification muting.
+          - Theme Studio with Windows 93, Terminal, Classic Telegram, AMOLED, custom theme import, and IntelGram icon choices.
+          - Selected-message and chat/account exports to HTML, PDF, Markdown, JSON, and ZIP, plus AES-256-GCM Frozen Account Backup with permitted cached media.
           - Client-render-only display name, UID, primary and other usernames, anonymous number, bio, and profile photo for your own account.
           - Local profile cloning from an already-loaded peer by UID, including badges, emoji status, and personal channel, plus cached-peer search by UID or a phone number already visible to your account.
           - Telegram's familiar inline username-status presentation for the local username editor, without a server-side username check.
@@ -106,7 +113,7 @@ jobs:
 
           ### Local-only boundary
 
-          IntelGram does not update your Telegram name, photo, username, UID, phone, bio, emoji status, contacts, collectible ownership, or channel membership. Other Telegram users do not see these local overrides.
+          IntelGram does not update your Telegram name, photo, username, UID, phone, bio, emoji status, contacts, collectible ownership, or channel membership. Restrict Saving Content and self-destruct rules are preserved: protected message bodies and media never enter the vault, rules, exports, or backups.
 
           See the [complete feature list](https://github.com/foolspec/IntelGram/blob/main/FEATURES.md), [changelog](https://github.com/foolspec/IntelGram/blob/main/CHANGELOG.md), and [technical changelog](https://github.com/foolspec/IntelGram/blob/main/TECHNICAL_CHANGELOG.md).
 
@@ -116,6 +123,6 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
             --latest \
-            --title "IntelGram v6.7.8 - macOS, Windows, Linux" \
+            --title "IntelGram v6.7.8 - Vault Suite" \
             --notes-file release-notes.md \
             "${RELEASE_ASSETS[@]}"

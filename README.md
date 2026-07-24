@@ -1,6 +1,6 @@
 # IntelGram
 
-IntelGram is a cross-platform AyuGram Desktop build focused on local-only profile customization.
+IntelGram is a cross-platform AyuGram Desktop build focused on local profile customization, private on-device productivity tools, and verifiable local exports.
 
 [![IntelGram release validation](https://github.com/foolspec/IntelGram/actions/workflows/intelgram-release-validation.yml/badge.svg?branch=main)](https://github.com/foolspec/IntelGram/actions/workflows/intelgram-release-validation.yml)
 
@@ -8,6 +8,12 @@ IntelGram is a cross-platform AyuGram Desktop build focused on local-only profil
 
 ## Main Features
 
+- Search messages, media metadata, links, and filenames already received by IntelGram with an on-device full-text vault and a unified inbox across signed-in accounts.
+- Use jump-to-date, conversation statistics, compact media history, saved moments, and locally observed message edit/deletion history.
+- Organize work with smart folders, private contact notes and reminders, opt-in public identity snapshots, local rules, and anti-spam review.
+- Set per-chat tags, priority, download behavior, read reminders, local-only draft preference, and local notification muting.
+- Export selected messages, a chat, or an account to HTML, PDF, Markdown, JSON, or ZIP; create an AES-256-GCM encrypted Frozen Account Backup with permitted cached media.
+- Switch among Windows 93, Terminal, Classic Telegram, AMOLED, imported theme packs, and IntelGram icon choices.
 - Render a local display name, UID, primary username, up to 20 other usernames, anonymous number, bio, and profile photo for your own account.
 - Clone the visible profile presentation of a user already loaded in IntelGram by entering their UID, including premium or verification badges, organization badge symbols, emoji status, and personal channel.
 - Find an already-loaded user by UID or by a phone number that is visible to your account, directly from the normal chat-list search field.
@@ -20,7 +26,8 @@ IntelGram is a cross-platform AyuGram Desktop build focused on local-only profil
 - Choose the pink IntelGram icon, its profile-art variant, or any of twelve supplied color variants from the in-app icon picker.
 - Read the latest changes and main feature summary from a bundled update log inside IntelGram.
 - Open the IntelGram community and project links directly from settings, with an optional local supporter badge after you join `@intelgrams` yourself.
-- Keep every override client-render-only, with no Telegram profile, ownership, contact, or account mutation.
+- Preserve Telegram's Restrict Saving Content and self-destruct rules: protected bodies and media never enter the vault, rules, exports, or backups.
+- Keep every profile override client-render-only, with no Telegram profile, ownership, contact, channel-join, or account mutation.
 
 ## Downloads
 
@@ -65,11 +72,22 @@ The IntelGram settings page links to [`@intelgrams`](https://t.me/intelgrams), t
 
 Open **IntelGram Settings -> IntelGram -> Update log** to read the latest update, main IntelGram features, and local-only privacy boundary without leaving the app. The dialog also provides an optional link to the complete GitHub changelog.
 
+Open **IntelGram Settings -> Vault & Tools** for:
+
+- **Search & timeline:** current-account or all-account vault search, unified inbox, smart folders, jump-to-date, statistics, media history, revisions, and saved moments.
+- **Contacts & automation:** private notes, tags, relationship context, reminders, opt-in identity history, configurable local rules, and rule activity.
+- **Current chat tools:** local tags and priority, manual/Wi-Fi/always download mode, read reminder, local-only draft preference, and local notification mute.
+- **Themes & backup:** built-in and imported themes, normal local exports, and encrypted Frozen Account Backup.
+
+Select one or more ordinary messages and use **Export selected messages** from the context menu to create a scoped export. In a protected chat, the same action records only basic metadata and a jump-back reference.
+
 ## Local Means Local
 
 These controls only change how your own profile is rendered inside this IntelGram installation. They do not change your Telegram display name, photo, bio, username, UID, phone number, emoji status, collectible ownership, or profile data. Other Telegram users do not see the local overrides.
 
-The implementation contains no Telegram account/profile mutation request and no contact import. Clone metadata refresh and collectible catalog/detail requests are read-only. Normal Telegram account editing remains available whenever the corresponding IntelGram local override is disabled.
+The vault processes content this client has already received. It does not fetch hidden history or bypass Telegram restrictions. Restrict Saving Content and self-destructing media are never copied into search text, rule payloads, media archives, or backups; only a local reference remains so you can return to the original message.
+
+The implementation contains no Telegram account/profile mutation request, contact import, automatic channel join, or collectible transaction. Clone metadata refresh and collectible catalog/detail requests are read-only. Normal Telegram account editing remains available whenever the corresponding IntelGram local override is disabled.
 
 ## Platform Builds
 
@@ -83,9 +101,10 @@ IntelGram uses its own visible application name, macOS bundle ID, Windows applic
 
 ## Source And Verification
 
-- [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch) contains the client-render-only implementation.
-- Patch SHA-256: `ae6e8dbdfc3c9daee6c565800e8ef55c840a8b29172d6dd0d5d55790b5415de7`
+- [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch) contains the complete IntelGram implementation.
+- Patch SHA-256: `566f49ca3979c62366bb8ebb4543d3cc7694037aa5781eaa4db031ec1b78b94d`
 - [`build_intelgram_branding.py`](build_intelgram_branding.py) applies the cross-platform IntelGram product identity.
+- [`validate_intelgram_patch.py`](validate_intelgram_patch.py) verifies the feature hooks, protected-content boundaries, and absence of custom Telegram mutation requests before each platform build.
 - [`branding/icons`](branding/icons) contains the pink character artwork and twelve color masters with generated macOS, Windows, and Linux resources; [`generate_intelgram_character_icons.py`](generate_intelgram_character_icons.py) reproduces them.
 - [`.github/workflows/intelgram-multiplatform-build.yml`](.github/workflows/intelgram-multiplatform-build.yml) performs clean macOS, Windows, and Linux builds.
 - Every release includes SHA-256 checksums, platform validation notes, and launch logs.
@@ -99,4 +118,4 @@ IntelGram preserves AyuGram's internal settings keys and source namespaces for c
 
 IntelGram is based on [AyuGram Desktop](https://github.com/AyuGram/AyuGramDesktop), which is based on [Telegram Desktop](https://github.com/telegramdesktop/tdesktop). Their upstream licenses and attribution remain in the source.
 
-Local profile and collectible override features by **fool**.
+IntelGram custom features by **fool**.

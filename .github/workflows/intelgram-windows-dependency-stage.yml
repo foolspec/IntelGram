@@ -224,6 +224,16 @@ jobs:
           if %errorlevel% neq 0 exit /b %errorlevel%
           type nul > "${{ inputs.completion_marker }}"
 
+      - name: Prune installed Qt source tree from cache
+        shell: pwsh
+        run: |
+          $source = Join-Path $PWD "Libraries\win64\qt_6.2.13"
+          $install = Join-Path $PWD "Libraries\win64\Qt-6.2.13"
+          if ((Test-Path $source) -and (Test-Path $install)) {
+            Write-Host "Removing installed Qt source tree from the dependency cache: $source"
+            Remove-Item $source -Recurse -Force
+          }
+
       - name: Save accumulated dependencies
         if: ${{ always() && env.CACHE_INPUT_VALID == '1' }}
         uses: actions/cache/save@v4
