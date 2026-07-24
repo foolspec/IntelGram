@@ -732,11 +732,24 @@ void ShowExport(not_null<Window::SessionController *> controller, bool encrypted
 	const auto currentDialogId = peer ? getDialogIdFromPeer(peer) : 0;
 	controller->show(Box([=](not_null<Ui::GenericBox *> box) {
 		box->setTitle(encrypted ? tr::ayu_VaultFrozenBackup() : tr::ayu_VaultExportCenter());
-		const auto passphrase
-			= box->addRow(object_ptr<Ui::PasswordInput>(box, st::settingLocalPasscodeInputField,
-														tr::ayu_VaultBackupPassphrase()),
-						  st::boxRowPadding);
-		passphrase->setVisible(encrypted);
+		const auto passphrase = [&]() -> Ui::PasswordInput * {
+			if (!encrypted) {
+				return nullptr;
+			}
+			const auto content = box->verticalLayout();
+			auto wrap = object_ptr<Ui::RpWidget>(content);
+			wrap->resize(content->width(), st::settingLocalPasscodeInputField.heightMin);
+			const auto field = Ui::CreateChild<Ui::PasswordInput>(
+				wrap.data(),
+				st::settingLocalPasscodeInputField,
+				tr::ayu_VaultBackupPassphrase());
+			wrap->geometryValue(
+			) | rpl::on_next([=](const QRect &geometry) {
+				field->moveToLeft((geometry.width() - field->width()) / 2, 0);
+			}, wrap->lifetime());
+			content->add(std::move(wrap));
+			return field;
+		}();
 		Ui::AddDividerText(
 			box->verticalLayout(),
 			encrypted ? tr::ayu_VaultFrozenBackupDescription() : tr::ayu_VaultExportDescription());
@@ -751,7 +764,9 @@ void ShowExport(not_null<Window::SessionController *> controller, bool encrypted
 											IntelGram::Export::Options{
 												.encrypted = encrypted,
 												.dialogId = dialogId,
-												.passphrase = passphrase->getLastText(),
+												.passphrase = passphrase
+													? passphrase->getLastText()
+													: QString(),
 											});
 			if (!result.ok) {
 				controller->showToast(result.error);
@@ -797,13 +812,13 @@ void BuildSearchAndTimeline(SectionBuilder &builder) {
 	builder.addButton({
 		.id = u"intelgram/vault/timeline"_q,
 		.title = tr::ayu_VaultTimeline(),
-		.icon = {&st::menuIconCalendar},
+		.icon = {&st::menuIconSchedule},
 		.onClick = [=] { ShowTimeline(controller); },
 	});
 	builder.addButton({
 		.id = u"intelgram/vault/jumpDate"_q,
 		.title = tr::ayu_VaultJumpToDate(),
-		.icon = {&st::menuIconCalendar},
+		.icon = {&st::menuIconSchedule},
 		.onClick = [=] { ShowJumpToDate(controller); },
 	});
 	builder.addButton({
@@ -833,7 +848,7 @@ void BuildSmartFolders(SectionBuilder &builder) {
 		builder.addButton({
 			.id = std::move(id),
 			.title = rpl::single(title),
-			.icon = {&st::menuIconFolder},
+			.icon = {&st::menuIconShowInFolder},
 			.onClick = [=] { ShowSmartFolder(controller, folder, rpl::single(title)); },
 		});
 	};
@@ -866,7 +881,7 @@ void BuildIdentityAndRules(SectionBuilder &builder) {
 	if (due) {
 		builder.addButton({
 			.id = u"intelgram/vault/dueProfileNotes"_q,
-			.title = tr::ayu_VaultDueProfileReminders(lt_count, rpl::single(int(due))),
+			.title = tr::ayu_VaultDueProfileReminders(lt_count, rpl::single(1. * due)),
 			.icon = {&st::menuIconNotifications},
 			.onClick = [=] { ShowDueProfileNotes(controller); },
 		});
