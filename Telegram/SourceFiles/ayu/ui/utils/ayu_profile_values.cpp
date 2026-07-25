@@ -375,6 +375,8 @@ public:
 		QString value);
 
 	[[nodiscard]] Ui::UsernameInput *field() const;
+	[[nodiscard]] rpl::producer<> changes() const;
+	[[nodiscard]] rpl::producer<> submits() const;
 
 protected:
 	void resizeEvent(QResizeEvent *e) override;
@@ -382,7 +384,8 @@ protected:
 private:
 	const style::margins &_padding;
 	object_ptr<Ui::UsernameInput> _field;
-
+	rpl::event_stream<> _changes;
+	rpl::event_stream<> _submits;
 };
 
 LocalUsernameEditor::LocalUsernameEditor(
@@ -396,10 +399,24 @@ LocalUsernameEditor::LocalUsernameEditor(
 	std::move(value),
 	QString()) {
 	resize(width(), _padding.top() + _field->height());
+	connect(_field, &Ui::MaskedInputField::changed, [=] {
+		_changes.fire({});
+	});
+	connect(_field, &Ui::MaskedInputField::submitted, [=] {
+		_submits.fire({});
+	});
 }
 
 Ui::UsernameInput *LocalUsernameEditor::field() const {
 	return _field.data();
+}
+
+rpl::producer<> LocalUsernameEditor::changes() const {
+	return _changes.events();
+}
+
+rpl::producer<> LocalUsernameEditor::submits() const {
+	return _submits.events();
 }
 
 void LocalUsernameEditor::resizeEvent(QResizeEvent *e) {
@@ -1042,7 +1059,7 @@ void ShowLocalProfileUsernameEditor(
 		});
 
 		auto checkInfo = rpl::single(rpl::empty) | rpl::then(
-			field->changes()
+			editor->changes()
 		) | rpl::map([=] {
 			auto name = field->getLastText().trimmed();
 			if (name.startsWith('@')) {
@@ -1096,8 +1113,8 @@ void ShowLocalProfileUsernameEditor(
 			settings.setLocalProfileUsernameEnabled(true);
 			box->closeBox();
 		};
-		field->submits(
-		) | rpl::on_next(save, field->lifetime());
+		editor->submits(
+		) | rpl::on_next(save, editor->lifetime());
 		box->addButton(tr::lng_settings_save(), save);
 		box->addButton(tr::lng_cancel(), [=] {
 			box->closeBox();
