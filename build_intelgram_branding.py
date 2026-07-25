@@ -35,6 +35,20 @@ def replace(path: str, replacements: list[tuple[str, str]]) -> None:
 	file.write_text(content, encoding="utf-8")
 
 
+def replace_or_verify(path: str, replacements: list[tuple[str, str]]) -> None:
+	file = ROOT / path
+	content = file.read_text(encoding="utf-8")
+	for old, new in replacements:
+		count = content.count(old)
+		if count == 1:
+			content = content.replace(old, new)
+		elif count != 0 or content.count(new) != 1:
+			raise RuntimeError(
+				f"{path}: expected one occurrence of {old!r} or {new!r}, "
+				f"found {count} and {content.count(new)}")
+	file.write_text(content, encoding="utf-8")
+
+
 def replace_all(path: str, old: str, new: str, expected: int) -> None:
 	file = ROOT / path
 	content = file.read_text(encoding="utf-8")
@@ -318,10 +332,8 @@ replace("Telegram/SourceFiles/ayu/ui/settings/settings_ayu.cpp", [
 	 'return rpl::single(QString("IntelGram"));'),
 ])
 
-replace("Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp", [
+replace_or_verify("Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp", [
 	('QString("AyuGram Desktop v")', 'QString("IntelGram Desktop v")'),
-	('.title = rpl::single(QString("AyuGram")),',
-	 '.title = rpl::single(QString("IntelGram")),'),
 ])
 
 replace("Telegram/SourceFiles/settings/sections/settings_notifications.cpp", [
