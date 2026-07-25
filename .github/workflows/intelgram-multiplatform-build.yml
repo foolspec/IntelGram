@@ -60,7 +60,8 @@ permissions:
 
 env:
   SOURCE_TAG: v6.7.8
-  PATCH_SHA256: 7e08df09395bd170067a0495019f9dcef66e172dc6492bbba27c4cf1d70cbef6
+  PATCH_SHA256: 8fcb5eff6158a9745c5e6d25ad820b45ad2ec40e50ba4c20a245d4b0e0694e47
+  LIB_UI_COMMIT: 2324a08c969967f62148b013eda0ae12507753ab
 
 jobs:
   macos_dependencies_1:
@@ -222,6 +223,10 @@ jobs:
           test "$(shasum -a 256 intelgram-local-profile-render-overrides.patch | awk '{print $1}')" = "$PATCH_SHA256"
           git -C tdesktop apply --check "$GITHUB_WORKSPACE/intelgram-local-profile-render-overrides.patch"
           git -C tdesktop apply "$GITHUB_WORKSPACE/intelgram-local-profile-render-overrides.patch"
+          git -C tdesktop submodule sync -- Telegram/lib_ui
+          git -C tdesktop submodule update --init --force Telegram/lib_ui
+          git -C tdesktop/Telegram/lib_ui checkout --detach "$LIB_UI_COMMIT"
+          test "$(git -C tdesktop/Telegram/lib_ui rev-parse HEAD)" = "$LIB_UI_COMMIT"
           (cd tdesktop && python3 "$GITHUB_WORKSPACE/build_intelgram_branding.py")
           git -C tdesktop diff --check
           if git -C tdesktop diff --no-ext-diff | grep -E 'updateProfile|updateUsername|MTPaccount_|MTPusers_|account\.update|users\..*update'; then
@@ -538,6 +543,10 @@ jobs:
           if ($actual -ne $env:PATCH_SHA256) { throw "Patch hash mismatch" }
           git -C tdesktop apply --check "$env:GITHUB_WORKSPACE/intelgram-local-profile-render-overrides.patch"
           git -C tdesktop apply "$env:GITHUB_WORKSPACE/intelgram-local-profile-render-overrides.patch"
+          git -C tdesktop submodule sync -- Telegram/lib_ui
+          git -C tdesktop submodule update --init --force Telegram/lib_ui
+          git -C tdesktop/Telegram/lib_ui checkout --detach $env:LIB_UI_COMMIT
+          if ((git -C tdesktop/Telegram/lib_ui rev-parse HEAD).Trim() -ne $env:LIB_UI_COMMIT) { throw "Telegram/lib_ui commit mismatch" }
           Push-Location tdesktop
           python "$env:GITHUB_WORKSPACE/build_intelgram_branding.py"
           Pop-Location
@@ -646,6 +655,10 @@ jobs:
           test "$(sha256sum intelgram-local-profile-render-overrides.patch | awk '{print $1}')" = "$PATCH_SHA256"
           git -C tdesktop apply --check "$GITHUB_WORKSPACE/intelgram-local-profile-render-overrides.patch"
           git -C tdesktop apply "$GITHUB_WORKSPACE/intelgram-local-profile-render-overrides.patch"
+          git -C tdesktop submodule sync -- Telegram/lib_ui
+          git -C tdesktop submodule update --init --force Telegram/lib_ui
+          git -C tdesktop/Telegram/lib_ui checkout --detach "$LIB_UI_COMMIT"
+          test "$(git -C tdesktop/Telegram/lib_ui rev-parse HEAD)" = "$LIB_UI_COMMIT"
           (cd tdesktop && python3 "$GITHUB_WORKSPACE/build_intelgram_branding.py")
           git -C tdesktop diff --check
           if git -C tdesktop diff --no-ext-diff | grep -E 'updateProfile|updateUsername|MTPaccount_|MTPusers_|account\.update|users\..*update'; then
@@ -777,11 +790,11 @@ jobs:
           find release-assets -maxdepth 1 -type f -print -exec ls -lh {} \;
           mapfile -d '' RELEASE_ASSETS < <(find release-assets -maxdepth 1 -type f ! -empty -print0)
           test "${#RELEASE_ASSETS[@]}" -gt 0
-          TAG="intelgram-v6.7.8-appearance-refresh-${GITHUB_RUN_ID}"
+          TAG="intelgram-v6.7.8-glass-motion-${GITHUB_RUN_ID}"
           gh release create "$TAG" \
             --repo "$GITHUB_REPOSITORY" \
             --target "$TARGET_SHA" \
             --latest \
-            --title "IntelGram v6.7.8 - Appearance Refresh" \
-            --notes "IntelGram includes local full-text search, unified account views, timelines and statistics, saved moments, locally observed edit/deletion history, smart folders, private contact notes and reminders, opt-in public identity snapshots, local rules and anti-spam review, per-chat download/draft/notification controls, selected-message exports, full account exports, and AES-256-GCM Frozen Account Backup. Appearance & Backgrounds adds native visual theme cards, cloud themes, visible custom-theme removal, Telegram's wallpaper gallery, local background images, preview and tiling controls, and IntelGram app icons. Existing client-render-only profile, clone, UID/visible-phone search, collectible gallery, local photo, badge, username, and anonymous-number features remain included. Protected and self-destructing content is never copied: IntelGram stores only metadata and a jump-back reference. No Telegram profile, contact, channel membership, collectible ownership, or protected-content mutation is included." \
+            --title "IntelGram v6.7.8 - Glass & Motion" \
+            --notes "Glass & Motion adds opt-in whole-window transparency with native macOS and Windows backdrop blur, Linux compositor transparency, separate sidebar/chat/panel controls, glass tint and opacity, and a removable local whole-app background with independent opacity and blur. Enhanced Animations applies Quick Snap, Smooth Flow, Diabolical, or Springy timing across IntelGram transitions, dialogs, drawers, controls, and navigation, plus an optional window-opening animation. Reduced-motion and power-saving settings remain authoritative. IntelGram also includes its existing local vault, timeline, automation, export and Frozen Account Backup tools; native theme and wallpaper controls; and client-render-only profile, clone, UID/visible-phone search, collectible, local photo, badge, username, and anonymous-number features. Protected and self-destructing content is never copied, and no Telegram profile, contact, channel-membership, collectible-ownership, or protected-content mutation is included." \
             "${RELEASE_ASSETS[@]}"

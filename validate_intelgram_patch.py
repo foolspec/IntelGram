@@ -7,6 +7,7 @@ import subprocess
 import sys
 
 BASELINE = "b25513a06ff88be0b3f4c928252b56c3da39cec7"
+LIB_UI_COMMIT = "2324a08c969967f62148b013eda0ae12507753ab"
 
 
 def fail(message: str) -> None:
@@ -35,10 +36,15 @@ def main() -> None:
             "ayu/data/intelgram_vault.cpp",
             "ayu/data/intelgram_export.cpp",
             "ayu/ui/settings/settings_vault.cpp",
+            "ayu/ui/settings/settings_visual_effects.cpp",
+            "ayu/ui/visual_effects.cpp",
         ),
         "Telegram/Resources/langs/lang.strings": (
             '"ayu_CategoryAppearance" = "Appearance & Backgrounds";',
             '"ayu_RemoveCurrentTheme" = "Remove current custom theme";',
+            '"ayu_VisualEffectsTitle" = "Glass & Motion";',
+            '"ayu_VisualEffectsEnableGlass" = "Enable transparent mode";',
+            '"ayu_VisualEffectsMotionDynamic" = "Diabolical";',
             '"ayu_VaultTitle" = "Vault & Search";',
             '"ayu_AutomationTitle" = "Contacts & Automation";',
             '"ayu_ExportTitle" = "Export & Backup";',
@@ -77,9 +83,48 @@ def main() -> None:
         ),
         "Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp": (
             "tr::ayu_SettingsCustomizeHeader()",
+            "AyuVisualEffects::Id()",
             "AyuAutomation::Id()",
             "AyuExport::Id()",
             "AyuAdvanced::Id()",
+        ),
+        "Telegram/SourceFiles/ayu/ui/settings/settings_visual_effects.cpp": (
+            "AyuVisualEffects::Id()",
+            "AyuSettings::transparentMode",
+            "AyuSettings::transparentSidebar",
+            "AyuSettings::transparentChat",
+            "AyuSettings::transparentPanels",
+            "AyuSettings::enhancedAnimations",
+            "AyuSettings::animateWindowOpening",
+            "ChooseBackdrop(",
+        ),
+        "Telegram/SourceFiles/ayu/ui/visual_effects.cpp": (
+            "Images::BlurLargeImage",
+            "Platform::SetWindowVisualEffect",
+            "anim::SetMotionStyle",
+            "void PaintWindow(",
+        ),
+        "Telegram/SourceFiles/platform/mac/specific_mac.mm": (
+            "NSVisualEffectView",
+            "NSVisualEffectBlendingModeBehindWindow",
+            "void SetWindowVisualEffect(",
+        ),
+        "Telegram/SourceFiles/platform/win/specific_win.cpp": (
+            "DwmSetWindowAttribute",
+            "DwmEnableBlurBehindWindow",
+            "void SetWindowVisualEffect(",
+        ),
+        "Telegram/SourceFiles/platform/linux/specific_linux.cpp": (
+            "void SetWindowVisualEffect(",
+        ),
+        "Telegram/lib_ui/ui/effects/animation_value.cpp": (
+            "MotionDuration(",
+            "MotionTransition(",
+            "MotionStyle::Springy",
+        ),
+        "Telegram/lib_ui/ui/effects/animations.h": (
+            "anim::MotionDuration(duration)",
+            "anim::MotionTransition(std::move(transition))",
         ),
         "Telegram/SourceFiles/history/history_item_helpers.cpp": (
             "(flags & MTP::f_noforwards) ? Flag::NoForwards",
@@ -99,6 +144,18 @@ def main() -> None:
     }
     for path, needles in requirements.items():
         require(root, path, needles)
+
+    lib_ui_commit = subprocess.run(
+        ["git", "-C", str(root / "Telegram/lib_ui"), "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    if lib_ui_commit != LIB_UI_COMMIT:
+        fail(
+            "Telegram/lib_ui is not at the pinned IntelGram motion commit "
+            f"{LIB_UI_COMMIT}"
+        )
 
     removed_themes = (
         "Telegram/Resources/intelgram-windows93.tdesktop-theme",

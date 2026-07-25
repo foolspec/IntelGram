@@ -100,6 +100,10 @@ IntelGram preserves Telegram's Restrict Saving Content and self-destruct rules. 
 
 Open **IntelGram Preferences -> Appearance & Backgrounds**. Choose from the visual light and dark theme cards, browse Telegram cloud themes inside the app, or select the chat-background preview to open Telegram's wallpaper gallery. The background editor can apply a wallpaper from the gallery or a local image and includes preview, tiling, and wide-layout controls. Theme, palette, and supported image files can also be imported through the native file picker. To remove an installed theme, select it and choose **Remove current custom theme**; built-in defaults are protected.
 
+## How do I make the whole app transparent or more animated?
+
+Open **IntelGram Preferences -> Glass & Motion**. Enable transparent mode, choose which surface groups should be glass, and adjust the tint and opacity. Native desktop blur is optional; you can instead choose a local image for the whole app and set its own opacity and blur. Enable Enhanced Animations separately, then choose Quick Snap, Smooth Flow, Diabolical, or Springy. Both master switches can be turned off at any time to return immediately to the normal theme and motion.
+
 ## Where did the other settings go?
 
 The IntelGram Preferences home page is grouped into **Customize**, **Power tools**, and **Client settings**. Navigation and tray behavior are in **Navigation & Layout**; contact notes, rules, identity inspection, privacy, and anti-spam tools are in **Contacts & Automation**; exports and Frozen Account Backup are in **Export & Backup**; diagnostics, URL registration, and reset controls are in **Advanced & Maintenance**.

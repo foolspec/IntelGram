@@ -13,6 +13,9 @@
 - Chat controls: local tags, priority, manual/Wi-Fi/always download behavior, read reminders, local-only draft preference, and local notification muting.
 - Anti-spam: unknown-sender and suspicious-invite review tags plus keyword, link, photo, and file rules.
 - Appearance & Backgrounds: native visual theme cards, in-app cloud themes, imported theme files, a visible remove-current-theme action, Telegram's wallpaper gallery, custom local images, live background preview, tiling controls, and the IntelGram icon set.
+- Glass & Motion: opt-in whole-window transparency with native macOS and Windows blur, Linux compositor transparency, separate sidebar/chat/panel switches, glass tint and opacity, and a removable local whole-app image with independent opacity and blur.
+- Enhanced Animations: Quick Snap, Smooth Flow, Diabolical, and Springy presets apply across existing transitions, dialogs, drawers, controls, and navigation, with an optional window-opening animation.
+- Accessibility: IntelGram's reduced-motion and power-saving switch remains authoritative and disables the added motion behavior.
 - Export Center: selected-message, chat, and account HTML/PDF/Markdown/JSON/ZIP export.
 - Frozen Account Backup: streamed AES-256-GCM `.intelvault` output with permitted cached media and no plaintext destination files.
 - Existing feature scope remains: local profile fields, photo, high-fidelity profile clone, UID/visible-phone cached-peer search, native collection and item galleries, featured gift, pinned gifts, and fourteen app-icon choices.
@@ -28,7 +31,7 @@
 - Settings cleanup: inherited Boosty and cryptocurrency donation rows were removed and replaced with IntelGram community, source, and changelog links.
 - Community badge: joining `@intelgrams` through Telegram's normal channel page unlocks a local supporter badge; IntelGram performs no automatic join request.
 - In-app update log: **IntelGram Preferences -> Update log** opens a bundled native summary without requiring GitHub.
-- Current source patch SHA-256: `7e08df09395bd170067a0495019f9dcef66e172dc6492bbba27c4cf1d70cbef6`.
+- Current source patch SHA-256: `8fcb5eff6158a9745c5e6d25ad820b45ad2ec40e50ba4c20a245d4b0e0694e47`.
 - Privacy boundary: no Telegram profile mutation, contact import, automatic channel join, collectible transaction, or protected-content bypass.
 - Protected content: Restrict Saving Content and self-destructing items remain metadata-only jump-back references; bodies, links, filenames, revisions, and media are excluded from rules, exports, and backups.
 - Branding consistency: product-facing window, settings, version, and notification-preview titles use IntelGram while upstream attribution remains intact.

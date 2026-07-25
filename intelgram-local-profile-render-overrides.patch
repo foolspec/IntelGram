@@ -1,17 +1,41 @@
+diff --git a/.gitmodules b/.gitmodules
+index b839a6b756661957b603bec399473afc63895378..7e0cc43f9bdcbc45ceee1c02432b659626dbb5b4 100644
+--- a/.gitmodules
++++ b/.gitmodules
+@@ -24,7 +24,7 @@
+ 	url = https://github.com/AyuGram/codegen.git
+ [submodule "Telegram/lib_ui"]
+ 	path = Telegram/lib_ui
+-	url = https://github.com/AyuGram/lib_ui.git
++	url = https://github.com/foolspec/lib_ui.git
+ [submodule "Telegram/lib_lottie"]
+ 	path = Telegram/lib_lottie
+ 	url = https://github.com/desktop-app/lib_lottie.git
 diff --git a/Telegram/CMakeLists.txt b/Telegram/CMakeLists.txt
-index 3ac3f4ba0..4b8a83b3d 100644
+index 3ac3f4ba0bcde68c0c384d13e7cf2472e2be37f5..5abcbf1592447adb43de3468a570d097bbfd0882 100644
 --- a/Telegram/CMakeLists.txt
 +++ b/Telegram/CMakeLists.txt
-@@ -166,6 +166,8 @@ set(ayugram_files
+@@ -138,6 +138,8 @@ set(ayugram_files
+         ayu/ui/toasts.h
+         ayu/ui/ayu_userpic.cpp
+         ayu/ui/ayu_userpic.h
++        ayu/ui/visual_effects.cpp
++        ayu/ui/visual_effects.h
+         ayu/ui/utils/ayu_profile_values.cpp
+         ayu/ui/utils/ayu_profile_values.h
+         ayu/ui/utils/color_cut_quantizer.cpp
+@@ -166,6 +168,10 @@ set(ayugram_files
          ayu/ui/settings/settings_main.h
          ayu/ui/settings/settings_other.cpp
          ayu/ui/settings/settings_other.h
 +        ayu/ui/settings/settings_vault.cpp
 +        ayu/ui/settings/settings_vault.h
++        ayu/ui/settings/settings_visual_effects.cpp
++        ayu/ui/settings/settings_visual_effects.h
          ayu/ui/settings/filters/settings_filters_list.cpp
          ayu/ui/settings/filters/settings_filters_list.h
          ayu/ui/settings/filters/per_dialog_filter.cpp
-@@ -249,6 +251,10 @@ set(ayugram_files
+@@ -249,6 +255,10 @@ set(ayugram_files
          ayu/features/filters/filters_utils.h
          ayu/data/messages_storage.cpp
          ayu/data/messages_storage.h
@@ -23,10 +47,10 @@ index 3ac3f4ba0..4b8a83b3d 100644
          ayu/data/ayu_database.cpp
          ayu/data/ayu_database.h
 diff --git a/Telegram/Resources/langs/lang.strings b/Telegram/Resources/langs/lang.strings
-index 7380587e7..bfae242df 100644
+index 7380587e74ff4f8d59ca6aab8dd30b6bbc5e6d0f..ad5ad6ad06b4cdb87190fcdc109e30a66ede382f 100644
 --- a/Telegram/Resources/langs/lang.strings
 +++ b/Telegram/Resources/langs/lang.strings
-@@ -7971,14 +7971,23 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -7971,14 +7971,54 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  // Keys finished
  
  
@@ -39,6 +63,37 @@ index 7380587e7..bfae242df 100644
  "ayu_CategoryGeneral" = "General";
 -"ayu_CategoryAppearance" = "Appearance";
 +"ayu_CategoryAppearance" = "Appearance & Backgrounds";
++"ayu_VisualEffectsTitle" = "Glass & Motion";
++"ayu_VisualEffectsGlassHeader" = "Transparent mode";
++"ayu_VisualEffectsEnableGlass" = "Enable transparent mode";
++"ayu_VisualEffectsNativeBlur" = "Blur what is behind IntelGram";
++"ayu_VisualEffectsSidebar" = "Transparent chat list and sidebar";
++"ayu_VisualEffectsChat" = "Transparent chats and message surfaces";
++"ayu_VisualEffectsPanels" = "Transparent menus, dialogs, and panels";
++"ayu_VisualEffectsOpacity" = "Glass surface opacity";
++"ayu_VisualEffectsGlassDescription" = "Uses native macOS and Windows blur when available. Linux uses compositor transparency. Text, icons, avatars, and media stay fully opaque.";
++"ayu_VisualEffectsBackdropHeader" = "Window backdrop";
++"ayu_VisualEffectsTint" = "Glass tint";
++"ayu_VisualEffectsTintTitle" = "Glass tint";
++"ayu_VisualEffectsTintPlaceholder" = "Hex color, for example #161922";
++"ayu_VisualEffectsTintDescription" = "Choose the color placed over the desktop blur or your custom background image.";
++"ayu_VisualEffectsTintInvalid" = "Enter a valid hex color.";
++"ayu_VisualEffectsChooseBackground" = "Choose whole-app background";
++"ayu_VisualEffectsNoBackground" = "Desktop blur";
++"ayu_VisualEffectsClearBackground" = "Clear whole-app background";
++"ayu_VisualEffectsBackgroundInvalid" = "That image could not be opened.";
++"ayu_VisualEffectsBackgroundOpacity" = "Background image opacity";
++"ayu_VisualEffectsBackgroundBlur" = "Background image blur";
++"ayu_VisualEffectsBackdropDescription" = "A local image can sit behind the entire IntelGram interface. It stays on this device and can be removed at any time.";
++"ayu_VisualEffectsMotionHeader" = "Enhanced animations";
++"ayu_VisualEffectsEnhancedAnimations" = "Enable enhanced animations";
++"ayu_VisualEffectsMotionStyle" = "Animation style";
++"ayu_VisualEffectsMotionQuick" = "Quick Snap";
++"ayu_VisualEffectsMotionSmooth" = "Smooth Flow";
++"ayu_VisualEffectsMotionDynamic" = "Diabolical";
++"ayu_VisualEffectsMotionSpringy" = "Springy";
++"ayu_VisualEffectsAnimateWindows" = "Animate window opening";
++"ayu_VisualEffectsMotionDescription" = "Applies the selected timing and easing across IntelGram transitions, dialogs, drawers, controls, and navigation. Reduced-motion and power-saving settings are always respected.";
 +"ayu_CategoryNavigation" = "Navigation & Layout";
  "ayu_CategoryChats" = "Chats";
 -"ayu_CategoryOther" = "Other";
@@ -54,7 +109,7 @@ index 7380587e7..bfae242df 100644
  "ayu_CategoryGhostMode" = "Ghost Mode";
  "ayu_CategorySpy" = "Spy";
  "ayu_CategoryFilters" = "Filters";
-@@ -8031,12 +8040,13 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8031,12 +8071,13 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_ExportDatabaseButton" = "Export Database";
  "ayu_ImportDatabaseButton" = "Import Database";
  "ayu_QoLTogglesHeader" = "Useful features";
@@ -70,7 +125,7 @@ index 7380587e7..bfae242df 100644
  "ayu_HidePremiumStatuses" = "Hide Premium Statuses";
  "ayu_SmoothScroll" = "Smooth Scroll";
  "ayu_DisableNotificationsDelay" = "Disable Notify Delay";
-@@ -8056,6 +8066,23 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8056,6 +8097,23 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_LinksChats" = "Chats";
  "ayu_LinksTranslate" = "Translate";
  "ayu_LinksDocumentation" = "Documentation";
@@ -84,9 +139,9 @@ index 7380587e7..bfae242df 100644
 +"ayu_IntelGramUpdateLogLabel" = "Open in IntelGram";
 +"ayu_IntelGramUpdateLogTitle" = "IntelGram update log";
 +"ayu_IntelGramUpdateLogCurrentTitle" = "Latest update";
-+"ayu_IntelGramUpdateLogCurrent" = "**Appearance and settings refresh**\n- Appearance & Backgrounds now uses Telegram's native visual theme cards, in-app cloud theme gallery, and full wallpaper preview editor.\n- Choose a chat background from Telegram's gallery or any local image, then control tiling and wide-layout behavior without leaving IntelGram.\n- Select an installed custom theme and use Remove current custom theme to return to a built-in default and uninstall it.\n- The old novelty theme list was removed. Theme files and images can be imported through the native appearance controls.\n- IntelGram Preferences is grouped into Customize, Power tools, and Client settings.\n- Local Profile & Collectibles, Navigation & Layout, Vault & Search, Contacts & Automation, Export & Backup, and Advanced & Maintenance are separate focused pages.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
++"ayu_IntelGramUpdateLogCurrent" = "**Glass & Motion**\n- Transparent mode adds native desktop blur on macOS and Windows, compositor transparency on Linux, and independently controlled glass surfaces for the sidebar, chats, menus, dialogs, and panels.\n- Choose a private local image as the full IntelGram backdrop, then control image opacity, blur, and glass tint without fading text, icons, avatars, or media.\n- Enhanced Animations applies Quick Snap, Smooth Flow, Diabolical, or Springy motion across shared IntelGram transitions while still respecting reduced-motion and power-saving settings.\n- Appearance & Backgrounds continues to provide Telegram's native visual theme cards, cloud theme gallery, wallpaper preview editor, and removable imported themes.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
 +"ayu_IntelGramUpdateLogFeaturesTitle" = "Main IntelGram features";
-+"ayu_IntelGramUpdateLogFeatures" = "**Local profile and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, badges, emoji status, and personal channel rendering.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native visual themes, cloud theme browsing, custom chat backgrounds, wallpaper previews, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
++"ayu_IntelGramUpdateLogFeatures" = "**Local profile and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, badges, emoji status, and personal channel rendering.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity and customization**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native themes, cloud theme browsing, chat wallpapers, whole-app glass backgrounds, native blur, motion presets, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
 +"ayu_IntelGramUpdateLogPrivacyTitle" = "Local-only boundary";
 +"ayu_IntelGramUpdateLogPrivacy" = "Local profile tools never update your Telegram profile, import contacts, change collectible ownership, or join a channel automatically. Vault tools only process data already received by this client. Restrict Saving Content and self-destructing media are preserved: IntelGram stores a jump-back reference and basic metadata, never the protected body or media.";
 +"ayu_IntelGramUpdateLogCredit" = "IntelGram local profile tools by fool.";
@@ -94,7 +149,7 @@ index 7380587e7..bfae242df 100644
  "ayu_CategoriesHeader" = "Categories";
  "ayu_SupportHeader" = "Support";
  "ayu_SupportDescription1" = "Support Development";
-@@ -8070,8 +8097,72 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8070,8 +8128,72 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SupportBoxReceiveBadgeInfo" = "After payment verification, you will receive a unique badge that will be displayed on your profile and visible to other users.";
  "ayu_CrashReporting" = "Crash Reporting";
  "ayu_CrashReportingDescription" = "When this option is enabled, you'll be prompted to send a report after the app crashes. You can decide whether to send it or not.";
@@ -168,7 +223,7 @@ index 7380587e7..bfae242df 100644
  "ayu_DisableColorfulCover" = "Disable adaptive color";
  "ayu_EnableColorfulCover" = "Enable adaptive color";
  "ayu_CustomizationHeader" = "Customization";
-@@ -8130,14 +8221,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8130,14 +8252,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SettingsBiggerWindow" = "Bigger Window";
  "ayu_SettingsIncreaseWebviewHeight" = "Increase Content Height";
  "ayu_SettingsIncreaseWebviewWidth" = "Increase Content Width";
@@ -185,7 +240,7 @@ index 7380587e7..bfae242df 100644
  "ayu_ImportDataDescription" = "It will replace the current database.";
  "ayu_ImportDataConfirm" = "Yes, replace existing";
  "ayu_ImportDataCancel" = "No, close window";
-@@ -8204,7 +8295,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8204,7 +8326,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_FiltersClearPopupAltActionText" = "Clear unknown";
  "ayu_AppIconHeader" = "App Icon";
  "ayu_IconDefault" = "Default";
@@ -194,7 +249,7 @@ index 7380587e7..bfae242df 100644
  "ayu_IconDiscord" = "Discord";
  "ayu_IconSpotify" = "Spotify";
  "ayu_IconExtera" = "extera";
-@@ -8214,8 +8305,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8214,8 +8336,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_IconAyuTyan" = "AyuTyan";
  "ayu_WALMode" = "Enable WAL mode";
  "ayu_PushNotificationCount" = "FCM notifications received";
@@ -205,7 +260,7 @@ index 7380587e7..bfae242df 100644
  "ayu_TelegramCacheDatabase" = "Telegram Messages Database";
  "ayu_ConfirmationsTitle" = "Confirmations";
  "ayu_StickerConfirmation" = "For Stickers";
-@@ -8288,9 +8379,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8288,9 +8410,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SuggestGhostModeStoryText" = "Do you want to enable **Ghost Mode** before viewing the story?";
  "ayu_SuggestGhostModeStoryActionTextYes" = "Yes";
  "ayu_SuggestGhostModeStoryActionTextNo" = "No";
@@ -217,7 +272,7 @@ index 7380587e7..bfae242df 100644
  "ayu_HideNextViewsDescriptionAyu" = "Hide my views forever, until Ghost Mode is disabled.";
  "ayu_EnableGhostModeStories" = "Enable Ghost Mode";
  "ayu_GhostModeIsActive" = "Ghost Mode is Active";
-@@ -8355,28 +8446,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8355,28 +8477,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_ContextCopyID" = "Copy ID";
  "ayu_IDCopiedToast" = "ID copied to clipboard.";
  "ayu_ContextHideMessage" = "Hide";
@@ -384,7 +439,7 @@ index 7380587e7..bfae242df 100644
 +"ayu_VaultExportComplete" = "IntelGram export completed.";
 +"ayu_VaultProtectedPolicy" = "Telegram's Restrict Saving Content setting is preserved. Protected and self-destructing content is never copied into search, rules, exports, or backups.";
 diff --git a/Telegram/SourceFiles/apiwrap.cpp b/Telegram/SourceFiles/apiwrap.cpp
-index 8893dce20..3de0e8dda 100644
+index 8893dce20fe6a86563687c7e7855e5de53e53daa..3de0e8dda375ff2584ebd4ff75aa9e7b32c741bd 100644
 --- a/Telegram/SourceFiles/apiwrap.cpp
 +++ b/Telegram/SourceFiles/apiwrap.cpp
 @@ -38,6 +38,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -416,7 +471,7 @@ index 8893dce20..3de0e8dda 100644
  			++i;
  			continue; // sent already
 diff --git a/Telegram/SourceFiles/ayu/ayu_infra.cpp b/Telegram/SourceFiles/ayu/ayu_infra.cpp
-index 2fa8a2a3f..a34d572f2 100644
+index 2fa8a2a3f2fc9c6170a7d686093c832ea66357be..a34d572f22131ba0b35cff4f0cc509bf928de0be 100644
 --- a/Telegram/SourceFiles/ayu/ayu_infra.cpp
 +++ b/Telegram/SourceFiles/ayu/ayu_infra.cpp
 @@ -11,6 +11,7 @@
@@ -436,7 +491,7 @@ index 2fa8a2a3f..a34d572f2 100644
  
  void initWorker() {
 diff --git a/Telegram/SourceFiles/ayu/ayu_settings.cpp b/Telegram/SourceFiles/ayu/ayu_settings.cpp
-index 2280020ce..0ed18158d 100644
+index 2280020ce869c829600fe3bbacf4db26cbfe75a7..e261152008405915966324f1982cd85a0636001e 100644
 --- a/Telegram/SourceFiles/ayu/ayu_settings.cpp
 +++ b/Telegram/SourceFiles/ayu/ayu_settings.cpp
 @@ -11,6 +11,7 @@
@@ -447,7 +502,112 @@ index 2280020ce..0ed18158d 100644
  #include "core/application.h"
  #include "features/filters/filters_cache_controller.h"
  #include "features/translator/ayu_translator.h"
-@@ -681,6 +682,112 @@ void AyuSettings::setLocalPremium(bool val) {
+@@ -20,8 +21,10 @@
+ #include "rpl/combine.h"
+ #include "window/window_controller.h"
+ 
++#include <algorithm>
+ #include <fstream>
+ #include <QApplication>
++#include <QColor>
+ 
+ using json = nlohmann::json;
+ 
+@@ -663,6 +666,93 @@ void AyuSettings::setMaterialSwitches(bool val) {
+ 	save();
+ }
+ 
++void AyuSettings::setTransparentMode(bool val) {
++	if (_transparentMode.current() == val) return;
++	_transparentMode = val;
++	save();
++}
++
++void AyuSettings::setTransparentBlur(bool val) {
++	if (_transparentBlur.current() == val) return;
++	_transparentBlur = val;
++	save();
++}
++
++void AyuSettings::setTransparentSidebar(bool val) {
++	if (_transparentSidebar.current() == val) return;
++	_transparentSidebar = val;
++	save();
++}
++
++void AyuSettings::setTransparentChat(bool val) {
++	if (_transparentChat.current() == val) return;
++	_transparentChat = val;
++	save();
++}
++
++void AyuSettings::setTransparentPanels(bool val) {
++	if (_transparentPanels.current() == val) return;
++	_transparentPanels = val;
++	save();
++}
++
++void AyuSettings::setTransparentOpacity(int val) {
++	val = std::clamp(val, 20, 100);
++	if (_transparentOpacity.current() == val) return;
++	_transparentOpacity = val;
++	save();
++}
++
++void AyuSettings::setTransparentTint(const QString &val) {
++	const auto color = QColor(val.trimmed());
++	if (!color.isValid()) {
++		return;
++	}
++	const auto normalized = color.name(QColor::HexRgb);
++	if (_transparentTint.current() == normalized) return;
++	_transparentTint = normalized;
++	save();
++}
++
++void AyuSettings::setTransparentBackgroundPath(const QString &val) {
++	const auto normalized = val.trimmed();
++	if (_transparentBackgroundPath.current() == normalized) return;
++	_transparentBackgroundPath = normalized;
++	save();
++}
++
++void AyuSettings::setTransparentBackgroundOpacity(int val) {
++	val = std::clamp(val, 0, 100);
++	if (_transparentBackgroundOpacity.current() == val) return;
++	_transparentBackgroundOpacity = val;
++	save();
++}
++
++void AyuSettings::setTransparentBackgroundBlur(int val) {
++	val = std::clamp(val, 0, 40);
++	if (_transparentBackgroundBlur.current() == val) return;
++	_transparentBackgroundBlur = val;
++	save();
++}
++
++void AyuSettings::setEnhancedAnimations(bool val) {
++	if (_enhancedAnimations.current() == val) return;
++	_enhancedAnimations = val;
++	save();
++}
++
++void AyuSettings::setMotionStyle(IntelGramMotionStyle val) {
++	if (_motionStyle.current() == val) return;
++	_motionStyle = val;
++	save();
++}
++
++void AyuSettings::setAnimateWindowOpening(bool val) {
++	if (_animateWindowOpening.current() == val) return;
++	_animateWindowOpening = val;
++	save();
++}
++
+ void AyuSettings::setRemoveMessageTail(bool val) {
+ 	if (_removeMessageTail.current() == val) return;
+ 	_removeMessageTail = val;
+@@ -681,6 +771,112 @@ void AyuSettings::setLocalPremium(bool val) {
  	save();
  }
  
@@ -560,7 +720,23 @@ index 2280020ce..0ed18158d 100644
  void AyuSettings::setShowChannelReactions(bool val) {
  	if (_showChannelReactions.current() == val) return;
  	_showChannelReactions = val;
-@@ -1083,6 +1190,22 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
+@@ -1080,9 +1276,38 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
+ 		{"increaseWebviewHeight", s._increaseWebviewHeight.current()},
+ 		{"increaseWebviewWidth", s._increaseWebviewWidth.current()},
+ 		{"materialSwitches", s._materialSwitches.current()},
++		{"transparentMode", s._transparentMode.current()},
++		{"transparentBlur", s._transparentBlur.current()},
++		{"transparentSidebar", s._transparentSidebar.current()},
++		{"transparentChat", s._transparentChat.current()},
++		{"transparentPanels", s._transparentPanels.current()},
++		{"transparentOpacity", s._transparentOpacity.current()},
++		{"transparentTint", s._transparentTint.current()},
++		{"transparentBackgroundPath", s._transparentBackgroundPath.current()},
++		{"transparentBackgroundOpacity", s._transparentBackgroundOpacity.current()},
++		{"transparentBackgroundBlur", s._transparentBackgroundBlur.current()},
++		{"enhancedAnimations", s._enhancedAnimations.current()},
++		{"motionStyle", s._motionStyle.current()},
++		{"animateWindowOpening", s._animateWindowOpening.current()},
  		{"removeMessageTail", s._removeMessageTail.current()},
  		{"disableNotificationsDelay", s._disableNotificationsDelay.current()},
  		{"localPremium", s._localPremium.current()},
@@ -583,7 +759,46 @@ index 2280020ce..0ed18158d 100644
  		{"showChannelReactions", s._showChannelReactions.current()},
  		{"showGroupReactions", s._showGroupReactions.current()},
  		{"showPrivateChatReactions", s._showPrivateChatReactions.current()},
-@@ -1183,6 +1306,22 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
+@@ -1180,9 +1405,61 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
+ 	s._increaseWebviewHeight = j.value("increaseWebviewHeight", defaults._increaseWebviewHeight.current());
+ 	s._increaseWebviewWidth = j.value("increaseWebviewWidth", defaults._increaseWebviewWidth.current());
+ 	s._materialSwitches = j.value("materialSwitches", defaults._materialSwitches.current());
++	s._transparentMode = j.value("transparentMode", defaults._transparentMode.current());
++	s._transparentBlur = j.value("transparentBlur", defaults._transparentBlur.current());
++	s._transparentSidebar = j.value("transparentSidebar", defaults._transparentSidebar.current());
++	s._transparentChat = j.value("transparentChat", defaults._transparentChat.current());
++	s._transparentPanels = j.value("transparentPanels", defaults._transparentPanels.current());
++	s._transparentOpacity = std::clamp(
++		j.value("transparentOpacity", defaults._transparentOpacity.current()),
++		20,
++		100);
++	const auto tint = QColor(
++		j.value("transparentTint", defaults._transparentTint.current()));
++	s._transparentTint = tint.isValid()
++		? tint.name(QColor::HexRgb)
++		: defaults._transparentTint.current();
++	s._transparentBackgroundPath = j.value(
++		"transparentBackgroundPath",
++		defaults._transparentBackgroundPath.current()).trimmed();
++	s._transparentBackgroundOpacity = std::clamp(
++		j.value(
++			"transparentBackgroundOpacity",
++			defaults._transparentBackgroundOpacity.current()),
++		0,
++		100);
++	s._transparentBackgroundBlur = std::clamp(
++		j.value(
++			"transparentBackgroundBlur",
++			defaults._transparentBackgroundBlur.current()),
++		0,
++		40);
++	s._enhancedAnimations = j.value(
++		"enhancedAnimations",
++		defaults._enhancedAnimations.current());
++	s._motionStyle = j.value("motionStyle", defaults._motionStyle.current());
++	s._animateWindowOpening = j.value(
++		"animateWindowOpening",
++		defaults._animateWindowOpening.current());
  	s._removeMessageTail = j.value("removeMessageTail", defaults._removeMessageTail.current());
  	s._disableNotificationsDelay = j.value("disableNotificationsDelay", defaults._disableNotificationsDelay.current());
  	s._localPremium = j.value("localPremium", defaults._localPremium.current());
@@ -607,10 +822,54 @@ index 2280020ce..0ed18158d 100644
  	s._showGroupReactions = j.value("showGroupReactions", defaults._showGroupReactions.current());
  	s._showPrivateChatReactions = j.value("showPrivateChatReactions", defaults._showPrivateChatReactions.current());
 diff --git a/Telegram/SourceFiles/ayu/ayu_settings.h b/Telegram/SourceFiles/ayu/ayu_settings.h
-index 97a043921..ece921506 100644
+index 97a0439215a0951bbe5e57ac52f0aeffe398c4dd..eab1e9e5071fda3c8c77377509a533463d3b864b 100644
 --- a/Telegram/SourceFiles/ayu/ayu_settings.h
 +++ b/Telegram/SourceFiles/ayu/ayu_settings.h
-@@ -291,6 +291,22 @@ public:
+@@ -51,6 +51,13 @@ enum class SendWithoutSoundOption {
+ 	Always = 2,
+ };
+ 
++enum class IntelGramMotionStyle {
++	Quick = 0,
++	Smooth = 1,
++	Dynamic = 2,
++	Springy = 3,
++};
++
+ NLOHMANN_JSON_SERIALIZE_ENUM(PeerIdDisplay, {
+ 	{PeerIdDisplay::Hidden, 0},
+ 	{PeerIdDisplay::TelegramApi, 1},
+@@ -82,6 +89,13 @@ NLOHMANN_JSON_SERIALIZE_ENUM(SendWithoutSoundOption, {
+ 	{SendWithoutSoundOption::Always, 2},
+ })
+ 
++NLOHMANN_JSON_SERIALIZE_ENUM(IntelGramMotionStyle, {
++	{IntelGramMotionStyle::Quick, "quick"},
++	{IntelGramMotionStyle::Smooth, "smooth"},
++	{IntelGramMotionStyle::Dynamic, "dynamic"},
++	{IntelGramMotionStyle::Springy, "springy"},
++})
++
+ class GhostModeAccountSettings {
+ public:
+ 	GhostModeAccountSettings();
+@@ -288,9 +302,38 @@ public:
+ 	[[nodiscard]] bool increaseWebviewHeight() const { return _increaseWebviewHeight.current(); }
+ 	[[nodiscard]] bool increaseWebviewWidth() const { return _increaseWebviewWidth.current(); }
+ 	[[nodiscard]] bool materialSwitches() const { return _materialSwitches.current(); }
++	[[nodiscard]] bool transparentMode() const { return _transparentMode.current(); }
++	[[nodiscard]] bool transparentBlur() const { return _transparentBlur.current(); }
++	[[nodiscard]] bool transparentSidebar() const { return _transparentSidebar.current(); }
++	[[nodiscard]] bool transparentChat() const { return _transparentChat.current(); }
++	[[nodiscard]] bool transparentPanels() const { return _transparentPanels.current(); }
++	[[nodiscard]] int transparentOpacity() const { return _transparentOpacity.current(); }
++	[[nodiscard]] const QString &transparentTint() const { return _transparentTint.current(); }
++	[[nodiscard]] const QString &transparentBackgroundPath() const { return _transparentBackgroundPath.current(); }
++	[[nodiscard]] int transparentBackgroundOpacity() const { return _transparentBackgroundOpacity.current(); }
++	[[nodiscard]] int transparentBackgroundBlur() const { return _transparentBackgroundBlur.current(); }
++	[[nodiscard]] bool enhancedAnimations() const { return _enhancedAnimations.current(); }
++	[[nodiscard]] IntelGramMotionStyle motionStyle() const { return _motionStyle.current(); }
++	[[nodiscard]] bool animateWindowOpening() const { return _animateWindowOpening.current(); }
  	[[nodiscard]] bool removeMessageTail() const { return _removeMessageTail.current(); }
  	[[nodiscard]] bool disableNotificationsDelay() const { return _disableNotificationsDelay.current(); }
  	[[nodiscard]] bool localPremium() const { return _localPremium.current(); }
@@ -633,7 +892,23 @@ index 97a043921..ece921506 100644
  	[[nodiscard]] bool showChannelReactions() const { return _showChannelReactions.current(); }
  	[[nodiscard]] bool showGroupReactions() const { return _showGroupReactions.current(); }
  	[[nodiscard]] bool showPrivateChatReactions() const { return _showPrivateChatReactions.current(); }
-@@ -375,6 +391,22 @@ public:
+@@ -372,9 +415,38 @@ public:
+ 	void setIncreaseWebviewHeight(bool val);
+ 	void setIncreaseWebviewWidth(bool val);
+ 	void setMaterialSwitches(bool val);
++	void setTransparentMode(bool val);
++	void setTransparentBlur(bool val);
++	void setTransparentSidebar(bool val);
++	void setTransparentChat(bool val);
++	void setTransparentPanels(bool val);
++	void setTransparentOpacity(int val);
++	void setTransparentTint(const QString &val);
++	void setTransparentBackgroundPath(const QString &val);
++	void setTransparentBackgroundOpacity(int val);
++	void setTransparentBackgroundBlur(int val);
++	void setEnhancedAnimations(bool val);
++	void setMotionStyle(IntelGramMotionStyle val);
++	void setAnimateWindowOpening(bool val);
  	void setRemoveMessageTail(bool val);
  	void setDisableNotificationsDelay(bool val);
  	void setLocalPremium(bool val);
@@ -656,7 +931,39 @@ index 97a043921..ece921506 100644
  	void setShowChannelReactions(bool val);
  	void setShowGroupReactions(bool val);
  	void setShowPrivateChatReactions(bool val);
-@@ -485,6 +517,38 @@ public:
+@@ -479,12 +551,70 @@ public:
+ 	[[nodiscard]] rpl::producer<bool> increaseWebviewWidthChanges() const { return _increaseWebviewWidth.changes(); }
+ 	[[nodiscard]] rpl::producer<bool> materialSwitchesValue() const { return _materialSwitches.value(); }
+ 	[[nodiscard]] rpl::producer<bool> materialSwitchesChanges() const { return _materialSwitches.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentModeValue() const { return _transparentMode.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentModeChanges() const { return _transparentMode.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentBlurValue() const { return _transparentBlur.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentBlurChanges() const { return _transparentBlur.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentSidebarValue() const { return _transparentSidebar.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentSidebarChanges() const { return _transparentSidebar.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentChatValue() const { return _transparentChat.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentChatChanges() const { return _transparentChat.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentPanelsValue() const { return _transparentPanels.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentPanelsChanges() const { return _transparentPanels.changes(); }
++	[[nodiscard]] rpl::producer<int> transparentOpacityValue() const { return _transparentOpacity.value(); }
++	[[nodiscard]] rpl::producer<int> transparentOpacityChanges() const { return _transparentOpacity.changes(); }
++	[[nodiscard]] rpl::producer<QString> transparentTintValue() const { return _transparentTint.value(); }
++	[[nodiscard]] rpl::producer<QString> transparentTintChanges() const { return _transparentTint.changes(); }
++	[[nodiscard]] rpl::producer<QString> transparentBackgroundPathValue() const { return _transparentBackgroundPath.value(); }
++	[[nodiscard]] rpl::producer<QString> transparentBackgroundPathChanges() const { return _transparentBackgroundPath.changes(); }
++	[[nodiscard]] rpl::producer<int> transparentBackgroundOpacityValue() const { return _transparentBackgroundOpacity.value(); }
++	[[nodiscard]] rpl::producer<int> transparentBackgroundOpacityChanges() const { return _transparentBackgroundOpacity.changes(); }
++	[[nodiscard]] rpl::producer<int> transparentBackgroundBlurValue() const { return _transparentBackgroundBlur.value(); }
++	[[nodiscard]] rpl::producer<int> transparentBackgroundBlurChanges() const { return _transparentBackgroundBlur.changes(); }
++	[[nodiscard]] rpl::producer<bool> enhancedAnimationsValue() const { return _enhancedAnimations.value(); }
++	[[nodiscard]] rpl::producer<bool> enhancedAnimationsChanges() const { return _enhancedAnimations.changes(); }
++	[[nodiscard]] rpl::producer<IntelGramMotionStyle> motionStyleValue() const { return _motionStyle.value(); }
++	[[nodiscard]] rpl::producer<IntelGramMotionStyle> motionStyleChanges() const { return _motionStyle.changes(); }
++	[[nodiscard]] rpl::producer<bool> animateWindowOpeningValue() const { return _animateWindowOpening.value(); }
++	[[nodiscard]] rpl::producer<bool> animateWindowOpeningChanges() const { return _animateWindowOpening.changes(); }
+ 	[[nodiscard]] rpl::producer<bool> removeMessageTailValue() const { return _removeMessageTail.value(); }
+ 	[[nodiscard]] rpl::producer<bool> removeMessageTailChanges() const { return _removeMessageTail.changes(); }
+ 	[[nodiscard]] rpl::producer<bool> disableNotificationsDelayValue() const { return _disableNotificationsDelay.value(); }
  	[[nodiscard]] rpl::producer<bool> disableNotificationsDelayChanges() const { return _disableNotificationsDelay.changes(); }
  	[[nodiscard]] rpl::producer<bool> localPremiumValue() const { return _localPremium.value(); }
  	[[nodiscard]] rpl::producer<bool> localPremiumChanges() const { return _localPremium.changes(); }
@@ -695,7 +1002,23 @@ index 97a043921..ece921506 100644
  	[[nodiscard]] rpl::producer<bool> showChannelReactionsValue() const { return _showChannelReactions.value(); }
  	[[nodiscard]] rpl::producer<bool> showChannelReactionsChanges() const { return _showChannelReactions.changes(); }
  	[[nodiscard]] rpl::producer<bool> showGroupReactionsValue() const { return _showGroupReactions.value(); }
-@@ -636,6 +700,22 @@ private:
+@@ -633,9 +763,38 @@ private:
+ 	rpl::variable<bool> _increaseWebviewHeight = false;
+ 	rpl::variable<bool> _increaseWebviewWidth = false;
+ 	rpl::variable<bool> _materialSwitches = true;
++	rpl::variable<bool> _transparentMode = false;
++	rpl::variable<bool> _transparentBlur = true;
++	rpl::variable<bool> _transparentSidebar = true;
++	rpl::variable<bool> _transparentChat = true;
++	rpl::variable<bool> _transparentPanels = true;
++	rpl::variable<int> _transparentOpacity = 78;
++	rpl::variable<QString> _transparentTint = QString::fromLatin1("#161922");
++	rpl::variable<QString> _transparentBackgroundPath;
++	rpl::variable<int> _transparentBackgroundOpacity = 72;
++	rpl::variable<int> _transparentBackgroundBlur = 8;
++	rpl::variable<bool> _enhancedAnimations = false;
++	rpl::variable<IntelGramMotionStyle> _motionStyle = IntelGramMotionStyle::Smooth;
++	rpl::variable<bool> _animateWindowOpening = true;
  	rpl::variable<bool> _removeMessageTail = false;
  	rpl::variable<bool> _disableNotificationsDelay = false;
  	rpl::variable<bool> _localPremium = false;
@@ -720,7 +1043,7 @@ index 97a043921..ece921506 100644
  	rpl::variable<bool> _showPrivateChatReactions = true;
 diff --git a/Telegram/SourceFiles/ayu/data/intelgram_export.cpp b/Telegram/SourceFiles/ayu/data/intelgram_export.cpp
 new file mode 100644
-index 000000000..590f9db0b
+index 0000000000000000000000000000000000000000..590f9db0bd42d3111f86f8b0866e9d2e9bf21365
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/data/intelgram_export.cpp
 @@ -0,0 +1,410 @@
@@ -1136,7 +1459,7 @@ index 000000000..590f9db0b
 +} // namespace IntelGram::Export
 diff --git a/Telegram/SourceFiles/ayu/data/intelgram_export.h b/Telegram/SourceFiles/ayu/data/intelgram_export.h
 new file mode 100644
-index 000000000..b4fbcfb3d
+index 0000000000000000000000000000000000000000..b4fbcfb3d6d6ac0be5f06d05c656d3d169d7c532
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/data/intelgram_export.h
 @@ -0,0 +1,36 @@
@@ -1178,7 +1501,7 @@ index 000000000..b4fbcfb3d
 +} // namespace IntelGram::Export
 diff --git a/Telegram/SourceFiles/ayu/data/intelgram_vault.cpp b/Telegram/SourceFiles/ayu/data/intelgram_vault.cpp
 new file mode 100644
-index 000000000..e5c4d1713
+index 0000000000000000000000000000000000000000..e5c4d1713a01dbf1c329279437dc65517a167e5c
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/data/intelgram_vault.cpp
 @@ -0,0 +1,1809 @@
@@ -2993,7 +3316,7 @@ index 000000000..e5c4d1713
 +} // namespace IntelGram::Vault
 diff --git a/Telegram/SourceFiles/ayu/data/intelgram_vault.h b/Telegram/SourceFiles/ayu/data/intelgram_vault.h
 new file mode 100644
-index 000000000..b38fa07a8
+index 0000000000000000000000000000000000000000..b38fa07a8768934c7099ed57f37b8c896c77c38a
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/data/intelgram_vault.h
 @@ -0,0 +1,239 @@
@@ -3237,7 +3560,7 @@ index 000000000..b38fa07a8
 +
 +} // namespace IntelGram::Vault
 diff --git a/Telegram/SourceFiles/ayu/data/messages_storage.cpp b/Telegram/SourceFiles/ayu/data/messages_storage.cpp
-index 97f332a96..8dd2b38e0 100644
+index 97f332a96636ac0fac612677724486f6267a67b2..8dd2b38e0f7686643528ed352412bb1a7795df48 100644
 --- a/Telegram/SourceFiles/ayu/data/messages_storage.cpp
 +++ b/Telegram/SourceFiles/ayu/data/messages_storage.cpp
 @@ -85,6 +85,13 @@ void map(not_null<HistoryItem*> item, AyuMessageBase &message) {
@@ -3269,7 +3592,7 @@ index 97f332a96..8dd2b38e0 100644
  	map(item, message);
  
 diff --git a/Telegram/SourceFiles/ayu/features/forward/ayu_forward.cpp b/Telegram/SourceFiles/ayu/features/forward/ayu_forward.cpp
-index 5258d4436..148380c22 100644
+index 5258d443677d1cbc80629eca8107b6c201fbe04c..148380c22882222c8f31a87e47cbd255bb6696ed 100644
 --- a/Telegram/SourceFiles/ayu/features/forward/ayu_forward.cpp
 +++ b/Telegram/SourceFiles/ayu/features/forward/ayu_forward.cpp
 @@ -215,23 +215,16 @@ void sendMedia(
@@ -3302,7 +3625,7 @@ index 5258d4436..148380c22 100644
  
  struct ForwardChunk
 diff --git a/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp b/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp
-index 8fceff22c..22eb1d05c 100644
+index 8fceff22c4ae26fc2c1d3f2d8d8eb9fc18e4fd57..22eb1d05ccbf2542319aa6d0c9dcebdb7dc10ea3 100644
 --- a/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp
 @@ -13,6 +13,7 @@
@@ -3378,7 +3701,7 @@ index 8fceff22c..22eb1d05c 100644
  	}
  
 diff --git a/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.h b/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.h
-index 02133dda3..175c706d8 100644
+index 02133dda3017f0edbfdafeeaaef442e96519a6d3..175c706d826d13628f2d84d9f5d6670c7d38ed89 100644
 --- a/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.h
 +++ b/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.h
 @@ -42,6 +42,7 @@ void AddDeleteOwnMessagesAction(PeerData *peerData,
@@ -3390,7 +3713,7 @@ index 02133dda3..175c706d8 100644
  void AddUserMessagesAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
  void AddMessageDetailsAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.cpp
-index c41224c5c..7021b36b6 100644
+index c41224c5c828a324d3c79a7ef62a4711d090b11d..7021b36b67491676c00d66621f70f0fff775332c 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.cpp
 @@ -15,8 +15,11 @@
@@ -3549,7 +3872,7 @@ index c41224c5c..7021b36b6 100644
  	return AyuAppearance::Id();
  }
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.h b/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.h
-index 869861bba..7395a80ec 100644
+index 869861bba6113907c0eb07702048c78083e385bf..7395a80ecf05b0f96d9cfe9ade71ec4562771808 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.h
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.h
 @@ -23,6 +23,18 @@ public:
@@ -3572,10 +3895,10 @@ index 869861bba..7395a80ec 100644
  
  [[nodiscard]] Type AyuAppearanceId();
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
-index a4b1e7ad4..7850730d7 100644
+index a4b1e7ad414afc3e214fd954027e2df337668af4..8b0f3d579f5ae0774f2efa2af0ed19ff24ca40bb 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
-@@ -6,31 +6,38 @@
+@@ -6,31 +6,39 @@
  // Copyright @Radolyn, 2026
  #include "ayu/ui/settings/settings_main.h"
  
@@ -3590,6 +3913,7 @@ index a4b1e7ad4..7850730d7 100644
  #include "ayu/ui/settings/settings_general.h"
  #include "ayu/ui/settings/settings_other.h"
 +#include "ayu/ui/settings/settings_vault.h"
++#include "ayu/ui/settings/settings_visual_effects.h"
 +#include "ayu/ui/ayu_logo.h"
 +#include "ayu/ayu_settings.h"
 +#include "boxes/abstract_box.h"
@@ -3623,7 +3947,7 @@ index a4b1e7ad4..7850730d7 100644
  
  namespace Settings {
  
-@@ -70,7 +77,7 @@ void BuildVersionInfo(SectionBuilder &builder) {
+@@ -70,7 +78,7 @@ void BuildVersionInfo(SectionBuilder &builder) {
  			.widget = object_ptr<Ui::FlatLabel>(
  				ctx.container,
  				rpl::single(
@@ -3632,7 +3956,7 @@ index a4b1e7ad4..7850730d7 100644
  					+ QString::fromLatin1(AppVersionStr)),
  				st::boxTitle),
  			.align = style::al_top,
-@@ -98,27 +105,52 @@ void BuildCategories(SectionBuilder &builder) {
+@@ -98,27 +106,57 @@ void BuildCategories(SectionBuilder &builder) {
  	builder.addDivider();
  	builder.addSkip();
  
@@ -3659,19 +3983,24 @@ index a4b1e7ad4..7850730d7 100644
 -		.title = tr::ayu_CategoryGeneral(),
 -		.targetSection = AyuGeneral::Id(),
 -		.icon = { &st::menuIconShowAll },
++		.title = tr::ayu_VisualEffectsTitle(),
++		.targetSection = AyuVisualEffects::Id(),
++		.icon = { &st::menuIconTransparent },
+ 	});
+ 	builder.addSectionButton({
+-		.title = tr::ayu_CategoryAppearance(),
+-		.targetSection = AyuAppearance::Id(),
+-		.icon = { &st::menuIconPalette },
 +		.title = tr::ayu_CategoryNavigation(),
 +		.targetSection = AyuNavigation::Id(),
 +		.icon = { &st::menuIconShowInFolder },
- 	});
++	});
 +
 +	builder.addDivider();
 +	builder.addSkip();
 +	builder.addSubsectionTitle(tr::ayu_SettingsPowerToolsHeader());
 +
- 	builder.addSectionButton({
--		.title = tr::ayu_CategoryAppearance(),
--		.targetSection = AyuAppearance::Id(),
--		.icon = { &st::menuIconPalette },
++	builder.addSectionButton({
 +		.title = tr::ayu_VaultTitle(),
 +		.targetSection = AyuVault::Id(),
 +		.icon = { &st::menuIconArchive },
@@ -3698,7 +4027,7 @@ index a4b1e7ad4..7850730d7 100644
  	});
  	builder.addSectionButton({
  		.title = tr::ayu_CategoryChats(),
-@@ -126,63 +158,122 @@ void BuildCategories(SectionBuilder &builder) {
+@@ -126,10 +164,60 @@ void BuildCategories(SectionBuilder &builder) {
  		.icon = { &st::menuIconChatBubble },
  	});
  	builder.addSectionButton({
@@ -3713,14 +4042,14 @@ index a4b1e7ad4..7850730d7 100644
 +		.title = tr::ayu_CategoryGeneral(),
 +		.targetSection = AyuGeneral::Id(),
 +		.icon = { &st::menuIconShowAll },
-+	});
+ 	});
 +	builder.addSectionButton({
 +		.title = tr::ayu_CategoryAdvanced(),
 +		.targetSection = AyuAdvanced::Id(),
 +		.icon = { &st::menuIconSettings },
- 	});
- }
- 
++	});
++}
++
 +void ShowIntelGramUpdateLog(
 +		not_null<Window::SessionController*> controller) {
 +	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
@@ -3759,10 +4088,10 @@ index a4b1e7ad4..7850730d7 100644
 +			box->closeBox();
 +		});
 +	}));
-+}
-+
+ }
+ 
  void BuildLinks(SectionBuilder &builder) {
- 	builder.addSkip();
+@@ -137,52 +225,61 @@ void BuildLinks(SectionBuilder &builder) {
  	builder.addDivider();
  	builder.addSkip();
  
@@ -3849,7 +4178,7 @@ index a4b1e7ad4..7850730d7 100644
  	builder.addSkip();
  }
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-index 929cf4609..6e391186c 100644
+index 929cf4609b032bbf104dc3ef28ea6dc72deb37f8..6e391186cd8d3915561523438f38f9dcee171de2 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 @@ -6,33 +6,45 @@
@@ -5062,7 +5391,7 @@ index 929cf4609..6e391186c 100644
  	return AyuOther::Id();
  }
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_other.h b/Telegram/SourceFiles/ayu/ui/settings/settings_other.h
-index a7d340f8d..a4095ea60 100644
+index a7d340f8dab0ecfe9715c9cf44db8e5e748da9da..a4095ea60c557a31b1b80015221c980a8461525a 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_other.h
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_other.h
 @@ -23,6 +23,18 @@ public:
@@ -5086,7 +5415,7 @@ index a7d340f8d..a4095ea60 100644
  [[nodiscard]] Type AyuOtherId();
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_vault.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_vault.cpp
 new file mode 100644
-index 000000000..84d16b634
+index 0000000000000000000000000000000000000000..84d16b634f5e0b69fb7daa4eda9718747b3e4b79
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_vault.cpp
 @@ -0,0 +1,1022 @@
@@ -6114,7 +6443,7 @@ index 000000000..84d16b634
 +} // namespace Settings
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_vault.h b/Telegram/SourceFiles/ayu/ui/settings/settings_vault.h
 new file mode 100644
-index 000000000..b4a7a0919
+index 0000000000000000000000000000000000000000..b4a7a0919b21fdcccdab5b0fc9284b426960a88e
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_vault.h
 @@ -0,0 +1,53 @@
@@ -6171,8 +6500,329 @@ index 000000000..b4a7a0919
 +};
 +
 +} // namespace Settings
+diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_visual_effects.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_visual_effects.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..dd80127b26c3f39c4a269950da97c8d1308c8bb8
+--- /dev/null
++++ b/Telegram/SourceFiles/ayu/ui/settings/settings_visual_effects.cpp
+@@ -0,0 +1,285 @@
++#include "ayu/ui/settings/settings_visual_effects.h"
++
++#include "ayu/ayu_settings.h"
++#include "ayu/ui/settings/ayu_builder.h"
++#include "ayu/ui/settings/settings_main.h"
++#include "boxes/abstract_box.h"
++#include "core/application.h"
++#include "core/file_utilities.h"
++#include "lang_auto.h"
++#include "settings/settings_builder.h"
++#include "styles/style_layers.h"
++#include "styles/style_menu_icons.h"
++#include "styles/style_settings.h"
++#include "ui/layers/generic_box.h"
++#include "ui/image/image.h"
++#include "ui/vertical_list.h"
++#include "ui/widgets/fields/input_field.h"
++#include "ui/wrap/vertical_layout.h"
++#include "window/window_session_controller.h"
++
++#include <QtCore/QFileInfo>
++#include <QtGui/QColor>
++
++namespace Settings {
++namespace {
++
++using namespace Builder;
++using namespace AyuBuilder;
++
++void ShowTintEditor(
++		not_null<Window::SessionController*> controller) {
++	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
++		box->setTitle(tr::ayu_VisualEffectsTintTitle());
++		const auto field = box->addRow(
++			object_ptr<Ui::InputField>(
++				box,
++				st::defaultInputField,
++				tr::ayu_VisualEffectsTintPlaceholder(),
++				AyuSettings::getInstance().transparentTint()),
++			st::boxRowPadding);
++		field->setMaxLength(9);
++		box->setFocusCallback([=] {
++			field->setFocusFast();
++		});
++		Ui::AddDividerText(
++			box->verticalLayout(),
++			tr::ayu_VisualEffectsTintDescription());
++		const auto save = [=] {
++			const auto value = field->getLastText().trimmed();
++			if (!QColor(value).isValid()) {
++				controller->showToast(
++					tr::ayu_VisualEffectsTintInvalid(tr::now));
++				return;
++			}
++			AyuSettings::getInstance().setTransparentTint(value);
++			box->closeBox();
++		};
++		field->submits(
++		) | rpl::on_next(save, field->lifetime());
++		box->addButton(tr::lng_settings_save(), save);
++		box->addButton(tr::lng_cancel(), [=] {
++			box->closeBox();
++		});
++	}));
++}
++
++void ChooseBackdrop(
++		not_null<Window::SessionController*> controller) {
++	const auto filter = u"Image files (*.png *.jpg *.jpeg *.webp *.heic);;"_q
++		+ FileDialog::AllFilesFilter();
++	FileDialog::GetOpenPath(
++		Core::App().getFileDialogParent(),
++		tr::ayu_VisualEffectsChooseBackground(tr::now),
++		filter,
++		[=](const FileDialog::OpenResult &result) {
++			if (result.paths.isEmpty()) {
++				return;
++			}
++			const auto path = result.paths.front();
++			if (Images::Read({ .path = path }).image.isNull()) {
++				controller->showToast(
++					tr::ayu_VisualEffectsBackgroundInvalid(tr::now));
++				return;
++			}
++			AyuSettings::getInstance().setTransparentBackgroundPath(path);
++		});
++}
++
++void BuildGlass(SectionBuilder &builder, AyuSectionBuilder &ayu) {
++	auto &settings = AyuSettings::getInstance();
++
++	builder.addSubsectionTitle(tr::ayu_VisualEffectsGlassHeader());
++	ayu.addSettingToggle({
++		.id = u"ayu/transparentMode"_q,
++		.title = tr::ayu_VisualEffectsEnableGlass(),
++		.getter = &AyuSettings::transparentMode,
++		.setter = &AyuSettings::setTransparentMode,
++		.icon = { &st::menuIconTransparent },
++	});
++	ayu.addSettingToggle({
++		.id = u"ayu/transparentBlur"_q,
++		.title = tr::ayu_VisualEffectsNativeBlur(),
++		.getter = &AyuSettings::transparentBlur,
++		.setter = &AyuSettings::setTransparentBlur,
++		.icon = { &st::menuIconChangeColors },
++	});
++	ayu.addSettingToggle({
++		.id = u"ayu/transparentSidebar"_q,
++		.title = tr::ayu_VisualEffectsSidebar(),
++		.getter = &AyuSettings::transparentSidebar,
++		.setter = &AyuSettings::setTransparentSidebar,
++	});
++	ayu.addSettingToggle({
++		.id = u"ayu/transparentChat"_q,
++		.title = tr::ayu_VisualEffectsChat(),
++		.getter = &AyuSettings::transparentChat,
++		.setter = &AyuSettings::setTransparentChat,
++	});
++	ayu.addSettingToggle({
++		.id = u"ayu/transparentPanels"_q,
++		.title = tr::ayu_VisualEffectsPanels(),
++		.getter = &AyuSettings::transparentPanels,
++		.setter = &AyuSettings::setTransparentPanels,
++	});
++	ayu.addSlider({
++		.id = u"ayu/transparentOpacity"_q,
++		.title = tr::ayu_VisualEffectsOpacity(),
++		.steps = 81,
++		.current = settings.transparentOpacity(),
++		.indexToValue = [](int index) {
++			return index + 20;
++		},
++		.onChanged = [](int value) {
++			AyuSettings::getInstance().setTransparentOpacity(value);
++		},
++		.formatLabel = [](int value) {
++			return QString::number(value) + '%';
++		},
++	});
++	builder.addDividerText(tr::ayu_VisualEffectsGlassDescription());
++	ayu.addSectionDivider();
++}
++
++void BuildBackdrop(SectionBuilder &builder, AyuSectionBuilder &ayu) {
++	auto &settings = AyuSettings::getInstance();
++	const auto controller = builder.controller();
++
++	builder.addSubsectionTitle(tr::ayu_VisualEffectsBackdropHeader());
++	builder.addButton({
++		.id = u"ayu/transparentTint"_q,
++		.title = tr::ayu_VisualEffectsTint(),
++		.icon = { &st::menuIconChangeColors },
++		.label = settings.transparentTintValue(),
++		.onClick = [=] {
++			ShowTintEditor(controller);
++		},
++	});
++	builder.addButton({
++		.id = u"ayu/transparentBackground"_q,
++		.title = tr::ayu_VisualEffectsChooseBackground(),
++		.icon = { &st::menuIconPhoto },
++		.label = settings.transparentBackgroundPathValue(
++		) | rpl::map([](const QString &path) {
++			return path.isEmpty()
++				? tr::ayu_VisualEffectsNoBackground(tr::now)
++				: QFileInfo(path).fileName();
++		}),
++		.onClick = [=] {
++			ChooseBackdrop(controller);
++		},
++	});
++	builder.addButton({
++		.id = u"ayu/transparentBackgroundClear"_q,
++		.title = tr::ayu_VisualEffectsClearBackground(),
++		.icon = { &st::menuIconDelete },
++		.onClick = [] {
++			AyuSettings::getInstance().setTransparentBackgroundPath(
++				QString());
++		},
++		.shown = settings.transparentBackgroundPathValue(
++		) | rpl::map([](const QString &path) {
++			return !path.isEmpty();
++		}),
++	});
++	ayu.addSlider({
++		.id = u"ayu/transparentBackgroundOpacity"_q,
++		.title = tr::ayu_VisualEffectsBackgroundOpacity(),
++		.steps = 101,
++		.current = settings.transparentBackgroundOpacity(),
++		.onChanged = [](int value) {
++			AyuSettings::getInstance().setTransparentBackgroundOpacity(
++				value);
++		},
++		.formatLabel = [](int value) {
++			return QString::number(value) + '%';
++		},
++	});
++	ayu.addSlider({
++		.id = u"ayu/transparentBackgroundBlur"_q,
++		.title = tr::ayu_VisualEffectsBackgroundBlur(),
++		.steps = 41,
++		.current = settings.transparentBackgroundBlur(),
++		.onFinalChanged = [](int value) {
++			AyuSettings::getInstance().setTransparentBackgroundBlur(value);
++		},
++		.formatLabel = [](int value) {
++			return QString::number(value) + u" px"_q;
++		},
++	});
++	builder.addDividerText(tr::ayu_VisualEffectsBackdropDescription());
++	ayu.addSectionDivider();
++}
++
++void BuildMotion(SectionBuilder &builder, AyuSectionBuilder &ayu) {
++	auto &settings = AyuSettings::getInstance();
++
++	builder.addSubsectionTitle(tr::ayu_VisualEffectsMotionHeader());
++	ayu.addSettingToggle({
++		.id = u"ayu/enhancedAnimations"_q,
++		.title = tr::ayu_VisualEffectsEnhancedAnimations(),
++		.getter = &AyuSettings::enhancedAnimations,
++		.setter = &AyuSettings::setEnhancedAnimations,
++		.icon = { &st::menuIconExperimental },
++	});
++	ayu.addChooseButton({
++		.id = u"ayu/motionStyle"_q,
++		.title = tr::ayu_VisualEffectsMotionStyle(),
++		.boxTitle = tr::ayu_VisualEffectsMotionStyle(),
++		.initialSelection = int(settings.motionStyle()),
++		.options = {
++			tr::ayu_VisualEffectsMotionQuick(tr::now),
++			tr::ayu_VisualEffectsMotionSmooth(tr::now),
++			tr::ayu_VisualEffectsMotionDynamic(tr::now),
++			tr::ayu_VisualEffectsMotionSpringy(tr::now),
++		},
++		.setter = [](int value) {
++			AyuSettings::getInstance().setMotionStyle(
++				static_cast<IntelGramMotionStyle>(value));
++		},
++		.icon = { &st::menuIconPowerUsage },
++	});
++	ayu.addSettingToggle({
++		.id = u"ayu/animateWindowOpening"_q,
++		.title = tr::ayu_VisualEffectsAnimateWindows(),
++		.getter = &AyuSettings::animateWindowOpening,
++		.setter = &AyuSettings::setAnimateWindowOpening,
++	});
++	builder.addDividerText(tr::ayu_VisualEffectsMotionDescription());
++}
++
++const auto kMeta = BuildHelper({
++	.id = AyuVisualEffects::Id(),
++	.parentId = AyuMain::Id(),
++	.title = &tr::ayu_VisualEffectsTitle,
++	.icon = &st::menuIconTransparent,
++}, [](SectionBuilder &builder) {
++	auto ayu = AyuSectionBuilder(builder);
++
++	builder.addSkip();
++	BuildGlass(builder, ayu);
++	BuildBackdrop(builder, ayu);
++	BuildMotion(builder, ayu);
++	builder.addSkip();
++});
++
++} // namespace
++
++rpl::producer<QString> AyuVisualEffects::title() {
++	return tr::ayu_VisualEffectsTitle();
++}
++
++AyuVisualEffects::AyuVisualEffects(
++	QWidget *parent,
++	not_null<Window::SessionController*> controller)
++: Section(parent, controller) {
++	setupContent();
++}
++
++void AyuVisualEffects::setupContent() {
++	const auto content = Ui::CreateChild<Ui::VerticalLayout>(this);
++	build(content, kMeta.build);
++	Ui::ResizeFitChild(this, content);
++}
++
++} // namespace Settings
+diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_visual_effects.h b/Telegram/SourceFiles/ayu/ui/settings/settings_visual_effects.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..57e78a5ffd8cf8fb9a2afeb09b4adaca607a42b4
+--- /dev/null
++++ b/Telegram/SourceFiles/ayu/ui/settings/settings_visual_effects.h
+@@ -0,0 +1,24 @@
++#pragma once
++
++#include "settings/settings_common.h"
++#include "settings/settings_common_session.h"
++
++namespace Window {
++class SessionController;
++} // namespace Window
++
++namespace Settings {
++
++class AyuVisualEffects : public Section<AyuVisualEffects> {
++public:
++	AyuVisualEffects(
++		QWidget *parent,
++		not_null<Window::SessionController*> controller);
++
++	[[nodiscard]] rpl::producer<QString> title() override;
++
++private:
++	void setupContent();
++};
++
++} // namespace Settings
 diff --git a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
-index c9d247a20..199077ed6 100644
+index c9d247a204c67a575477c915d653ed48e2c189f4..199077ed6412dcc339d823d7271a459147f3b98f 100644
 --- a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
 @@ -6,15 +6,1078 @@
@@ -7271,7 +7921,7 @@ index c9d247a20..199077ed6 100644
  			? TextWithEntities()
  			: tr::marked(IDString(peer));
 diff --git a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h
-index 950f22d7e..8f7aec9e6 100644
+index 950f22d7e74c87b82aa8621fd90bde09e22e0db5..8f7aec9e6c4d2418dc3a0f985d610499e6d01865 100644
 --- a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h
 +++ b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h
 @@ -6,8 +6,110 @@
@@ -7387,8 +8037,301 @@ index 950f22d7e..8f7aec9e6 100644
 -rpl::producer<TextWithEntities> IDValue(MsgId topicRootId);
 \ No newline at end of file
 +rpl::producer<TextWithEntities> IDValue(MsgId topicRootId);
+diff --git a/Telegram/SourceFiles/ayu/ui/visual_effects.cpp b/Telegram/SourceFiles/ayu/ui/visual_effects.cpp
+new file mode 100644
+index 0000000000000000000000000000000000000000..c8098370d4630b1b892d17fa6bf250df35ea4296
+--- /dev/null
++++ b/Telegram/SourceFiles/ayu/ui/visual_effects.cpp
+@@ -0,0 +1,267 @@
++#include "ayu/ui/visual_effects.h"
++
++#include "ayu/ayu_settings.h"
++#include "platform/platform_specific.h"
++#include "styles/style_basic.h"
++#include "ui/effects/animation_value.h"
++#include "ui/image/image_prepare.h"
++#include "ui/painter.h"
++#include "ui/style/style_core_palette.h"
++
++#include <algorithm>
++#include <array>
++#include <QtGui/QPainter>
++#include <QtWidgets/QWidget>
++
++namespace Ayu::VisualEffects {
++namespace {
++
++struct PaletteEntry {
++	const char *name;
++	style::color color;
++	int alphaOffset = 0;
++};
++
++struct State {
++	QByteArray opaquePalette;
++	QByteArray glassPalette;
++	QString imagePath;
++	int imageBlur = -1;
++	QImage image;
++	bool applyingPalette = false;
++};
++
++[[nodiscard]] State &CurrentState() {
++	static auto result = State();
++	return result;
++}
++
++[[nodiscard]] int SurfaceAlpha(int offset = 0) {
++	const auto opacity = AyuSettings::getInstance().transparentOpacity();
++	return std::clamp((255 * opacity / 100) + offset, 0, 255);
++}
++
++void SetEntryAlpha(const PaletteEntry &entry) {
++	auto color = entry.color->c;
++	const auto requested = SurfaceAlpha(entry.alphaOffset);
++	color.setAlpha(color.alpha() * requested / 255);
++	style::main_palette::setColor(
++		QLatin1String(entry.name),
++		color.red(),
++		color.green(),
++		color.blue(),
++		color.alpha());
++}
++
++void ApplyEntries(gsl::span<const PaletteEntry> entries) {
++	for (const auto &entry : entries) {
++		SetEntryAlpha(entry);
++	}
++}
++
++void ApplyGlassPalette(bool force) {
++	auto &state = CurrentState();
++	if (state.applyingPalette) {
++		return;
++	}
++	const auto enabled = AyuSettings::getInstance().transparentMode();
++	const auto current = style::main_palette::save();
++	if (enabled && !force && current == state.glassPalette) {
++		return;
++	}
++	if (!enabled) {
++		if (!state.opaquePalette.isEmpty()
++			&& current != state.opaquePalette) {
++			state.applyingPalette = true;
++			style::main_palette::load(state.opaquePalette);
++			state.glassPalette.clear();
++			style::NotifyPaletteChanged();
++			state.applyingPalette = false;
++		}
++		state.opaquePalette.clear();
++		state.glassPalette.clear();
++		return;
++	}
++	if (state.opaquePalette.isEmpty()
++		|| (!state.glassPalette.isEmpty()
++			&& current != state.glassPalette)) {
++		state.opaquePalette = current;
++	}
++
++	state.applyingPalette = true;
++	style::main_palette::load(state.opaquePalette);
++
++	const auto common = std::array{
++		PaletteEntry{ "windowBg", st::windowBg },
++		PaletteEntry{ "windowBgOver", st::windowBgOver, 24 },
++		PaletteEntry{ "windowBgRipple", st::windowBgRipple, 36 },
++		PaletteEntry{ "lightButtonBg", st::lightButtonBg, 10 },
++		PaletteEntry{ "lightButtonBgOver", st::lightButtonBgOver, 28 },
++		PaletteEntry{ "lightButtonBgRipple", st::lightButtonBgRipple, 40 },
++		PaletteEntry{ "filterInputActiveBg", st::filterInputActiveBg, 14 },
++		PaletteEntry{ "filterInputInactiveBg", st::filterInputInactiveBg, 22 },
++		PaletteEntry{ "titleBg", st::titleBg, 12 },
++		PaletteEntry{ "titleBgActive", st::titleBgActive, 12 },
++		PaletteEntry{ "titleButtonBg", st::titleButtonBg, 12 },
++		PaletteEntry{ "titleButtonBgActive", st::titleButtonBgActive, 12 },
++	};
++	ApplyEntries(common);
++
++	const auto &settings = AyuSettings::getInstance();
++	if (settings.transparentSidebar()) {
++		const auto sidebar = std::array{
++			PaletteEntry{ "dialogsBg", st::dialogsBg },
++			PaletteEntry{ "dialogsBgOver", st::dialogsBgOver, 24 },
++			PaletteEntry{ "dialogsRippleBg", st::dialogsRippleBg, 36 },
++			PaletteEntry{ "searchedBarBg", st::searchedBarBg, 18 },
++			PaletteEntry{ "mainMenuBg", st::mainMenuBg, 6 },
++		};
++		ApplyEntries(sidebar);
++	}
++	if (settings.transparentChat()) {
++		const auto chat = std::array{
++			PaletteEntry{ "topBarBg", st::topBarBg, 8 },
++			PaletteEntry{ "msgInBg", st::msgInBg, 34 },
++			PaletteEntry{ "msgOutBg", st::msgOutBg, 34 },
++			PaletteEntry{ "historyComposeAreaBg", st::historyComposeAreaBg, 16 },
++			PaletteEntry{ "historyPinnedBg", st::historyPinnedBg, 16 },
++			PaletteEntry{ "historyReplyBg", st::historyReplyBg, 16 },
++			PaletteEntry{ "historyComposeButtonBg", st::historyComposeButtonBg, 16 },
++			PaletteEntry{ "historyComposeButtonBgOver", st::historyComposeButtonBgOver, 30 },
++			PaletteEntry{ "historyComposeButtonBgRipple", st::historyComposeButtonBgRipple, 42 },
++			PaletteEntry{ "historyToDownBg", st::historyToDownBg, 24 },
++			PaletteEntry{ "historyToDownBgOver", st::historyToDownBgOver, 36 },
++			PaletteEntry{ "historyToDownBgRipple", st::historyToDownBgRipple, 48 },
++		};
++		ApplyEntries(chat);
++	}
++	if (settings.transparentPanels()) {
++		const auto panels = std::array{
++			PaletteEntry{ "menuBg", st::menuBg, 8 },
++			PaletteEntry{ "menuBgOver", st::menuBgOver, 26 },
++			PaletteEntry{ "menuBgRipple", st::menuBgRipple, 38 },
++			PaletteEntry{ "boxBg", st::boxBg, 8 },
++			PaletteEntry{ "boxSearchBg", st::boxSearchBg, 16 },
++			PaletteEntry{ "boxDividerBg", st::boxDividerBg, 24 },
++			PaletteEntry{ "contactsBg", st::contactsBg, 8 },
++			PaletteEntry{ "contactsBgOver", st::contactsBgOver, 26 },
++			PaletteEntry{ "emojiPanBg", st::emojiPanBg, 8 },
++			PaletteEntry{ "emojiPanCategories", st::emojiPanCategories, 18 },
++			PaletteEntry{ "emojiPanHeaderBg", st::emojiPanHeaderBg, 20 },
++			PaletteEntry{ "mediaPlayerBg", st::mediaPlayerBg, 8 },
++		};
++		ApplyEntries(panels);
++	}
++
++	state.glassPalette = style::main_palette::save();
++	style::NotifyPaletteChanged();
++	state.applyingPalette = false;
++}
++
++void RefreshImage() {
++	auto &state = CurrentState();
++	const auto &settings = AyuSettings::getInstance();
++	const auto path = settings.transparentBackgroundPath();
++	const auto blur = settings.transparentBackgroundBlur();
++	if (state.imagePath == path && state.imageBlur == blur) {
++		return;
++	}
++	state.imagePath = path;
++	state.imageBlur = blur;
++	state.image = path.isEmpty()
++		? QImage()
++		: Images::Read({ .path = path }).image;
++	if (!state.image.isNull() && blur > 0) {
++		state.image = Images::BlurLargeImage(std::move(state.image), blur);
++	}
++}
++
++[[nodiscard]] anim::MotionStyle ResolveMotionStyle() {
++	const auto &settings = AyuSettings::getInstance();
++	if (!settings.enhancedAnimations()) {
++		return anim::MotionStyle::Default;
++	}
++	switch (settings.motionStyle()) {
++	case IntelGramMotionStyle::Quick:
++		return anim::MotionStyle::Quick;
++	case IntelGramMotionStyle::Smooth:
++		return anim::MotionStyle::Smooth;
++	case IntelGramMotionStyle::Dynamic:
++		return anim::MotionStyle::Dynamic;
++	case IntelGramMotionStyle::Springy:
++		return anim::MotionStyle::Springy;
++	}
++	Unexpected("IntelGramMotionStyle value.");
++}
++
++} // namespace
++
++void PrepareWindow(QWidget *window) {
++	window->setAttribute(Qt::WA_TranslucentBackground);
++	window->setAutoFillBackground(false);
++}
++
++void RefreshWindow(QWidget *window) {
++	ApplyMotionSettings();
++	ApplyGlassPalette(true);
++	RefreshImage();
++	const auto &settings = AyuSettings::getInstance();
++	Platform::SetWindowVisualEffect(
++		window,
++		settings.transparentMode(),
++		settings.transparentBlur());
++	window->update();
++}
++
++void HandlePaletteChanged(QWidget *window) {
++	ApplyGlassPalette(false);
++	Platform::SetWindowVisualEffect(
++		window,
++		AyuSettings::getInstance().transparentMode(),
++		AyuSettings::getInstance().transparentBlur());
++	window->update();
++}
++
++void PaintWindow(QWidget *window, QPainter &painter) {
++	const auto &settings = AyuSettings::getInstance();
++	if (!settings.transparentMode()) {
++		painter.fillRect(window->rect(), st::windowBg);
++		return;
++	}
++
++	RefreshImage();
++	const auto &image = CurrentState().image;
++	if (!image.isNull() && !window->rect().isEmpty()) {
++		const auto target = QRectF(window->rect());
++		const auto targetRatio = target.width() / target.height();
++		const auto imageRatio = image.width() / float64(image.height());
++		auto source = QRectF(QPointF(), QSizeF(image.size()));
++		if (imageRatio > targetRatio) {
++			const auto width = source.height() * targetRatio;
++			source.setLeft((source.width() - width) / 2.);
++			source.setWidth(width);
++		} else {
++			const auto height = source.width() / targetRatio;
++			source.setTop((source.height() - height) / 2.);
++			source.setHeight(height);
++		}
++		painter.save();
++		painter.setRenderHint(QPainter::SmoothPixmapTransform);
++		painter.setOpacity(settings.transparentBackgroundOpacity() / 100.);
++		painter.drawImage(target, image, source);
++		painter.restore();
++	}
++
++	auto tint = QColor(settings.transparentTint());
++	if (!tint.isValid()) {
++		tint = QColor(22, 25, 34);
++	}
++	tint.setAlpha(image.isNull() ? 76 : 42);
++	painter.fillRect(window->rect(), tint);
++}
++
++void ApplyMotionSettings() {
++	anim::SetMotionStyle(ResolveMotionStyle());
++}
++
++} // namespace Ayu::VisualEffects
+diff --git a/Telegram/SourceFiles/ayu/ui/visual_effects.h b/Telegram/SourceFiles/ayu/ui/visual_effects.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..b62f8a80409c8558ad28658e3696be9aa9e1363a
+--- /dev/null
++++ b/Telegram/SourceFiles/ayu/ui/visual_effects.h
+@@ -0,0 +1,14 @@
++#pragma once
++
++class QPainter;
++class QWidget;
++
++namespace Ayu::VisualEffects {
++
++void PrepareWindow(QWidget *window);
++void RefreshWindow(QWidget *window);
++void HandlePaletteChanged(QWidget *window);
++void PaintWindow(QWidget *window, QPainter &painter);
++void ApplyMotionSettings();
++
++} // namespace Ayu::VisualEffects
 diff --git a/Telegram/SourceFiles/ayu/utils/telegram_helpers.cpp b/Telegram/SourceFiles/ayu/utils/telegram_helpers.cpp
-index d95ee8739..a7ed475ca 100644
+index d95ee873919e5483ab751699e0308ef93b7b2c87..a7ed475ca414030acf1c1f9b2bba83e19541792c 100644
 --- a/Telegram/SourceFiles/ayu/utils/telegram_helpers.cpp
 +++ b/Telegram/SourceFiles/ayu/utils/telegram_helpers.cpp
 @@ -13,6 +13,7 @@
@@ -7574,7 +8517,7 @@ index d95ee8739..a7ed475ca 100644
  	const auto botId = isSupporter ? regDateBotId : regDateBotFallbackId;
  	const auto botUsername = isSupporter ? regDateBotUsername : regDateBotFallbackUsername;
 diff --git a/Telegram/SourceFiles/ayu/utils/telegram_helpers.h b/Telegram/SourceFiles/ayu/utils/telegram_helpers.h
-index 021679a64..8023b0aa0 100644
+index 021679a64047004ca7806b37c8edeb2346794b4d..8023b0aa04e80fedff0bede46ae172062ead843b 100644
 --- a/Telegram/SourceFiles/ayu/utils/telegram_helpers.h
 +++ b/Telegram/SourceFiles/ayu/utils/telegram_helpers.h
 @@ -62,6 +62,7 @@ ID getBareID(not_null<PeerData*> peer);
@@ -7586,7 +8529,7 @@ index 021679a64..8023b0aa0 100644
  CustomBadge getCustomBadge(ID peerId);
  
 diff --git a/Telegram/SourceFiles/boxes/gift_premium_box.cpp b/Telegram/SourceFiles/boxes/gift_premium_box.cpp
-index 88d437ae1..860f39e9a 100644
+index 88d437ae1cd2dac6c3ec856f16f1ec2108708e86..860f39e9ae3f5ac0de6705870a6f128568897444 100644
 --- a/Telegram/SourceFiles/boxes/gift_premium_box.cpp
 +++ b/Telegram/SourceFiles/boxes/gift_premium_box.cpp
 @@ -49,6 +49,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -7636,7 +8579,7 @@ index 88d437ae1..860f39e9a 100644
  						rpl::single(dateText),
  						lt_text,
 diff --git a/Telegram/SourceFiles/boxes/peers/edit_peer_color_box.cpp b/Telegram/SourceFiles/boxes/peers/edit_peer_color_box.cpp
-index 5f813d2b7..107a3e7f9 100644
+index 5f813d2b796d2578e569e9b24b7004cc055cc551..107a3e7f9e48d5af6d0ec8beedcb0ed69ffbf5f3 100644
 --- a/Telegram/SourceFiles/boxes/peers/edit_peer_color_box.cpp
 +++ b/Telegram/SourceFiles/boxes/peers/edit_peer_color_box.cpp
 @@ -7,9 +7,10 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -7664,7 +8607,7 @@ index 5f813d2b7..107a3e7f9 100644
  	const auto sampleSize = st::settingsColorSampleSize;
  
 diff --git a/Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp b/Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp
-index e2d4aa8a7..d4b4872cd 100644
+index e2d4aa8a76b68d2fcfe6337daf50724a89b9f969..d4b4872cda9a94904ab3be75ba88df33446f357d 100644
 --- a/Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp
 +++ b/Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp
 @@ -29,6 +29,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -7759,7 +8702,7 @@ index e2d4aa8a7..d4b4872cd 100644
  	const auto userpicPhoto = (userpicPhotoId
  		&& (userpicPhotoId != PeerData::kUnknownPhotoId)
 diff --git a/Telegram/SourceFiles/core/local_url_handlers.cpp b/Telegram/SourceFiles/core/local_url_handlers.cpp
-index 7595146a2..82271563b 100644
+index 7595146a200c856bf17ef12dba15958a5b2f0ee8..82271563bd79302a2c0721b4581b3a4318bc3a69 100644
 --- a/Telegram/SourceFiles/core/local_url_handlers.cpp
 +++ b/Telegram/SourceFiles/core/local_url_handlers.cpp
 @@ -43,6 +43,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -7873,7 +8816,7 @@ index 7595146a2..82271563b 100644
  	const auto kExp = u"^(?:(\\d+)h)?(?:(\\d+)m)?(?:(\\d+)s)?$"_q;
  	const auto m = QRegularExpression(kExp).match(value);
 diff --git a/Telegram/SourceFiles/core/local_url_handlers.h b/Telegram/SourceFiles/core/local_url_handlers.h
-index af9c2a4bf..047fc724f 100644
+index af9c2a4bf81d97837b67c8494f1f3e7ddd6e7a3c..047fc724fb6ba82a23da1866248b2bc02df78ff7 100644
 --- a/Telegram/SourceFiles/core/local_url_handlers.h
 +++ b/Telegram/SourceFiles/core/local_url_handlers.h
 @@ -15,6 +15,8 @@ namespace ChatHelpers {
@@ -7897,7 +8840,7 @@ index af9c2a4bf..047fc724f 100644
  [[nodiscard]] TimeId ParseVideoTimestamp(QStringView value);
  
 diff --git a/Telegram/SourceFiles/data/data_auto_download.cpp b/Telegram/SourceFiles/data/data_auto_download.cpp
-index 7a35b1599..cdbd6100d 100644
+index 7a35b15994c9ef627b7a712a2842e9a05f30b362..cdbd6100d9415af7b7f4c4ebb112dd4063d2afd2 100644
 --- a/Telegram/SourceFiles/data/data_auto_download.cpp
 +++ b/Telegram/SourceFiles/data/data_auto_download.cpp
 @@ -7,11 +7,13 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -8000,7 +8943,7 @@ index 7a35b1599..cdbd6100d 100644
  	const auto size = photo->videoByteSize(PhotoSize::Large);
  	return photo->hasVideo()
 diff --git a/Telegram/SourceFiles/data/data_peer.cpp b/Telegram/SourceFiles/data/data_peer.cpp
-index 6533de425..00111087e 100644
+index 6533de425088bb632d83ceed51bdd2a7132807f2..00111087ed83e98aaeca3fd37d91d48deec75d19 100644
 --- a/Telegram/SourceFiles/data/data_peer.cpp
 +++ b/Telegram/SourceFiles/data/data_peer.cpp
 @@ -57,6 +57,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -8126,7 +9069,7 @@ index 6533de425..00111087e 100644
  }
  
 diff --git a/Telegram/SourceFiles/data/data_session.cpp b/Telegram/SourceFiles/data/data_session.cpp
-index 2498bfc6d..c02427014 100644
+index 2498bfc6df06c79722e98d31b18861591c5abed2..c02427014197ae7cf9441954b6abc8875d0cfc5b 100644
 --- a/Telegram/SourceFiles/data/data_session.cpp
 +++ b/Telegram/SourceFiles/data/data_session.cpp
 @@ -88,6 +88,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -8178,7 +9121,7 @@ index 2498bfc6d..c02427014 100644
  		CheckForSwitchInlineButton(result);
  	}
 diff --git a/Telegram/SourceFiles/dialogs/dialogs_inner_widget.cpp b/Telegram/SourceFiles/dialogs/dialogs_inner_widget.cpp
-index 9e940482f..09fa81eea 100644
+index 9e940482f673bf8aa86a8947920e629c727154b4..09fa81eeaae84d4e932fcb84eedcc8d7d1fe8799 100644
 --- a/Telegram/SourceFiles/dialogs/dialogs_inner_widget.cpp
 +++ b/Telegram/SourceFiles/dialogs/dialogs_inner_widget.cpp
 @@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -8214,7 +9157,7 @@ index 9e940482f..09fa81eea 100644
  	_searchIn->apply({
  		{ ChatSearchTab::ThisTopic, topicIcon },
 diff --git a/Telegram/SourceFiles/dialogs/dialogs_row.cpp b/Telegram/SourceFiles/dialogs/dialogs_row.cpp
-index 3bcfab953..2fa76d855 100644
+index 3bcfab95352302c13815d854e6a6b119bf9bb153..2fa76d8557631d54afa021254a13e5836d385f4d 100644
 --- a/Telegram/SourceFiles/dialogs/dialogs_row.cpp
 +++ b/Telegram/SourceFiles/dialogs/dialogs_row.cpp
 @@ -40,6 +40,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -8249,7 +9192,7 @@ index 3bcfab953..2fa76d855 100644
  	}
  	return _name;
 diff --git a/Telegram/SourceFiles/dialogs/dialogs_widget.cpp b/Telegram/SourceFiles/dialogs/dialogs_widget.cpp
-index 3061b9d6b..9e3d0b7b9 100644
+index 3061b9d6becb39b2e3da08a357b068a9de9f1273..9e3d0b7b9a5a7a38820d7e2aa91aa56c9fc69d3b 100644
 --- a/Telegram/SourceFiles/dialogs/dialogs_widget.cpp
 +++ b/Telegram/SourceFiles/dialogs/dialogs_widget.cpp
 @@ -168,6 +168,31 @@ struct IdSearchQuery {
@@ -8451,7 +9394,7 @@ index 3061b9d6b..9e3d0b7b9 100644
  		SearchRequestType type,
  		not_null<SearchProcessState*> process) {
 diff --git a/Telegram/SourceFiles/dialogs/dialogs_widget.h b/Telegram/SourceFiles/dialogs/dialogs_widget.h
-index ef6b527aa..2fe836a41 100644
+index ef6b527aa44a80b858c2478e4599421f13007aaa..2fe836a410693a0d2d25b4577d7fbea1353aa672 100644
 --- a/Telegram/SourceFiles/dialogs/dialogs_widget.h
 +++ b/Telegram/SourceFiles/dialogs/dialogs_widget.h
 @@ -195,6 +195,7 @@ private:
@@ -8463,7 +9406,7 @@ index ef6b527aa..2fe836a41 100644
  	void submit();
  	void cancelSearchRequest();
 diff --git a/Telegram/SourceFiles/dialogs/ui/dialogs_video_userpic.cpp b/Telegram/SourceFiles/dialogs/ui/dialogs_video_userpic.cpp
-index bc28b73e4..a3a61e8c8 100644
+index bc28b73e4c0aa889383206c1b613ee6ef8fe36c0..a3a61e8c8f0ca5762314db37566e095c842409c9 100644
 --- a/Telegram/SourceFiles/dialogs/ui/dialogs_video_userpic.cpp
 +++ b/Telegram/SourceFiles/dialogs/ui/dialogs_video_userpic.cpp
 @@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -8484,7 +9427,7 @@ index bc28b73e4..a3a61e8c8 100644
  	} else {
  		peer->paintUserpicLeft(p, view, x, y, outerWidth, size);
 diff --git a/Telegram/SourceFiles/history/history_item.cpp b/Telegram/SourceFiles/history/history_item.cpp
-index 2a84434d4..65697e61a 100644
+index 2a84434d4eb2290c9feafec07eb1d3e095447b59..65697e61a60d6f7cee97cca6b9360068c60f1f77 100644
 --- a/Telegram/SourceFiles/history/history_item.cpp
 +++ b/Telegram/SourceFiles/history/history_item.cpp
 @@ -2922,9 +2922,9 @@ bool HistoryItem::forbidsForward() const {
@@ -8500,7 +9443,7 @@ index 2a84434d4..65697e61a 100644
  }
  
 diff --git a/Telegram/SourceFiles/history/history_item_helpers.cpp b/Telegram/SourceFiles/history/history_item_helpers.cpp
-index 21c158039..50ab04eed 100644
+index 21c158039badc104bdeae5154a95c646d84eaffb..50ab04eed36a620e0f6f6bfe6ed421f5a0e7df71 100644
 --- a/Telegram/SourceFiles/history/history_item_helpers.cpp
 +++ b/Telegram/SourceFiles/history/history_item_helpers.cpp
 @@ -861,8 +861,7 @@ MessageFlags FlagsFromMTP(
@@ -8514,7 +9457,7 @@ index 21c158039..50ab04eed 100644
  		| ((flags & MTP::f_invert_media) ? Flag::InvertMedia : Flag())
  		| ((flags & MTP::f_video_processing_pending)
 diff --git a/Telegram/SourceFiles/history/view/history_view_about_view.cpp b/Telegram/SourceFiles/history/view/history_view_about_view.cpp
-index c30fcf259..f2a647a30 100644
+index c30fcf2597a07cef41534926d3f742f1da212417..f2a647a302fea2ab86b436d1481c2d5f25fb2d58 100644
 --- a/Telegram/SourceFiles/history/view/history_view_about_view.cpp
 +++ b/Telegram/SourceFiles/history/view/history_view_about_view.cpp
 @@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -8550,7 +9493,7 @@ index c30fcf259..f2a647a30 100644
  		tr::bold(parentName),
  		tr::rich);
 diff --git a/Telegram/SourceFiles/history/view/history_view_chat_section.cpp b/Telegram/SourceFiles/history/view/history_view_chat_section.cpp
-index 2c52f4b73..9dcd1e765 100644
+index 2c52f4b737bdce4efb3ecc7bae8fb4297970a596..9dcd1e7658509ca8fcde016a55124b27e9edbb42 100644
 --- a/Telegram/SourceFiles/history/view/history_view_chat_section.cpp
 +++ b/Telegram/SourceFiles/history/view/history_view_chat_section.cpp
 @@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -8575,7 +9518,7 @@ index 2c52f4b73..9dcd1e765 100644
  	});
  }
 diff --git a/Telegram/SourceFiles/history/view/history_view_context_menu.cpp b/Telegram/SourceFiles/history/view/history_view_context_menu.cpp
-index 0b39a579c..895351d87 100644
+index 0b39a579c38990863648203b828aabd842b352ed..895351d878684c81b8472c7619b522c05c300d6e 100644
 --- a/Telegram/SourceFiles/history/view/history_view_context_menu.cpp
 +++ b/Telegram/SourceFiles/history/view/history_view_context_menu.cpp
 @@ -112,8 +112,11 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -8698,7 +9641,7 @@ index 0b39a579c..895351d87 100644
  
  } // namespace HistoryView
 diff --git a/Telegram/SourceFiles/history/view/history_view_message.cpp b/Telegram/SourceFiles/history/view/history_view_message.cpp
-index 9d181996b..4e8074c54 100644
+index 9d181996bff8df8a62b0f228b9f9b0812a4890e9..4e8074c54c84fd896ce9e422625815347b23b312 100644
 --- a/Telegram/SourceFiles/history/view/history_view_message.cpp
 +++ b/Telegram/SourceFiles/history/view/history_view_message.cpp
 @@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -8737,7 +9680,7 @@ index 9d181996b..4e8074c54 100644
  	}
  	if (from->isPremium()
 diff --git a/Telegram/SourceFiles/history/view/history_view_reply.cpp b/Telegram/SourceFiles/history/view/history_view_reply.cpp
-index 841d23920..2edac8bc4 100644
+index 841d23920001de13a0a564cdcbd22cdc5ca0f626..2edac8bc4e91544017e7755c7705bf71731f6daf 100644
 --- a/Telegram/SourceFiles/history/view/history_view_reply.cpp
 +++ b/Telegram/SourceFiles/history/view/history_view_reply.cpp
 @@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -8798,7 +9741,7 @@ index 841d23920..2edac8bc4 100644
  	return (quote
  		? tr::lng_preview_reply_to_quote
 diff --git a/Telegram/SourceFiles/history/view/history_view_top_bar_widget.cpp b/Telegram/SourceFiles/history/view/history_view_top_bar_widget.cpp
-index 63b23a43a..9c7dee66b 100644
+index 63b23a43a0dc9557e7a6cb5948a4d9920dbb6202..9c7dee66ba9cd847ef4a4aae9ceafab73a0b0b12 100644
 --- a/Telegram/SourceFiles/history/view/history_view_top_bar_widget.cpp
 +++ b/Telegram/SourceFiles/history/view/history_view_top_bar_widget.cpp
 @@ -74,6 +74,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -8831,7 +9774,7 @@ index 63b23a43a..9c7dee66b 100644
  			_title.setText(
  				st::msgNameStyle,
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_actions.cpp b/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
-index 594061dbb..85a22a448 100644
+index 594061dbb904f1cabdc1b063dc8fd7978b14b2fd..85a22a448bd29f8804bd1c6a5206f55fdc8a390a 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
 @@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -8939,7 +9882,7 @@ index 594061dbb..85a22a448 100644
  						rebuild(i, anim::type::normal);
  					}
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_badge.cpp b/Telegram/SourceFiles/info/profile/info_profile_badge.cpp
-index 4855a6aab..133953851 100644
+index 4855a6aabbbfa3dfd9efb8c7ef9be3b335db6b64..133953851bc77ef76a337d764004fecf21548702 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_badge.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_badge.cpp
 @@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -8988,7 +9931,7 @@ index 4855a6aab..133953851 100644
  
  } // namespace Info::Profile
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp b/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp
-index a410a35ca..4087aac79 100644
+index a410a35caed194e55834be9ba2d298ee75fad33a..4087aac794da6f1835d09a33368a6b2362ba3a44 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp
 @@ -23,6 +23,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -9235,7 +10178,7 @@ index a410a35ca..4087aac79 100644
  
  		_pinnedToTopGifts.push_back(std::move(entry));
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_top_bar.h b/Telegram/SourceFiles/info/profile/info_profile_top_bar.h
-index deaedd9f0..a404cd001 100644
+index deaedd9f033c55f0d544044d640d27998f68b2b4..a404cd001e7da3cd0872588281a2d6c7b4a1ccc3 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_top_bar.h
 +++ b/Telegram/SourceFiles/info/profile/info_profile_top_bar.h
 @@ -284,6 +284,7 @@ private:
@@ -9247,7 +10190,7 @@ index deaedd9f0..a404cd001 100644
  	std::unique_ptr<Ui::Animations::Simple> _giftsHiding;
  	rpl::lifetime _giftsLoadingLifetime;
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_values.cpp b/Telegram/SourceFiles/info/profile/info_profile_values.cpp
-index 19c194b8b..e166cc3c9 100644
+index 19c194b8b98130a687d902de01c398db7d05cf01..e166cc3c9c0634c288a95c0a5a73cf3c4e5bb8c5 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_values.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_values.cpp
 @@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -9401,7 +10344,7 @@ index 19c194b8b..e166cc3c9 100644
  
  rpl::producer<QString> BirthdayLabelText(
 diff --git a/Telegram/SourceFiles/media/view/media_view_overlay_widget.cpp b/Telegram/SourceFiles/media/view/media_view_overlay_widget.cpp
-index 1fb8ed681..1497e22e0 100644
+index 1fb8ed681e4e1f25dca63e505fe578116a60b02c..1497e22e080135301e737a21ae75c8d53a838150 100644
 --- a/Telegram/SourceFiles/media/view/media_view_overlay_widget.cpp
 +++ b/Telegram/SourceFiles/media/view/media_view_overlay_widget.cpp
 @@ -1215,12 +1215,12 @@ QSize OverlayWidget::flipSizeByRotation(QSize size) const {
@@ -9420,8 +10363,158 @@ index 1fb8ed681..1497e22e0 100644
  }
  
  bool OverlayWidget::showCopyMediaRestriction(bool skipPRemiumCheck) {
+diff --git a/Telegram/SourceFiles/platform/linux/specific_linux.cpp b/Telegram/SourceFiles/platform/linux/specific_linux.cpp
+index 6479deaeee9be611f1c440e386f0095c909807fc..a64b52a39dd53bc6a9a5b2c716e7ff3cd440bdb4 100644
+--- a/Telegram/SourceFiles/platform/linux/specific_linux.cpp
++++ b/Telegram/SourceFiles/platform/linux/specific_linux.cpp
+@@ -725,6 +725,12 @@ int psFixPrevious() {
+ 
+ namespace Platform {
+ 
++void SetWindowVisualEffect(QWidget *window, bool enabled, bool blur) {
++	Q_UNUSED(window);
++	Q_UNUSED(enabled);
++	Q_UNUSED(blur);
++}
++
+ void start() {
+ 	QGuiApplication::setDesktopFileName([&] {
+ 		if (KSandbox::isFlatpak()) {
+diff --git a/Telegram/SourceFiles/platform/mac/specific_mac.mm b/Telegram/SourceFiles/platform/mac/specific_mac.mm
+index 51a09b5b5f1976ee1ec6d21e9f25da49572bd8b2..59d7aa4aa080ea09e7beb4ab53d5f57a1c1e9267 100644
+--- a/Telegram/SourceFiles/platform/mac/specific_mac.mm
++++ b/Telegram/SourceFiles/platform/mac/specific_mac.mm
+@@ -35,6 +35,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include <IOKit/hidsystem/ev_keymap.h>
+ #include <mach-o/dyld.h>
+ #include <AVFoundation/AVFoundation.h>
++#include <objc/runtime.h>
+ 
+ namespace {
+ 
+@@ -108,6 +109,12 @@ int psFixPrevious() {
+ 
+ namespace Platform {
+ 
++namespace {
++
++char WindowVisualEffectKey;
++
++} // namespace
++
+ void start() {
+ 	objc_start();
+ }
+@@ -116,6 +123,47 @@ void finish() {
+ 	objc_finish();
+ }
+ 
++void SetWindowVisualEffect(QWidget *widget, bool enabled, bool blur) {
++	const auto nativeView = reinterpret_cast<NSView*>(widget->winId());
++	const auto window = nativeView.window;
++	if (!window) {
++		return;
++	}
++	auto effect = (NSVisualEffectView*)objc_getAssociatedObject(
++		window,
++		&WindowVisualEffectKey);
++	const auto useEffect = enabled && blur;
++	if (useEffect && !effect) {
++		effect = [[NSVisualEffectView alloc] initWithFrame:nativeView.bounds];
++		effect.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
++		effect.blendingMode = NSVisualEffectBlendingModeBehindWindow;
++		if (@available(macOS 10.14, *)) {
++			effect.material = NSVisualEffectMaterialUnderWindowBackground;
++		} else {
++			effect.material = NSVisualEffectMaterialAppearanceBased;
++		}
++		effect.state = NSVisualEffectStateActive;
++		[nativeView addSubview:effect positioned:NSWindowBelow relativeTo:nil];
++		objc_setAssociatedObject(
++			window,
++			&WindowVisualEffectKey,
++			effect,
++			OBJC_ASSOCIATION_RETAIN_NONATOMIC);
++		[effect release];
++	} else if (!useEffect && effect) {
++		[effect removeFromSuperview];
++		objc_setAssociatedObject(
++			window,
++			&WindowVisualEffectKey,
++			nil,
++			OBJC_ASSOCIATION_RETAIN_NONATOMIC);
++	}
++	window.opaque = !enabled;
++	window.backgroundColor = enabled
++		? NSColor.clearColor
++		: NSColor.windowBackgroundColor;
++}
++
+ QString SingleInstanceLocalServerName(const QString &hash) {
+ #ifndef OS_MAC_STORE
+ 	return u"/tmp/"_q + hash + '-' + cGUIDStr();
+diff --git a/Telegram/SourceFiles/platform/platform_specific.h b/Telegram/SourceFiles/platform/platform_specific.h
+index 862e3c3a67f61492a721ceef1cb20c29f30d3cd1..e0875130a2c759ebdaab34f44fc1ea9d1ecd09af 100644
+--- a/Telegram/SourceFiles/platform/platform_specific.h
++++ b/Telegram/SourceFiles/platform/platform_specific.h
+@@ -7,6 +7,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ */
+ #pragma once
+ 
++class QWidget;
++
+ namespace Core {
+ enum class QuitReason;
+ } // namespace Core
+@@ -55,6 +57,7 @@ void NewVersionLaunched(int oldVersion);
+ [[nodiscard]] bool PreventsQuit(Core::QuitReason reason);
+ [[nodiscard]] QString ExecutablePathForShortcuts();
+ void LaunchMaps(const Data::LocationPoint &point, Fn<void()> fail);
++void SetWindowVisualEffect(QWidget *window, bool enabled, bool blur);
+ 
+ #if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
+ [[nodiscard]] std::optional<bool> IsDarkMode();
+diff --git a/Telegram/SourceFiles/platform/win/specific_win.cpp b/Telegram/SourceFiles/platform/win/specific_win.cpp
+index 67d40e0710eb0fa4f66663081882ff08dc3dc663..ce1d4c1bbad9787836ff85d35872d64dbc362e42 100644
+--- a/Telegram/SourceFiles/platform/win/specific_win.cpp
++++ b/Telegram/SourceFiles/platform/win/specific_win.cpp
+@@ -59,6 +59,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include <locale.h>
+ 
+ #include <ShellScalingApi.h>
++#include <dwmapi.h>
+ 
+ #ifndef DCX_USESTYLE
+ #define DCX_USESTYLE 0x00010000
+@@ -601,6 +602,26 @@ namespace {
+ 
+ namespace Platform {
+ 
++void SetWindowVisualEffect(QWidget *window, bool enabled, bool blur) {
++	const auto hwnd = reinterpret_cast<HWND>(window->winId());
++	if (!hwnd) {
++		return;
++	}
++	constexpr auto kSystemBackdropType = DWMWINDOWATTRIBUTE(38);
++	const auto backdrop = (enabled && blur) ? 3 : 1;
++	DwmSetWindowAttribute(
++		hwnd,
++		kSystemBackdropType,
++		&backdrop,
++		sizeof(backdrop));
++
++	auto behind = DWM_BLURBEHIND{
++		.dwFlags = DWM_BB_ENABLE,
++		.fEnable = (enabled && blur) ? TRUE : FALSE,
++	};
++	DwmEnableBlurBehindWindow(hwnd, &behind);
++}
++
+ PermissionStatus GetPermissionStatus(PermissionType type) {
+ 	if (type == PermissionType::Microphone) {
+ 		PermissionStatus result = PermissionStatus::Granted;
 diff --git a/Telegram/SourceFiles/settings/sections/settings_information.cpp b/Telegram/SourceFiles/settings/sections/settings_information.cpp
-index 24f2034f9..db4692a46 100644
+index 24f2034f9a14d8b029af84ffa462bc787d6a130b..db4692a46873b0bd4531fa2eabd6418312b307c6 100644
 --- a/Telegram/SourceFiles/settings/sections/settings_information.cpp
 +++ b/Telegram/SourceFiles/settings/sections/settings_information.cpp
 @@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -9468,7 +10561,7 @@ index 24f2034f9..db4692a46 100644
  		parent,
  		rpl::duplicate(text),
 diff --git a/Telegram/SourceFiles/settings/sections/settings_main.cpp b/Telegram/SourceFiles/settings/sections/settings_main.cpp
-index fbe74c4c0..1902d2945 100644
+index fbe74c4c04c3b9d72cd8bcf673f970a9832cf738..1902d2945c8563653c4c42adc151bc56d35296bc 100644
 --- a/Telegram/SourceFiles/settings/sections/settings_main.cpp
 +++ b/Telegram/SourceFiles/settings/sections/settings_main.cpp
 @@ -9,6 +9,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -9536,7 +10629,7 @@ index fbe74c4c0..1902d2945 100644
  	});
  }
 diff --git a/Telegram/SourceFiles/settings/settings_credits_graphics.cpp b/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
-index 9ac4584e4..56133a250 100644
+index 9ac4584e40378616adf49b1f2a6da2e9a1cc292e..56133a250551ba82856245e4d8de6ed9db463dbf 100644
 --- a/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
 +++ b/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
 @@ -2722,7 +2722,11 @@ void GlobalStarGiftBox(
@@ -9553,7 +10646,7 @@ index 9ac4584e4..56133a250 100644
  		box,
  		show,
 diff --git a/Telegram/SourceFiles/settings/settings_credits_graphics.h b/Telegram/SourceFiles/settings/settings_credits_graphics.h
-index f517eb4c8..6723023b2 100644
+index f517eb4c853586b1abcf22560e906b897b3f8381..6723023b27dc916a2cc18734e2934ea14d600909 100644
 --- a/Telegram/SourceFiles/settings/settings_credits_graphics.h
 +++ b/Telegram/SourceFiles/settings/settings_credits_graphics.h
 @@ -193,6 +193,7 @@ void CreditsPrizeBox(
@@ -9565,7 +10658,7 @@ index f517eb4c8..6723023b2 100644
  };
  void GlobalStarGiftBox(
 diff --git a/Telegram/SourceFiles/ui/controls/table_rows.cpp b/Telegram/SourceFiles/ui/controls/table_rows.cpp
-index 40692d96e..744bcccbb 100644
+index 40692d96ea0fad05748c5a1e14b2d23bcc3edb35..744bcccbb9dd514e04f860ceffda5f31392c2d1d 100644
 --- a/Telegram/SourceFiles/ui/controls/table_rows.cpp
 +++ b/Telegram/SourceFiles/ui/controls/table_rows.cpp
 @@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -9588,7 +10681,7 @@ index 40692d96e..744bcccbb 100644
  
  	raw->widthValue() | rpl::on_next([=](int width) {
 diff --git a/Telegram/SourceFiles/ui/unread_badge.cpp b/Telegram/SourceFiles/ui/unread_badge.cpp
-index 297c37bdd..69a22b6a5 100644
+index 297c37bdd209f0668d12bccd58009f9bbf6cb7c0..69a22b6a537d4d472cc6802bcd5b49244d775db6 100644
 --- a/Telegram/SourceFiles/ui/unread_badge.cpp
 +++ b/Telegram/SourceFiles/ui/unread_badge.cpp
 @@ -189,7 +189,7 @@ int PeerBadge::drawGetWidth(Painter &p, Descriptor &&descriptor) {
@@ -9600,8 +10693,196 @@ index 297c37bdd..69a22b6a5 100644
  		&& !paintExteraCustom
  		&& !hidePremiumStatuses;
  	const auto paintExtera = paintExteraDev || paintExteraSupporter;
+diff --git a/Telegram/SourceFiles/window/main_window.cpp b/Telegram/SourceFiles/window/main_window.cpp
+index 1330fcabd4f48874f20ede45b314448bfc7a9183..6b351e504f7a5873058930c08c4c30517ea6ed48 100644
+--- a/Telegram/SourceFiles/window/main_window.cpp
++++ b/Telegram/SourceFiles/window/main_window.cpp
+@@ -57,8 +57,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include <kurlmimedata.h>
+ 
+ // AyuGram includes
++#include "ayu/ayu_settings.h"
+ #include "ayu/ui/ayu_logo.h"
+-
++#include "ayu/ui/visual_effects.h"
+ 
+ namespace Window {
+ namespace {
+@@ -388,11 +389,38 @@ MainWindow::MainWindow(not_null<Controller*> controller)
+ 	}));
+ }))
+ , _body(body()) {
++	Ayu::VisualEffects::PrepareWindow(this);
++
+ 	style::PaletteChanged(
+ 	) | rpl::on_next([=] {
++		Ayu::VisualEffects::HandlePaletteChanged(this);
+ 		updatePalette();
+ 	}, lifetime());
+ 
++	auto &ayu = AyuSettings::getInstance();
++	rpl::merge(
++		ayu.transparentModeChanges() | rpl::to_empty,
++		ayu.transparentBlurChanges() | rpl::to_empty,
++		ayu.transparentSidebarChanges() | rpl::to_empty,
++		ayu.transparentChatChanges() | rpl::to_empty,
++		ayu.transparentPanelsChanges() | rpl::to_empty,
++		ayu.transparentOpacityChanges() | rpl::to_empty,
++		ayu.transparentTintChanges() | rpl::to_empty,
++		ayu.transparentBackgroundPathChanges() | rpl::to_empty,
++		ayu.transparentBackgroundOpacityChanges() | rpl::to_empty,
++		ayu.transparentBackgroundBlurChanges() | rpl::to_empty,
++		ayu.enhancedAnimationsChanges() | rpl::to_empty,
++		ayu.motionStyleChanges() | rpl::to_empty,
++		ayu.animateWindowOpeningChanges() | rpl::to_empty
++	) | rpl::on_next([=] {
++		Ayu::VisualEffects::RefreshWindow(this);
++	}, lifetime());
++	ayu.transparentModeChanges(
++	) | rpl::on_next([=] {
++		refreshTitleWidget();
++		recountGeometryConstraints();
++	}, lifetime());
++
+ 	Core::App().unreadBadgeChanges(
+ 	) | rpl::on_next([=] {
+ 		updateTitle();
+@@ -533,6 +561,7 @@ QRect MainWindow::desktopRect() const {
+ void MainWindow::init() {
+ 	initHook();
+ 
++	Ayu::VisualEffects::RefreshWindow(this);
+ 	updatePalette();
+ 
+ 	if (Ui::Platform::NativeWindowFrameSupported()) {
+@@ -604,7 +633,13 @@ void MainWindow::quitFromTray() {
+ void MainWindow::activate() {
+ 	bool wasHidden = !isVisible();
+ 	setWindowState(windowState() & ~Qt::WindowMinimized);
++	if (wasHidden) {
++		prepareWindowEntranceAnimation();
++	}
+ 	setVisible(true);
++	if (wasHidden) {
++		startWindowEntranceAnimation();
++	}
+ 	Platform::ActivateThisProcess();
+ 	raise();
+ 	activateWindow();
+@@ -624,6 +659,13 @@ void MainWindow::updatePalette() {
+ 	setPalette(p);
+ }
+ 
++void MainWindow::paintEvent(QPaintEvent *e) {
++	Ui::RpWindow::paintEvent(e);
++	auto p = QPainter(this);
++	p.setClipRect(e->rect());
++	Ayu::VisualEffects::PaintWindow(this, p);
++}
++
+ int MainWindow::computeMinWidth() const {
+ 	auto result = st::windowMinWidth;
+ 	if (_rightColumn) {
+@@ -651,7 +693,8 @@ int MainWindow::computeMinHeight() const {
+ }
+ 
+ void MainWindow::refreshTitleWidget() {
+-	if (Ui::Platform::NativeWindowFrameSupported()
++	if (!AyuSettings::getInstance().transparentMode()
++		&& Ui::Platform::NativeWindowFrameSupported()
+ 		&& Core::App().settings().nativeWindowFrame()) {
+ 		setNativeFrame(true);
+ 		if (Platform::NativeTitleRequiresShadow()) {
+@@ -752,7 +795,9 @@ QRect MainWindow::countInitialGeometry(WindowPosition position) {
+ void MainWindow::firstShow() {
+ 	updateMinimumSize();
+ 	if (initGeometryFromSystem()) {
++		prepareWindowEntranceAnimation();
+ 		show();
++		startWindowEntranceAnimation();
+ 		return;
+ 	}
+ 	const auto geometry = countInitialGeometry(initialPosition());
+@@ -762,7 +807,39 @@ void MainWindow::firstShow() {
+ 		).arg(geometry.width()
+ 		).arg(geometry.height()));
+ 	setGeometry(geometry);
++	prepareWindowEntranceAnimation();
+ 	show();
++	startWindowEntranceAnimation();
++}
++
++bool MainWindow::windowEntranceAnimationsEnabled() const {
++	const auto &settings = AyuSettings::getInstance();
++	return settings.enhancedAnimations()
++		&& settings.animateWindowOpening()
++		&& !anim::Disabled();
++}
++
++void MainWindow::prepareWindowEntranceAnimation() {
++	_windowEntranceAnimation.stop();
++	setWindowOpacity(windowEntranceAnimationsEnabled() ? 0. : 1.);
++}
++
++void MainWindow::startWindowEntranceAnimation() {
++	if (!windowEntranceAnimationsEnabled()) {
++		setWindowOpacity(1.);
++		return;
++	}
++	_windowEntranceAnimation.start(
++		[=](float64 value) {
++			setWindowOpacity(value);
++		},
++		0.,
++		1.,
++		crl::time(220),
++		anim::easeOutCubic);
++	_windowEntranceAnimation.setFinishedCallback([=] {
++		setWindowOpacity(1.);
++	});
+ }
+ 
+ void MainWindow::positionUpdated() {
+diff --git a/Telegram/SourceFiles/window/main_window.h b/Telegram/SourceFiles/window/main_window.h
+index 22302c9bcd9f24171bc53191153ac755a2d4d745..7e25b5ac7bde139dacd3865e5e13845a369e221f 100644
+--- a/Telegram/SourceFiles/window/main_window.h
++++ b/Telegram/SourceFiles/window/main_window.h
+@@ -11,6 +11,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "base/timer.h"
+ #include "base/object_ptr.h"
+ #include "core/core_settings.h"
++#include "ui/effects/animations.h"
+ 
+ namespace Main {
+ class Session;
+@@ -146,6 +147,7 @@ public:
+ 	}
+ 
+ protected:
++	void paintEvent(QPaintEvent *e) override;
+ 	void leaveEventHook(QEvent *e) override;
+ 
+ 	void savePosition(Qt::WindowState state = Qt::WindowActive);
+@@ -196,6 +198,9 @@ private:
+ 	void refreshTitleWidget();
+ 	void updateMinimumSize();
+ 	void updatePalette();
++	[[nodiscard]] bool windowEntranceAnimationsEnabled() const;
++	void prepareWindowEntranceAnimation();
++	void startWindowEntranceAnimation();
+ 
+ 	[[nodiscard]] Core::WindowPosition initialPosition() const;
+ 	[[nodiscard]] Core::WindowPosition nextInitialChildPosition(
+@@ -221,6 +226,7 @@ private:
+ 	rpl::event_stream<> _imeCompositionStartReceived;
+ 
+ 	bool _maximizedBeforeHide = false;
++	Ui::Animations::Simple _windowEntranceAnimation;
+ 
+ 	QPoint _lastMyChildCreatePosition;
+ 	int _lastChildIndex = 0;
 diff --git a/Telegram/SourceFiles/window/notifications_manager.cpp b/Telegram/SourceFiles/window/notifications_manager.cpp
-index 3dc0a866d..3a2d2381f 100644
+index 3dc0a866d0d9127a120da33236dcea8e0f64a0c7..3a2d2381f7d63b1e7979553f124a4217cd0fee73 100644
 --- a/Telegram/SourceFiles/window/notifications_manager.cpp
 +++ b/Telegram/SourceFiles/window/notifications_manager.cpp
 @@ -50,6 +50,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -9634,7 +10915,7 @@ index 3dc0a866d..3a2d2381f 100644
  	const auto type = fields.reactionFrom
  		? (pollVote
 diff --git a/Telegram/SourceFiles/window/notifications_manager_default.cpp b/Telegram/SourceFiles/window/notifications_manager_default.cpp
-index d82764873..c3fd346db 100644
+index d82764873452b47e3c18be923c46718bdc8f49db..c3fd346dbd40d895a7c1418b9608ad099eef021c 100644
 --- a/Telegram/SourceFiles/window/notifications_manager_default.cpp
 +++ b/Telegram/SourceFiles/window/notifications_manager_default.cpp
 @@ -45,8 +45,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -9659,7 +10940,7 @@ index d82764873..c3fd346db 100644
  	showNextFromQueue();
  }
 diff --git a/Telegram/SourceFiles/window/window_main_menu.cpp b/Telegram/SourceFiles/window/window_main_menu.cpp
-index 61524ae69..387ae7c45 100644
+index 61524ae690d1e22c69b93da56aa23dc249ced6ef..387ae7c457900a96e241ba915d96677bd5d55034 100644
 --- a/Telegram/SourceFiles/window/window_main_menu.cpp
 +++ b/Telegram/SourceFiles/window/window_main_menu.cpp
 @@ -83,6 +83,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -9718,7 +10999,7 @@ index 61524ae69..387ae7c45 100644
  		moveBadge();
  	}
 diff --git a/Telegram/SourceFiles/window/window_session_controller.cpp b/Telegram/SourceFiles/window/window_session_controller.cpp
-index 3cb7dc4ff..c8cb3cd8a 100644
+index 3cb7dc4ff48ca7c490026fcc5120ca5603d80ee1..c8cb3cd8adcc8ed2487dcd59506db6dc8963dae9 100644
 --- a/Telegram/SourceFiles/window/window_session_controller.cpp
 +++ b/Telegram/SourceFiles/window/window_session_controller.cpp
 @@ -129,6 +129,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -9738,3 +11019,10 @@ index 3cb7dc4ff..c8cb3cd8a 100644
  		.cryptoAmount = data.vcrypto_amount().v,
  		.amount = data.vamount().v,
  		.cryptoCurrency = qs(data.vcrypto_currency()),
+diff --git a/Telegram/lib_ui b/Telegram/lib_ui
+index 51673cadc14c3a45a67c37364b33b0d572d9b1cf..2324a08c969967f62148b013eda0ae12507753ab 160000
+--- a/Telegram/lib_ui
++++ b/Telegram/lib_ui
+@@ -1 +1 @@
+-Subproject commit 51673cadc14c3a45a67c37364b33b0d572d9b1cf
++Subproject commit 2324a08c969967f62148b013eda0ae12507753ab

@@ -114,11 +114,23 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - Import an existing `.tdesktop-theme`, `.tdesktop-palette`, or supported image through the native file picker.
 - Keep the existing IntelGram app-icon chooser with pink character art and twelve color variants.
 
+## Glass And Motion
+
+- Enable or disable whole-window transparent mode without replacing the selected Telegram theme.
+- Use native behind-window blur on macOS, the Windows DWM backdrop where available, and compositor transparency on Linux.
+- Control transparency independently for the chat list/sidebar, chat and message surfaces, and menus/dialogs/panels.
+- Set the glass tint and surface opacity while keeping text, icons, avatars, and media fully opaque.
+- Choose a local image as the whole-app backdrop, then adjust its opacity and blur or remove it completely.
+- Enable enhanced animations separately from transparency.
+- Choose Quick Snap, Smooth Flow, Diabolical, or Springy motion for existing transitions, dialogs, drawers, controls, and navigation.
+- Optionally animate first window display and restore-from-tray without weakening the normal reduced-motion or power-saving switch.
+
 ## Organized Preferences
 
 - Group the home page into **Customize**, **Power tools**, and **Client settings**.
 - Keep profile and collectible rendering under **Local Profile & Collectibles**.
 - Keep themes, backgrounds, app icons, avatar shape, and interface styling under **Appearance & Backgrounds**.
+- Keep whole-window transparency, backdrop, and animation controls under **Glass & Motion**.
 - Keep drawer, tray, and chat-folder controls under **Navigation & Layout**.
 - Keep search, timeline, moments, and smart folders under **Vault & Search**.
 - Keep notes, identity inspection, rules, privacy, and anti-spam under **Contacts & Automation**.

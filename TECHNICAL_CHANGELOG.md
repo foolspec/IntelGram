@@ -2,6 +2,56 @@
 
 This file records implementation-level changes to IntelGram's custom layer. Product-facing changes are summarized in [`CHANGELOG.md`](CHANGELOG.md).
 
+## IntelGram v6.7.8 Glass And Motion - 2026-07-25
+
+### Source Baseline And Patch
+
+- Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
+- Source commit: `416931433` on the recovered local implementation branch.
+- Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
+- Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
+- Patch SHA-256: `8fcb5eff6158a9745c5e6d25ad820b45ad2ec40e50ba4c20a245d4b0e0694e47`.
+- Patch footprint: 74 files, 8,370 insertions, and 488 deletions relative to the pinned source.
+- `Telegram/lib_ui` now points to public fork [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui), pinned at `2324a08c969967f62148b013eda0ae12507753ab`.
+
+### Settings And Persistence
+
+- Added `Settings::AyuVisualEffects` as a dedicated **Glass & Motion** page under the existing Customize group.
+- `AyuSettings` persists the transparent-mode master switch; native blur; sidebar, chat, and panel surface switches; glass opacity and tint; local background path, opacity, and blur; enhanced-animation switch; motion preset; and window-opening switch.
+- Numeric and color values are normalized during assignment and JSON loading. Missing keys retain conservative defaults, keeping both feature masters disabled after upgrade.
+- The local background picker uses Telegram Desktop's image reader and stores only the selected local path. Clearing the setting releases the decoded image and returns to native blur or the selected theme.
+
+### Window Glass Rendering
+
+- `Ayu::VisualEffects` snapshots the current opaque palette, derives alpha-adjusted glass roles, and reapplies them when a theme changes.
+- Sidebar, chat, and panel role groups are independent, while common input, hover, title, and window roles follow the master opacity.
+- Disabling transparent mode restores the untouched palette snapshot instead of constructing a replacement theme.
+- `MainWindow` uses a translucent Qt root surface and paints a scaled-cover local backdrop, optional `Images::BlurLargeImage` result, and glass tint behind normal child widgets.
+- Text, icons, avatars, videos, and message media are not faded because opacity is applied to background palette roles and backdrop painting rather than to the complete window.
+- IntelGram temporarily uses its custom frame while transparent mode is active so per-pixel transparency reaches the platform surface, then restores the user's normal frame preference when disabled.
+
+### Native Backdrop Backends
+
+- macOS inserts one associated `NSVisualEffectView` behind Qt content, using behind-window blending and the under-window-background material where available.
+- Windows requests the DWM system backdrop and falls back to `DwmEnableBlurBehindWindow` on systems without the newer attribute.
+- Linux leaves the Qt ARGB window transparent for the running compositor and does not assume a desktop-specific blur protocol.
+- Every platform can render the same local image backdrop independently of the native blur path.
+
+### Shared Motion Engine
+
+- The pinned `lib_ui` fork adds process-wide `anim::MotionStyle`, duration scaling, and transition selection.
+- `Ui::Animations::Simple::start` and `change` route existing animations through `MotionDuration` and `MotionTransition`, covering established IntelGram transitions without duplicating animation code at individual call sites.
+- Quick Snap shortens motion and uses a fast quintic exit; Smooth Flow slightly lengthens cubic easing; Diabolical uses a brisk circular exit; Springy uses a monotonic critically damped curve.
+- `Ayu::VisualEffects::ApplyMotionSettings` maps the persisted IntelGram preset into the shared UI engine and returns it to `Default` whenever Enhanced Animations is off.
+- The optional main-window fade runs only when enhanced motion is enabled and the upstream `anim::Disabled()` accessibility/power-saving gate permits animation.
+
+### Build And Validation
+
+- All platform jobs resynchronize `Telegram/lib_ui` after patch application, force-check out the pinned public fork commit, and verify its exact SHA before branding or compilation.
+- `validate_intelgram_patch.py` now requires the Glass & Motion settings, palette compositor, native platform backends, shared motion hooks, and exact `lib_ui` commit in addition to every previous mutation and protected-content boundary.
+- Local validation includes patch alias equality, patch SHA-256, `git diff --check`, localization-key uniqueness, clean application to the pinned source, exact submodule checkout, validator execution, and reverse-application.
+- Full compilation, packaging, isolated launch smoke tests, and public release-asset verification remain delegated to GitHub Actions under the upstream no-local-full-build instruction.
+
 ## IntelGram v6.7.8 Appearance And Settings Refresh - 2026-07-24
 
 ### Source Baseline And Patch

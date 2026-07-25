@@ -2,6 +2,31 @@
 
 All notable IntelGram custom-feature changes are recorded here.
 
+## IntelGram v6.7.8 Glass & Motion - 2026-07-25
+
+### Added
+
+- A dedicated **Glass & Motion** settings page, separate from Telegram themes and chat wallpaper controls.
+- Opt-in whole-window transparency with native backdrop blur on macOS and Windows and compositor transparency on Linux.
+- Independent glass controls for the chat list/sidebar, chat and message surfaces, and menus/dialogs/panels.
+- Glass tint and surface-opacity controls that leave text, icons, avatars, and media crisp.
+- A removable local whole-app background image with independent opacity and blur.
+- Enhanced Animations with Quick Snap, Smooth Flow, Diabolical, and Springy presets.
+- An optional window-opening and restore-from-tray animation.
+
+### Changed
+
+- Existing IntelGram transitions, dialogs, drawers, controls, and navigation now share one selectable motion profile when Enhanced Animations is enabled.
+- Transparent mode follows live theme changes and restores the untouched theme palette immediately when disabled.
+- Reduced-motion and power-saving behavior remains authoritative over every added animation.
+
+### Platform Support
+
+- macOS uses `NSVisualEffectView` behind the Qt content surface.
+- Windows uses the DWM system backdrop with the legacy blur API as a fallback.
+- Linux keeps the Qt ARGB surface transparent for the active desktop compositor.
+- Every platform can use a local image backdrop when native desktop blur is unavailable or undesired.
+
 ## IntelGram v6.7.8 Appearance & Settings Refresh - 2026-07-24
 
 ### Added

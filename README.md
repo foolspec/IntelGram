@@ -14,6 +14,8 @@ IntelGram is a cross-platform AyuGram Desktop build focused on local profile cus
 - Set per-chat tags, priority, download behavior, read reminders, local-only draft preference, and local notification muting.
 - Export selected messages, a chat, or an account to HTML, PDF, Markdown, JSON, or ZIP; create an AES-256-GCM encrypted Frozen Account Backup with permitted cached media.
 - Browse visual theme cards and cloud themes inside IntelGram, import or remove custom themes, choose any local image as the chat background, preview wallpaper changes, and select IntelGram app icons.
+- Turn on whole-window glass with native backdrop blur, separate sidebar/chat/panel transparency, tint and opacity controls, and an optional removable local background image.
+- Make the interface more lively with Quick Snap, Smooth Flow, Diabolical, and Springy animation presets while preserving reduced-motion and power-saving behavior.
 - Render a local display name, UID, primary username, up to 20 other usernames, anonymous number, bio, and profile photo for your own account.
 - Clone the visible profile presentation of a user already loaded in IntelGram by entering their UID, including premium or verification badges, organization badge symbols, emoji status, and personal channel.
 - Find an already-loaded user by UID or by a phone number that is visible to your account, directly from the normal chat-list search field.
@@ -66,6 +68,8 @@ The collectible picker opens as a native visual collection gallery. Choose a col
 
 The local-profile page is split into focused identity, contact, photo, and collectible groups. **IntelGram Preferences -> Appearance & Backgrounds** contains visual theme cards, the in-app cloud theme gallery, a visible action for removing the selected custom theme, a live chat-background preview, Telegram's wallpaper gallery, local-image selection, tiling controls, and the IntelGram app-icon picker. **Navigation & Layout** separately contains chat-folder, tray, and drawer controls. macOS uses full-bleed platform artwork without a duplicate white frame or inset. The name-color editor uses your currently rendered local display name in its preview.
 
+Open **IntelGram Preferences -> Glass & Motion** for the new visual-effects controls. Transparent mode can independently soften the chat list/sidebar, message surfaces, and menus/dialogs; set the glass tint and opacity; and use native desktop blur or a local whole-app image with its own opacity and blur. Enhanced Animations applies one selected preset across existing IntelGram transitions, dialogs, drawers, controls, and navigation, with an optional window-opening fade. Turning either master switch off restores the normal IntelGram appearance and motion immediately.
+
 Choose a local image to replace your own profile photo throughout this IntelGram installation. Profile cloning accepts the UID of a user whose profile has already been opened and locally mirrors their visible name, UID, usernames, phone, bio, photo, profile colors, premium or verification badges, organization badge symbol, emoji status, personal channel, and featured collectible. After selection, IntelGram performs Telegram's standard read-only full-profile refresh for that already-known user so visible badge and personal-channel metadata can render immediately. If the source profile lacks a badge, status, or personal channel, IntelGram clears that element from the cloned local view. Stop cloning at any time to return to the individual local fields.
 
 The IntelGram settings page links to [`@intelgrams`](https://t.me/intelgrams), this GitHub repository, and both changelogs. Joining the channel is an explicit Telegram action: open the channel and press Telegram's normal **Join** button. IntelGram then derives the supporter badge from the locally known membership state; it never joins a channel in the background.
@@ -78,6 +82,7 @@ IntelGram Preferences is grouped into **Customize**, **Power tools**, and **Clie
 - **Contacts & Automation:** private notes, tags, relationship context, reminders, opt-in identity history, configurable local rules, rule activity, and privacy controls.
 - **Export & Backup:** normal local exports and encrypted Frozen Account Backup.
 - **Appearance & Backgrounds:** native theme previews, cloud themes, custom theme import/removal, wallpaper gallery, local background images, live preview, and app icons.
+- **Glass & Motion:** whole-window transparency, native blur, local window backdrops, and global motion presets.
 - **Advanced & Maintenance:** diagnostics, URL registration, and resetting IntelGram settings.
 
 Select one or more ordinary messages and use **Export selected messages** from the context menu to create a scoped export. In a protected chat, the same action records only basic metadata and a jump-back reference.
@@ -99,11 +104,13 @@ All packages are built from the official AyuGram Desktop `v6.7.8` source at comm
 - Linux: x64 `IntelGram`, launch tested under Xvfb, packaged as tar.gz
 
 IntelGram uses its own visible application name, macOS bundle ID, Windows application ID, and Linux desktop ID so it can coexist with a normal AyuGram installation.
+Glass mode uses a native behind-window material on macOS, the Windows DWM backdrop where available, and the desktop compositor's ARGB transparency on Linux. A local image fallback is available on every platform.
 
 ## Source And Verification
 
 - [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch) contains the complete IntelGram implementation.
-- Patch SHA-256: `7e08df09395bd170067a0495019f9dcef66e172dc6492bbba27c4cf1d70cbef6`
+- Patch SHA-256: `8fcb5eff6158a9745c5e6d25ad820b45ad2ec40e50ba4c20a245d4b0e0694e47`
+- The patch pins [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui) commit `2324a08c969967f62148b013eda0ae12507753ab`, which carries IntelGram's shared motion-preset hook.
 - [`build_intelgram_branding.py`](build_intelgram_branding.py) applies the cross-platform IntelGram product identity.
 - [`validate_intelgram_patch.py`](validate_intelgram_patch.py) verifies the feature hooks, protected-content boundaries, and absence of custom Telegram mutation requests before each platform build.
 - [`branding/icons`](branding/icons) contains the pink character artwork and twelve color masters with generated macOS, Windows, and Linux resources; [`generate_intelgram_character_icons.py`](generate_intelgram_character_icons.py) reproduces them.
