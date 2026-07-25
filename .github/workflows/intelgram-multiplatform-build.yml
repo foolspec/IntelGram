@@ -62,6 +62,7 @@ env:
   SOURCE_TAG: v6.7.8
   PATCH_SHA256: 8fcb5eff6158a9745c5e6d25ad820b45ad2ec40e50ba4c20a245d4b0e0694e47
   LIB_UI_COMMIT: 2324a08c969967f62148b013eda0ae12507753ab
+  LIB_UI_REF: codex/intelgram-motion-presets-20260725
 
 jobs:
   macos_dependencies_1:
@@ -225,7 +226,9 @@ jobs:
           git -C tdesktop apply "$GITHUB_WORKSPACE/intelgram-local-profile-render-overrides.patch"
           git -C tdesktop submodule sync -- Telegram/lib_ui
           git -C tdesktop submodule update --init --force Telegram/lib_ui
-          git -C tdesktop/Telegram/lib_ui checkout --detach "$LIB_UI_COMMIT"
+          git -C tdesktop/Telegram/lib_ui remote set-url origin https://github.com/foolspec/lib_ui.git
+          git -C tdesktop/Telegram/lib_ui fetch --no-tags --depth=1 origin "$LIB_UI_REF"
+          git -C tdesktop/Telegram/lib_ui checkout --detach FETCH_HEAD
           test "$(git -C tdesktop/Telegram/lib_ui rev-parse HEAD)" = "$LIB_UI_COMMIT"
           (cd tdesktop && python3 "$GITHUB_WORKSPACE/build_intelgram_branding.py")
           git -C tdesktop diff --check
@@ -545,7 +548,9 @@ jobs:
           git -C tdesktop apply "$env:GITHUB_WORKSPACE/intelgram-local-profile-render-overrides.patch"
           git -C tdesktop submodule sync -- Telegram/lib_ui
           git -C tdesktop submodule update --init --force Telegram/lib_ui
-          git -C tdesktop/Telegram/lib_ui checkout --detach $env:LIB_UI_COMMIT
+          git -C tdesktop/Telegram/lib_ui remote set-url origin https://github.com/foolspec/lib_ui.git
+          git -C tdesktop/Telegram/lib_ui fetch --no-tags --depth=1 origin $env:LIB_UI_REF
+          git -C tdesktop/Telegram/lib_ui checkout --detach FETCH_HEAD
           if ((git -C tdesktop/Telegram/lib_ui rev-parse HEAD).Trim() -ne $env:LIB_UI_COMMIT) { throw "Telegram/lib_ui commit mismatch" }
           Push-Location tdesktop
           python "$env:GITHUB_WORKSPACE/build_intelgram_branding.py"
@@ -657,7 +662,9 @@ jobs:
           git -C tdesktop apply "$GITHUB_WORKSPACE/intelgram-local-profile-render-overrides.patch"
           git -C tdesktop submodule sync -- Telegram/lib_ui
           git -C tdesktop submodule update --init --force Telegram/lib_ui
-          git -C tdesktop/Telegram/lib_ui checkout --detach "$LIB_UI_COMMIT"
+          git -C tdesktop/Telegram/lib_ui remote set-url origin https://github.com/foolspec/lib_ui.git
+          git -C tdesktop/Telegram/lib_ui fetch --no-tags --depth=1 origin "$LIB_UI_REF"
+          git -C tdesktop/Telegram/lib_ui checkout --detach FETCH_HEAD
           test "$(git -C tdesktop/Telegram/lib_ui rev-parse HEAD)" = "$LIB_UI_COMMIT"
           (cd tdesktop && python3 "$GITHUB_WORKSPACE/build_intelgram_branding.py")
           git -C tdesktop diff --check
