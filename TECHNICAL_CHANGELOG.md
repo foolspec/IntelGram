@@ -39,6 +39,7 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - Validation fails if any retired novelty-theme resource is reintroduced.
 - Localization-key uniqueness, QRC XML parsing, patch whitespace checks, byte-identical patch aliases, clean pinned-source application, and mutation-boundary scans remain required before packaging.
 - Platform compilation, packaging, isolated launch tests, and public release-asset verification remain delegated to GitHub Actions in accordance with the upstream no-local-full-build instruction.
+- Release `intelgram-v6.7.8-appearance-refresh-20260724` combines successful macOS run `30125712722`, Windows run `30125939832`, and Linux run `30125506279`; every package records patch `7e08df09395bd170067a0495019f9dcef66e172dc6492bbba27c4cf1d70cbef6` and a passed isolated launch smoke test. Publisher run `30139305324` uploaded all 19 permanent assets, and public-asset validation run `30139540010` passed every digest, checksum, report, asset-presence, latest-release, and patch-hash check.
 
 ## IntelGram v6.7.8 Vault Suite - 2026-07-23
 
