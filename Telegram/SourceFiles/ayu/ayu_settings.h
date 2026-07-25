@@ -51,6 +51,13 @@ enum class SendWithoutSoundOption {
 	Always = 2,
 };
 
+enum class IntelGramMotionStyle {
+	Quick = 0,
+	Smooth = 1,
+	Dynamic = 2,
+	Springy = 3,
+};
+
 NLOHMANN_JSON_SERIALIZE_ENUM(PeerIdDisplay, {
 	{PeerIdDisplay::Hidden, 0},
 	{PeerIdDisplay::TelegramApi, 1},
@@ -80,6 +87,13 @@ NLOHMANN_JSON_SERIALIZE_ENUM(SendWithoutSoundOption, {
 	{SendWithoutSoundOption::Never, 0},
 	{SendWithoutSoundOption::InGhostMode, 1},
 	{SendWithoutSoundOption::Always, 2},
+})
+
+NLOHMANN_JSON_SERIALIZE_ENUM(IntelGramMotionStyle, {
+	{IntelGramMotionStyle::Quick, "quick"},
+	{IntelGramMotionStyle::Smooth, "smooth"},
+	{IntelGramMotionStyle::Dynamic, "dynamic"},
+	{IntelGramMotionStyle::Springy, "springy"},
 })
 
 class GhostModeAccountSettings {
@@ -288,6 +302,19 @@ public:
 	[[nodiscard]] bool increaseWebviewHeight() const { return _increaseWebviewHeight.current(); }
 	[[nodiscard]] bool increaseWebviewWidth() const { return _increaseWebviewWidth.current(); }
 	[[nodiscard]] bool materialSwitches() const { return _materialSwitches.current(); }
+	[[nodiscard]] bool transparentMode() const { return _transparentMode.current(); }
+	[[nodiscard]] bool transparentBlur() const { return _transparentBlur.current(); }
+	[[nodiscard]] bool transparentSidebar() const { return _transparentSidebar.current(); }
+	[[nodiscard]] bool transparentChat() const { return _transparentChat.current(); }
+	[[nodiscard]] bool transparentPanels() const { return _transparentPanels.current(); }
+	[[nodiscard]] int transparentOpacity() const { return _transparentOpacity.current(); }
+	[[nodiscard]] const QString &transparentTint() const { return _transparentTint.current(); }
+	[[nodiscard]] const QString &transparentBackgroundPath() const { return _transparentBackgroundPath.current(); }
+	[[nodiscard]] int transparentBackgroundOpacity() const { return _transparentBackgroundOpacity.current(); }
+	[[nodiscard]] int transparentBackgroundBlur() const { return _transparentBackgroundBlur.current(); }
+	[[nodiscard]] bool enhancedAnimations() const { return _enhancedAnimations.current(); }
+	[[nodiscard]] IntelGramMotionStyle motionStyle() const { return _motionStyle.current(); }
+	[[nodiscard]] bool animateWindowOpening() const { return _animateWindowOpening.current(); }
 	[[nodiscard]] bool removeMessageTail() const { return _removeMessageTail.current(); }
 	[[nodiscard]] bool disableNotificationsDelay() const { return _disableNotificationsDelay.current(); }
 	[[nodiscard]] bool localPremium() const { return _localPremium.current(); }
@@ -388,6 +415,19 @@ public:
 	void setIncreaseWebviewHeight(bool val);
 	void setIncreaseWebviewWidth(bool val);
 	void setMaterialSwitches(bool val);
+	void setTransparentMode(bool val);
+	void setTransparentBlur(bool val);
+	void setTransparentSidebar(bool val);
+	void setTransparentChat(bool val);
+	void setTransparentPanels(bool val);
+	void setTransparentOpacity(int val);
+	void setTransparentTint(const QString &val);
+	void setTransparentBackgroundPath(const QString &val);
+	void setTransparentBackgroundOpacity(int val);
+	void setTransparentBackgroundBlur(int val);
+	void setEnhancedAnimations(bool val);
+	void setMotionStyle(IntelGramMotionStyle val);
+	void setAnimateWindowOpening(bool val);
 	void setRemoveMessageTail(bool val);
 	void setDisableNotificationsDelay(bool val);
 	void setLocalPremium(bool val);
@@ -511,6 +551,32 @@ public:
 	[[nodiscard]] rpl::producer<bool> increaseWebviewWidthChanges() const { return _increaseWebviewWidth.changes(); }
 	[[nodiscard]] rpl::producer<bool> materialSwitchesValue() const { return _materialSwitches.value(); }
 	[[nodiscard]] rpl::producer<bool> materialSwitchesChanges() const { return _materialSwitches.changes(); }
+	[[nodiscard]] rpl::producer<bool> transparentModeValue() const { return _transparentMode.value(); }
+	[[nodiscard]] rpl::producer<bool> transparentModeChanges() const { return _transparentMode.changes(); }
+	[[nodiscard]] rpl::producer<bool> transparentBlurValue() const { return _transparentBlur.value(); }
+	[[nodiscard]] rpl::producer<bool> transparentBlurChanges() const { return _transparentBlur.changes(); }
+	[[nodiscard]] rpl::producer<bool> transparentSidebarValue() const { return _transparentSidebar.value(); }
+	[[nodiscard]] rpl::producer<bool> transparentSidebarChanges() const { return _transparentSidebar.changes(); }
+	[[nodiscard]] rpl::producer<bool> transparentChatValue() const { return _transparentChat.value(); }
+	[[nodiscard]] rpl::producer<bool> transparentChatChanges() const { return _transparentChat.changes(); }
+	[[nodiscard]] rpl::producer<bool> transparentPanelsValue() const { return _transparentPanels.value(); }
+	[[nodiscard]] rpl::producer<bool> transparentPanelsChanges() const { return _transparentPanels.changes(); }
+	[[nodiscard]] rpl::producer<int> transparentOpacityValue() const { return _transparentOpacity.value(); }
+	[[nodiscard]] rpl::producer<int> transparentOpacityChanges() const { return _transparentOpacity.changes(); }
+	[[nodiscard]] rpl::producer<QString> transparentTintValue() const { return _transparentTint.value(); }
+	[[nodiscard]] rpl::producer<QString> transparentTintChanges() const { return _transparentTint.changes(); }
+	[[nodiscard]] rpl::producer<QString> transparentBackgroundPathValue() const { return _transparentBackgroundPath.value(); }
+	[[nodiscard]] rpl::producer<QString> transparentBackgroundPathChanges() const { return _transparentBackgroundPath.changes(); }
+	[[nodiscard]] rpl::producer<int> transparentBackgroundOpacityValue() const { return _transparentBackgroundOpacity.value(); }
+	[[nodiscard]] rpl::producer<int> transparentBackgroundOpacityChanges() const { return _transparentBackgroundOpacity.changes(); }
+	[[nodiscard]] rpl::producer<int> transparentBackgroundBlurValue() const { return _transparentBackgroundBlur.value(); }
+	[[nodiscard]] rpl::producer<int> transparentBackgroundBlurChanges() const { return _transparentBackgroundBlur.changes(); }
+	[[nodiscard]] rpl::producer<bool> enhancedAnimationsValue() const { return _enhancedAnimations.value(); }
+	[[nodiscard]] rpl::producer<bool> enhancedAnimationsChanges() const { return _enhancedAnimations.changes(); }
+	[[nodiscard]] rpl::producer<IntelGramMotionStyle> motionStyleValue() const { return _motionStyle.value(); }
+	[[nodiscard]] rpl::producer<IntelGramMotionStyle> motionStyleChanges() const { return _motionStyle.changes(); }
+	[[nodiscard]] rpl::producer<bool> animateWindowOpeningValue() const { return _animateWindowOpening.value(); }
+	[[nodiscard]] rpl::producer<bool> animateWindowOpeningChanges() const { return _animateWindowOpening.changes(); }
 	[[nodiscard]] rpl::producer<bool> removeMessageTailValue() const { return _removeMessageTail.value(); }
 	[[nodiscard]] rpl::producer<bool> removeMessageTailChanges() const { return _removeMessageTail.changes(); }
 	[[nodiscard]] rpl::producer<bool> disableNotificationsDelayValue() const { return _disableNotificationsDelay.value(); }
@@ -697,6 +763,19 @@ private:
 	rpl::variable<bool> _increaseWebviewHeight = false;
 	rpl::variable<bool> _increaseWebviewWidth = false;
 	rpl::variable<bool> _materialSwitches = true;
+	rpl::variable<bool> _transparentMode = false;
+	rpl::variable<bool> _transparentBlur = true;
+	rpl::variable<bool> _transparentSidebar = true;
+	rpl::variable<bool> _transparentChat = true;
+	rpl::variable<bool> _transparentPanels = true;
+	rpl::variable<int> _transparentOpacity = 78;
+	rpl::variable<QString> _transparentTint = QString::fromLatin1("#161922");
+	rpl::variable<QString> _transparentBackgroundPath;
+	rpl::variable<int> _transparentBackgroundOpacity = 72;
+	rpl::variable<int> _transparentBackgroundBlur = 8;
+	rpl::variable<bool> _enhancedAnimations = false;
+	rpl::variable<IntelGramMotionStyle> _motionStyle = IntelGramMotionStyle::Smooth;
+	rpl::variable<bool> _animateWindowOpening = true;
 	rpl::variable<bool> _removeMessageTail = false;
 	rpl::variable<bool> _disableNotificationsDelay = false;
 	rpl::variable<bool> _localPremium = false;

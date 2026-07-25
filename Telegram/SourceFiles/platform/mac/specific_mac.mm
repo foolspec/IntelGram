@@ -35,6 +35,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include <IOKit/hidsystem/ev_keymap.h>
 #include <mach-o/dyld.h>
 #include <AVFoundation/AVFoundation.h>
+#include <objc/runtime.h>
 
 namespace {
 
@@ -108,12 +109,59 @@ int psFixPrevious() {
 
 namespace Platform {
 
+namespace {
+
+char WindowVisualEffectKey;
+
+} // namespace
+
 void start() {
 	objc_start();
 }
 
 void finish() {
 	objc_finish();
+}
+
+void SetWindowVisualEffect(QWidget *widget, bool enabled, bool blur) {
+	const auto nativeView = reinterpret_cast<NSView*>(widget->winId());
+	const auto window = nativeView.window;
+	if (!window) {
+		return;
+	}
+	auto effect = (NSVisualEffectView*)objc_getAssociatedObject(
+		window,
+		&WindowVisualEffectKey);
+	const auto useEffect = enabled && blur;
+	if (useEffect && !effect) {
+		effect = [[NSVisualEffectView alloc] initWithFrame:nativeView.bounds];
+		effect.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+		effect.blendingMode = NSVisualEffectBlendingModeBehindWindow;
+		if (@available(macOS 10.14, *)) {
+			effect.material = NSVisualEffectMaterialUnderWindowBackground;
+		} else {
+			effect.material = NSVisualEffectMaterialAppearanceBased;
+		}
+		effect.state = NSVisualEffectStateActive;
+		[nativeView addSubview:effect positioned:NSWindowBelow relativeTo:nil];
+		objc_setAssociatedObject(
+			window,
+			&WindowVisualEffectKey,
+			effect,
+			OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+		[effect release];
+	} else if (!useEffect && effect) {
+		[effect removeFromSuperview];
+		objc_setAssociatedObject(
+			window,
+			&WindowVisualEffectKey,
+			nil,
+			OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+	}
+	window.opaque = !enabled;
+	window.backgroundColor = enabled
+		? NSColor.clearColor
+		: NSColor.windowBackgroundColor;
 }
 
 QString SingleInstanceLocalServerName(const QString &hash) {

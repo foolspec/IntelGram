@@ -57,8 +57,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include <kurlmimedata.h>
 
 // AyuGram includes
+#include "ayu/ayu_settings.h"
 #include "ayu/ui/ayu_logo.h"
-
+#include "ayu/ui/visual_effects.h"
 
 namespace Window {
 namespace {
@@ -388,9 +389,36 @@ MainWindow::MainWindow(not_null<Controller*> controller)
 	}));
 }))
 , _body(body()) {
+	Ayu::VisualEffects::PrepareWindow(this);
+
 	style::PaletteChanged(
 	) | rpl::on_next([=] {
+		Ayu::VisualEffects::HandlePaletteChanged(this);
 		updatePalette();
+	}, lifetime());
+
+	auto &ayu = AyuSettings::getInstance();
+	rpl::merge(
+		ayu.transparentModeChanges() | rpl::to_empty,
+		ayu.transparentBlurChanges() | rpl::to_empty,
+		ayu.transparentSidebarChanges() | rpl::to_empty,
+		ayu.transparentChatChanges() | rpl::to_empty,
+		ayu.transparentPanelsChanges() | rpl::to_empty,
+		ayu.transparentOpacityChanges() | rpl::to_empty,
+		ayu.transparentTintChanges() | rpl::to_empty,
+		ayu.transparentBackgroundPathChanges() | rpl::to_empty,
+		ayu.transparentBackgroundOpacityChanges() | rpl::to_empty,
+		ayu.transparentBackgroundBlurChanges() | rpl::to_empty,
+		ayu.enhancedAnimationsChanges() | rpl::to_empty,
+		ayu.motionStyleChanges() | rpl::to_empty,
+		ayu.animateWindowOpeningChanges() | rpl::to_empty
+	) | rpl::on_next([=] {
+		Ayu::VisualEffects::RefreshWindow(this);
+	}, lifetime());
+	ayu.transparentModeChanges(
+	) | rpl::on_next([=] {
+		refreshTitleWidget();
+		recountGeometryConstraints();
 	}, lifetime());
 
 	Core::App().unreadBadgeChanges(
@@ -533,6 +561,7 @@ QRect MainWindow::desktopRect() const {
 void MainWindow::init() {
 	initHook();
 
+	Ayu::VisualEffects::RefreshWindow(this);
 	updatePalette();
 
 	if (Ui::Platform::NativeWindowFrameSupported()) {
@@ -604,7 +633,13 @@ void MainWindow::quitFromTray() {
 void MainWindow::activate() {
 	bool wasHidden = !isVisible();
 	setWindowState(windowState() & ~Qt::WindowMinimized);
+	if (wasHidden) {
+		prepareWindowEntranceAnimation();
+	}
 	setVisible(true);
+	if (wasHidden) {
+		startWindowEntranceAnimation();
+	}
 	Platform::ActivateThisProcess();
 	raise();
 	activateWindow();
@@ -622,6 +657,13 @@ void MainWindow::updatePalette() {
 	auto p = palette();
 	p.setColor(QPalette::Window, st::windowBg->c);
 	setPalette(p);
+}
+
+void MainWindow::paintEvent(QPaintEvent *e) {
+	Ui::RpWindow::paintEvent(e);
+	auto p = QPainter(this);
+	p.setClipRect(e->rect());
+	Ayu::VisualEffects::PaintWindow(this, p);
 }
 
 int MainWindow::computeMinWidth() const {
@@ -651,7 +693,8 @@ int MainWindow::computeMinHeight() const {
 }
 
 void MainWindow::refreshTitleWidget() {
-	if (Ui::Platform::NativeWindowFrameSupported()
+	if (!AyuSettings::getInstance().transparentMode()
+		&& Ui::Platform::NativeWindowFrameSupported()
 		&& Core::App().settings().nativeWindowFrame()) {
 		setNativeFrame(true);
 		if (Platform::NativeTitleRequiresShadow()) {
@@ -752,7 +795,9 @@ QRect MainWindow::countInitialGeometry(WindowPosition position) {
 void MainWindow::firstShow() {
 	updateMinimumSize();
 	if (initGeometryFromSystem()) {
+		prepareWindowEntranceAnimation();
 		show();
+		startWindowEntranceAnimation();
 		return;
 	}
 	const auto geometry = countInitialGeometry(initialPosition());
@@ -762,7 +807,39 @@ void MainWindow::firstShow() {
 		).arg(geometry.width()
 		).arg(geometry.height()));
 	setGeometry(geometry);
+	prepareWindowEntranceAnimation();
 	show();
+	startWindowEntranceAnimation();
+}
+
+bool MainWindow::windowEntranceAnimationsEnabled() const {
+	const auto &settings = AyuSettings::getInstance();
+	return settings.enhancedAnimations()
+		&& settings.animateWindowOpening()
+		&& !anim::Disabled();
+}
+
+void MainWindow::prepareWindowEntranceAnimation() {
+	_windowEntranceAnimation.stop();
+	setWindowOpacity(windowEntranceAnimationsEnabled() ? 0. : 1.);
+}
+
+void MainWindow::startWindowEntranceAnimation() {
+	if (!windowEntranceAnimationsEnabled()) {
+		setWindowOpacity(1.);
+		return;
+	}
+	_windowEntranceAnimation.start(
+		[=](float64 value) {
+			setWindowOpacity(value);
+		},
+		0.,
+		1.,
+		crl::time(220),
+		anim::easeOutCubic);
+	_windowEntranceAnimation.setFinishedCallback([=] {
+		setWindowOpacity(1.);
+	});
 }
 
 void MainWindow::positionUpdated() {

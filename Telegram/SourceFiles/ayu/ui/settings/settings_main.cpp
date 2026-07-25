@@ -13,6 +13,7 @@
 #include "ayu/ui/settings/settings_general.h"
 #include "ayu/ui/settings/settings_other.h"
 #include "ayu/ui/settings/settings_vault.h"
+#include "ayu/ui/settings/settings_visual_effects.h"
 #include "ayu/ui/ayu_logo.h"
 #include "ayu/ayu_settings.h"
 #include "boxes/abstract_box.h"
@@ -116,6 +117,11 @@ void BuildCategories(SectionBuilder &builder) {
 		.title = tr::ayu_CategoryAppearance(),
 		.targetSection = AyuAppearance::Id(),
 		.icon = { &st::menuIconPalette },
+	});
+	builder.addSectionButton({
+		.title = tr::ayu_VisualEffectsTitle(),
+		.targetSection = AyuVisualEffects::Id(),
+		.icon = { &st::menuIconTransparent },
 	});
 	builder.addSectionButton({
 		.title = tr::ayu_CategoryNavigation(),

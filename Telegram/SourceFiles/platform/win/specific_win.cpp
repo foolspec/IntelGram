@@ -59,6 +59,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include <locale.h>
 
 #include <ShellScalingApi.h>
+#include <dwmapi.h>
 
 #ifndef DCX_USESTYLE
 #define DCX_USESTYLE 0x00010000
@@ -600,6 +601,26 @@ namespace {
 }
 
 namespace Platform {
+
+void SetWindowVisualEffect(QWidget *window, bool enabled, bool blur) {
+	const auto hwnd = reinterpret_cast<HWND>(window->winId());
+	if (!hwnd) {
+		return;
+	}
+	constexpr auto kSystemBackdropType = DWMWINDOWATTRIBUTE(38);
+	const auto backdrop = (enabled && blur) ? 3 : 1;
+	DwmSetWindowAttribute(
+		hwnd,
+		kSystemBackdropType,
+		&backdrop,
+		sizeof(backdrop));
+
+	auto behind = DWM_BLURBEHIND{
+		.dwFlags = DWM_BB_ENABLE,
+		.fEnable = (enabled && blur) ? TRUE : FALSE,
+	};
+	DwmEnableBlurBehindWindow(hwnd, &behind);
+}
 
 PermissionStatus GetPermissionStatus(PermissionType type) {
 	if (type == PermissionType::Microphone) {

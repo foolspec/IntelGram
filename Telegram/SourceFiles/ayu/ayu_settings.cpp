@@ -21,8 +21,10 @@
 #include "rpl/combine.h"
 #include "window/window_controller.h"
 
+#include <algorithm>
 #include <fstream>
 #include <QApplication>
+#include <QColor>
 
 using json = nlohmann::json;
 
@@ -664,6 +666,93 @@ void AyuSettings::setMaterialSwitches(bool val) {
 	save();
 }
 
+void AyuSettings::setTransparentMode(bool val) {
+	if (_transparentMode.current() == val) return;
+	_transparentMode = val;
+	save();
+}
+
+void AyuSettings::setTransparentBlur(bool val) {
+	if (_transparentBlur.current() == val) return;
+	_transparentBlur = val;
+	save();
+}
+
+void AyuSettings::setTransparentSidebar(bool val) {
+	if (_transparentSidebar.current() == val) return;
+	_transparentSidebar = val;
+	save();
+}
+
+void AyuSettings::setTransparentChat(bool val) {
+	if (_transparentChat.current() == val) return;
+	_transparentChat = val;
+	save();
+}
+
+void AyuSettings::setTransparentPanels(bool val) {
+	if (_transparentPanels.current() == val) return;
+	_transparentPanels = val;
+	save();
+}
+
+void AyuSettings::setTransparentOpacity(int val) {
+	val = std::clamp(val, 20, 100);
+	if (_transparentOpacity.current() == val) return;
+	_transparentOpacity = val;
+	save();
+}
+
+void AyuSettings::setTransparentTint(const QString &val) {
+	const auto color = QColor(val.trimmed());
+	if (!color.isValid()) {
+		return;
+	}
+	const auto normalized = color.name(QColor::HexRgb);
+	if (_transparentTint.current() == normalized) return;
+	_transparentTint = normalized;
+	save();
+}
+
+void AyuSettings::setTransparentBackgroundPath(const QString &val) {
+	const auto normalized = val.trimmed();
+	if (_transparentBackgroundPath.current() == normalized) return;
+	_transparentBackgroundPath = normalized;
+	save();
+}
+
+void AyuSettings::setTransparentBackgroundOpacity(int val) {
+	val = std::clamp(val, 0, 100);
+	if (_transparentBackgroundOpacity.current() == val) return;
+	_transparentBackgroundOpacity = val;
+	save();
+}
+
+void AyuSettings::setTransparentBackgroundBlur(int val) {
+	val = std::clamp(val, 0, 40);
+	if (_transparentBackgroundBlur.current() == val) return;
+	_transparentBackgroundBlur = val;
+	save();
+}
+
+void AyuSettings::setEnhancedAnimations(bool val) {
+	if (_enhancedAnimations.current() == val) return;
+	_enhancedAnimations = val;
+	save();
+}
+
+void AyuSettings::setMotionStyle(IntelGramMotionStyle val) {
+	if (_motionStyle.current() == val) return;
+	_motionStyle = val;
+	save();
+}
+
+void AyuSettings::setAnimateWindowOpening(bool val) {
+	if (_animateWindowOpening.current() == val) return;
+	_animateWindowOpening = val;
+	save();
+}
+
 void AyuSettings::setRemoveMessageTail(bool val) {
 	if (_removeMessageTail.current() == val) return;
 	_removeMessageTail = val;
@@ -1187,6 +1276,19 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
 		{"increaseWebviewHeight", s._increaseWebviewHeight.current()},
 		{"increaseWebviewWidth", s._increaseWebviewWidth.current()},
 		{"materialSwitches", s._materialSwitches.current()},
+		{"transparentMode", s._transparentMode.current()},
+		{"transparentBlur", s._transparentBlur.current()},
+		{"transparentSidebar", s._transparentSidebar.current()},
+		{"transparentChat", s._transparentChat.current()},
+		{"transparentPanels", s._transparentPanels.current()},
+		{"transparentOpacity", s._transparentOpacity.current()},
+		{"transparentTint", s._transparentTint.current()},
+		{"transparentBackgroundPath", s._transparentBackgroundPath.current()},
+		{"transparentBackgroundOpacity", s._transparentBackgroundOpacity.current()},
+		{"transparentBackgroundBlur", s._transparentBackgroundBlur.current()},
+		{"enhancedAnimations", s._enhancedAnimations.current()},
+		{"motionStyle", s._motionStyle.current()},
+		{"animateWindowOpening", s._animateWindowOpening.current()},
 		{"removeMessageTail", s._removeMessageTail.current()},
 		{"disableNotificationsDelay", s._disableNotificationsDelay.current()},
 		{"localPremium", s._localPremium.current()},
@@ -1303,6 +1405,42 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
 	s._increaseWebviewHeight = j.value("increaseWebviewHeight", defaults._increaseWebviewHeight.current());
 	s._increaseWebviewWidth = j.value("increaseWebviewWidth", defaults._increaseWebviewWidth.current());
 	s._materialSwitches = j.value("materialSwitches", defaults._materialSwitches.current());
+	s._transparentMode = j.value("transparentMode", defaults._transparentMode.current());
+	s._transparentBlur = j.value("transparentBlur", defaults._transparentBlur.current());
+	s._transparentSidebar = j.value("transparentSidebar", defaults._transparentSidebar.current());
+	s._transparentChat = j.value("transparentChat", defaults._transparentChat.current());
+	s._transparentPanels = j.value("transparentPanels", defaults._transparentPanels.current());
+	s._transparentOpacity = std::clamp(
+		j.value("transparentOpacity", defaults._transparentOpacity.current()),
+		20,
+		100);
+	const auto tint = QColor(
+		j.value("transparentTint", defaults._transparentTint.current()));
+	s._transparentTint = tint.isValid()
+		? tint.name(QColor::HexRgb)
+		: defaults._transparentTint.current();
+	s._transparentBackgroundPath = j.value(
+		"transparentBackgroundPath",
+		defaults._transparentBackgroundPath.current()).trimmed();
+	s._transparentBackgroundOpacity = std::clamp(
+		j.value(
+			"transparentBackgroundOpacity",
+			defaults._transparentBackgroundOpacity.current()),
+		0,
+		100);
+	s._transparentBackgroundBlur = std::clamp(
+		j.value(
+			"transparentBackgroundBlur",
+			defaults._transparentBackgroundBlur.current()),
+		0,
+		40);
+	s._enhancedAnimations = j.value(
+		"enhancedAnimations",
+		defaults._enhancedAnimations.current());
+	s._motionStyle = j.value("motionStyle", defaults._motionStyle.current());
+	s._animateWindowOpening = j.value(
+		"animateWindowOpening",
+		defaults._animateWindowOpening.current());
 	s._removeMessageTail = j.value("removeMessageTail", defaults._removeMessageTail.current());
 	s._disableNotificationsDelay = j.value("disableNotificationsDelay", defaults._disableNotificationsDelay.current());
 	s._localPremium = j.value("localPremium", defaults._localPremium.current());

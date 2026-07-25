@@ -138,6 +138,8 @@ set(ayugram_files
         ayu/ui/toasts.h
         ayu/ui/ayu_userpic.cpp
         ayu/ui/ayu_userpic.h
+        ayu/ui/visual_effects.cpp
+        ayu/ui/visual_effects.h
         ayu/ui/utils/ayu_profile_values.cpp
         ayu/ui/utils/ayu_profile_values.h
         ayu/ui/utils/color_cut_quantizer.cpp
@@ -168,6 +170,8 @@ set(ayugram_files
         ayu/ui/settings/settings_other.h
         ayu/ui/settings/settings_vault.cpp
         ayu/ui/settings/settings_vault.h
+        ayu/ui/settings/settings_visual_effects.cpp
+        ayu/ui/settings/settings_visual_effects.h
         ayu/ui/settings/filters/settings_filters_list.cpp
         ayu/ui/settings/filters/settings_filters_list.h
         ayu/ui/settings/filters/per_dialog_filter.cpp

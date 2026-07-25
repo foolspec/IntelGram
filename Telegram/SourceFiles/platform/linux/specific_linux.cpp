@@ -725,6 +725,12 @@ int psFixPrevious() {
 
 namespace Platform {
 
+void SetWindowVisualEffect(QWidget *window, bool enabled, bool blur) {
+	Q_UNUSED(window);
+	Q_UNUSED(enabled);
+	Q_UNUSED(blur);
+}
+
 void start() {
 	QGuiApplication::setDesktopFileName([&] {
 		if (KSandbox::isFlatpak()) {

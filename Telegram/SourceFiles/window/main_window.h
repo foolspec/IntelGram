@@ -11,6 +11,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "base/timer.h"
 #include "base/object_ptr.h"
 #include "core/core_settings.h"
+#include "ui/effects/animations.h"
 
 namespace Main {
 class Session;
@@ -146,6 +147,7 @@ public:
 	}
 
 protected:
+	void paintEvent(QPaintEvent *e) override;
 	void leaveEventHook(QEvent *e) override;
 
 	void savePosition(Qt::WindowState state = Qt::WindowActive);
@@ -196,6 +198,9 @@ private:
 	void refreshTitleWidget();
 	void updateMinimumSize();
 	void updatePalette();
+	[[nodiscard]] bool windowEntranceAnimationsEnabled() const;
+	void prepareWindowEntranceAnimation();
+	void startWindowEntranceAnimation();
 
 	[[nodiscard]] Core::WindowPosition initialPosition() const;
 	[[nodiscard]] Core::WindowPosition nextInitialChildPosition(
@@ -221,6 +226,7 @@ private:
 	rpl::event_stream<> _imeCompositionStartReceived;
 
 	bool _maximizedBeforeHide = false;
+	Ui::Animations::Simple _windowEntranceAnimation;
 
 	QPoint _lastMyChildCreatePosition;
 	int _lastChildIndex = 0;
