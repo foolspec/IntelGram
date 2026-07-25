@@ -27,7 +27,7 @@
 #include "rpl/combine.h"
 #include "ui/image/image.h"
 #include "ui/layers/generic_box.h"
-#include "ui/widgets/fields/input_field.h"
+#include "ui/widgets/fields/special_fields.h"
 #include "ui/widgets/labels.h"
 #include "ui/vertical_list.h"
 #include "window/window_session_controller.h"
@@ -987,15 +987,16 @@ void ShowLocalProfileUsernameEditor(
 		not_null<Window::SessionController*> controller,
 		not_null<UserData*>) {
 	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
-		box->setTitle(tr::ayu_LocalProfileUsernameEditorTitle());
+		box->setTitle(tr::lng_username_title());
 		const auto container = box->verticalLayout();
 		const auto field = box->addRow(
-			object_ptr<Ui::InputField>(
+			object_ptr<Ui::UsernameInput>(
 				box,
 				st::defaultInputField,
-				tr::ayu_LocalProfileUsername(),
-				AyuSettings::getInstance().localProfileUsername()),
-			st::boxRowPadding);
+				rpl::single(u"@username"_q),
+				AyuSettings::getInstance().localProfileUsername(),
+				QString()),
+			st::usernamePadding);
 		field->setMaxLength(kMaxLocalProfileUsernameLength);
 		box->setFocusCallback([=] {
 			field->setFocusFast();
@@ -1036,11 +1037,17 @@ void ShowLocalProfileUsernameEditor(
 			};
 		});
 		AddUsernameCheckLabel(container, std::move(checkInfo));
+		auto description = rpl::combine(
+			tr::lng_username_description1(tr::rich),
+			tr::lng_username_description2(tr::rich)
+		) | rpl::map([](TextWithEntities first, TextWithEntities second) {
+			return first.append("\n\n").append(std::move(second));
+		});
 		container->add(object_ptr<Ui::DividerLabel>(
 			container,
 			object_ptr<Ui::FlatLabel>(
 				container,
-				tr::ayu_LocalProfileUsernameEditorDescription(tr::rich),
+				std::move(description),
 				st::boxDividerLabel),
 			st::defaultBoxDividerLabelPadding));
 
