@@ -15,6 +15,8 @@
 #include "ayu/ui/settings/ayu_builder.h"
 #include "ayu/ui/settings/settings_ayu_utils.h"
 #include "ayu/ui/settings/settings_main.h"
+#include "data/data_cloud_themes.h"
+#include "data/data_session.h"
 #include "inline_bots/bot_attach_web_view.h"
 #include "main/main_session.h"
 #include "settings/sections/settings_chat.h"
@@ -26,10 +28,13 @@
 #include "styles/style_layers.h"
 #include "styles/style_menu_icons.h"
 #include "styles/style_settings.h"
+#include "ui/boxes/confirm_box.h"
 #include "ui/painter.h"
 #include "ui/widgets/labels.h"
 #include "ui/wrap/padding_wrap.h"
 #include "ui/wrap/vertical_layout.h"
+#include "window/themes/window_theme.h"
+#include "window/window_controller.h"
 #include "window/window_session_controller.h"
 
 namespace Settings {
@@ -51,6 +56,38 @@ bool HasDrawerBots(not_null<Window::SessionController*> controller) {
 	return false;
 }
 
+[[nodiscard]] bool HasRemovableTheme() {
+	return !Window::Theme::IsEmbeddedTheme(
+		Window::Theme::Background()->themeObject().pathAbsolute);
+}
+
+void RemoveCurrentTheme(
+		not_null<Window::SessionController*> controller) {
+	using namespace Window::Theme;
+
+	if (!HasRemovableTheme()) {
+		return;
+	}
+	const auto cloudThemeId = Background()->themeObject().cloud.id;
+	controller->show(Ui::MakeConfirmBox({
+		.text = tr::lng_theme_delete_sure(),
+		.confirmed = [=](Fn<void()> &&close) {
+			close();
+			if (Background()->editingTheme().has_value()) {
+				Background()->clearEditingTheme(ClearEditing::KeepChanges);
+				controller->window().showRightColumn(nullptr);
+			}
+			ResetToSomeDefault();
+			KeepApplied();
+			if (cloudThemeId) {
+				controller->session().data().cloudThemes().remove(
+					cloudThemeId);
+			}
+		},
+		.confirmText = tr::lng_theme_delete(),
+	}));
+}
+
 void BuildThemesAndBackgrounds(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 	const auto controller = builder.controller();
 	const auto highlights = builder.highlights();
@@ -62,6 +99,20 @@ void BuildThemesAndBackgrounds(SectionBuilder &builder, AyuSectionBuilder &ayu) 
 	builder.add([=](const WidgetContext &context) {
 		SetupCloudThemes(controller, context.container.get(), highlights);
 		return SectionBuilder::WidgetToAdd{};
+	});
+	builder.addButton({
+		.id = u"ayu/removeCurrentTheme"_q,
+		.title = tr::ayu_RemoveCurrentTheme(),
+		.icon = { &st::menuIconDelete },
+		.onClick = [=] {
+			RemoveCurrentTheme(controller);
+		},
+		.shown = rpl::single(HasRemovableTheme()) | rpl::then(
+			Window::Theme::Background()->updates()
+				| rpl::map([](const Window::Theme::BackgroundUpdate &) {
+					return HasRemovableTheme();
+				})
+				| rpl::distinct_until_changed()),
 	});
 	builder.add([=](const WidgetContext &context) {
 		SetupChatBackground(controller, context.container.get(), highlights);
