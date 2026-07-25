@@ -60,7 +60,7 @@ permissions:
 
 env:
   SOURCE_TAG: v6.7.8
-  PATCH_SHA256: a1a4d1ebfd0e551dd571e2ea8c04bd0a4a343564078ff0929991dc636acffcae
+  PATCH_SHA256: e235a3172ccc1ce4aeddcb1e6f714e6d4fa3748ffcc3c69d5db2b469a85d71aa
   LIB_UI_COMMIT: 2324a08c969967f62148b013eda0ae12507753ab
   LIB_UI_REF: codex/intelgram-motion-presets-20260725
 

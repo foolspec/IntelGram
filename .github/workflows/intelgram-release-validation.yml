@@ -13,8 +13,8 @@ permissions:
   contents: read
 
 env:
-  SOURCE_PATCH_SHA256: a1a4d1ebfd0e551dd571e2ea8c04bd0a4a343564078ff0929991dc636acffcae
-  RELEASE_PATCH_SHA256: a1a4d1ebfd0e551dd571e2ea8c04bd0a4a343564078ff0929991dc636acffcae
+  SOURCE_PATCH_SHA256: e235a3172ccc1ce4aeddcb1e6f714e6d4fa3748ffcc3c69d5db2b469a85d71aa
+  RELEASE_PATCH_SHA256: e235a3172ccc1ce4aeddcb1e6f714e6d4fa3748ffcc3c69d5db2b469a85d71aa
 
 jobs:
   verify-release:

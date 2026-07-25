@@ -107,7 +107,10 @@ def main() -> None:
         "Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp": (
             "void ShowLocalProfileUsernameEditor(",
             "box->setTitle(tr::lng_username_title());",
-            "object_ptr<Ui::UsernameInput>(",
+            "class LocalUsernameEditor final : public Ui::RpWidget",
+            "object_ptr<Ui::UsernameInput> _field;",
+            "_padding(st::usernamePadding)",
+            "object_ptr<LocalUsernameEditor>(",
             'rpl::single(u"@username"_q)',
             "tr::lng_username_description1(tr::rich)",
             "tr::lng_username_description2(tr::rich)",
