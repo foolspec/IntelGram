@@ -61,7 +61,7 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - Provides current-account search, all-account search, and a unified inbox with clear account labels.
 - Stores locally observed revisions before an edit is applied and records deletions only for messages this client had already received.
 - Shows protected messages only as metadata and jump-back references; their body, filename, link text, and cached media path are blank.
-- Can be turned off from **Vault & Tools** without changing Telegram history.
+- Can be turned off from **Contacts & Automation** without changing Telegram history.
 
 ## Chat Timeline Tools
 
@@ -83,7 +83,7 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 
 - Attach private notes, tags, relationship/context text, and an optional reminder date to a loaded contact.
 - Keep a local history of note changes.
-- Show due reminders from the Vault & Tools page.
+- Show due reminders from the **Contacts & Automation** page.
 - Capture opt-in identity snapshots containing only the public name, usernames, public badge flags, and shared-group count already visible to IntelGram.
 - Never fetch hidden profile fields or send notes to Telegram.
 
@@ -104,11 +104,26 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - Local-only draft preference that prevents that chat's draft from being uploaded by IntelGram.
 - Local notification mute without changing Telegram's server-side notification settings.
 
-## Theme Studio
+## Appearance And Custom Backgrounds
 
-- Bundled Windows 93, Terminal, Classic Telegram, and true-black AMOLED themes.
-- Import an existing `.tdesktop-theme` or `.palette` file.
+- Browse Telegram's native light and dark theme cards with visual previews.
+- Browse cloud themes inside IntelGram without opening an external theme site.
+- Select an installed custom theme and remove it with a visible action that safely restores a built-in default.
+- Choose a global chat background from Telegram's wallpaper gallery or any local image.
+- Preview a background before applying it and control image tiling and wide-layout behavior.
+- Import an existing `.tdesktop-theme`, `.tdesktop-palette`, or supported image through the native file picker.
 - Keep the existing IntelGram app-icon chooser with pink character art and twelve color variants.
+
+## Organized Preferences
+
+- Group the home page into **Customize**, **Power tools**, and **Client settings**.
+- Keep profile and collectible rendering under **Local Profile & Collectibles**.
+- Keep themes, backgrounds, app icons, avatar shape, and interface styling under **Appearance & Backgrounds**.
+- Keep drawer, tray, and chat-folder controls under **Navigation & Layout**.
+- Keep search, timeline, moments, and smart folders under **Vault & Search**.
+- Keep notes, identity inspection, rules, privacy, and anti-spam under **Contacts & Automation**.
+- Keep exports and encrypted archives under **Export & Backup**.
+- Keep diagnostics, URL registration, and reset controls under **Advanced & Maintenance**.
 
 ## Export Center And Frozen Account Backup
 

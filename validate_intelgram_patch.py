@@ -37,14 +37,13 @@ def main() -> None:
             "ayu/ui/settings/settings_vault.cpp",
         ),
         "Telegram/Resources/langs/lang.strings": (
-            '"ayu_VaultTitle" = "Vault & Tools";',
+            '"ayu_CategoryAppearance" = "Appearance & Backgrounds";',
+            '"ayu_RemoveCurrentTheme" = "Remove current custom theme";',
+            '"ayu_VaultTitle" = "Vault & Search";',
+            '"ayu_AutomationTitle" = "Contacts & Automation";',
+            '"ayu_ExportTitle" = "Export & Backup";',
             '"ayu_VaultExportSelectedMessages" = "Export selected messages";',
             "Restrict Saving Content",
-        ),
-        "Telegram/Resources/qrc/telegram/telegram.qrc": (
-            "intelgram-windows93.tdesktop-theme",
-            "intelgram-terminal.tdesktop-theme",
-            "intelgram-amoled.tdesktop-theme",
         ),
         "Telegram/SourceFiles/ayu/data/intelgram_vault.cpp": (
             "CREATE VIRTUAL TABLE IF NOT EXISTS vault_messages_fts USING fts5",
@@ -64,8 +63,23 @@ def main() -> None:
             "ShowVaultSearch(",
             "ShowTimeline(",
             "ShowRules(",
-            "ShowThemeStudio(",
             "ShowExport(",
+            "AyuAutomation::Id()",
+            "AyuExport::Id()",
+        ),
+        "Telegram/SourceFiles/ayu/ui/settings/settings_appearance.cpp": (
+            "SetupThemeOptions(",
+            "SetupCloudThemes(",
+            "SetupChatBackground(",
+            "RemoveCurrentTheme(",
+            "cloudThemes().remove(",
+            "AyuNavigation::Id()",
+        ),
+        "Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp": (
+            "tr::ayu_SettingsCustomizeHeader()",
+            "AyuAutomation::Id()",
+            "AyuExport::Id()",
+            "AyuAdvanced::Id()",
         ),
         "Telegram/SourceFiles/history/history_item_helpers.cpp": (
             "(flags & MTP::f_noforwards) ? Flag::NoForwards",
@@ -85,6 +99,15 @@ def main() -> None:
     }
     for path, needles in requirements.items():
         require(root, path, needles)
+
+    removed_themes = (
+        "Telegram/Resources/intelgram-windows93.tdesktop-theme",
+        "Telegram/Resources/intelgram-terminal.tdesktop-theme",
+        "Telegram/Resources/intelgram-amoled.tdesktop-theme",
+    )
+    for path in removed_themes:
+        if (root / path).exists():
+            fail(f"removed novelty theme is still present: {path}")
 
     diff = subprocess.run(
         ["git", "-C", str(root), "diff", "--unified=0", "--no-ext-diff"],

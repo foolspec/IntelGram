@@ -13,7 +13,7 @@ IntelGram is a cross-platform AyuGram Desktop build focused on local profile cus
 - Organize work with smart folders, private contact notes and reminders, opt-in public identity snapshots, local rules, and anti-spam review.
 - Set per-chat tags, priority, download behavior, read reminders, local-only draft preference, and local notification muting.
 - Export selected messages, a chat, or an account to HTML, PDF, Markdown, JSON, or ZIP; create an AES-256-GCM encrypted Frozen Account Backup with permitted cached media.
-- Switch among Windows 93, Terminal, Classic Telegram, AMOLED, imported theme packs, and IntelGram icon choices.
+- Browse visual theme cards and cloud themes inside IntelGram, import or remove custom themes, choose any local image as the chat background, preview wallpaper changes, and select IntelGram app icons.
 - Render a local display name, UID, primary username, up to 20 other usernames, anonymous number, bio, and profile photo for your own account.
 - Clone the visible profile presentation of a user already loaded in IntelGram by entering their UID, including premium or verification badges, organization badge symbols, emoji status, and personal channel.
 - Find an already-loaded user by UID or by a phone number that is visible to your account, directly from the normal chat-list search field.
@@ -47,7 +47,7 @@ IntelGram is a cross-platform AyuGram Desktop build focused on local profile cus
 
 ## Using IntelGram
 
-Open **IntelGram Settings -> Other -> Local profile** to configure:
+Open **IntelGram Preferences -> Local Profile & Collectibles** to configure:
 
 - Local display name
 - Local UID
@@ -64,20 +64,21 @@ Clicking your username in IntelGram's profile settings opens the local username 
 
 The collectible picker opens as a native visual collection gallery. Choose a collection card to open a scrollable grid of its exact numbered collectibles, click any artwork to select it without leaving IntelGram, or paste a supported Telegram gift slug, `t.me/nft` link, Getgems item URL, or TON NFT address. IntelGram resolves the collectible read-only, shows its native `Collection #Number` profile tooltip, and uses Telegram's native collectible detail view when clicked. For a locally selected or cloned gift, the detail view presents both the recipient link and Telegram profile chip as your real or enabled local display name, with both opening your own locally rendered profile. The compact profile card uses the active local photo, phone, usernames, bio, and personal channel; the gift's actual ownership, sender, date, and transaction data are not changed.
 
-The local-profile page is split into focused identity, contact, photo, and collectible groups. **Settings -> Appearance -> App Icon** includes the new pink IntelGram artwork, a profile-art alternate, and twelve coordinated color variants. macOS uses full-bleed platform artwork without a duplicate white frame or inset. The name-color editor uses your currently rendered local display name in its preview.
+The local-profile page is split into focused identity, contact, photo, and collectible groups. **IntelGram Preferences -> Appearance & Backgrounds** contains visual theme cards, the in-app cloud theme gallery, a visible action for removing the selected custom theme, a live chat-background preview, Telegram's wallpaper gallery, local-image selection, tiling controls, and the IntelGram app-icon picker. **Navigation & Layout** separately contains chat-folder, tray, and drawer controls. macOS uses full-bleed platform artwork without a duplicate white frame or inset. The name-color editor uses your currently rendered local display name in its preview.
 
 Choose a local image to replace your own profile photo throughout this IntelGram installation. Profile cloning accepts the UID of a user whose profile has already been opened and locally mirrors their visible name, UID, usernames, phone, bio, photo, profile colors, premium or verification badges, organization badge symbol, emoji status, personal channel, and featured collectible. After selection, IntelGram performs Telegram's standard read-only full-profile refresh for that already-known user so visible badge and personal-channel metadata can render immediately. If the source profile lacks a badge, status, or personal channel, IntelGram clears that element from the cloned local view. Stop cloning at any time to return to the individual local fields.
 
 The IntelGram settings page links to [`@intelgrams`](https://t.me/intelgrams), this GitHub repository, and both changelogs. Joining the channel is an explicit Telegram action: open the channel and press Telegram's normal **Join** button. IntelGram then derives the supporter badge from the locally known membership state; it never joins a channel in the background.
 
-Open **IntelGram Settings -> IntelGram -> Update log** to read the latest update, main IntelGram features, and local-only privacy boundary without leaving the app. The dialog also provides an optional link to the complete GitHub changelog.
+Open **IntelGram Preferences -> Update log** to read the latest update, main IntelGram features, and local-only privacy boundary without leaving the app. The dialog also provides an optional link to the complete GitHub changelog.
 
-Open **IntelGram Settings -> Vault & Tools** for:
+IntelGram Preferences is grouped into **Customize**, **Power tools**, and **Client settings**:
 
-- **Search & timeline:** current-account or all-account vault search, unified inbox, smart folders, jump-to-date, statistics, media history, revisions, and saved moments.
-- **Contacts & automation:** private notes, tags, relationship context, reminders, opt-in identity history, configurable local rules, and rule activity.
-- **Current chat tools:** local tags and priority, manual/Wi-Fi/always download mode, read reminder, local-only draft preference, and local notification mute.
-- **Themes & backup:** built-in and imported themes, normal local exports, and encrypted Frozen Account Backup.
+- **Vault & Search:** current-account or all-account vault search, unified inbox, smart folders, jump-to-date, statistics, media history, revisions, and saved moments.
+- **Contacts & Automation:** private notes, tags, relationship context, reminders, opt-in identity history, configurable local rules, rule activity, and privacy controls.
+- **Export & Backup:** normal local exports and encrypted Frozen Account Backup.
+- **Appearance & Backgrounds:** native theme previews, cloud themes, custom theme import/removal, wallpaper gallery, local background images, live preview, and app icons.
+- **Advanced & Maintenance:** diagnostics, URL registration, and resetting IntelGram settings.
 
 Select one or more ordinary messages and use **Export selected messages** from the context menu to create a scoped export. In a protected chat, the same action records only basic metadata and a jump-back reference.
 
@@ -102,7 +103,7 @@ IntelGram uses its own visible application name, macOS bundle ID, Windows applic
 ## Source And Verification
 
 - [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch) contains the complete IntelGram implementation.
-- Patch SHA-256: `566f49ca3979c62366bb8ebb4543d3cc7694037aa5781eaa4db031ec1b78b94d`
+- Patch SHA-256: `7e08df09395bd170067a0495019f9dcef66e172dc6492bbba27c4cf1d70cbef6`
 - [`build_intelgram_branding.py`](build_intelgram_branding.py) applies the cross-platform IntelGram product identity.
 - [`validate_intelgram_patch.py`](validate_intelgram_patch.py) verifies the feature hooks, protected-content boundaries, and absence of custom Telegram mutation requests before each platform build.
 - [`branding/icons`](branding/icons) contains the pink character artwork and twelve color masters with generated macOS, Windows, and Linux resources; [`generate_intelgram_character_icons.py`](generate_intelgram_character_icons.py) reproduces them.

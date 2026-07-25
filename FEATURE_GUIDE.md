@@ -2,7 +2,7 @@
 
 ## Where do I change my local profile?
 
-Open **IntelGram Settings -> Other -> Local profile**. The controls are grouped into **Identity**, **Usernames, bio and contact**, **Profile photo**, and **Collectibles**. Each field has its own switch or action, so you can use only the pieces you want.
+Open **IntelGram Preferences -> Local Profile & Collectibles**. The controls are grouped into **Identity**, **Usernames, bio and contact**, **Profile photo**, and **Collectibles**. Each field has its own switch or action, so you can use only the pieces you want.
 
 ## How do I change my local username?
 
@@ -34,7 +34,7 @@ Yes. Use **Open by collectible link** and paste a supported Getgems item URL, `t
 
 ## How do I change the IntelGram app icon?
 
-Open **Settings -> Appearance -> App Icon**. Choose the pink primary artwork, the pink profile-art alternate, or one of twelve color variants. IntelGram stores the choice locally and uses the matching platform-native icon resource. On macOS, the Dock icon uses full-bleed artwork without an extra white frame.
+Open **IntelGram Preferences -> Appearance & Backgrounds**, then choose **App Icon**. Choose the pink primary artwork, the pink profile-art alternate, or one of twelve color variants. IntelGram stores the choice locally and uses the matching platform-native icon resource. On macOS, the Dock icon uses full-bleed artwork without an extra white frame.
 
 ## Why does the name-color preview show a different name?
 
@@ -50,15 +50,15 @@ No. They are visible only in this IntelGram installation. Screenshots will natur
 
 ## How do I get the IntelGram supporter badge?
 
-Open **IntelGram Settings -> IntelGram -> Telegram**, then press Telegram's normal **Join** button on `@intelgrams`. IntelGram reads that locally known membership state and displays the badge on your own profile. It does not join the channel automatically, and leaving the channel removes the local membership-derived badge after Telegram updates the channel state.
+Open **IntelGram Preferences -> IntelGram -> Telegram**, then press Telegram's normal **Join** button on `@intelgrams`. IntelGram reads that locally known membership state and displays the badge on your own profile. It does not join the channel automatically, and leaving the channel removes the local membership-derived badge after Telegram updates the channel state.
 
 ## Where can I read the update log?
 
-Open **IntelGram Settings -> IntelGram -> Update log**. The bundled dialog summarizes the latest update, main IntelGram features, and the local-only privacy boundary. **View full changelog** opens the longer GitHub history when you need it.
+Open **IntelGram Preferences -> Update log**. The bundled dialog summarizes the latest update, main IntelGram features, and the local-only privacy boundary. **View full changelog** opens the longer GitHub history when you need it.
 
 ## Where is the message vault?
 
-Open **IntelGram Settings -> Vault & Tools**. **Search this account** searches the active account; **Search all accounts** and **Unified account inbox** label results with the account they belong to. IntelGram starts indexing messages as this build receives or loads them, so older history appears as it is loaded.
+Open **IntelGram Preferences -> Vault & Search**. **Search this account** searches the active account; **Search all accounts** and **Unified account inbox** label results with the account they belong to. IntelGram starts indexing messages as this build receives or loads them, so older history appears as it is loaded.
 
 ## How do I use the timeline tools?
 
@@ -70,7 +70,7 @@ Right-click a message and choose **Save as IntelGram moment**. Moments are priva
 
 ## How do I add private contact notes?
 
-Open a person's chat, then choose **Private note for current contact** under **Vault & Tools**. You can store a note, tags, relationship/context text, and an optional reminder date. **All private profile notes** shows the saved list and due reminders.
+Open a person's chat, then choose **Private note for current contact** under **Contacts & Automation**. You can store a note, tags, relationship/context text, and an optional reminder date. **All private profile notes** shows the saved list and due reminders.
 
 ## What does the identity inspector store?
 
@@ -86,7 +86,7 @@ Open the chat and choose **Current chat tools**. Set tags, priority, download mo
 
 ## How do I export a chat or account?
 
-Open **Export Center** under **Vault & Tools** and choose the current chat or current account. IntelGram writes HTML, PDF, Markdown, JSON, and ZIP files to the folder you select. Select messages in a chat and use **Export selected messages** to export only that selection.
+Open **IntelGram Preferences -> Export & Backup** and choose the current chat or current account. IntelGram writes HTML, PDF, Markdown, JSON, and ZIP files to the folder you select. Select messages in a chat and use **Export selected messages** to export only that selection.
 
 ## What is Frozen Account Backup?
 
@@ -98,4 +98,8 @@ IntelGram preserves Telegram's Restrict Saving Content and self-destruct rules. 
 
 ## How do I change themes?
 
-Open **Theme Studio** under **Vault & Tools** and choose Windows 93, Terminal, Classic Telegram, or AMOLED. You can also import a Telegram desktop theme file. App icons remain available under **Settings -> Appearance -> App Icon**.
+Open **IntelGram Preferences -> Appearance & Backgrounds**. Choose from the visual light and dark theme cards, browse Telegram cloud themes inside the app, or select the chat-background preview to open Telegram's wallpaper gallery. The background editor can apply a wallpaper from the gallery or a local image and includes preview, tiling, and wide-layout controls. Theme, palette, and supported image files can also be imported through the native file picker. To remove an installed theme, select it and choose **Remove current custom theme**; built-in defaults are protected.
+
+## Where did the other settings go?
+
+The IntelGram Preferences home page is grouped into **Customize**, **Power tools**, and **Client settings**. Navigation and tray behavior are in **Navigation & Layout**; contact notes, rules, identity inspection, privacy, and anti-spam tools are in **Contacts & Automation**; exports and Frozen Account Backup are in **Export & Backup**; diagnostics, URL registration, and reset controls are in **Advanced & Maintenance**.

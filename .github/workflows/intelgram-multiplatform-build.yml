@@ -60,7 +60,7 @@ permissions:
 
 env:
   SOURCE_TAG: v6.7.8
-  PATCH_SHA256: 566f49ca3979c62366bb8ebb4543d3cc7694037aa5781eaa4db031ec1b78b94d
+  PATCH_SHA256: 7e08df09395bd170067a0495019f9dcef66e172dc6492bbba27c4cf1d70cbef6
 
 jobs:
   macos_dependencies_1:
@@ -777,11 +777,11 @@ jobs:
           find release-assets -maxdepth 1 -type f -print -exec ls -lh {} \;
           mapfile -d '' RELEASE_ASSETS < <(find release-assets -maxdepth 1 -type f ! -empty -print0)
           test "${#RELEASE_ASSETS[@]}" -gt 0
-          TAG="intelgram-v6.7.8-vault-suite-${GITHUB_RUN_ID}"
+          TAG="intelgram-v6.7.8-appearance-refresh-${GITHUB_RUN_ID}"
           gh release create "$TAG" \
             --repo "$GITHUB_REPOSITORY" \
             --target "$TARGET_SHA" \
             --latest \
-            --title "IntelGram v6.7.8 - Vault Suite" \
-            --notes "IntelGram's Vault Suite adds local full-text search, unified account views, timelines and statistics, saved moments, locally observed edit/deletion history, smart folders, private contact notes and reminders, opt-in public identity snapshots, local rules and anti-spam review, per-chat download/draft/notification controls, Theme Studio, selected-message exports, full account exports, and AES-256-GCM Frozen Account Backup. Existing client-render-only profile, clone, UID/visible-phone search, collectible gallery, local photo, badge, username, anonymous-number, and icon features remain included. Protected and self-destructing content is never copied: IntelGram stores only metadata and a jump-back reference. No Telegram profile, contact, channel membership, collectible ownership, or protected-content mutation is included." \
+            --title "IntelGram v6.7.8 - Appearance Refresh" \
+            --notes "IntelGram includes local full-text search, unified account views, timelines and statistics, saved moments, locally observed edit/deletion history, smart folders, private contact notes and reminders, opt-in public identity snapshots, local rules and anti-spam review, per-chat download/draft/notification controls, selected-message exports, full account exports, and AES-256-GCM Frozen Account Backup. Appearance & Backgrounds adds native visual theme cards, cloud themes, visible custom-theme removal, Telegram's wallpaper gallery, local background images, preview and tiling controls, and IntelGram app icons. Existing client-render-only profile, clone, UID/visible-phone search, collectible gallery, local photo, badge, username, and anonymous-number features remain included. Protected and self-destructing content is never copied: IntelGram stores only metadata and a jump-back reference. No Telegram profile, contact, channel membership, collectible ownership, or protected-content mutation is included." \
             "${RELEASE_ASSETS[@]}"

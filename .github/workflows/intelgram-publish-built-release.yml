@@ -88,7 +88,7 @@ jobs:
           mapfile -d '' RELEASE_ASSETS < <(find release-assets -maxdepth 1 -type f ! -empty -print0)
           test "${#RELEASE_ASSETS[@]}" -gt 0
           cat > release-notes.md <<'EOF'
-          ## IntelGram v6.7.8 Vault Suite
+          ## IntelGram v6.7.8 Appearance Refresh
 
           This release contains launch-tested IntelGram packages for macOS Apple Silicon, Windows x64, and Linux x64.
 
@@ -98,7 +98,8 @@ jobs:
           - Chat timelines with jump-to-date, statistics, compact media history, saved moments, and locally observed edit/deletion history.
           - Smart folders, private contact notes with reminders and history, opt-in public identity snapshots, local rules, and anti-spam review.
           - Per-chat local tags, priority, download mode, read reminders, local-only draft preference, and local notification muting.
-          - Theme Studio with Windows 93, Terminal, Classic Telegram, AMOLED, custom theme import, and IntelGram icon choices.
+          - **Appearance & Backgrounds** with visual light/dark theme cards, in-app cloud themes, custom theme import and removal, Telegram's wallpaper gallery, local background images, live preview, tiling and wide-layout controls, and IntelGram icon choices.
+          - Preferences organized into focused Local Profile, Appearance, Navigation, Vault, Automation, Export, Privacy, and Advanced pages.
           - Selected-message and chat/account exports to HTML, PDF, Markdown, JSON, and ZIP, plus AES-256-GCM Frozen Account Backup with permitted cached media.
           - Client-render-only display name, UID, primary and other usernames, anonymous number, bio, and profile photo for your own account.
           - Local profile cloning from an already-loaded peer by UID, including badges, emoji status, and personal channel, plus cached-peer search by UID or a phone number already visible to your account.
@@ -123,6 +124,6 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
             --latest \
-            --title "IntelGram v6.7.8 - Vault Suite" \
+            --title "IntelGram v6.7.8 - Appearance Refresh" \
             --notes-file release-notes.md \
             "${RELEASE_ASSETS[@]}"

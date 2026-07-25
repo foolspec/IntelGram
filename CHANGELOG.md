@@ -2,6 +2,27 @@
 
 All notable IntelGram custom-feature changes are recorded here.
 
+## IntelGram v6.7.8 Appearance & Settings Refresh - 2026-07-24
+
+### Added
+
+- Telegram's native visual theme-card selector directly inside **Appearance & Backgrounds**.
+- In-app cloud-theme browsing with previews and no external theme website.
+- A complete chat-background editor with Telegram's wallpaper gallery, local-image selection, live preview, tiling, and wide-layout controls.
+- A visible **Remove current custom theme** action for uninstalling the selected custom theme and returning safely to a built-in default.
+- Separate **Navigation & Layout**, **Contacts & Automation**, **Export & Backup**, and **Advanced & Maintenance** settings pages.
+- **Customize**, **Power tools**, and **Client settings** groups on the IntelGram Preferences home page.
+
+### Changed
+
+- Renamed **Other** to **Local Profile & Collectibles** and removed unrelated maintenance controls from that page.
+- Renamed **Vault & Tools** to **Vault & Search** and limited it to search, timeline, moments, and smart folders.
+- Moved contact notes, identity inspection, rules, privacy, and anti-spam controls into **Contacts & Automation**.
+- Moved local export and Frozen Account Backup into **Export & Backup**.
+- Moved chat-folder, tray, and drawer controls out of Appearance and into **Navigation & Layout**.
+- Removed the bundled Windows 93, Terminal, and AMOLED novelty packs in favor of Telegram's native visual and cloud theme catalogs.
+- Clarified that the background preference for imported themes controls only backgrounds bundled inside theme files.
+
 ## IntelGram v6.7.8 Vault Suite - 2026-07-23
 
 ### Added

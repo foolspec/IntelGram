@@ -1,6 +1,6 @@
 # IntelGram Downloads
 
-IntelGram is built from official AyuGram Desktop v6.7.8 with the local profile, collectible, Vault & Tools, theme, and export suite.
+IntelGram is built from official AyuGram Desktop v6.7.8 with local profile rendering, collectible galleries, native themes and custom backgrounds, local search and timeline tools, automation, and verified exports.
 
 ## Download
 
@@ -14,6 +14,6 @@ Each release attaches platform-specific SHA-256 files, validation notes, and lau
 
 The application is named `IntelGram`. Its distinct bundle and application IDs let it coexist with a normal AyuGram installation. The macOS package is ad-hoc signed, so macOS may require Control-click, then **Open**, on first launch.
 
-After signing in, open **IntelGram Settings -> Other -> Local profile** for local identity and collectible rendering. Open **IntelGram Settings -> Vault & Tools** for local search, timelines, smart folders, private notes, rules, per-chat controls, themes, exports, and encrypted backup.
+After signing in, open **IntelGram Preferences -> Local Profile & Collectibles** for local identity and collectible rendering. Use **Appearance & Backgrounds** for visual theme previews, cloud themes, custom-theme removal, Telegram's wallpaper gallery, local background images, and app icons. Search/timeline tools, contact automation, and exports now have their own focused pages so the controls are easier to find.
 
 The main search field can also find already-loaded peers by UID or a phone number already visible to your account. None of these additions mutate Telegram profile data, import contacts, join a channel, change collectible ownership, or bypass Restrict Saving Content.

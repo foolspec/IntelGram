@@ -2,6 +2,44 @@
 
 This file records implementation-level changes to IntelGram's custom layer. Product-facing changes are summarized in [`CHANGELOG.md`](CHANGELOG.md).
 
+## IntelGram v6.7.8 Appearance And Settings Refresh - 2026-07-24
+
+### Source Baseline And Patch
+
+- Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
+- Source commit: `eeba6a1ec` on the recovered local implementation branch.
+- Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
+- Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
+- Patch SHA-256: `7e08df09395bd170067a0495019f9dcef66e172dc6492bbba27c4cf1d70cbef6`.
+- Patch footprint: 62 files, 7,357 insertions, and 484 deletions relative to the pinned source.
+
+### Native Appearance And Background Controls
+
+- `Settings::AyuAppearance::setupContent` reuses Telegram Desktop's `Settings::SetupThemeOptions` for visual light/dark theme cards and `Settings::SetupCloudThemes` for the native in-app cloud-theme browser.
+- `Settings::SetupChatBackground` supplies the live wallpaper preview, Telegram wallpaper gallery, local-image picker, tiling control, and wide-layout behavior.
+- Telegram's native theme/palette/image import row and IntelGram's fourteen platform-native app-icon choices remain on the same focused page.
+- A reactive **Remove current custom theme** row appears only for a non-embedded theme, confirms the action, closes an active editor safely, restores an embedded default, and delegates cloud-theme uninstallation to Telegram Desktop's existing theme manager.
+- Removed the three bundled Windows 93, Terminal, and AMOLED novelty resources and their QRC registrations; appearance now follows Telegram Desktop's maintained visual and cloud-theme paths.
+- Renamed the inherited custom-background switch so its label accurately describes ignoring backgrounds bundled with themes.
+
+### Settings Information Architecture
+
+- `Settings::AyuSettings::setupContent` groups the preferences home page into **Customize**, **Power tools**, and **Client settings**.
+- `Settings::AyuOther` now owns only **Local Profile & Collectibles** controls.
+- Added `Settings::AyuNavigation` for drawer, tray, and chat-folder controls.
+- `Settings::AyuVault` now owns only search, timeline, moments, and smart-folder tools.
+- Added `Settings::AyuAutomation` for contact notes, public identity snapshots, rules, anti-spam, and per-chat privacy controls.
+- Added `Settings::AyuExport` for selected-message, chat, account, ZIP, and encrypted archive exports.
+- Added `Settings::AyuAdvanced` for diagnostics, URL registration, and local reset controls.
+- Corrected the settings version label to `IntelGram Desktop`.
+
+### Validation
+
+- The patch validator requires the native theme-card, cloud-theme, and chat-background hooks plus every new focused settings class.
+- Validation fails if any retired novelty-theme resource is reintroduced.
+- Localization-key uniqueness, QRC XML parsing, patch whitespace checks, byte-identical patch aliases, clean pinned-source application, and mutation-boundary scans remain required before packaging.
+- Platform compilation, packaging, isolated launch tests, and public release-asset verification remain delegated to GitHub Actions in accordance with the upstream no-local-full-build instruction.
+
 ## IntelGram v6.7.8 Vault Suite - 2026-07-23
 
 ### Source Baseline And Patch

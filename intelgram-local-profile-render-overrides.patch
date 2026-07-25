@@ -22,444 +22,11 @@ index 3ac3f4ba0..4b8a83b3d 100644
          ayu/data/entities.h
          ayu/data/ayu_database.cpp
          ayu/data/ayu_database.h
-diff --git a/Telegram/Resources/intelgram-amoled.tdesktop-theme b/Telegram/Resources/intelgram-amoled.tdesktop-theme
-new file mode 100644
-index 0000000000000000000000000000000000000000..8158cb94c84283244a8646b186ae3dfbc8b457d7
-GIT binary patch
-literal 8740
-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
-R<bM1&0{)xh|EmB4`(KeA)-wPA
-
-literal 0
-HcmV?d00001
-
-diff --git a/Telegram/Resources/intelgram-terminal.tdesktop-theme b/Telegram/Resources/intelgram-terminal.tdesktop-theme
-new file mode 100644
-index 0000000000000000000000000000000000000000..b5c561e4b6cbb1dc444d06d59583f0c8436ebfa1
-GIT binary patch
-literal 8675
-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
-F{{XB-qJsbc
-
-literal 0
-HcmV?d00001
-
-diff --git a/Telegram/Resources/intelgram-windows93.tdesktop-theme b/Telegram/Resources/intelgram-windows93.tdesktop-theme
-new file mode 100644
-index 0000000000000000000000000000000000000000..b872aeded36dc343814cd4fb084b45d571a09fb3
-GIT binary patch
-literal 3679
-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
-G0Pr6$mj-tL
-
-literal 0
-HcmV?d00001
-
 diff --git a/Telegram/Resources/langs/lang.strings b/Telegram/Resources/langs/lang.strings
-index 7380587e7..c89b1c637 100644
+index 7380587e7..bfae242df 100644
 --- a/Telegram/Resources/langs/lang.strings
 +++ b/Telegram/Resources/langs/lang.strings
-@@ -7971,9 +7971,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -7971,14 +7971,23 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  // Keys finished
  
  
@@ -470,8 +37,24 @@ index 7380587e7..c89b1c637 100644
 +"ayu_AyuPreferences" = "IntelGram Preferences";
  "ayu_DocsText" = "Documentation";
  "ayu_CategoryGeneral" = "General";
- "ayu_CategoryAppearance" = "Appearance";
-@@ -8031,7 +8031,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+-"ayu_CategoryAppearance" = "Appearance";
++"ayu_CategoryAppearance" = "Appearance & Backgrounds";
++"ayu_CategoryNavigation" = "Navigation & Layout";
+ "ayu_CategoryChats" = "Chats";
+-"ayu_CategoryOther" = "Other";
++"ayu_CategoryLocalProfile" = "Local Profile & Collectibles";
++"ayu_CategoryPrivacy" = "Privacy & Messaging";
++"ayu_CategoryAdvanced" = "Advanced & Maintenance";
++"ayu_SettingsCustomizeHeader" = "Customize";
++"ayu_SettingsPowerToolsHeader" = "Power tools";
++"ayu_SettingsClientHeader" = "Client settings";
++"ayu_InterfaceAppearance" = "Interface";
++"ayu_DiagnosticsHeader" = "Diagnostics";
++"ayu_MaintenanceHeader" = "Maintenance";
+ "ayu_CategoryGhostMode" = "Ghost Mode";
+ "ayu_CategorySpy" = "Spy";
+ "ayu_CategoryFilters" = "Filters";
+@@ -8031,12 +8040,13 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_ExportDatabaseButton" = "Export Database";
  "ayu_ImportDatabaseButton" = "Import Database";
  "ayu_QoLTogglesHeader" = "Useful features";
@@ -480,7 +63,14 @@ index 7380587e7..c89b1c637 100644
  "ayu_KeepAliveServiceNote" = "We recommend migrating to **FCM** version.";
  "ayu_DisableAds" = "Disable Ads";
  "ayu_DisableStories" = "Disable Stories";
-@@ -8056,6 +8056,23 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ "ayu_DisableOpenLinkWarning" = "Disable Open Link Warning";
+-"ayu_DisableCustomBackgrounds" = "Disable Custom Backgrounds";
++"ayu_DisableCustomBackgrounds" = "Ignore backgrounds bundled with themes";
++"ayu_RemoveCurrentTheme" = "Remove current custom theme";
+ "ayu_HidePremiumStatuses" = "Hide Premium Statuses";
+ "ayu_SmoothScroll" = "Smooth Scroll";
+ "ayu_DisableNotificationsDelay" = "Disable Notify Delay";
+@@ -8056,6 +8066,23 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_LinksChats" = "Chats";
  "ayu_LinksTranslate" = "Translate";
  "ayu_LinksDocumentation" = "Documentation";
@@ -494,9 +84,9 @@ index 7380587e7..c89b1c637 100644
 +"ayu_IntelGramUpdateLogLabel" = "Open in IntelGram";
 +"ayu_IntelGramUpdateLogTitle" = "IntelGram update log";
 +"ayu_IntelGramUpdateLogCurrentTitle" = "Latest update";
-+"ayu_IntelGramUpdateLogCurrent" = "**Vault, timeline, automation, and private exports**\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Timeline tools add jump-to-date, compact media history, conversation statistics, saved moments, and locally observed edit and deletion history.\n- Smart folders organize unread people, work, high-priority, needs-reply, and spam-review items.\n- Private contact notes retain context history and due reminders; opt-in identity snapshots record only public names, usernames, badges, and shared-group counts visible to this client.\n- Local rules can match keywords, links, photos, or files to tag, save, alert, mute, flag spam, or open Telegram's native forward picker for a confirmed ordinary-message queue.\n- Theme Studio includes real Windows 93, Terminal, Classic Telegram, and AMOLED packs, custom theme import, and IntelGram icon choices.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Per-chat tools add tags, priority, manual/Wi-Fi/always download modes, local read reminders, local-only drafts, and local notification muting.\n- Telegram's protected-content and self-destruct restrictions are enforced throughout the vault, rules, exports, and legacy local save paths.";
++"ayu_IntelGramUpdateLogCurrent" = "**Appearance and settings refresh**\n- Appearance & Backgrounds now uses Telegram's native visual theme cards, in-app cloud theme gallery, and full wallpaper preview editor.\n- Choose a chat background from Telegram's gallery or any local image, then control tiling and wide-layout behavior without leaving IntelGram.\n- Select an installed custom theme and use Remove current custom theme to return to a built-in default and uninstall it.\n- The old novelty theme list was removed. Theme files and images can be imported through the native appearance controls.\n- IntelGram Preferences is grouped into Customize, Power tools, and Client settings.\n- Local Profile & Collectibles, Navigation & Layout, Vault & Search, Contacts & Automation, Export & Backup, and Advanced & Maintenance are separate focused pages.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
 +"ayu_IntelGramUpdateLogFeaturesTitle" = "Main IntelGram features";
-+"ayu_IntelGramUpdateLogFeatures" = "**Local profile and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, badges, emoji status, and personal channel rendering.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Real Windows 93, Terminal, Classic Telegram, and AMOLED themes plus icon swapping.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
++"ayu_IntelGramUpdateLogFeatures" = "**Local profile and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, badges, emoji status, and personal channel rendering.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native visual themes, cloud theme browsing, custom chat backgrounds, wallpaper previews, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
 +"ayu_IntelGramUpdateLogPrivacyTitle" = "Local-only boundary";
 +"ayu_IntelGramUpdateLogPrivacy" = "Local profile tools never update your Telegram profile, import contacts, change collectible ownership, or join a channel automatically. Vault tools only process data already received by this client. Restrict Saving Content and self-destructing media are preserved: IntelGram stores a jump-back reference and basic metadata, never the protected body or media.";
 +"ayu_IntelGramUpdateLogCredit" = "IntelGram local profile tools by fool.";
@@ -504,7 +94,7 @@ index 7380587e7..c89b1c637 100644
  "ayu_CategoriesHeader" = "Categories";
  "ayu_SupportHeader" = "Support";
  "ayu_SupportDescription1" = "Support Development";
-@@ -8070,8 +8087,72 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8070,8 +8097,72 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SupportBoxReceiveBadgeInfo" = "After payment verification, you will receive a unique badge that will be displayed on your profile and visible to other users.";
  "ayu_CrashReporting" = "Crash Reporting";
  "ayu_CrashReportingDescription" = "When this option is enabled, you'll be prompted to send a report after the app crashes. You can decide whether to send it or not.";
@@ -578,7 +168,7 @@ index 7380587e7..c89b1c637 100644
  "ayu_DisableColorfulCover" = "Disable adaptive color";
  "ayu_EnableColorfulCover" = "Enable adaptive color";
  "ayu_CustomizationHeader" = "Customization";
-@@ -8130,14 +8211,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8130,14 +8221,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SettingsBiggerWindow" = "Bigger Window";
  "ayu_SettingsIncreaseWebviewHeight" = "Increase Content Height";
  "ayu_SettingsIncreaseWebviewWidth" = "Increase Content Width";
@@ -595,7 +185,7 @@ index 7380587e7..c89b1c637 100644
  "ayu_ImportDataDescription" = "It will replace the current database.";
  "ayu_ImportDataConfirm" = "Yes, replace existing";
  "ayu_ImportDataCancel" = "No, close window";
-@@ -8204,7 +8285,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8204,7 +8295,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_FiltersClearPopupAltActionText" = "Clear unknown";
  "ayu_AppIconHeader" = "App Icon";
  "ayu_IconDefault" = "Default";
@@ -604,7 +194,7 @@ index 7380587e7..c89b1c637 100644
  "ayu_IconDiscord" = "Discord";
  "ayu_IconSpotify" = "Spotify";
  "ayu_IconExtera" = "extera";
-@@ -8214,8 +8295,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8214,8 +8305,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_IconAyuTyan" = "AyuTyan";
  "ayu_WALMode" = "Enable WAL mode";
  "ayu_PushNotificationCount" = "FCM notifications received";
@@ -615,7 +205,7 @@ index 7380587e7..c89b1c637 100644
  "ayu_TelegramCacheDatabase" = "Telegram Messages Database";
  "ayu_ConfirmationsTitle" = "Confirmations";
  "ayu_StickerConfirmation" = "For Stickers";
-@@ -8288,9 +8369,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8288,9 +8379,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SuggestGhostModeStoryText" = "Do you want to enable **Ghost Mode** before viewing the story?";
  "ayu_SuggestGhostModeStoryActionTextYes" = "Yes";
  "ayu_SuggestGhostModeStoryActionTextNo" = "No";
@@ -627,7 +217,7 @@ index 7380587e7..c89b1c637 100644
  "ayu_HideNextViewsDescriptionAyu" = "Hide my views forever, until Ghost Mode is disabled.";
  "ayu_EnableGhostModeStories" = "Enable Ghost Mode";
  "ayu_GhostModeIsActive" = "Ghost Mode is Active";
-@@ -8355,28 +8436,162 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8355,28 +8446,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_ContextCopyID" = "Copy ID";
  "ayu_IDCopiedToast" = "ID copied to clipboard.";
  "ayu_ContextHideMessage" = "Hide";
@@ -667,7 +257,10 @@ index 7380587e7..c89b1c637 100644
 +"ayu_AboutText1" = "IntelGram is a community desktop client based on {api_link}, focused on local customization and private on-device tools.";
 +"ayu_UpdateAyuGram" = "Update IntelGram";
  "ayu_UtilityRestartRequired" = "The app will close in 5 seconds.";
-+"ayu_VaultTitle" = "Vault & Tools";
++"ayu_VaultTitle" = "Vault & Search";
++"ayu_AutomationTitle" = "Contacts & Automation";
++"ayu_ExportTitle" = "Export & Backup";
++"ayu_ExportArchiveHeader" = "Local archives";
 +"ayu_VaultSearchAndTimeline" = "Search & timeline";
 +"ayu_VaultSearch" = "Search this account";
 +"ayu_VaultUniversalSearch" = "Search all accounts";
@@ -720,7 +313,7 @@ index 7380587e7..c89b1c637 100644
 +"ayu_VaultPrivateDraftValue" = "Keep draft preference local";
 +"ayu_VaultLocalMuteValue" = "Mute notifications locally";
 +"ayu_VaultPolicySaved" = "Local chat tools saved.";
-+"ayu_VaultIdentityAndRules" = "Contacts & automation";
++"ayu_VaultIdentityAndRules" = "Contact notes & rules";
 +"ayu_VaultProfileNotes" = "Private note for current contact";
 +"ayu_VaultAllProfileNotes" = "All private profile notes";
 +"ayu_VaultProfileNotesEmpty" = "No private profile notes yet.";
@@ -779,15 +372,6 @@ index 7380587e7..c89b1c637 100644
 +"ayu_VaultInviteWarnings" = "Invite and suspicious-link warnings";
 +"ayu_VaultUnknownReview" = "Review unknown senders locally";
 +"ayu_VaultGhostControls" = "Stealth reading controls";
-+"ayu_VaultThemesAndBackup" = "Themes & backup";
-+"ayu_VaultThemeStudio" = "Theme Studio";
-+"ayu_VaultThemeWindows93" = "Windows 93";
-+"ayu_VaultThemeTerminal" = "Terminal";
-+"ayu_VaultThemeClassic" = "Classic Telegram";
-+"ayu_VaultThemeAmoled" = "AMOLED";
-+"ayu_VaultThemeImport" = "Import a custom theme pack";
-+"ayu_VaultThemeImportTitle" = "Choose a Telegram theme";
-+"ayu_VaultIconsAndAppearance" = "Icons & appearance";
 +"ayu_VaultExportCenter" = "Export Center";
 +"ayu_VaultExportDescription" = "Create local HTML, PDF, Markdown, JSON, and ZIP exports. Protected chats include metadata references only.";
 +"ayu_VaultFrozenBackup" = "Frozen Account Backup";
@@ -799,20 +383,6 @@ index 7380587e7..c89b1c637 100644
 +"ayu_VaultExportCurrentAccount" = "Export current account";
 +"ayu_VaultExportComplete" = "IntelGram export completed.";
 +"ayu_VaultProtectedPolicy" = "Telegram's Restrict Saving Content setting is preserved. Protected and self-destructing content is never copied into search, rules, exports, or backups.";
-diff --git a/Telegram/Resources/qrc/telegram/telegram.qrc b/Telegram/Resources/qrc/telegram/telegram.qrc
-index 0c9e0a701..d6caa59bc 100644
---- a/Telegram/Resources/qrc/telegram/telegram.qrc
-+++ b/Telegram/Resources/qrc/telegram/telegram.qrc
-@@ -15,6 +15,9 @@
-     <file alias="night-green.tdesktop-theme">../../night-green.tdesktop-theme</file>
-     <file alias="day-custom-base.tdesktop-theme">../../day-custom-base.tdesktop-theme</file>
-     <file alias="night-custom-base.tdesktop-theme">../../night-custom-base.tdesktop-theme</file>
-+    <file alias="intelgram-windows93.tdesktop-theme">../../intelgram-windows93.tdesktop-theme</file>
-+    <file alias="intelgram-terminal.tdesktop-theme">../../intelgram-terminal.tdesktop-theme</file>
-+    <file alias="intelgram-amoled.tdesktop-theme">../../intelgram-amoled.tdesktop-theme</file>
-     <file alias="icons/calls/hands.lottie">../../icons/calls/hands.lottie</file>
-     <file alias="icons/calls/voice.lottie">../../icons/calls/voice.lottie</file>
-     <file alias="recording/info_audio.svg">../../art/recording/recording_info_audio.svg</file>
 diff --git a/Telegram/SourceFiles/apiwrap.cpp b/Telegram/SourceFiles/apiwrap.cpp
 index 8893dce20..3de0e8dda 100644
 --- a/Telegram/SourceFiles/apiwrap.cpp
@@ -3819,8 +3389,190 @@ index 02133dda3..175c706d8 100644
  void AddHideMessageAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
  void AddUserMessagesAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
  void AddMessageDetailsAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
+diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.cpp
+index c41224c5c..7021b36b6 100644
+--- a/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.cpp
++++ b/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.cpp
+@@ -15,8 +15,11 @@
+ #include "ayu/ui/settings/ayu_builder.h"
+ #include "ayu/ui/settings/settings_ayu_utils.h"
+ #include "ayu/ui/settings/settings_main.h"
++#include "data/data_cloud_themes.h"
++#include "data/data_session.h"
+ #include "inline_bots/bot_attach_web_view.h"
+ #include "main/main_session.h"
++#include "settings/sections/settings_chat.h"
+ #include "settings/settings_builder.h"
+ #include "settings/settings_common.h"
+ #include "styles/style_ayu_icons.h"
+@@ -25,10 +28,13 @@
+ #include "styles/style_layers.h"
+ #include "styles/style_menu_icons.h"
+ #include "styles/style_settings.h"
++#include "ui/boxes/confirm_box.h"
+ #include "ui/painter.h"
+ #include "ui/widgets/labels.h"
+ #include "ui/wrap/padding_wrap.h"
+ #include "ui/wrap/vertical_layout.h"
++#include "window/themes/window_theme.h"
++#include "window/window_controller.h"
+ #include "window/window_session_controller.h"
+ 
+ namespace Settings {
+@@ -50,6 +56,72 @@ bool HasDrawerBots(not_null<Window::SessionController*> controller) {
+ 	return false;
+ }
+ 
++[[nodiscard]] bool HasRemovableTheme() {
++	return !Window::Theme::IsEmbeddedTheme(
++		Window::Theme::Background()->themeObject().pathAbsolute);
++}
++
++void RemoveCurrentTheme(
++		not_null<Window::SessionController*> controller) {
++	using namespace Window::Theme;
++
++	if (!HasRemovableTheme()) {
++		return;
++	}
++	const auto cloudThemeId = Background()->themeObject().cloud.id;
++	controller->show(Ui::MakeConfirmBox({
++		.text = tr::lng_theme_delete_sure(),
++		.confirmed = [=](Fn<void()> &&close) {
++			close();
++			if (Background()->editingTheme().has_value()) {
++				Background()->clearEditingTheme(ClearEditing::KeepChanges);
++				controller->window().showRightColumn(nullptr);
++			}
++			ResetToSomeDefault();
++			KeepApplied();
++			if (cloudThemeId) {
++				controller->session().data().cloudThemes().remove(
++					cloudThemeId);
++			}
++		},
++		.confirmText = tr::lng_theme_delete(),
++	}));
++}
++
++void BuildThemesAndBackgrounds(SectionBuilder &builder, AyuSectionBuilder &ayu) {
++	const auto controller = builder.controller();
++	const auto highlights = builder.highlights();
++
++	builder.add([=](const WidgetContext &context) {
++		SetupThemeOptions(controller, context.container.get(), highlights);
++		return SectionBuilder::WidgetToAdd{};
++	});
++	builder.add([=](const WidgetContext &context) {
++		SetupCloudThemes(controller, context.container.get(), highlights);
++		return SectionBuilder::WidgetToAdd{};
++	});
++	builder.addButton({
++		.id = u"ayu/removeCurrentTheme"_q,
++		.title = tr::ayu_RemoveCurrentTheme(),
++		.icon = { &st::menuIconDelete },
++		.onClick = [=] {
++			RemoveCurrentTheme(controller);
++		},
++		.shown = rpl::single(HasRemovableTheme()) | rpl::then(
++			Window::Theme::Background()->updates()
++				| rpl::map([](const Window::Theme::BackgroundUpdate &) {
++					return HasRemovableTheme();
++				})
++				| rpl::distinct_until_changed()),
++	});
++	builder.add([=](const WidgetContext &context) {
++		SetupChatBackground(controller, context.container.get(), highlights);
++		return SectionBuilder::WidgetToAdd{};
++	});
++
++	ayu.addSectionDivider();
++}
++
+ void BuildAppIcon(SectionBuilder &builder, AyuSectionBuilder &ayu) {
+ 	builder.addSubsectionTitle({
+ 		.id = u"ayu/appIcon"_q,
+@@ -188,7 +260,7 @@ void BuildAvatarCorners(SectionBuilder &builder, AyuSectionBuilder &ayu) {
+ void BuildAppearance(SectionBuilder &builder, AyuSectionBuilder &ayu) {
+ 	auto *settings = &AyuSettings::getInstance();
+ 
+-	builder.addSubsectionTitle(tr::ayu_CategoryAppearance());
++	builder.addSubsectionTitle(tr::ayu_InterfaceAppearance());
+ 
+ 	ayu.addSettingToggle({
+ 		.id = u"ayu/materialSwitches"_q,
+@@ -384,9 +456,22 @@ const auto kMeta = BuildHelper({
+ 	auto ayu = AyuSectionBuilder(builder);
+ 
+ 	builder.addSkip();
++	BuildThemesAndBackgrounds(builder, ayu);
+ 	BuildAppIcon(builder, ayu);
+ 	BuildAvatarCorners(builder, ayu);
+ 	BuildAppearance(builder, ayu);
++	builder.addSkip();
++});
++
++const auto kNavigationMeta = BuildHelper({
++	.id = AyuNavigation::Id(),
++	.parentId = AyuMain::Id(),
++	.title = &tr::ayu_CategoryNavigation,
++	.icon = &st::menuIconShowInFolder,
++}, [](SectionBuilder &builder) {
++	auto ayu = AyuSectionBuilder(builder);
++
++	builder.addSkip();
+ 	BuildChatFolders(builder, ayu);
+ 	BuildTrayElements(builder, ayu);
+ 	BuildDrawerElements(builder, ayu);
+@@ -412,6 +497,23 @@ void AyuAppearance::setupContent() {
+ 	Ui::ResizeFitChild(this, content);
+ }
+ 
++AyuNavigation::AyuNavigation(
++	QWidget *parent,
++	not_null<Window::SessionController*> controller)
++: Section(parent, controller) {
++	setupContent();
++}
++
++rpl::producer<QString> AyuNavigation::title() {
++	return tr::ayu_CategoryNavigation();
++}
++
++void AyuNavigation::setupContent() {
++	const auto content = Ui::CreateChild<Ui::VerticalLayout>(this);
++	build(content, kNavigationMeta.build);
++	Ui::ResizeFitChild(this, content);
++}
++
+ Type AyuAppearanceId() {
+ 	return AyuAppearance::Id();
+ }
+diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.h b/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.h
+index 869861bba..7395a80ec 100644
+--- a/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.h
++++ b/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.h
+@@ -23,6 +23,18 @@ public:
+ 
+ private:
+ 	void setupContent();
++
++};
++
++class AyuNavigation : public Section<AyuNavigation> {
++public:
++	AyuNavigation(QWidget *parent, not_null<Window::SessionController*> controller);
++
++	[[nodiscard]] rpl::producer<QString> title() override;
++
++private:
++	void setupContent();
++
+ };
+ 
+ [[nodiscard]] Type AyuAppearanceId();
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
-index a4b1e7ad4..02baf3fee 100644
+index a4b1e7ad4..7850730d7 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
 @@ -6,31 +6,38 @@
@@ -3871,19 +3623,101 @@ index a4b1e7ad4..02baf3fee 100644
  
  namespace Settings {
  
-@@ -125,6 +132,11 @@ void BuildCategories(SectionBuilder &builder) {
- 		.targetSection = AyuChats::Id(),
- 		.icon = { &st::menuIconChatBubble },
+@@ -70,7 +77,7 @@ void BuildVersionInfo(SectionBuilder &builder) {
+ 			.widget = object_ptr<Ui::FlatLabel>(
+ 				ctx.container,
+ 				rpl::single(
+-					QString("AyuGram Desktop v")
++					QString("IntelGram Desktop v")
+ 					+ QString::fromLatin1(AppVersionStr)),
+ 				st::boxTitle),
+ 			.align = style::al_top,
+@@ -98,27 +105,52 @@ void BuildCategories(SectionBuilder &builder) {
+ 	builder.addDivider();
+ 	builder.addSkip();
+ 
+-	builder.addSubsectionTitle(tr::ayu_CategoriesHeader());
++	builder.addSubsectionTitle(tr::ayu_SettingsCustomizeHeader());
+ 
+ 	builder.addSectionButton({
+-		.title = rpl::single(QString("AyuGram")),
+-		.targetSection = AyuGhost::Id(),
+-		.icon = { &st::menuIconGroupReactions },
++		.title = tr::ayu_CategoryLocalProfile(),
++		.targetSection = AyuOther::Id(),
++		.icon = { &st::menuIconProfile },
  	});
-+	builder.addSectionButton({
+ 	builder.addSectionButton({
+-		.title = tr::ayu_CategoryFilters(),
+-		.targetSection = AyuFilters::Id(),
+-		.icon = { &st::menuIconTagFilter },
++		.title = tr::ayu_CategoryAppearance(),
++		.targetSection = AyuAppearance::Id(),
++		.icon = { &st::menuIconPalette },
+ 	});
+ 	builder.addSectionButton({
+-		.title = tr::ayu_CategoryGeneral(),
+-		.targetSection = AyuGeneral::Id(),
+-		.icon = { &st::menuIconShowAll },
++		.title = tr::ayu_CategoryNavigation(),
++		.targetSection = AyuNavigation::Id(),
++		.icon = { &st::menuIconShowInFolder },
+ 	});
++
++	builder.addDivider();
++	builder.addSkip();
++	builder.addSubsectionTitle(tr::ayu_SettingsPowerToolsHeader());
++
+ 	builder.addSectionButton({
+-		.title = tr::ayu_CategoryAppearance(),
+-		.targetSection = AyuAppearance::Id(),
+-		.icon = { &st::menuIconPalette },
 +		.title = tr::ayu_VaultTitle(),
 +		.targetSection = AyuVault::Id(),
 +		.icon = { &st::menuIconArchive },
 +	});
++	builder.addSectionButton({
++		.title = tr::ayu_AutomationTitle(),
++		.targetSection = AyuAutomation::Id(),
++		.icon = { &st::menuIconBot },
++	});
++	builder.addSectionButton({
++		.title = tr::ayu_ExportTitle(),
++		.targetSection = AyuExport::Id(),
++		.icon = { &st::menuIconExport },
++	});
++
++	builder.addDivider();
++	builder.addSkip();
++	builder.addSubsectionTitle(tr::ayu_SettingsClientHeader());
++
++	builder.addSectionButton({
++		.title = tr::ayu_CategoryPrivacy(),
++		.targetSection = AyuGhost::Id(),
++		.icon = { &st::menuIconLock },
+ 	});
  	builder.addSectionButton({
- 		.title = tr::ayu_CategoryOther(),
- 		.targetSection = AyuOther::Id(),
-@@ -132,57 +144,106 @@ void BuildCategories(SectionBuilder &builder) {
+ 		.title = tr::ayu_CategoryChats(),
+@@ -126,63 +158,122 @@ void BuildCategories(SectionBuilder &builder) {
+ 		.icon = { &st::menuIconChatBubble },
+ 	});
+ 	builder.addSectionButton({
+-		.title = tr::ayu_CategoryOther(),
+-		.targetSection = AyuOther::Id(),
+-		.icon = { &st::menuIconFave },
++		.title = tr::ayu_CategoryFilters(),
++		.targetSection = AyuFilters::Id(),
++		.icon = { &st::menuIconTagFilter },
++	});
++	builder.addSectionButton({
++		.title = tr::ayu_CategoryGeneral(),
++		.targetSection = AyuGeneral::Id(),
++		.icon = { &st::menuIconShowAll },
++	});
++	builder.addSectionButton({
++		.title = tr::ayu_CategoryAdvanced(),
++		.targetSection = AyuAdvanced::Id(),
++		.icon = { &st::menuIconSettings },
  	});
  }
  
@@ -4015,7 +3849,7 @@ index a4b1e7ad4..02baf3fee 100644
  	builder.addSkip();
  }
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-index 929cf4609..34927bc34 100644
+index 929cf4609..6e391186c 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 @@ -6,33 +6,45 @@
@@ -4076,7 +3910,7 @@ index 929cf4609..34927bc34 100644
  
  namespace Settings {
  
-@@ -41,156 +53,955 @@ using namespace AyuBuilder;
+@@ -41,162 +53,964 @@ using namespace AyuBuilder;
  
  namespace {
  
@@ -4085,8 +3919,7 @@ index 929cf4609..34927bc34 100644
 -	QColor background;
 +void BuildCrashReporting(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 +#ifndef TDESKTOP_DISABLE_AUTOUPDATE
-+	builder.addSkip();
-+	builder.addSubsectionTitle(tr::ayu_CategoryOther());
++	builder.addSubsectionTitle(tr::ayu_DiagnosticsHeader());
 +
 +	ayu.addSettingToggle({
 +		.id = u"ayu/crashReporting"_q,
@@ -4305,8 +4138,22 @@ index 929cf4609..34927bc34 100644
 +		lt_gift,
 +		Data::UniqueGiftName(*gift.unique)));
 +	return true;
-+}
-+
+ }
+ 
+-void BuildDonations(SectionBuilder &builder) {
+-	builder.add([](const BuildContext &ctx) {
+-		v::match(ctx, [&](const WidgetContext &wctx) {
+-			const auto container = wctx.container;
+-
+-			AddSubsectionTitle(container, tr::ayu_SupportHeader());
+-			AddDonate(
+-				AddButtonWithIcon(
+-					container,
+-					rpl::single(QString("Boosty")),
+-					st::settingsButton),
+-				"boosty"
+-			)->setClickedCallback([=] {
+-				QDesktopServices::openUrl(QString("https://boosty.to/alexeyzavar"));
 +[[nodiscard]] QString ResolveLocalGiftReference(
 +		QString reference,
 +		const LocalGiftCollection &collection) {
@@ -4392,22 +4239,8 @@ index 929cf4609..34927bc34 100644
 +			}
 +			state->gifts = Ui::GiftsDescriptor{ .list = state->items };
 +		});
- }
- 
--void BuildDonations(SectionBuilder &builder) {
--	builder.add([](const BuildContext &ctx) {
--		v::match(ctx, [&](const WidgetContext &wctx) {
--			const auto container = wctx.container;
--
--			AddSubsectionTitle(container, tr::ayu_SupportHeader());
--			AddDonate(
--				AddButtonWithIcon(
--					container,
--					rpl::single(QString("Boosty")),
--					st::settingsButton),
--				"boosty"
--			)->setClickedCallback([=] {
--				QDesktopServices::openUrl(QString("https://boosty.to/alexeyzavar"));
++}
++
 +[[nodiscard]] bool ApplyLocalGiftCatalog(
 +		QPointer<Ui::GenericBox> box,
 +		not_null<LocalGiftBrowserState*> state) {
@@ -4854,8 +4687,7 @@ index 929cf4609..34927bc34 100644
 +void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 +	const auto controller = builder.controller();
 +
- 	builder.addSkip();
--	builder.addSubsectionTitle(tr::ayu_CategoryOther());
++	builder.addSkip();
 +	builder.addSubsectionTitle(tr::ayu_LocalProfileHeader());
 +	builder.addButton({
 +		.id = u"ayu/localProfileClone"_q,
@@ -4876,7 +4708,8 @@ index 929cf4609..34927bc34 100644
 +		},
 +	});
 +	builder.addDividerText(tr::ayu_LocalProfileCloneLocalOnly());
-+	builder.addSkip();
+ 	builder.addSkip();
+-	builder.addSubsectionTitle(tr::ayu_CategoryOther());
 +	builder.addSubsectionTitle(tr::ayu_LocalProfileIdentityHeader());
  
  	ayu.addSettingToggle({
@@ -5158,23 +4991,105 @@ index 929cf4609..34927bc34 100644
  }
  
  void BuildOtherThings(SectionBuilder &builder) {
-@@ -233,9 +1044,8 @@ const auto kMeta = BuildHelper({
+ 	const auto controller = builder.controller();
+ 
++#ifndef TDESKTOP_DISABLE_AUTOUPDATE
++	builder.addDivider();
++#endif
+ 	builder.addSkip();
++	builder.addSubsectionTitle(tr::ayu_MaintenanceHeader());
+ 	builder.addButton({
+ 		.id = u"ayu/registerUrlScheme"_q,
+ 		.title = tr::ayu_RegisterURLScheme(),
+@@ -228,13 +1042,23 @@ void BuildOtherThings(SectionBuilder &builder) {
+ const auto kMeta = BuildHelper({
+ 	.id = AyuOther::Id(),
+ 	.parentId = AyuMain::Id(),
+-	.title = &tr::ayu_CategoryOther,
+-	.icon = &st::menuIconFave,
++	.title = &tr::ayu_CategoryLocalProfile,
++	.icon = &st::menuIconProfile,
++}, [](SectionBuilder &builder) {
++	auto ayu = AyuSectionBuilder(builder);
++
++	BuildLocalProfile(builder, ayu);
++});
++
++const auto kAdvancedMeta = BuildHelper({
++	.id = AyuAdvanced::Id(),
++	.parentId = AyuMain::Id(),
++	.title = &tr::ayu_CategoryAdvanced,
++	.icon = &st::menuIconSettings,
  }, [](SectionBuilder &builder) {
  	auto ayu = AyuSectionBuilder(builder);
  
--	builder.addSkip();
+ 	builder.addSkip();
 -	BuildDonations(builder);
  	BuildCrashReporting(builder, ayu);
-+	BuildLocalProfile(builder, ayu);
  	BuildOtherThings(builder);
  });
+@@ -242,7 +1066,7 @@ const auto kMeta = BuildHelper({
+ } // namespace
  
+ rpl::producer<QString> AyuOther::title() {
+-	return tr::ayu_CategoryOther();
++	return tr::ayu_CategoryLocalProfile();
+ }
+ 
+ AyuOther::AyuOther(
+@@ -258,6 +1082,23 @@ void AyuOther::setupContent() {
+ 	Ui::ResizeFitChild(this, content);
+ }
+ 
++AyuAdvanced::AyuAdvanced(
++	QWidget *parent,
++	not_null<Window::SessionController*> controller)
++: Section(parent, controller) {
++	setupContent();
++}
++
++rpl::producer<QString> AyuAdvanced::title() {
++	return tr::ayu_CategoryAdvanced();
++}
++
++void AyuAdvanced::setupContent() {
++	const auto content = Ui::CreateChild<Ui::VerticalLayout>(this);
++	build(content, kAdvancedMeta.build);
++	Ui::ResizeFitChild(this, content);
++}
++
+ Type AyuOtherId() {
+ 	return AyuOther::Id();
+ }
+diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_other.h b/Telegram/SourceFiles/ayu/ui/settings/settings_other.h
+index a7d340f8d..a4095ea60 100644
+--- a/Telegram/SourceFiles/ayu/ui/settings/settings_other.h
++++ b/Telegram/SourceFiles/ayu/ui/settings/settings_other.h
+@@ -23,6 +23,18 @@ public:
+ 
+ private:
+ 	void setupContent();
++
++};
++
++class AyuAdvanced : public Section<AyuAdvanced> {
++public:
++	AyuAdvanced(QWidget *parent, not_null<Window::SessionController*> controller);
++
++	[[nodiscard]] rpl::producer<QString> title() override;
++
++private:
++	void setupContent();
++
+ };
+ 
+ [[nodiscard]] Type AyuOtherId();
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_vault.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_vault.cpp
 new file mode 100644
-index 000000000..3e43fec21
+index 000000000..84d16b634
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_vault.cpp
-@@ -0,0 +1,1006 @@
+@@ -0,0 +1,1022 @@
 +// This is the source code of AyuGram for Desktop.
 +//
 +// We do not and cannot prevent the use of our code,
@@ -5188,7 +5103,6 @@ index 000000000..3e43fec21
 +#include "ayu/data/intelgram_export.h"
 +#include "ayu/data/intelgram_vault.h"
 +#include "ayu/ui/settings/ayu_builder.h"
-+#include "ayu/ui/settings/settings_appearance.h"
 +#include "ayu/ui/settings/settings_ayu.h"
 +#include "ayu/ui/settings/settings_main.h"
 +#include "ayu/utils/telegram_helpers.h"
@@ -5213,7 +5127,6 @@ index 000000000..3e43fec21
 +#include "ui/widgets/fields/password_input.h"
 +#include "ui/widgets/labels.h"
 +#include "ui/wrap/vertical_layout.h"
-+#include "window/themes/window_theme.h"
 +#include "window/window_peer_menu.h"
 +#include "window/window_session_controller.h"
 +
@@ -5877,33 +5790,6 @@ index 000000000..3e43fec21
 +	}));
 +}
 +
-+void ShowThemeStudio(not_null<Window::SessionController *> controller) {
-+	controller->show(Box([=](not_null<Ui::GenericBox *> box) {
-+		box->setTitle(tr::ayu_VaultThemeStudio());
-+		const auto content = box->verticalLayout();
-+		const auto add = [&](rpl::producer<QString> title, const QString &path) {
-+			const auto button = content->add(object_ptr<Ui::SettingsButton>(
-+				content, std::move(title), st::settingsButtonNoIcon));
-+			button->setClickedCallback([=] { Window::Theme::Apply(path); });
-+		};
-+		add(tr::ayu_VaultThemeWindows93(), u":/gui/intelgram-windows93.tdesktop-theme"_q);
-+		add(tr::ayu_VaultThemeTerminal(), u":/gui/intelgram-terminal.tdesktop-theme"_q);
-+		add(tr::ayu_VaultThemeClassic(), u":/gui/day-blue.tdesktop-theme"_q);
-+		add(tr::ayu_VaultThemeAmoled(), u":/gui/intelgram-amoled.tdesktop-theme"_q);
-+		const auto custom = content->add(object_ptr<Ui::SettingsButton>(
-+			content, tr::ayu_VaultThemeImport(), st::settingsButtonNoIcon));
-+		custom->setClickedCallback([=] {
-+			const auto path = QFileDialog::getOpenFileName(
-+				box, tr::ayu_VaultThemeImportTitle(tr::now), QString(),
-+				u"Telegram themes (*.tdesktop-theme *.palette)"_q);
-+			if (!path.isEmpty()) {
-+				Window::Theme::Apply(path);
-+			}
-+		});
-+		box->addButton(tr::lng_box_done(), [=] { box->closeBox(); });
-+	}));
-+}
-+
 +void ShowExport(not_null<Window::SessionController *> controller, bool encrypted) {
 +	const auto peer = controller->activeChatCurrent().peer();
 +	const auto currentDialogId = peer ? getDialogIdFromPeer(peer) : 0;
@@ -6112,20 +5998,9 @@ index 000000000..3e43fec21
 +	});
 +}
 +
-+void BuildThemesAndExport(SectionBuilder &builder) {
++void BuildExport(SectionBuilder &builder) {
 +	const auto controller = builder.controller();
-+	builder.addSubsectionTitle(tr::ayu_VaultThemesAndBackup());
-+	builder.addButton({
-+		.id = u"intelgram/vault/themeStudio"_q,
-+		.title = tr::ayu_VaultThemeStudio(),
-+		.icon = {&st::menuIconPalette},
-+		.onClick = [=] { ShowThemeStudio(controller); },
-+	});
-+	builder.addSectionButton({
-+		.title = tr::ayu_VaultIconsAndAppearance(),
-+		.targetSection = AyuAppearance::Id(),
-+		.icon = {&st::menuIconPalette},
-+	});
++	builder.addSubsectionTitle(tr::ayu_ExportArchiveHeader());
 +	builder.addButton({
 +		.id = u"intelgram/vault/export"_q,
 +		.title = tr::ayu_VaultExportCenter(),
@@ -6149,17 +6024,39 @@ index 000000000..3e43fec21
 +		.icon = &st::menuIconArchive,
 +	},
 +	[](SectionBuilder &builder) {
-+		auto ayu = AyuSectionBuilder(builder);
 +		builder.addSkip();
 +		BuildSearchAndTimeline(builder);
 +		AyuSectionBuilder(builder).addSectionDivider();
 +		BuildSmartFolders(builder);
-+		AyuSectionBuilder(builder).addSectionDivider();
++		builder.addSkip();
++	});
++
++const auto kAutomationMeta = BuildHelper(
++	{
++		.id = AyuAutomation::Id(),
++		.parentId = AyuMain::Id(),
++		.title = &tr::ayu_AutomationTitle,
++		.icon = &st::menuIconBot,
++	},
++	[](SectionBuilder &builder) {
++		auto ayu = AyuSectionBuilder(builder);
++		builder.addSkip();
 +		BuildIdentityAndRules(builder);
 +		AyuSectionBuilder(builder).addSectionDivider();
 +		BuildPrivacy(builder, ayu);
-+		AyuSectionBuilder(builder).addSectionDivider();
-+		BuildThemesAndExport(builder);
++		builder.addSkip();
++	});
++
++const auto kExportMeta = BuildHelper(
++	{
++		.id = AyuExport::Id(),
++		.parentId = AyuMain::Id(),
++		.title = &tr::ayu_ExportTitle,
++		.icon = &st::menuIconExport,
++	},
++	[](SectionBuilder &builder) {
++		builder.addSkip();
++		BuildExport(builder);
 +		builder.addSkip();
 +	});
 +
@@ -6180,13 +6077,47 @@ index 000000000..3e43fec21
 +	Ui::ResizeFitChild(this, content);
 +}
 +
++AyuAutomation::AyuAutomation(
++	QWidget *parent,
++	not_null<Window::SessionController *> controller)
++: Section(parent, controller) {
++	setupContent();
++}
++
++rpl::producer<QString> AyuAutomation::title() {
++	return tr::ayu_AutomationTitle();
++}
++
++void AyuAutomation::setupContent() {
++	const auto content = Ui::CreateChild<Ui::VerticalLayout>(this);
++	build(content, kAutomationMeta.build);
++	Ui::ResizeFitChild(this, content);
++}
++
++AyuExport::AyuExport(
++	QWidget *parent,
++	not_null<Window::SessionController *> controller)
++: Section(parent, controller) {
++	setupContent();
++}
++
++rpl::producer<QString> AyuExport::title() {
++	return tr::ayu_ExportTitle();
++}
++
++void AyuExport::setupContent() {
++	const auto content = Ui::CreateChild<Ui::VerticalLayout>(this);
++	build(content, kExportMeta.build);
++	Ui::ResizeFitChild(this, content);
++}
++
 +} // namespace Settings
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_vault.h b/Telegram/SourceFiles/ayu/ui/settings/settings_vault.h
 new file mode 100644
-index 000000000..748c9aa32
+index 000000000..b4a7a0919
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_vault.h
-@@ -0,0 +1,29 @@
+@@ -0,0 +1,53 @@
 +// This is the source code of AyuGram for Desktop.
 +//
 +// We do not and cannot prevent the use of our code,
@@ -6207,6 +6138,30 @@ index 000000000..748c9aa32
 +class AyuVault : public Section<AyuVault> {
 +public:
 +	AyuVault(QWidget *parent, not_null<Window::SessionController *> controller);
++
++	[[nodiscard]] rpl::producer<QString> title() override;
++
++private:
++	void setupContent();
++
++};
++
++class AyuAutomation : public Section<AyuAutomation> {
++public:
++	AyuAutomation(
++		QWidget *parent,
++		not_null<Window::SessionController *> controller);
++
++	[[nodiscard]] rpl::producer<QString> title() override;
++
++private:
++	void setupContent();
++
++};
++
++class AyuExport : public Section<AyuExport> {
++public:
++	AyuExport(QWidget *parent, not_null<Window::SessionController *> controller);
 +
 +	[[nodiscard]] rpl::producer<QString> title() override;
 +
