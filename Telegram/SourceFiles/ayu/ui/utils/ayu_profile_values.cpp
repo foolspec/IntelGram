@@ -368,6 +368,47 @@ void AddLocalProfileUsername(
 	return localAbout.isEmpty() ? realAbout : localAbout;
 }
 
+class LocalUsernameEditor final : public Ui::RpWidget {
+public:
+	LocalUsernameEditor(
+		not_null<Ui::RpWidget*> parent,
+		QString value);
+
+	[[nodiscard]] Ui::UsernameInput *field() const;
+
+protected:
+	void resizeEvent(QResizeEvent *e) override;
+
+private:
+	const style::margins &_padding;
+	object_ptr<Ui::UsernameInput> _field;
+
+};
+
+LocalUsernameEditor::LocalUsernameEditor(
+	not_null<Ui::RpWidget*>,
+	QString value)
+: _padding(st::usernamePadding)
+, _field(
+	this,
+	st::defaultInputField,
+	rpl::single(u"@username"_q),
+	std::move(value),
+	QString()) {
+	resize(width(), _padding.top() + _field->height());
+}
+
+Ui::UsernameInput *LocalUsernameEditor::field() const {
+	return _field.data();
+}
+
+void LocalUsernameEditor::resizeEvent(QResizeEvent *e) {
+	_field->resize(
+		width() - _padding.left() - _padding.right(),
+		_field->height());
+	_field->moveToLeft(_padding.left(), _padding.top());
+}
+
 } // namespace
 
 QString NormalizeLocalProfileName(QString name) {
@@ -989,14 +1030,12 @@ void ShowLocalProfileUsernameEditor(
 	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
 		box->setTitle(tr::lng_username_title());
 		const auto container = box->verticalLayout();
-		const auto field = box->addRow(
-			object_ptr<Ui::UsernameInput>(
+		const auto editor = box->addRow(
+			object_ptr<LocalUsernameEditor>(
 				box,
-				st::defaultInputField,
-				rpl::single(u"@username"_q),
-				AyuSettings::getInstance().localProfileUsername(),
-				QString()),
-			st::usernamePadding);
+				AyuSettings::getInstance().localProfileUsername()),
+			style::margins());
+		const auto field = editor->field();
 		field->setMaxLength(kMaxLocalProfileUsernameLength);
 		box->setFocusCallback([=] {
 			field->setFocusFast();
