@@ -109,7 +109,7 @@ Glass mode uses a native behind-window material on macOS, the Windows DWM backdr
 ## Source And Verification
 
 - [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch) contains the complete IntelGram implementation.
-- Patch SHA-256: `e235a3172ccc1ce4aeddcb1e6f714e6d4fa3748ffcc3c69d5db2b469a85d71aa`
+- Patch SHA-256: `362ac5558d2cabea490f8576776a41b48666724c88b0fc31022c08e310c8c102`
 - The patch pins [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui) commit `2324a08c969967f62148b013eda0ae12507753ab`, which carries IntelGram's shared motion-preset hook.
 - [`build_intelgram_branding.py`](build_intelgram_branding.py) applies the cross-platform IntelGram product identity.
 - [`validate_intelgram_patch.py`](validate_intelgram_patch.py) verifies the feature hooks, protected-content boundaries, and absence of custom Telegram mutation requests before each platform build.

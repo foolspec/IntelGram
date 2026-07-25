@@ -7,11 +7,11 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 ### Source Baseline And Patch
 
 - Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
-- Source commit: `e3b31b084` on the recovered local implementation branch.
+- Source commit: `71c6fcb8f` on the recovered local implementation branch.
 - Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
 - Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
-- Patch SHA-256: `e235a3172ccc1ce4aeddcb1e6f714e6d4fa3748ffcc3c69d5db2b469a85d71aa`.
-- Patch footprint: 74 files, 8,414 insertions, and 488 deletions relative to the pinned source.
+- Patch SHA-256: `362ac5558d2cabea490f8576776a41b48666724c88b0fc31022c08e310c8c102`.
+- Patch footprint: 74 files, 8,431 insertions, and 488 deletions relative to the pinned source.
 - `Telegram/lib_ui` now points to public fork [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui), pinned at `2324a08c969967f62148b013eda0ae12507753ab`.
 
 ### Settings And Persistence
@@ -206,6 +206,7 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - `ShowLocalProfileCloneBox` calls the existing `requestFullPeer` read path after selecting an already-loaded user so visible full-profile badge and personal-channel fields are refreshed without changing either account.
 - `ShowLocalProfileUsernameEditor` now uses Telegram's `lng_username_title`, native `Ui::UsernameInput`, `@username` label, `st::usernamePadding`, `AddUsernameCheckLabel`, native two-part help copy, and standard Save/Cancel layout.
 - `LocalUsernameEditor` wraps the native non-reactive `Ui::UsernameInput` in `Ui::RpWidget`, matching Telegram's own editor geometry while satisfying `Ui::GenericBox::addRow` on Clang and GCC.
+- The wrapper adapts `Ui::MaskedInputField::changed` and `submitted` into local reactive streams used by the validation label and Save action.
 - The editor no longer references the custom `Local username` title or IntelGram-only disclaimer. Its syntax result and save are computed locally and never call `MTPaccount_CheckUsername`, `MTPaccount_UpdateUsername`, or another account mutation method.
 - Removed the added `Original Telegram username` strip and its localization keys.
 

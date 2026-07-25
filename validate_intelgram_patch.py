@@ -109,9 +109,15 @@ def main() -> None:
             "box->setTitle(tr::lng_username_title());",
             "class LocalUsernameEditor final : public Ui::RpWidget",
             "object_ptr<Ui::UsernameInput> _field;",
+            "rpl::event_stream<> _changes;",
+            "rpl::event_stream<> _submits;",
+            "&Ui::MaskedInputField::changed",
+            "&Ui::MaskedInputField::submitted",
             "_padding(st::usernamePadding)",
             "object_ptr<LocalUsernameEditor>(",
             'rpl::single(u"@username"_q)',
+            "editor->changes()",
+            "editor->submits(",
             "tr::lng_username_description1(tr::rich)",
             "tr::lng_username_description2(tr::rich)",
             "settings.setLocalProfileUsername(field->getLastText());",
@@ -206,6 +212,7 @@ def main() -> None:
         if line.startswith("+") and not line.startswith("+++")
     )
     forbidden = (
+        "MTPaccount_CheckUsername",
         "MTPaccount_UpdateProfile",
         "MTPaccount_UpdateUsername",
         "MTPaccount_UpdateEmojiStatus",
