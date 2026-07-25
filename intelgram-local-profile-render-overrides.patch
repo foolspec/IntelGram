@@ -47,7 +47,7 @@ index 3ac3f4ba0bcde68c0c384d13e7cf2472e2be37f5..5abcbf1592447adb43de3468a570d097
          ayu/data/ayu_database.cpp
          ayu/data/ayu_database.h
 diff --git a/Telegram/Resources/langs/lang.strings b/Telegram/Resources/langs/lang.strings
-index 7380587e74ff4f8d59ca6aab8dd30b6bbc5e6d0f..ad5ad6ad06b4cdb87190fcdc109e30a66ede382f 100644
+index 7380587e74ff4f8d59ca6aab8dd30b6bbc5e6d0f..b51dee4880a4d49837885e19485da589effd808a 100644
 --- a/Telegram/Resources/langs/lang.strings
 +++ b/Telegram/Resources/langs/lang.strings
 @@ -7971,14 +7971,54 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -139,7 +139,7 @@ index 7380587e74ff4f8d59ca6aab8dd30b6bbc5e6d0f..ad5ad6ad06b4cdb87190fcdc109e30a6
 +"ayu_IntelGramUpdateLogLabel" = "Open in IntelGram";
 +"ayu_IntelGramUpdateLogTitle" = "IntelGram update log";
 +"ayu_IntelGramUpdateLogCurrentTitle" = "Latest update";
-+"ayu_IntelGramUpdateLogCurrent" = "**Glass & Motion**\n- Transparent mode adds native desktop blur on macOS and Windows, compositor transparency on Linux, and independently controlled glass surfaces for the sidebar, chats, menus, dialogs, and panels.\n- Choose a private local image as the full IntelGram backdrop, then control image opacity, blur, and glass tint without fading text, icons, avatars, or media.\n- Enhanced Animations applies Quick Snap, Smooth Flow, Diabolical, or Springy motion across shared IntelGram transitions while still respecting reduced-motion and power-saving settings.\n- Appearance & Backgrounds continues to provide Telegram's native visual theme cards, cloud theme gallery, wallpaper preview editor, and removable imported themes.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
++"ayu_IntelGramUpdateLogCurrent" = "**Glass & Motion**\n- Transparent mode adds native desktop blur on macOS and Windows, compositor transparency on Linux, and independently controlled glass surfaces for the sidebar, chats, menus, dialogs, and panels.\n- Choose a private local image as the full IntelGram backdrop, then control image opacity, blur, and glass tint without fading text, icons, avatars, or media.\n- Enhanced Animations applies Quick Snap, Smooth Flow, Diabolical, or Springy motion across shared IntelGram transitions while still respecting reduced-motion and power-saving settings.\n- The profile username editor now matches Telegram's native title, @username field, validation row, help text, and button layout while saving only IntelGram's local render value.\n- Appearance & Backgrounds continues to provide Telegram's native visual theme cards, cloud theme gallery, wallpaper preview editor, and removable imported themes.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
 +"ayu_IntelGramUpdateLogFeaturesTitle" = "Main IntelGram features";
 +"ayu_IntelGramUpdateLogFeatures" = "**Local profile and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, badges, emoji status, and personal channel rendering.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity and customization**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native themes, cloud theme browsing, chat wallpapers, whole-app glass backgrounds, native blur, motion presets, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
 +"ayu_IntelGramUpdateLogPrivacyTitle" = "Local-only boundary";
@@ -149,7 +149,7 @@ index 7380587e74ff4f8d59ca6aab8dd30b6bbc5e6d0f..ad5ad6ad06b4cdb87190fcdc109e30a6
  "ayu_CategoriesHeader" = "Categories";
  "ayu_SupportHeader" = "Support";
  "ayu_SupportDescription1" = "Support Development";
-@@ -8070,8 +8128,72 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8070,8 +8128,70 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SupportBoxReceiveBadgeInfo" = "After payment verification, you will receive a unique badge that will be displayed on your profile and visible to other users.";
  "ayu_CrashReporting" = "Crash Reporting";
  "ayu_CrashReportingDescription" = "When this option is enabled, you'll be prompted to send a report after the app crashes. You can decide whether to send it or not.";
@@ -165,8 +165,6 @@ index 7380587e74ff4f8d59ca6aab8dd30b6bbc5e6d0f..ad5ad6ad06b4cdb87190fcdc109e30a6
 +"ayu_LocalProfileUsernameEnabled" = "Use local profile usernames";
 +"ayu_LocalProfileUsername" = "Local username";
 +"ayu_LocalProfileUsernames" = "Other usernames";
-+"ayu_LocalProfileUsernameEditorTitle" = "Local username";
-+"ayu_LocalProfileUsernameEditorDescription" = "This changes only how your username appears in IntelGram. Your Telegram username and availability are not changed.";
 +"ayu_LocalProfilePhoneEnabled" = "Use local anonymous number";
 +"ayu_LocalProfilePhone" = "Local anonymous number";
 +"ayu_LocalProfileAboutEnabled" = "Use local bio";
@@ -223,7 +221,7 @@ index 7380587e74ff4f8d59ca6aab8dd30b6bbc5e6d0f..ad5ad6ad06b4cdb87190fcdc109e30a6
  "ayu_DisableColorfulCover" = "Disable adaptive color";
  "ayu_EnableColorfulCover" = "Enable adaptive color";
  "ayu_CustomizationHeader" = "Customization";
-@@ -8130,14 +8252,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8130,14 +8250,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SettingsBiggerWindow" = "Bigger Window";
  "ayu_SettingsIncreaseWebviewHeight" = "Increase Content Height";
  "ayu_SettingsIncreaseWebviewWidth" = "Increase Content Width";
@@ -240,7 +238,7 @@ index 7380587e74ff4f8d59ca6aab8dd30b6bbc5e6d0f..ad5ad6ad06b4cdb87190fcdc109e30a6
  "ayu_ImportDataDescription" = "It will replace the current database.";
  "ayu_ImportDataConfirm" = "Yes, replace existing";
  "ayu_ImportDataCancel" = "No, close window";
-@@ -8204,7 +8326,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8204,7 +8324,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_FiltersClearPopupAltActionText" = "Clear unknown";
  "ayu_AppIconHeader" = "App Icon";
  "ayu_IconDefault" = "Default";
@@ -249,7 +247,7 @@ index 7380587e74ff4f8d59ca6aab8dd30b6bbc5e6d0f..ad5ad6ad06b4cdb87190fcdc109e30a6
  "ayu_IconDiscord" = "Discord";
  "ayu_IconSpotify" = "Spotify";
  "ayu_IconExtera" = "extera";
-@@ -8214,8 +8336,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8214,8 +8334,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_IconAyuTyan" = "AyuTyan";
  "ayu_WALMode" = "Enable WAL mode";
  "ayu_PushNotificationCount" = "FCM notifications received";
@@ -260,7 +258,7 @@ index 7380587e74ff4f8d59ca6aab8dd30b6bbc5e6d0f..ad5ad6ad06b4cdb87190fcdc109e30a6
  "ayu_TelegramCacheDatabase" = "Telegram Messages Database";
  "ayu_ConfirmationsTitle" = "Confirmations";
  "ayu_StickerConfirmation" = "For Stickers";
-@@ -8288,9 +8410,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8288,9 +8408,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SuggestGhostModeStoryText" = "Do you want to enable **Ghost Mode** before viewing the story?";
  "ayu_SuggestGhostModeStoryActionTextYes" = "Yes";
  "ayu_SuggestGhostModeStoryActionTextNo" = "No";
@@ -272,7 +270,7 @@ index 7380587e74ff4f8d59ca6aab8dd30b6bbc5e6d0f..ad5ad6ad06b4cdb87190fcdc109e30a6
  "ayu_HideNextViewsDescriptionAyu" = "Hide my views forever, until Ghost Mode is disabled.";
  "ayu_EnableGhostModeStories" = "Enable Ghost Mode";
  "ayu_GhostModeIsActive" = "Ghost Mode is Active";
-@@ -8355,28 +8477,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8355,28 +8475,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_ContextCopyID" = "Copy ID";
  "ayu_IDCopiedToast" = "ID copied to clipboard.";
  "ayu_ContextHideMessage" = "Hide";
@@ -6822,10 +6820,10 @@ index 0000000000000000000000000000000000000000..57e78a5ffd8cf8fb9a2afeb09b4adaca
 +
 +} // namespace Settings
 diff --git a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
-index c9d247a204c67a575477c915d653ed48e2c189f4..199077ed6412dcc339d823d7271a459147f3b98f 100644
+index c9d247a204c67a575477c915d653ed48e2c189f4..f217b463f651ee43b9c45f360955bcd605bc5ad6 100644
 --- a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
-@@ -6,15 +6,1078 @@
+@@ -6,15 +6,1085 @@
  // Copyright @Radolyn, 2026
  #include "ayu/ui/utils/ayu_profile_values.h"
  
@@ -6850,7 +6848,7 @@ index c9d247a204c67a575477c915d653ed48e2c189f4..199077ed6412dcc339d823d7271a4591
 +#include "rpl/combine.h"
 +#include "ui/image/image.h"
 +#include "ui/layers/generic_box.h"
-+#include "ui/widgets/fields/input_field.h"
++#include "ui/widgets/fields/special_fields.h"
 +#include "ui/widgets/labels.h"
 +#include "ui/vertical_list.h"
 +#include "window/window_session_controller.h"
@@ -7810,15 +7808,16 @@ index c9d247a204c67a575477c915d653ed48e2c189f4..199077ed6412dcc339d823d7271a4591
 +		not_null<Window::SessionController*> controller,
 +		not_null<UserData*>) {
 +	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
-+		box->setTitle(tr::ayu_LocalProfileUsernameEditorTitle());
++		box->setTitle(tr::lng_username_title());
 +		const auto container = box->verticalLayout();
 +		const auto field = box->addRow(
-+			object_ptr<Ui::InputField>(
++			object_ptr<Ui::UsernameInput>(
 +				box,
 +				st::defaultInputField,
-+				tr::ayu_LocalProfileUsername(),
-+				AyuSettings::getInstance().localProfileUsername()),
-+			st::boxRowPadding);
++				rpl::single(u"@username"_q),
++				AyuSettings::getInstance().localProfileUsername(),
++				QString()),
++			st::usernamePadding);
 +		field->setMaxLength(kMaxLocalProfileUsernameLength);
 +		box->setFocusCallback([=] {
 +			field->setFocusFast();
@@ -7859,11 +7858,17 @@ index c9d247a204c67a575477c915d653ed48e2c189f4..199077ed6412dcc339d823d7271a4591
 +			};
 +		});
 +		AddUsernameCheckLabel(container, std::move(checkInfo));
++		auto description = rpl::combine(
++			tr::lng_username_description1(tr::rich),
++			tr::lng_username_description2(tr::rich)
++		) | rpl::map([](TextWithEntities first, TextWithEntities second) {
++			return first.append("\n\n").append(std::move(second));
++		});
 +		container->add(object_ptr<Ui::DividerLabel>(
 +			container,
 +			object_ptr<Ui::FlatLabel>(
 +				container,
-+				tr::ayu_LocalProfileUsernameEditorDescription(tr::rich),
++				std::move(description),
 +				st::boxDividerLabel),
 +			st::defaultBoxDividerLabelPadding));
 +
@@ -7905,7 +7910,7 @@ index c9d247a204c67a575477c915d653ed48e2c189f4..199077ed6412dcc339d823d7271a4591
  
  	const auto &settings = AyuSettings::getInstance();
  	if (settings.showPeerId() == PeerIdDisplay::BotApi) {
-@@ -33,8 +1096,12 @@ QString IDString(MsgId topicRootId) {
+@@ -33,8 +1103,12 @@ QString IDString(MsgId topicRootId) {
  }
  
  rpl::producer<TextWithEntities> IDValue(not_null<PeerData*> peer) {

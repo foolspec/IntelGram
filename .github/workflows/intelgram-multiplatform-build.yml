@@ -60,7 +60,7 @@ permissions:
 
 env:
   SOURCE_TAG: v6.7.8
-  PATCH_SHA256: 8fcb5eff6158a9745c5e6d25ad820b45ad2ec40e50ba4c20a245d4b0e0694e47
+  PATCH_SHA256: a1a4d1ebfd0e551dd571e2ea8c04bd0a4a343564078ff0929991dc636acffcae
   LIB_UI_COMMIT: 2324a08c969967f62148b013eda0ae12507753ab
   LIB_UI_REF: codex/intelgram-motion-presets-20260725
 
@@ -803,5 +803,5 @@ jobs:
             --target "$TARGET_SHA" \
             --latest \
             --title "IntelGram v6.7.8 - Glass & Motion" \
-            --notes "Glass & Motion adds opt-in whole-window transparency with native macOS and Windows backdrop blur, Linux compositor transparency, separate sidebar/chat/panel controls, glass tint and opacity, and a removable local whole-app background with independent opacity and blur. Enhanced Animations applies Quick Snap, Smooth Flow, Diabolical, or Springy timing across IntelGram transitions, dialogs, drawers, controls, and navigation, plus an optional window-opening animation. Reduced-motion and power-saving settings remain authoritative. IntelGram also includes its existing local vault, timeline, automation, export and Frozen Account Backup tools; native theme and wallpaper controls; and client-render-only profile, clone, UID/visible-phone search, collectible, local photo, badge, username, and anonymous-number features. Protected and self-destructing content is never copied, and no Telegram profile, contact, channel-membership, collectible-ownership, or protected-content mutation is included." \
+            --notes "Glass & Motion adds opt-in whole-window transparency with native macOS and Windows backdrop blur, Linux compositor transparency, separate sidebar/chat/panel controls, glass tint and opacity, and a removable local whole-app background with independent opacity and blur. Enhanced Animations applies Quick Snap, Smooth Flow, Diabolical, or Springy timing across IntelGram transitions, dialogs, drawers, controls, and navigation, plus an optional window-opening animation. The profile username editor matches Telegram's native title, @username field, validation row, help copy, spacing, and buttons while retaining a local-only save path. Reduced-motion and power-saving settings remain authoritative. IntelGram also includes its existing local vault, timeline, automation, export and Frozen Account Backup tools; native theme and wallpaper controls; and client-render-only profile, clone, UID/visible-phone search, collectible, local photo, badge, username, and anonymous-number features. Protected and self-destructing content is never copied, and no Telegram profile, contact, channel-membership, collectible-ownership, or protected-content mutation is included." \
             "${RELEASE_ASSETS[@]}"

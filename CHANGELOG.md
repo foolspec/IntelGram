@@ -19,6 +19,7 @@ All notable IntelGram custom-feature changes are recorded here.
 - Existing IntelGram transitions, dialogs, drawers, controls, and navigation now share one selectable motion profile when Enhanced Animations is enabled.
 - Transparent mode follows live theme changes and restores the untouched theme palette immediately when disabled.
 - Reduced-motion and power-saving behavior remains authoritative over every added animation.
+- The profile username editor now uses Telegram's native title, `@username` control, validation row, help copy, spacing, and buttons while retaining IntelGram's local-only save path.
 
 ### Platform Support
 

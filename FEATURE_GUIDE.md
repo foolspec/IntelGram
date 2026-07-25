@@ -6,7 +6,7 @@ Open **IntelGram Preferences -> Local Profile & Collectibles**. The controls are
 
 ## How do I change my local username?
 
-Enable local usernames, then open the username editor. Its familiar inline status checks the local value's Telegram-style syntax and marks a valid value as available inside IntelGram; it does not ask Telegram whether the public username is available. Add the primary local username and, if needed, up to 20 other usernames.
+Enable local usernames, then click your username. The editor intentionally looks like Telegram's normal **Username** dialog, including its `@username` field, inline status, help copy, spacing, and buttons. It validates the local value's Telegram-style syntax and marks a valid value as available inside IntelGram, but does not ask Telegram whether the public username is available and does not update the account. Add the primary rendered username and, if needed, up to 20 other usernames.
 
 ## How do I use an anonymous number or local UID?
 

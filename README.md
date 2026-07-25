@@ -62,7 +62,7 @@ Open **IntelGram Preferences -> Local Profile & Collectibles** to configure:
 
 In the main chat-list search field, paste a UID, `id: UID`, or a visible phone number. IntelGram checks only profiles already loaded in this client and shows the matching profile row under **Found by ID or phone**. Phone and UID lookup does not import contacts or send a profile lookup request.
 
-Clicking your username in IntelGram's profile settings opens the local username editor. The familiar inline Telegram-style status validates local syntax and shows the local value as available without sending a username check or save request to Telegram.
+Clicking your username opens an editor that matches Telegram's native **Username** dialog: the same `@username` field, inline validation row, explanatory copy, spacing, and Save/Cancel actions. Saving still changes only IntelGram's local render value and sends no username check or account-update request to Telegram.
 
 The collectible picker opens as a native visual collection gallery. Choose a collection card to open a scrollable grid of its exact numbered collectibles, click any artwork to select it without leaving IntelGram, or paste a supported Telegram gift slug, `t.me/nft` link, Getgems item URL, or TON NFT address. IntelGram resolves the collectible read-only, shows its native `Collection #Number` profile tooltip, and uses Telegram's native collectible detail view when clicked. For a locally selected or cloned gift, the detail view presents both the recipient link and Telegram profile chip as your real or enabled local display name, with both opening your own locally rendered profile. The compact profile card uses the active local photo, phone, usernames, bio, and personal channel; the gift's actual ownership, sender, date, and transaction data are not changed.
 
@@ -109,7 +109,7 @@ Glass mode uses a native behind-window material on macOS, the Windows DWM backdr
 ## Source And Verification
 
 - [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch) contains the complete IntelGram implementation.
-- Patch SHA-256: `8fcb5eff6158a9745c5e6d25ad820b45ad2ec40e50ba4c20a245d4b0e0694e47`
+- Patch SHA-256: `a1a4d1ebfd0e551dd571e2ea8c04bd0a4a343564078ff0929991dc636acffcae`
 - The patch pins [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui) commit `2324a08c969967f62148b013eda0ae12507753ab`, which carries IntelGram's shared motion-preset hook.
 - [`build_intelgram_branding.py`](build_intelgram_branding.py) applies the cross-platform IntelGram product identity.
 - [`validate_intelgram_patch.py`](validate_intelgram_patch.py) verifies the feature hooks, protected-content boundaries, and absence of custom Telegram mutation requests before each platform build.

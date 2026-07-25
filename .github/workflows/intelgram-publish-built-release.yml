@@ -106,7 +106,7 @@ jobs:
           - Selected-message and chat/account exports to HTML, PDF, Markdown, JSON, and ZIP, plus AES-256-GCM Frozen Account Backup with permitted cached media.
           - Client-render-only display name, UID, primary and other usernames, anonymous number, bio, and profile photo for your own account.
           - Local profile cloning from an already-loaded peer by UID, including badges, emoji status, and personal channel, plus cached-peer search by UID or a phone number already visible to your account.
-          - Telegram's familiar inline username-status presentation for the local username editor, without a server-side username check.
+          - A profile username editor matching Telegram's native title, `@username` field, validation row, help copy, spacing, and buttons, backed only by IntelGram's local render setting and no server-side username check or update.
           - A native in-app collectible browser with Telegram's read-only live catalog, exact numbered gifts, native previews and details, and Telegram, Getgems, and TON link input.
           - A visual collection gallery and scrollable exact-item gallery that selects collectibles without leaving IntelGram.
           - A featured local collectible backdrop and up to six pinned local collectibles around your avatar.

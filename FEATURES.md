@@ -7,7 +7,7 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - Local display name with a dedicated enable switch.
 - Local UID with a dedicated enable switch.
 - Local primary username and up to 20 other local usernames.
-- Telegram-style inline syntax and availability status in the local username editor, with no server-side availability request.
+- A profile username editor that visually matches Telegram's native title, `@username` field, validation row, explanatory copy, spacing, and buttons, with no server-side availability or save request.
 - Local anonymous number.
 - Local bio.
 - Local profile photo selected from a file on this device.

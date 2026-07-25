@@ -104,6 +104,16 @@ def main() -> None:
             "anim::SetMotionStyle",
             "void PaintWindow(",
         ),
+        "Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp": (
+            "void ShowLocalProfileUsernameEditor(",
+            "box->setTitle(tr::lng_username_title());",
+            "object_ptr<Ui::UsernameInput>(",
+            'rpl::single(u"@username"_q)',
+            "tr::lng_username_description1(tr::rich)",
+            "tr::lng_username_description2(tr::rich)",
+            "settings.setLocalProfileUsername(field->getLastText());",
+            "settings.setLocalProfileUsernameEnabled(true);",
+        ),
         "Telegram/SourceFiles/platform/mac/specific_mac.mm": (
             "NSVisualEffectView",
             "NSVisualEffectBlendingModeBehindWindow",
@@ -205,6 +215,20 @@ def main() -> None:
     for needle in forbidden:
         if needle in added:
             fail(f"unexpected Telegram mutation reference {needle}")
+    profile_values = (
+        root
+        / "Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp"
+    ).read_text(encoding="utf-8", errors="strict")
+    language = (
+        root
+        / "Telegram/Resources/langs/lang.strings"
+    ).read_text(encoding="utf-8", errors="strict")
+    for obsolete in (
+        "ayu_LocalProfileUsernameEditorTitle",
+        "ayu_LocalProfileUsernameEditorDescription",
+    ):
+        if obsolete in profile_values or obsolete in language:
+            fail(f"username editor still exposes obsolete local copy {obsolete}")
     if "QNetworkInformation" in added:
         fail("Qt 6.3-only QNetworkInformation API is not compatible with the pinned Qt 6.2 build")
 
