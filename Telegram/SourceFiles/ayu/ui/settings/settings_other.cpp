@@ -55,8 +55,7 @@ namespace {
 
 void BuildCrashReporting(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 #ifndef TDESKTOP_DISABLE_AUTOUPDATE
-	builder.addSkip();
-	builder.addSubsectionTitle(tr::ayu_CategoryOther());
+	builder.addSubsectionTitle(tr::ayu_DiagnosticsHeader());
 
 	ayu.addSettingToggle({
 		.id = u"ayu/crashReporting"_q,
@@ -1007,7 +1006,11 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 void BuildOtherThings(SectionBuilder &builder) {
 	const auto controller = builder.controller();
 
+#ifndef TDESKTOP_DISABLE_AUTOUPDATE
+	builder.addDivider();
+#endif
 	builder.addSkip();
+	builder.addSubsectionTitle(tr::ayu_MaintenanceHeader());
 	builder.addButton({
 		.id = u"ayu/registerUrlScheme"_q,
 		.title = tr::ayu_RegisterURLScheme(),
@@ -1039,20 +1042,31 @@ void BuildOtherThings(SectionBuilder &builder) {
 const auto kMeta = BuildHelper({
 	.id = AyuOther::Id(),
 	.parentId = AyuMain::Id(),
-	.title = &tr::ayu_CategoryOther,
-	.icon = &st::menuIconFave,
+	.title = &tr::ayu_CategoryLocalProfile,
+	.icon = &st::menuIconProfile,
 }, [](SectionBuilder &builder) {
 	auto ayu = AyuSectionBuilder(builder);
 
-	BuildCrashReporting(builder, ayu);
 	BuildLocalProfile(builder, ayu);
+});
+
+const auto kAdvancedMeta = BuildHelper({
+	.id = AyuAdvanced::Id(),
+	.parentId = AyuMain::Id(),
+	.title = &tr::ayu_CategoryAdvanced,
+	.icon = &st::menuIconSettings,
+}, [](SectionBuilder &builder) {
+	auto ayu = AyuSectionBuilder(builder);
+
+	builder.addSkip();
+	BuildCrashReporting(builder, ayu);
 	BuildOtherThings(builder);
 });
 
 } // namespace
 
 rpl::producer<QString> AyuOther::title() {
-	return tr::ayu_CategoryOther();
+	return tr::ayu_CategoryLocalProfile();
 }
 
 AyuOther::AyuOther(
@@ -1065,6 +1079,23 @@ AyuOther::AyuOther(
 void AyuOther::setupContent() {
 	const auto content = Ui::CreateChild<Ui::VerticalLayout>(this);
 	build(content, kMeta.build);
+	Ui::ResizeFitChild(this, content);
+}
+
+AyuAdvanced::AyuAdvanced(
+	QWidget *parent,
+	not_null<Window::SessionController*> controller)
+: Section(parent, controller) {
+	setupContent();
+}
+
+rpl::producer<QString> AyuAdvanced::title() {
+	return tr::ayu_CategoryAdvanced();
+}
+
+void AyuAdvanced::setupContent() {
+	const auto content = Ui::CreateChild<Ui::VerticalLayout>(this);
+	build(content, kAdvancedMeta.build);
 	Ui::ResizeFitChild(this, content);
 }
 

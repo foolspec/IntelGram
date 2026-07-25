@@ -26,4 +26,28 @@ private:
 
 };
 
+class AyuAutomation : public Section<AyuAutomation> {
+public:
+	AyuAutomation(
+		QWidget *parent,
+		not_null<Window::SessionController *> controller);
+
+	[[nodiscard]] rpl::producer<QString> title() override;
+
+private:
+	void setupContent();
+
+};
+
+class AyuExport : public Section<AyuExport> {
+public:
+	AyuExport(QWidget *parent, not_null<Window::SessionController *> controller);
+
+	[[nodiscard]] rpl::producer<QString> title() override;
+
+private:
+	void setupContent();
+
+};
+
 } // namespace Settings

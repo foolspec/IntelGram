@@ -77,7 +77,7 @@ void BuildVersionInfo(SectionBuilder &builder) {
 			.widget = object_ptr<Ui::FlatLabel>(
 				ctx.container,
 				rpl::single(
-					QString("AyuGram Desktop v")
+					QString("IntelGram Desktop v")
 					+ QString::fromLatin1(AppVersionStr)),
 				st::boxTitle),
 			.align = style::al_top,
@@ -105,12 +105,57 @@ void BuildCategories(SectionBuilder &builder) {
 	builder.addDivider();
 	builder.addSkip();
 
-	builder.addSubsectionTitle(tr::ayu_CategoriesHeader());
+	builder.addSubsectionTitle(tr::ayu_SettingsCustomizeHeader());
 
 	builder.addSectionButton({
-		.title = rpl::single(QString("AyuGram")),
+		.title = tr::ayu_CategoryLocalProfile(),
+		.targetSection = AyuOther::Id(),
+		.icon = { &st::menuIconProfile },
+	});
+	builder.addSectionButton({
+		.title = tr::ayu_CategoryAppearance(),
+		.targetSection = AyuAppearance::Id(),
+		.icon = { &st::menuIconPalette },
+	});
+	builder.addSectionButton({
+		.title = tr::ayu_CategoryNavigation(),
+		.targetSection = AyuNavigation::Id(),
+		.icon = { &st::menuIconShowInFolder },
+	});
+
+	builder.addDivider();
+	builder.addSkip();
+	builder.addSubsectionTitle(tr::ayu_SettingsPowerToolsHeader());
+
+	builder.addSectionButton({
+		.title = tr::ayu_VaultTitle(),
+		.targetSection = AyuVault::Id(),
+		.icon = { &st::menuIconArchive },
+	});
+	builder.addSectionButton({
+		.title = tr::ayu_AutomationTitle(),
+		.targetSection = AyuAutomation::Id(),
+		.icon = { &st::menuIconBot },
+	});
+	builder.addSectionButton({
+		.title = tr::ayu_ExportTitle(),
+		.targetSection = AyuExport::Id(),
+		.icon = { &st::menuIconExport },
+	});
+
+	builder.addDivider();
+	builder.addSkip();
+	builder.addSubsectionTitle(tr::ayu_SettingsClientHeader());
+
+	builder.addSectionButton({
+		.title = tr::ayu_CategoryPrivacy(),
 		.targetSection = AyuGhost::Id(),
-		.icon = { &st::menuIconGroupReactions },
+		.icon = { &st::menuIconLock },
+	});
+	builder.addSectionButton({
+		.title = tr::ayu_CategoryChats(),
+		.targetSection = AyuChats::Id(),
+		.icon = { &st::menuIconChatBubble },
 	});
 	builder.addSectionButton({
 		.title = tr::ayu_CategoryFilters(),
@@ -123,24 +168,9 @@ void BuildCategories(SectionBuilder &builder) {
 		.icon = { &st::menuIconShowAll },
 	});
 	builder.addSectionButton({
-		.title = tr::ayu_CategoryAppearance(),
-		.targetSection = AyuAppearance::Id(),
-		.icon = { &st::menuIconPalette },
-	});
-	builder.addSectionButton({
-		.title = tr::ayu_CategoryChats(),
-		.targetSection = AyuChats::Id(),
-		.icon = { &st::menuIconChatBubble },
-	});
-	builder.addSectionButton({
-		.title = tr::ayu_VaultTitle(),
-		.targetSection = AyuVault::Id(),
-		.icon = { &st::menuIconArchive },
-	});
-	builder.addSectionButton({
-		.title = tr::ayu_CategoryOther(),
-		.targetSection = AyuOther::Id(),
-		.icon = { &st::menuIconFave },
+		.title = tr::ayu_CategoryAdvanced(),
+		.targetSection = AyuAdvanced::Id(),
+		.icon = { &st::menuIconSettings },
 	});
 }
 

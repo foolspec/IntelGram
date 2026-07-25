@@ -11,7 +11,6 @@
 #include "ayu/data/intelgram_export.h"
 #include "ayu/data/intelgram_vault.h"
 #include "ayu/ui/settings/ayu_builder.h"
-#include "ayu/ui/settings/settings_appearance.h"
 #include "ayu/ui/settings/settings_ayu.h"
 #include "ayu/ui/settings/settings_main.h"
 #include "ayu/utils/telegram_helpers.h"
@@ -36,7 +35,6 @@
 #include "ui/widgets/fields/password_input.h"
 #include "ui/widgets/labels.h"
 #include "ui/wrap/vertical_layout.h"
-#include "window/themes/window_theme.h"
 #include "window/window_peer_menu.h"
 #include "window/window_session_controller.h"
 
@@ -700,33 +698,6 @@ void ShowRules(not_null<Window::SessionController *> controller) {
 	}));
 }
 
-void ShowThemeStudio(not_null<Window::SessionController *> controller) {
-	controller->show(Box([=](not_null<Ui::GenericBox *> box) {
-		box->setTitle(tr::ayu_VaultThemeStudio());
-		const auto content = box->verticalLayout();
-		const auto add = [&](rpl::producer<QString> title, const QString &path) {
-			const auto button = content->add(object_ptr<Ui::SettingsButton>(
-				content, std::move(title), st::settingsButtonNoIcon));
-			button->setClickedCallback([=] { Window::Theme::Apply(path); });
-		};
-		add(tr::ayu_VaultThemeWindows93(), u":/gui/intelgram-windows93.tdesktop-theme"_q);
-		add(tr::ayu_VaultThemeTerminal(), u":/gui/intelgram-terminal.tdesktop-theme"_q);
-		add(tr::ayu_VaultThemeClassic(), u":/gui/day-blue.tdesktop-theme"_q);
-		add(tr::ayu_VaultThemeAmoled(), u":/gui/intelgram-amoled.tdesktop-theme"_q);
-		const auto custom = content->add(object_ptr<Ui::SettingsButton>(
-			content, tr::ayu_VaultThemeImport(), st::settingsButtonNoIcon));
-		custom->setClickedCallback([=] {
-			const auto path = QFileDialog::getOpenFileName(
-				box, tr::ayu_VaultThemeImportTitle(tr::now), QString(),
-				u"Telegram themes (*.tdesktop-theme *.palette)"_q);
-			if (!path.isEmpty()) {
-				Window::Theme::Apply(path);
-			}
-		});
-		box->addButton(tr::lng_box_done(), [=] { box->closeBox(); });
-	}));
-}
-
 void ShowExport(not_null<Window::SessionController *> controller, bool encrypted) {
 	const auto peer = controller->activeChatCurrent().peer();
 	const auto currentDialogId = peer ? getDialogIdFromPeer(peer) : 0;
@@ -935,20 +906,9 @@ void BuildPrivacy(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 	});
 }
 
-void BuildThemesAndExport(SectionBuilder &builder) {
+void BuildExport(SectionBuilder &builder) {
 	const auto controller = builder.controller();
-	builder.addSubsectionTitle(tr::ayu_VaultThemesAndBackup());
-	builder.addButton({
-		.id = u"intelgram/vault/themeStudio"_q,
-		.title = tr::ayu_VaultThemeStudio(),
-		.icon = {&st::menuIconPalette},
-		.onClick = [=] { ShowThemeStudio(controller); },
-	});
-	builder.addSectionButton({
-		.title = tr::ayu_VaultIconsAndAppearance(),
-		.targetSection = AyuAppearance::Id(),
-		.icon = {&st::menuIconPalette},
-	});
+	builder.addSubsectionTitle(tr::ayu_ExportArchiveHeader());
 	builder.addButton({
 		.id = u"intelgram/vault/export"_q,
 		.title = tr::ayu_VaultExportCenter(),
@@ -972,17 +932,39 @@ const auto kMeta = BuildHelper(
 		.icon = &st::menuIconArchive,
 	},
 	[](SectionBuilder &builder) {
-		auto ayu = AyuSectionBuilder(builder);
 		builder.addSkip();
 		BuildSearchAndTimeline(builder);
 		AyuSectionBuilder(builder).addSectionDivider();
 		BuildSmartFolders(builder);
-		AyuSectionBuilder(builder).addSectionDivider();
+		builder.addSkip();
+	});
+
+const auto kAutomationMeta = BuildHelper(
+	{
+		.id = AyuAutomation::Id(),
+		.parentId = AyuMain::Id(),
+		.title = &tr::ayu_AutomationTitle,
+		.icon = &st::menuIconBot,
+	},
+	[](SectionBuilder &builder) {
+		auto ayu = AyuSectionBuilder(builder);
+		builder.addSkip();
 		BuildIdentityAndRules(builder);
 		AyuSectionBuilder(builder).addSectionDivider();
 		BuildPrivacy(builder, ayu);
-		AyuSectionBuilder(builder).addSectionDivider();
-		BuildThemesAndExport(builder);
+		builder.addSkip();
+	});
+
+const auto kExportMeta = BuildHelper(
+	{
+		.id = AyuExport::Id(),
+		.parentId = AyuMain::Id(),
+		.title = &tr::ayu_ExportTitle,
+		.icon = &st::menuIconExport,
+	},
+	[](SectionBuilder &builder) {
+		builder.addSkip();
+		BuildExport(builder);
 		builder.addSkip();
 	});
 
@@ -1000,6 +982,40 @@ AyuVault::AyuVault(QWidget *parent, not_null<Window::SessionController *> contro
 void AyuVault::setupContent() {
 	const auto content = Ui::CreateChild<Ui::VerticalLayout>(this);
 	build(content, kMeta.build);
+	Ui::ResizeFitChild(this, content);
+}
+
+AyuAutomation::AyuAutomation(
+	QWidget *parent,
+	not_null<Window::SessionController *> controller)
+: Section(parent, controller) {
+	setupContent();
+}
+
+rpl::producer<QString> AyuAutomation::title() {
+	return tr::ayu_AutomationTitle();
+}
+
+void AyuAutomation::setupContent() {
+	const auto content = Ui::CreateChild<Ui::VerticalLayout>(this);
+	build(content, kAutomationMeta.build);
+	Ui::ResizeFitChild(this, content);
+}
+
+AyuExport::AyuExport(
+	QWidget *parent,
+	not_null<Window::SessionController *> controller)
+: Section(parent, controller) {
+	setupContent();
+}
+
+rpl::producer<QString> AyuExport::title() {
+	return tr::ayu_ExportTitle();
+}
+
+void AyuExport::setupContent() {
+	const auto content = Ui::CreateChild<Ui::VerticalLayout>(this);
+	build(content, kExportMeta.build);
 	Ui::ResizeFitChild(this, content);
 }
 

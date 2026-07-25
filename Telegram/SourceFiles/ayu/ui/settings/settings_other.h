@@ -23,6 +23,18 @@ public:
 
 private:
 	void setupContent();
+
+};
+
+class AyuAdvanced : public Section<AyuAdvanced> {
+public:
+	AyuAdvanced(QWidget *parent, not_null<Window::SessionController*> controller);
+
+	[[nodiscard]] rpl::producer<QString> title() override;
+
+private:
+	void setupContent();
+
 };
 
 [[nodiscard]] Type AyuOtherId();

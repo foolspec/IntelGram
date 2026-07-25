@@ -23,6 +23,18 @@ public:
 
 private:
 	void setupContent();
+
+};
+
+class AyuNavigation : public Section<AyuNavigation> {
+public:
+	AyuNavigation(QWidget *parent, not_null<Window::SessionController*> controller);
+
+	[[nodiscard]] rpl::producer<QString> title() override;
+
+private:
+	void setupContent();
+
 };
 
 [[nodiscard]] Type AyuAppearanceId();

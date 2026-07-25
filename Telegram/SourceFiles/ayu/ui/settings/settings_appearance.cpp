@@ -17,6 +17,7 @@
 #include "ayu/ui/settings/settings_main.h"
 #include "inline_bots/bot_attach_web_view.h"
 #include "main/main_session.h"
+#include "settings/sections/settings_chat.h"
 #include "settings/settings_builder.h"
 #include "settings/settings_common.h"
 #include "styles/style_ayu_icons.h"
@@ -48,6 +49,26 @@ bool HasDrawerBots(not_null<Window::SessionController*> controller) {
 		return true;
 	}
 	return false;
+}
+
+void BuildThemesAndBackgrounds(SectionBuilder &builder, AyuSectionBuilder &ayu) {
+	const auto controller = builder.controller();
+	const auto highlights = builder.highlights();
+
+	builder.add([=](const WidgetContext &context) {
+		SetupThemeOptions(controller, context.container.get(), highlights);
+		return SectionBuilder::WidgetToAdd{};
+	});
+	builder.add([=](const WidgetContext &context) {
+		SetupCloudThemes(controller, context.container.get(), highlights);
+		return SectionBuilder::WidgetToAdd{};
+	});
+	builder.add([=](const WidgetContext &context) {
+		SetupChatBackground(controller, context.container.get(), highlights);
+		return SectionBuilder::WidgetToAdd{};
+	});
+
+	ayu.addSectionDivider();
 }
 
 void BuildAppIcon(SectionBuilder &builder, AyuSectionBuilder &ayu) {
@@ -188,7 +209,7 @@ void BuildAvatarCorners(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 void BuildAppearance(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 	auto *settings = &AyuSettings::getInstance();
 
-	builder.addSubsectionTitle(tr::ayu_CategoryAppearance());
+	builder.addSubsectionTitle(tr::ayu_InterfaceAppearance());
 
 	ayu.addSettingToggle({
 		.id = u"ayu/materialSwitches"_q,
@@ -384,9 +405,22 @@ const auto kMeta = BuildHelper({
 	auto ayu = AyuSectionBuilder(builder);
 
 	builder.addSkip();
+	BuildThemesAndBackgrounds(builder, ayu);
 	BuildAppIcon(builder, ayu);
 	BuildAvatarCorners(builder, ayu);
 	BuildAppearance(builder, ayu);
+	builder.addSkip();
+});
+
+const auto kNavigationMeta = BuildHelper({
+	.id = AyuNavigation::Id(),
+	.parentId = AyuMain::Id(),
+	.title = &tr::ayu_CategoryNavigation,
+	.icon = &st::menuIconShowInFolder,
+}, [](SectionBuilder &builder) {
+	auto ayu = AyuSectionBuilder(builder);
+
+	builder.addSkip();
 	BuildChatFolders(builder, ayu);
 	BuildTrayElements(builder, ayu);
 	BuildDrawerElements(builder, ayu);
@@ -409,6 +443,23 @@ AyuAppearance::AyuAppearance(
 void AyuAppearance::setupContent() {
 	const auto content = Ui::CreateChild<Ui::VerticalLayout>(this);
 	build(content, kMeta.build);
+	Ui::ResizeFitChild(this, content);
+}
+
+AyuNavigation::AyuNavigation(
+	QWidget *parent,
+	not_null<Window::SessionController*> controller)
+: Section(parent, controller) {
+	setupContent();
+}
+
+rpl::producer<QString> AyuNavigation::title() {
+	return tr::ayu_CategoryNavigation();
+}
+
+void AyuNavigation::setupContent() {
+	const auto content = Ui::CreateChild<Ui::VerticalLayout>(this);
+	build(content, kNavigationMeta.build);
 	Ui::ResizeFitChild(this, content);
 }
 
