@@ -44,6 +44,7 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - Clean-source patch application, byte-identical alias, SHA-256, whitespace checks, localization-key uniqueness, exact submodule revision, platform compilation, launch smoke tests, and release-asset digest validation remain required before publication.
 - Release inputs are successful macOS Apple Silicon run `30184725091`, Windows x64 run `30184751384`, and Linux x64 run `30184751392`. Every validation report records patch `c412cc0b47d3fdf0d3272ca6910623e9e3709879ff59bf2ba1ae8329c32c0170` and `Launch smoke test: PASS`.
 - The downloaded macOS application was additionally checked as an `arm64` Mach-O bundle with identifier `io.github.foolspec.IntelGram`, passed deep code-signature validation, launched from the isolated Codex output directory, and exposed the complete Liquid Glass, motion-pack, and local channel showcase controls through its native settings UI. The packaged DMG mounted read-only and its contained application passed the same identity and signature checks.
+- Publisher run `30187774625` created release `intelgram-v6.7.8-liquid-glass-20260726` with all 19 permanent assets. Public-download validation run `30187814073` passed latest-release identity, package digests, checksum files, validation reports, required assets, patch aliases, and patch-hash checks.
 
 ## IntelGram v6.7.8 Glass And Motion - 2026-07-25
 
