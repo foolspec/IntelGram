@@ -8,15 +8,16 @@
 #include "core/file_utilities.h"
 #include "lang_auto.h"
 #include "settings/settings_builder.h"
-#include "styles/style_layers.h"
-#include "styles/style_menu_icons.h"
-#include "styles/style_settings.h"
 #include "ui/layers/generic_box.h"
 #include "ui/image/image.h"
 #include "ui/vertical_list.h"
 #include "ui/widgets/fields/input_field.h"
 #include "ui/wrap/vertical_layout.h"
 #include "window/window_session_controller.h"
+
+#include "styles/style_layers.h"
+#include "styles/style_menu_icons.h"
+#include "styles/style_settings.h"
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QColor>

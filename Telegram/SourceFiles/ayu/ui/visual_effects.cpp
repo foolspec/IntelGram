@@ -2,12 +2,13 @@
 
 #include "ayu/ayu_settings.h"
 #include "platform/platform_specific.h"
-#include "styles/style_ayu_styles.h"
-#include "styles/style_basic.h"
 #include "ui/effects/animation_value.h"
 #include "ui/image/image_prepare.h"
 #include "ui/painter.h"
 #include "ui/style/style_core_palette.h"
+
+#include "styles/style_ayu_styles.h"
+#include "styles/style_basic.h"
 
 #include <algorithm>
 #include <array>
