@@ -339,6 +339,7 @@ public:
 	[[nodiscard]] const QString &localProfileCloneId() const { return _localProfileCloneId.current(); }
 	[[nodiscard]] bool localProfileChannelEnabled() const { return _localProfileChannelEnabled.current(); }
 	[[nodiscard]] const QString &localProfileChannel() const { return _localProfileChannel.current(); }
+	[[nodiscard]] const QString &localProfileChannelWorkspace() const { return _localProfileChannelWorkspace.current(); }
 	[[nodiscard]] bool localProfileGiftEnabled() const { return _localProfileGiftEnabled.current(); }
 	[[nodiscard]] const QString &localProfileGift() const { return _localProfileGift.current(); }
 	[[nodiscard]] const QString &localProfileGifts() const { return _localProfileGifts.current(); }
@@ -458,6 +459,7 @@ public:
 	void setLocalProfileCloneId(const QString &val);
 	void setLocalProfileChannelEnabled(bool val);
 	void setLocalProfileChannel(const QString &val);
+	void setLocalProfileChannelWorkspace(const QString &val);
 	void setLocalProfileGiftEnabled(bool val);
 	void setLocalProfileGift(const QString &val);
 	void setLocalProfileGifts(const QString &val);
@@ -635,6 +637,7 @@ public:
 	[[nodiscard]] rpl::producer<bool> localProfileChannelEnabledChanges() const { return _localProfileChannelEnabled.changes(); }
 	[[nodiscard]] rpl::producer<QString> localProfileChannelValue() const { return _localProfileChannel.value(); }
 	[[nodiscard]] rpl::producer<QString> localProfileChannelChanges() const { return _localProfileChannel.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileChannelWorkspaceValue() const { return _localProfileChannelWorkspace.value(); }
 	[[nodiscard]] rpl::producer<bool> localProfileGiftEnabledValue() const { return _localProfileGiftEnabled.value(); }
 	[[nodiscard]] rpl::producer<bool> localProfileGiftEnabledChanges() const { return _localProfileGiftEnabled.changes(); }
 	[[nodiscard]] rpl::producer<QString> localProfileGiftValue() const { return _localProfileGift.value(); }
@@ -824,6 +827,7 @@ private:
 	rpl::variable<QString> _localProfileCloneId;
 	rpl::variable<bool> _localProfileChannelEnabled = false;
 	rpl::variable<QString> _localProfileChannel;
+	rpl::variable<QString> _localProfileChannelWorkspace;
 	rpl::variable<bool> _localProfileGiftEnabled = false;
 	rpl::variable<QString> _localProfileGift;
 	rpl::variable<QString> _localProfileGifts;

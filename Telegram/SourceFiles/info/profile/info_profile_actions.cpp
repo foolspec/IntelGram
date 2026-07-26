@@ -8,6 +8,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "info/profile/info_profile_actions.h"
 
 #include "ayu/ayu_settings.h"
+#include "ayu/ui/local_channel_workspace.h"
 #include "ayu/ui/utils/ayu_profile_values.h"
 #include "api/api_blocked_peers.h"
 #include "api/api_chat_participants.h"
@@ -2107,11 +2108,16 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 		}));
 		onlyChannelWrap->finishAnimating();
 
-		auto text = rpl::duplicate(
-			channel
-		) | rpl::map([=](ChannelData *channel) {
-			return channel ? NameValue(channel) : rpl::single(QString());
-		}) | rpl::flatten_latest() | rpl::map([](const QString &name) {
+		auto text = rpl::combine(
+			rpl::duplicate(channel),
+			AyuSettings::getInstance().localProfileChannelWorkspaceValue()
+		) | rpl::map([=](
+				ChannelData *channel,
+				const QString &) {
+			return channel
+				? Ayu::LocalChannelDisplayTitle(channel)
+				: QString();
+		}) | rpl::map([](const QString &name) {
 			return name.isEmpty() ? TextWithEntities() : tr::link(name);
 		});
 		auto line = CreateTextWithLabel(
@@ -2127,7 +2133,11 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 				const ClickHandlerPtr &handler,
 				Qt::MouseButton button) {
 			if (const auto channel = Ayu::LocalProfilePersonalChannel(user)) {
-				window->showPeerInfo(channel->id);
+				if (Ayu::LocalProfileChannelShowcaseActive(user)) {
+					Ayu::ShowLocalChannelWorkspace(window);
+				} else {
+					window->showPeerInfo(channel->id);
+				}
 			}
 			return false;
 		});

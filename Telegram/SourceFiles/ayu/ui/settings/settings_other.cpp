@@ -8,6 +8,7 @@
 
 #include "api/api_premium.h"
 #include "ayu/ayu_settings.h"
+#include "ayu/ui/local_channel_workspace.h"
 #include "ayu/ui/settings/ayu_builder.h"
 #include "ayu/ui/settings/settings_ayu_utils.h"
 #include "ayu/ui/settings/settings_main.h"
@@ -1072,6 +1073,14 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		}),
 		.onClick = [=] {
 			ShowLocalProfileChannelBox(controller);
+		},
+	});
+	builder.addButton({
+		.id = u"ayu/localProfileChannelOpen"_q,
+		.title = tr::ayu_LocalChannelWorkspaceOpen(),
+		.icon = { &st::menuIconChannel },
+		.onClick = [=] {
+			Ayu::ShowLocalChannelWorkspace(controller);
 		},
 	});
 	builder.addButton({

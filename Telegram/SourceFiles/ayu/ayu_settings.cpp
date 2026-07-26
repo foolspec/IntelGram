@@ -30,6 +30,8 @@ using json = nlohmann::json;
 
 namespace {
 
+constexpr auto kMaxLocalProfileChannelWorkspaceLength = 1'500'000;
+
 std::string getSettingsPath() {
 	return (cWorkingDir() + u"tdata/ayu_settings.json"_q).toStdString();
 }
@@ -895,6 +897,13 @@ void AyuSettings::setLocalProfileChannel(const QString &val) {
 	save();
 }
 
+void AyuSettings::setLocalProfileChannelWorkspace(const QString &val) {
+	const auto normalized = val.left(kMaxLocalProfileChannelWorkspaceLength);
+	if (_localProfileChannelWorkspace.current() == normalized) return;
+	_localProfileChannelWorkspace = normalized;
+	save();
+}
+
 void AyuSettings::setLocalProfileGiftEnabled(bool val) {
 	if (_localProfileGiftEnabled.current() == val) return;
 	_localProfileGiftEnabled = val;
@@ -1349,6 +1358,7 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
 		{"localProfileCloneId", s._localProfileCloneId.current()},
 		{"localProfileChannelEnabled", s._localProfileChannelEnabled.current()},
 		{"localProfileChannel", s._localProfileChannel.current()},
+		{"localProfileChannelWorkspace", s._localProfileChannelWorkspace.current()},
 		{"localProfileGiftEnabled", s._localProfileGiftEnabled.current()},
 		{"localProfileGift", s._localProfileGift.current()},
 		{"localProfileGifts", s._localProfileGifts.current()},
@@ -1522,6 +1532,10 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
 	s._localProfileChannel = Ayu::NormalizeLocalProfileUsername(j.value(
 		"localProfileChannel",
 		defaults._localProfileChannel.current()));
+	s._localProfileChannelWorkspace = j.value(
+		"localProfileChannelWorkspace",
+		defaults._localProfileChannelWorkspace.current()).left(
+			kMaxLocalProfileChannelWorkspaceLength);
 	s._localProfileGiftEnabled = j.value("localProfileGiftEnabled", defaults._localProfileGiftEnabled.current());
 	s._localProfileGift = Ayu::NormalizeLocalProfileGift(j.value("localProfileGift", defaults._localProfileGift.current()));
 	s._localProfileGifts = Ayu::NormalizeLocalProfileGifts(j.value("localProfileGifts", defaults._localProfileGifts.current()));
