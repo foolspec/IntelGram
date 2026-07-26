@@ -7,11 +7,11 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 ### Source Baseline And Patch
 
 - Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
-- Source commit: `f74468479ab492b2c88ced18b36ab7df3acbb1ef` on the recovered local implementation branch.
+- Source commit: `f6eff6eecdc78f21811577ac6a115ec488c72366` on the recovered local implementation branch.
 - Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
 - Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
-- Patch SHA-256: `e339a5394158b784ff25b693548d0c1061d4529fee0d780273806fbf6f3c6bed`.
-- Patch footprint: 75 files, 9,111 insertions, and 496 deletions relative to the pinned source.
+- Patch SHA-256: `43912e9e7afa207b6a00fd3c52aec0e2091f695cd6caea2e2c52173657e48ccd`.
+- Patch footprint: 75 files, 9,113 insertions, and 496 deletions relative to the pinned source.
 - `Telegram/lib_ui` points to public fork [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui), pinned at `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
 
 ### Optical Material Renderer

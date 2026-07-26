@@ -35,7 +35,7 @@
 - Community badge: joining `@intelgrams` through Telegram's normal channel page unlocks a local supporter badge; IntelGram performs no automatic join request.
 - Local channel showcase: choose a public `@channel` or `t.me` link to render it on your own profile with an explicit **Local showcase** label; lookup is read-only and does not claim ownership, join the channel, grant permissions, or modify Telegram.
 - In-app update log: **IntelGram Preferences -> Update log** opens a bundled native summary without requiring GitHub.
-- Current source patch SHA-256: `e339a5394158b784ff25b693548d0c1061d4529fee0d780273806fbf6f3c6bed`.
+- Current source patch SHA-256: `43912e9e7afa207b6a00fd3c52aec0e2091f695cd6caea2e2c52173657e48ccd`.
 - Privacy boundary: no Telegram profile mutation, contact import, automatic channel join, channel ownership or permission mutation, collectible transaction, or protected-content bypass.
 - Protected content: Restrict Saving Content and self-destructing items remain metadata-only jump-back references; bodies, links, filenames, revisions, and media are excluded from rules, exports, and backups.
 - Branding consistency: product-facing window, settings, version, and notification-preview titles use IntelGram while upstream attribution remains intact.

@@ -6759,10 +6759,10 @@ index 000000000..b4a7a0919
 +} // namespace Settings
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_visual_effects.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_visual_effects.cpp
 new file mode 100644
-index 000000000..8ee9f94cb
+index 000000000..398b9861e
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_visual_effects.cpp
-@@ -0,0 +1,317 @@
+@@ -0,0 +1,318 @@
 +#include "ayu/ui/settings/settings_visual_effects.h"
 +
 +#include "ayu/ayu_settings.h"
@@ -6773,15 +6773,16 @@ index 000000000..8ee9f94cb
 +#include "core/file_utilities.h"
 +#include "lang_auto.h"
 +#include "settings/settings_builder.h"
-+#include "styles/style_layers.h"
-+#include "styles/style_menu_icons.h"
-+#include "styles/style_settings.h"
 +#include "ui/layers/generic_box.h"
 +#include "ui/image/image.h"
 +#include "ui/vertical_list.h"
 +#include "ui/widgets/fields/input_field.h"
 +#include "ui/wrap/vertical_layout.h"
 +#include "window/window_session_controller.h"
++
++#include "styles/style_layers.h"
++#include "styles/style_menu_icons.h"
++#include "styles/style_settings.h"
 +
 +#include <QtCore/QFileInfo>
 +#include <QtGui/QColor>
@@ -8420,20 +8421,21 @@ index 950f22d7e..5fb0e268e 100644
 +rpl::producer<TextWithEntities> IDValue(MsgId topicRootId);
 diff --git a/Telegram/SourceFiles/ayu/ui/visual_effects.cpp b/Telegram/SourceFiles/ayu/ui/visual_effects.cpp
 new file mode 100644
-index 000000000..69f9692e6
+index 000000000..d52aff33f
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/visual_effects.cpp
-@@ -0,0 +1,575 @@
+@@ -0,0 +1,576 @@
 +#include "ayu/ui/visual_effects.h"
 +
 +#include "ayu/ayu_settings.h"
 +#include "platform/platform_specific.h"
-+#include "styles/style_ayu_styles.h"
-+#include "styles/style_basic.h"
 +#include "ui/effects/animation_value.h"
 +#include "ui/image/image_prepare.h"
 +#include "ui/painter.h"
 +#include "ui/style/style_core_palette.h"
++
++#include "styles/style_ayu_styles.h"
++#include "styles/style_basic.h"
 +
 +#include <algorithm>
 +#include <array>
