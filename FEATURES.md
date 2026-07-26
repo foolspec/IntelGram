@@ -13,6 +13,8 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - Local profile photo selected from a file on this device.
 - Persistent local settings that survive an IntelGram restart.
 - One action to clear each local value and return to the real Telegram-rendered value.
+- An optional public-channel showcase rendered on your own profile with an explicit **Local showcase** label.
+- Public channels are resolved read-only from an `@channel` or `t.me` link; the showcase does not grant ownership, administration, permissions, or membership.
 
 ## Local Profile Clone
 
@@ -116,13 +118,20 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 
 ## Glass And Motion
 
-- Enable or disable whole-window transparent mode without replacing the selected Telegram theme.
+- Enable or disable the whole-window Liquid Glass material without replacing the selected Telegram theme.
 - Use native behind-window blur on macOS, the Windows DWM backdrop where available, and compositor transparency on Linux.
 - Control transparency independently for the chat list/sidebar, chat and message surfaces, and menus/dialogs/panels.
 - Set the glass tint and surface opacity while keeping text, icons, avatars, and media fully opaque.
+- Adapt the material tint, saturation, and contrast to the current theme or local backdrop.
+- Add wallpaper-colored light diffusion, cursor-reactive highlights, a slow moving specular reflection, and soft internal reflections.
+- Refract a cached local-image backdrop by 1-3 pixels at the simulated 8-pixel glass edge while preserving center readability.
+- Use deterministic 1-2% film grain to reduce color banding and anti-aliased inner and outer edge light.
 - Choose a local image as the whole-app backdrop, then adjust its opacity and blur or remove it completely.
+- Cache decoded, blurred, and scaled-cover backdrop images instead of rebuilding them for every frame.
+- Follow the active display refresh rate up to 120 Hz while visible and active, then pause optical animation while hidden, inactive, or reduced motion is enabled.
 - Enable enhanced animations separately from transparency.
-- Choose Quick Snap, Smooth Flow, Diabolical, or Springy motion for existing transitions, dialogs, drawers, controls, and navigation.
+- Choose Quick Snap, Smooth Flow, Diabolical, Springy, or Liquid Bounce motion for existing transitions, dialogs, drawers, controls, and navigation.
+- Quick Snap is compact and immediate; Smooth Flow is calm and critically damped; Diabolical is brisk with stronger depth; Springy settles gently without overshoot; Liquid Bounce is the most elastic and adds a controlled overshoot.
 - Optionally animate first window display and restore-from-tray without weakening the normal reduced-motion or power-saving switch.
 
 ## Organized Preferences
@@ -174,9 +183,9 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 
 ## Network And Protected-Content Boundary
 
-IntelGram's custom profile values stay local. Clone selection may issue Telegram's standard read-only full-profile refresh for the already-known source user. The collectible browser may issue read-only Telegram gift catalog/detail requests and a read-only TonAPI metadata lookup when resolving a raw TON NFT address. The supporter badge reads an already-known channel membership state and does not join a channel. Vault rules run only after IntelGram receives a message.
+IntelGram's custom profile values stay local. Clone selection may issue Telegram's standard read-only full-profile refresh for the already-known source user. The local channel showcase may resolve a public username and request its public full peer read-only. The collectible browser may issue read-only Telegram gift catalog/detail requests and a read-only TonAPI metadata lookup when resolving a raw TON NFT address. The supporter badge reads an already-known channel membership state and does not join a channel. Vault rules run only after IntelGram receives a message.
 
-IntelGram adds no Telegram account/profile update, contact import, collectible transaction, ownership mutation, automatic channel join, or protected-content bypass. Restrict Saving Content and self-destruct flags are enforced in the vault, edit/deletion history, saved moments, rules, exports, cached-media packaging, media overlay, and legacy Ayu message storage.
+IntelGram adds no Telegram account/profile update, contact import, collectible transaction, ownership mutation, channel ownership or permission mutation, automatic channel join, or protected-content bypass. Restrict Saving Content and self-destruct flags are enforced in the vault, edit/deletion history, saved moments, rules, exports, cached-media packaging, media overlay, and legacy Ayu message storage.
 
 ## Credit
 

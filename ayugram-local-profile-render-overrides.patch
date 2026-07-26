@@ -47,7 +47,7 @@ index 3ac3f4ba0..5abcbf159 100644
          ayu/data/ayu_database.cpp
          ayu/data/ayu_database.h
 diff --git a/Telegram/Resources/langs/lang.strings b/Telegram/Resources/langs/lang.strings
-index 7380587e7..9e06d0f2e 100644
+index 7380587e7..77dc95924 100644
 --- a/Telegram/Resources/langs/lang.strings
 +++ b/Telegram/Resources/langs/lang.strings
 @@ -7971,14 +7971,60 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -145,11 +145,11 @@ index 7380587e7..9e06d0f2e 100644
 +"ayu_IntelGramUpdateLogLabel" = "Open in IntelGram";
 +"ayu_IntelGramUpdateLogTitle" = "IntelGram update log";
 +"ayu_IntelGramUpdateLogCurrentTitle" = "Latest update";
-+"ayu_IntelGramUpdateLogCurrent" = "**Glass & Motion**\n- Transparent mode adds native desktop blur on macOS and Windows, compositor transparency on Linux, and independently controlled glass surfaces for the sidebar, chats, menus, dialogs, and panels.\n- Choose a private local image as the full IntelGram backdrop, then control image opacity, blur, and glass tint without fading text, icons, avatars, or media.\n- Enhanced Animations applies Quick Snap, Smooth Flow, Diabolical, or Springy motion across shared IntelGram transitions while still respecting reduced-motion and power-saving settings.\n- The profile username editor now matches Telegram's native title, @username field, validation row, help text, and button layout while saving only IntelGram's local render value.\n- Appearance & Backgrounds continues to provide Telegram's native visual theme cards, cloud theme gallery, wallpaper preview editor, and removable imported themes.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
++"ayu_IntelGramUpdateLogCurrent" = "**Liquid Glass & Motion**\n- Liquid Glass layers adaptive tint and contrast, wallpaper-aware diffusion, cursor-reactive specular light, refractive edges, internal reflections, and subtle film grain over native desktop blur.\n- Material animation follows the active display refresh rate up to 120 Hz and pauses while IntelGram is hidden, inactive, or respecting reduced-motion and power-saving settings.\n- Control sidebar, chat, menu, dialog, and panel transparency separately; choose a private local backdrop and tune image opacity, blur, tint, surface opacity, and optical intensity without fading text, icons, avatars, or media.\n- Quick Snap is compact and immediate. Smooth Flow is calm and critically damped. Diabolical is brisk with stronger depth. Springy settles gently. The optional Liquid Bounce pack adds the most elastic lift and a controlled overshoot.\n- Local channel showcase can display a selected public channel on your own IntelGram profile with a Local showcase label. It never claims ownership, joins the channel, changes permissions, or modifies Telegram.\n- The profile username editor matches Telegram's native title, @username field, validation row, help text, and button layout while saving only IntelGram's local render value.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
 +"ayu_IntelGramUpdateLogFeaturesTitle" = "Main IntelGram features";
-+"ayu_IntelGramUpdateLogFeatures" = "**Local profile and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, badges, emoji status, and personal channel rendering.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity and customization**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native themes, cloud theme browsing, chat wallpapers, whole-app glass backgrounds, native blur, motion presets, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
++"ayu_IntelGramUpdateLogFeatures" = "**Local profile and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, badges, emoji status, personal channel rendering, and a clearly labeled local public-channel showcase.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity and customization**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native themes, cloud theme browsing, chat wallpapers, adaptive Liquid Glass, native blur, five motion packs, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
 +"ayu_IntelGramUpdateLogPrivacyTitle" = "Local-only boundary";
-+"ayu_IntelGramUpdateLogPrivacy" = "Local profile tools never update your Telegram profile, import contacts, change collectible ownership, or join a channel automatically. Vault tools only process data already received by this client. Restrict Saving Content and self-destructing media are preserved: IntelGram stores a jump-back reference and basic metadata, never the protected body or media.";
++"ayu_IntelGramUpdateLogPrivacy" = "Local profile tools never update your Telegram profile, import contacts, claim channel ownership, change channel permissions, change collectible ownership, or join a channel automatically. The channel showcase uses only a public read-only lookup. Vault tools only process data already received by this client. Restrict Saving Content and self-destructing media are preserved: IntelGram stores a jump-back reference and basic metadata, never the protected body or media.";
 +"ayu_IntelGramUpdateLogCredit" = "IntelGram local profile tools by fool.";
 +"ayu_IntelGramUpdateLogFull" = "View full changelog";
  "ayu_CategoriesHeader" = "Categories";
@@ -8420,10 +8420,10 @@ index 950f22d7e..5fb0e268e 100644
 +rpl::producer<TextWithEntities> IDValue(MsgId topicRootId);
 diff --git a/Telegram/SourceFiles/ayu/ui/visual_effects.cpp b/Telegram/SourceFiles/ayu/ui/visual_effects.cpp
 new file mode 100644
-index 000000000..16ea764b4
+index 000000000..69f9692e6
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/visual_effects.cpp
-@@ -0,0 +1,568 @@
+@@ -0,0 +1,575 @@
 +#include "ayu/ui/visual_effects.h"
 +
 +#include "ayu/ayu_settings.h"
@@ -8464,6 +8464,8 @@ index 000000000..16ea764b4
 +	QImage image;
 +	QColor imageAverage;
 +	QImage grain;
++	QSize coverSize;
++	QImage cover;
 +	bool applyingPalette = false;
 +};
 +
@@ -8528,25 +8530,28 @@ index 000000000..16ea764b4
 +	return result;
 +}
 +
-+[[nodiscard]] QRectF CoverSource(
-+		const QImage &image,
-+		const QRectF &target) {
-+	if (image.isNull() || target.isEmpty()) {
-+		return QRectF();
++[[nodiscard]] const QImage &CoverImage(
++		State &state,
++		QSize size) {
++	if (state.image.isNull() || size.isEmpty()) {
++		state.coverSize = QSize();
++		state.cover = QImage();
++		return state.cover;
 +	}
-+	const auto targetRatio = target.width() / target.height();
-+	const auto imageRatio = image.width() / float64(image.height());
-+	auto source = QRectF(QPointF(), QSizeF(image.size()));
-+	if (imageRatio > targetRatio) {
-+		const auto width = source.height() * targetRatio;
-+		source.setLeft((source.width() - width) / 2.);
-+		source.setWidth(width);
-+	} else {
-+		const auto height = source.width() / targetRatio;
-+		source.setTop((source.height() - height) / 2.);
-+		source.setHeight(height);
++	if (state.coverSize == size && !state.cover.isNull()) {
++		return state.cover;
 +	}
-+	return source;
++	state.coverSize = size;
++	const auto scaled = state.image.scaled(
++		size,
++		Qt::KeepAspectRatioByExpanding,
++		Qt::SmoothTransformation);
++	state.cover = scaled.copy(
++		std::max((scaled.width() - size.width()) / 2, 0),
++		std::max((scaled.height() - size.height()) / 2, 0),
++		size.width(),
++		size.height());
++	return state.cover;
 +}
 +
 +[[nodiscard]] QColor AdaptiveTint(
@@ -8721,6 +8726,8 @@ index 000000000..16ea764b4
 +	}
 +	state.imagePath = path;
 +	state.imageBlur = blur;
++	state.coverSize = QSize();
++	state.cover = QImage();
 +	state.image = path.isEmpty()
 +		? QImage()
 +		: Images::Read({ .path = path }).image;
@@ -8804,12 +8811,12 @@ index 000000000..16ea764b4
 +	if (target.isEmpty()) {
 +		return;
 +	}
-+	const auto source = CoverSource(image, target);
++	const auto &cover = CoverImage(state, window->size());
 +	if (!image.isNull()) {
 +		painter.save();
 +		painter.setRenderHint(QPainter::SmoothPixmapTransform);
 +		painter.setOpacity(settings.transparentBackgroundOpacity() / 100.);
-+		painter.drawImage(target, image, source);
++		painter.drawImage(target, cover);
 +		painter.restore();
 +	}
 +
@@ -8895,7 +8902,7 @@ index 000000000..16ea764b4
 +			painter.setRenderHint(QPainter::SmoothPixmapTransform);
 +			painter.setClipPath(edge);
 +			painter.setOpacity(0.16 + (0.2 * intensity));
-+			painter.drawImage(target.translated(shift), image, source);
++			painter.drawImage(target.translated(shift), cover);
 +			painter.restore();
 +		}
 +		auto edgeMaterial = QLinearGradient(

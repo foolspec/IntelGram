@@ -2,6 +2,47 @@
 
 This file records implementation-level changes to IntelGram's custom layer. Product-facing changes are summarized in [`CHANGELOG.md`](CHANGELOG.md).
 
+## IntelGram v6.7.8 Liquid Glass - 2026-07-26
+
+### Source Baseline And Patch
+
+- Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
+- Source commit: `f74468479ab492b2c88ced18b36ab7df3acbb1ef` on the recovered local implementation branch.
+- Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
+- Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
+- Patch SHA-256: `e339a5394158b784ff25b693548d0c1061d4529fee0d780273806fbf6f3c6bed`.
+- Patch footprint: 75 files, 9,111 insertions, and 496 deletions relative to the pinned source.
+- `Telegram/lib_ui` points to public fork [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui), pinned at `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
+
+### Optical Material Renderer
+
+- `Window::MainWindow::paintEvent` keeps `Ayu::VisualEffects::PaintWindow` as the single behind-content render hook, so the material is painted before Qt child widgets and never fades text, controls, avatars, or media.
+- `Ayu::VisualEffects` combines the native platform backdrop or cached local image with adaptive tint and contrast, backdrop-color diffusion, cursor- and time-reactive radial light, a moving specular sweep, a soft top reflection, deterministic 1-2% film grain, and anti-aliased inner and outer edge light.
+- `WindowPath` and `EdgePath` model a rounded optical edge with an 8-pixel visual thickness. A local-image backdrop is sampled again inside that edge with a continuously animated 1-3 pixel displacement while the center remains undistorted.
+- The material samples the current backdrop average and theme background luminance to adjust tint and highlight strength instead of using a fixed alpha overlay.
+- `CoverImage` caches smooth scaled-cover results per window size. The decoded source and `Images::BlurLargeImage` result remain cached until the image path or blur radius changes.
+- `MainWindow::_glassAnimationTimer` repaints at the active screen refresh interval, clamped from 30 through 120 Hz. It runs only for a visible active window with dynamic highlights enabled and stops under the existing `anim::Disabled()` accessibility and power-saving gate.
+
+### Settings And Motion
+
+- `AyuSettings` persists adaptive material, dynamic highlights, edge refraction, and optical-material intensity with conservative normalized defaults.
+- `Settings::AyuVisualEffects` exposes the new controls and a bundled explanation for all five motion packs.
+- The shared `lib_ui` motion enum adds `MotionStyle::LiquidBounce`. It scales duration to 140% and applies `bumpy(1.12)` for a controlled overshoot.
+- Quick Snap remains the compact 75% quintic preset; Smooth Flow uses a 110% cubic settle; Diabolical uses a brisk 95% circular exit; Springy uses a monotonic 125% critically damped settle.
+
+### Local Channel Showcase
+
+- `ShowLocalProfileChannelBox` normalizes an `@channel` or `t.me` link, performs `MTPcontacts_ResolveUsername`, accepts only a public channel result, and requests its normal full peer read-only for rendering.
+- `LocalProfileChannelShowcaseActive`, `LocalProfilePersonalChannelValue`, and `LocalProfilePersonalChannelMessageId` supply the selected channel only for the current user's local profile and only outside clone mode.
+- The profile action row is labeled **Local showcase**. Clearing it writes only IntelGram's local setting.
+- No creator/admin flags are synthesized. No ownership, permission, membership, username, or profile update request is added.
+
+### Validation
+
+- `validate_intelgram_patch.py` requires the adaptive material controls, new optical render helpers, Liquid Bounce motion hook, local channel showcase UI and read-only lookup, and exact `lib_ui` commit.
+- Mutation scans continue to reject profile updates, username availability checks, contact import, channel joins, personal-channel updates, gift transfers, and protected-content bypasses.
+- Clean-source patch application, byte-identical alias, SHA-256, whitespace checks, localization-key uniqueness, exact submodule revision, platform compilation, launch smoke tests, and release-asset digest validation remain required before publication.
+
 ## IntelGram v6.7.8 Glass And Motion - 2026-07-25
 
 ### Source Baseline And Patch

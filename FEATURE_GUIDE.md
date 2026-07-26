@@ -20,6 +20,10 @@ Choose **Local profile photo**, select an image on this Mac or PC, and enable th
 
 First open the other user's profile so IntelGram has loaded it. Copy their UID, choose **Clone profile locally by UID**, paste the UID, and confirm. IntelGram refreshes that already-known profile read-only, then mirrors only data visible to you, including premium or verification badges, the organization badge symbol, emoji status, and personal channel. If the source has none of those elements, the cloned local view shows none even when your real profile has one. Choose **Stop cloning profile** to return to your own local fields.
 
+## How do I show a channel on my local profile?
+
+Under **Local Profile & Collectibles**, enable **Show a public channel on my local profile**, choose **Choose showcase channel**, and enter a public `@channel` or `t.me` link. IntelGram resolves the public channel read-only and shows it in the profile row labeled **Local showcase**. This is presentation only: it does not make you the owner or an administrator, join the channel, grant permissions, or change Telegram.
+
 ## How do I find somebody by UID or phone?
 
 Use the normal search field above the chat list. Paste a UID, `id: UID`, or a phone number. A known matching profile appears under **Found by ID or phone**. This cannot discover strangers or hidden phone numbers; the peer must already be loaded and the phone must already be visible.
@@ -102,7 +106,9 @@ Open **IntelGram Preferences -> Appearance & Backgrounds**. Choose from the visu
 
 ## How do I make the whole app transparent or more animated?
 
-Open **IntelGram Preferences -> Glass & Motion**. Enable transparent mode, choose which surface groups should be glass, and adjust the tint and opacity. Native desktop blur is optional; you can instead choose a local image for the whole app and set its own opacity and blur. Enable Enhanced Animations separately, then choose Quick Snap, Smooth Flow, Diabolical, or Springy. Both master switches can be turned off at any time to return immediately to the normal theme and motion.
+Open **IntelGram Preferences -> Glass & Motion**. Enable Liquid Glass, choose which surface groups use the material, and adjust tint, opacity, adaptive color, moving highlights, edge refraction, and optical intensity. Native desktop blur is optional; you can instead choose a removable local image for the whole app and set its opacity and blur. The material uses cached blur, light diffusion, moving reflections, fine grain, and refractive edges while leaving text and media opaque.
+
+Enable Enhanced Animations separately, then choose a pack: **Quick Snap** is compact and immediate, **Smooth Flow** is calm and critically damped, **Diabolical** is brisk with stronger depth, **Springy** settles gently without overshoot, and **Liquid Bounce** is the most elastic with a controlled overshoot. Both master switches can be turned off at any time, and reduced-motion or power-saving mode still takes priority.
 
 ## Where did the other settings go?
 

@@ -88,7 +88,7 @@ jobs:
           mapfile -d '' RELEASE_ASSETS < <(find release-assets -maxdepth 1 -type f ! -empty -print0)
           test "${#RELEASE_ASSETS[@]}" -gt 0
           cat > release-notes.md <<'EOF'
-          ## IntelGram v6.7.8 Glass & Motion
+          ## IntelGram v6.7.8 Liquid Glass
 
           This release contains launch-tested IntelGram packages for macOS Apple Silicon, Windows x64, and Linux x64.
 
@@ -99,13 +99,15 @@ jobs:
           - Smart folders, private contact notes with reminders and history, opt-in public identity snapshots, local rules, and anti-spam review.
           - Per-chat local tags, priority, download mode, read reminders, local-only draft preference, and local notification muting.
           - **Appearance & Backgrounds** with visual light/dark theme cards, in-app cloud themes, custom theme import and removal, Telegram's wallpaper gallery, local background images, live preview, tiling and wide-layout controls, and IntelGram icon choices.
-          - **Glass & Motion** with whole-window transparency, native macOS and Windows backdrop blur, Linux compositor transparency, separate sidebar/chat/panel controls, glass tint and opacity, and a removable local whole-app image with independent opacity and blur.
-          - Enhanced Animations with Quick Snap, Smooth Flow, Diabolical, and Springy presets across existing transitions, dialogs, drawers, controls, and navigation, plus an optional window-opening animation.
+          - **Liquid Glass** with cached native or local-image blur, adaptive tint and contrast, wallpaper-colored diffusion, cursor-reactive highlights, moving specular reflections, subtle edge refraction, anti-banding grain, and anti-aliased glass edges.
+          - Display-aware material animation up to 120 Hz while the window is active, with redraws paused while hidden or inactive.
+          - Enhanced Animations with Quick Snap, Smooth Flow, Diabolical, Springy, and the optional high-elasticity Liquid Bounce preset across existing transitions, dialogs, drawers, controls, and navigation.
           - Reduced-motion and power-saving behavior remains authoritative over every added animation.
           - Preferences organized into focused Local Profile, Appearance, Glass & Motion, Navigation, Vault, Automation, Export, Privacy, and Advanced pages.
           - Selected-message and chat/account exports to HTML, PDF, Markdown, JSON, and ZIP, plus AES-256-GCM Frozen Account Backup with permitted cached media.
           - Client-render-only display name, UID, primary and other usernames, anonymous number, bio, and profile photo for your own account.
           - Local profile cloning from an already-loaded peer by UID, including badges, emoji status, and personal channel, plus cached-peer search by UID or a phone number already visible to your account.
+          - A clearly labeled local channel showcase that resolves a public channel read-only and displays it on your own IntelGram profile without claiming server ownership or changing membership and permissions.
           - A profile username editor matching Telegram's native title, `@username` field, validation row, help copy, spacing, and buttons, backed only by IntelGram's local render setting and no server-side username check or update.
           - A native in-app collectible browser with Telegram's read-only live catalog, exact numbered gifts, native previews and details, and Telegram, Getgems, and TON link input.
           - A visual collection gallery and scrollable exact-item gallery that selects collectibles without leaving IntelGram.
@@ -117,7 +119,7 @@ jobs:
 
           ### Local-only boundary
 
-          IntelGram does not update your Telegram name, photo, username, UID, phone, bio, emoji status, contacts, collectible ownership, or channel membership. Restrict Saving Content and self-destruct rules are preserved: protected message bodies and media never enter the vault, rules, exports, or backups.
+          IntelGram does not update your Telegram name, photo, username, UID, phone, bio, emoji status, contacts, collectible ownership, channel ownership, permissions, or membership. Restrict Saving Content and self-destruct rules are preserved: protected message bodies and media never enter the vault, rules, exports, or backups.
 
           See the [complete feature list](https://github.com/foolspec/IntelGram/blob/main/FEATURES.md), [changelog](https://github.com/foolspec/IntelGram/blob/main/CHANGELOG.md), and [technical changelog](https://github.com/foolspec/IntelGram/blob/main/TECHNICAL_CHANGELOG.md).
 
@@ -127,6 +129,6 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
             --latest \
-            --title "IntelGram v6.7.8 - Glass & Motion" \
+            --title "IntelGram v6.7.8 - Liquid Glass" \
             --notes-file release-notes.md \
             "${RELEASE_ASSETS[@]}"

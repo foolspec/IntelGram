@@ -60,7 +60,7 @@ permissions:
 
 env:
   SOURCE_TAG: v6.7.8
-  PATCH_SHA256: ee01a150c3ae7a09fe3e55a72b5993902c7017110e617d735f4a2d35f0adbe8e
+  PATCH_SHA256: e339a5394158b784ff25b693548d0c1061d4529fee0d780273806fbf6f3c6bed
   LIB_UI_COMMIT: b9a30917daf2bd8fdc17ccd9682acca178882b7b
   LIB_UI_REF: codex/intelgram-liquid-bounce-20260726
 
@@ -797,11 +797,11 @@ jobs:
           find release-assets -maxdepth 1 -type f -print -exec ls -lh {} \;
           mapfile -d '' RELEASE_ASSETS < <(find release-assets -maxdepth 1 -type f ! -empty -print0)
           test "${#RELEASE_ASSETS[@]}" -gt 0
-          TAG="intelgram-v6.7.8-glass-motion-${GITHUB_RUN_ID}"
+          TAG="intelgram-v6.7.8-liquid-glass-${GITHUB_RUN_ID}"
           gh release create "$TAG" \
             --repo "$GITHUB_REPOSITORY" \
             --target "$TARGET_SHA" \
             --latest \
-            --title "IntelGram v6.7.8 - Glass & Motion" \
-            --notes "Glass & Motion adds opt-in whole-window transparency with native macOS and Windows backdrop blur, Linux compositor transparency, separate sidebar/chat/panel controls, glass tint and opacity, and a removable local whole-app background with independent opacity and blur. Enhanced Animations applies Quick Snap, Smooth Flow, Diabolical, or Springy timing across IntelGram transitions, dialogs, drawers, controls, and navigation, plus an optional window-opening animation. The profile username editor matches Telegram's native title, @username field, validation row, help copy, spacing, and buttons while retaining a local-only save path. Reduced-motion and power-saving settings remain authoritative. IntelGram also includes its existing local vault, timeline, automation, export and Frozen Account Backup tools; native theme and wallpaper controls; and client-render-only profile, clone, UID/visible-phone search, collectible, local photo, badge, username, and anonymous-number features. Protected and self-destructing content is never copied, and no Telegram profile, contact, channel-membership, collectible-ownership, or protected-content mutation is included." \
+            --title "IntelGram v6.7.8 - Liquid Glass" \
+            --notes "Liquid Glass replaces flat transparency with a layered optical material: cached native or local-image blur, adaptive tint and contrast, wallpaper-colored diffusion, moving cursor-reactive highlights, subtle edge refraction, internal reflections, anti-banding grain, and anti-aliased glass edges. The renderer follows the active display up to 120 Hz while visible and pauses for hidden, inactive, reduced-motion, or power-saving states. Enhanced Animations now includes Quick Snap, Smooth Flow, Diabolical, Springy, and the optional high-elasticity Liquid Bounce preset. Local Profile & Collectibles also gains a clearly labeled local channel showcase: resolve a public channel read-only and display it on your own IntelGram profile without ownership, admin rights, joining, or any Telegram mutation. IntelGram retains its local vault, timeline, automation, export and Frozen Account Backup tools; native theme and wallpaper controls; and client-render-only profile, clone, UID/visible-phone search, collectible, local photo, badge, username, and anonymous-number features. Protected and self-destructing content is never copied." \
             "${RELEASE_ASSETS[@]}"

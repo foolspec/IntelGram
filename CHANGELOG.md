@@ -2,6 +2,31 @@
 
 All notable IntelGram custom-feature changes are recorded here.
 
+## IntelGram v6.7.8 Liquid Glass - 2026-07-26
+
+### Added
+
+- A layered Liquid Glass material with adaptive tint and contrast, wallpaper-colored light diffusion, moving cursor-reactive highlights, subtle edge refraction, soft internal reflections, anti-banding grain, and anti-aliased edge light.
+- Separate controls for adaptive material, dynamic highlights, refractive edges, and optical-material intensity.
+- **Liquid Bounce**, an optional high-elasticity animation pack with controlled overshoot.
+- Plain-language descriptions of Quick Snap, Smooth Flow, Diabolical, Springy, and Liquid Bounce inside **Glass & Motion**.
+- A clearly labeled local channel showcase that can render a public channel on your own IntelGram profile after a read-only public username lookup.
+
+### Changed
+
+- Local-image backdrops now cache their blurred and scaled-cover results, avoiding image resampling on every animated frame.
+- Material animation follows the active display refresh rate up to 120 Hz and pauses while the window is hidden, inactive, or reduced motion is enabled.
+- The whole-window renderer now reacts to backdrop luminance and theme colors instead of applying one fixed transparent tint.
+- The local channel showcase explicitly states that it is not ownership and does not join a channel, grant permissions, or modify Telegram.
+
+### Motion Packs
+
+- **Quick Snap:** compact and immediate.
+- **Smooth Flow:** calm and critically damped.
+- **Diabolical:** brisk with stronger depth.
+- **Springy:** a gentle settle without overshoot.
+- **Liquid Bounce:** the most elastic option, with a controlled overshoot.
+
 ## IntelGram v6.7.8 Glass & Motion - 2026-07-25
 
 ### Added

@@ -5,7 +5,7 @@ patch relative to official AyuGram Desktop `v6.7.8` commit
 `b25513a06ff88be0b3f4c928252b56c3da39cec7`.
 
 Patch SHA-256:
-`a749b1673bc93f057f0da292680f2884fac956d64229554272b0bb2666995599`
+`e339a5394158b784ff25b693548d0c1061d4529fee0d780273806fbf6f3c6bed`
 
 ## Added
 
@@ -31,6 +31,7 @@ Patch SHA-256:
 - `Telegram/SourceFiles/ayu/ayu_settings.h`
 - `Telegram/SourceFiles/ayu/data/messages_storage.cpp`
 - `Telegram/SourceFiles/ayu/features/forward/ayu_forward.cpp`
+- `Telegram/SourceFiles/ayu/ui/ayu_styles.style`
 - `Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp`
 - `Telegram/SourceFiles/ayu/ui/context_menu/context_menu.h`
 - `Telegram/SourceFiles/ayu/ui/settings/settings_appearance.cpp`
@@ -87,4 +88,4 @@ Patch SHA-256:
 - `Telegram/SourceFiles/window/window_session_controller.cpp`
 - `Telegram/lib_ui` (submodule pointer)
 
-Total: 74 paths, including 10 added files and 64 modified paths.
+Total: 75 paths, including 10 added files and 65 modified paths.

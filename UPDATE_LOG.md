@@ -13,8 +13,11 @@
 - Chat controls: local tags, priority, manual/Wi-Fi/always download behavior, read reminders, local-only draft preference, and local notification muting.
 - Anti-spam: unknown-sender and suspicious-invite review tags plus keyword, link, photo, and file rules.
 - Appearance & Backgrounds: native visual theme cards, in-app cloud themes, imported theme files, a visible remove-current-theme action, Telegram's wallpaper gallery, custom local images, live background preview, tiling controls, and the IntelGram icon set.
-- Glass & Motion: opt-in whole-window transparency with native macOS and Windows blur, Linux compositor transparency, separate sidebar/chat/panel switches, glass tint and opacity, and a removable local whole-app image with independent opacity and blur.
-- Enhanced Animations: Quick Snap, Smooth Flow, Diabolical, and Springy presets apply across existing transitions, dialogs, drawers, controls, and navigation, with an optional window-opening animation.
+- Liquid Glass: cached native or local-image blur with adaptive tint and contrast, wallpaper-colored diffusion, cursor-reactive highlights, moving specular reflections, subtle edge refraction, internal reflections, anti-banding grain, and anti-aliased edges.
+- Optical controls: separate switches for adaptive material, dynamic highlights, refractive edges, and an intensity slider, alongside the existing sidebar/chat/panel, tint, opacity, and removable backdrop controls.
+- Material performance: active highlights follow the display refresh rate up to 120 Hz while blurred and scaled image results are cached; repainting pauses while hidden, inactive, or reduced motion is enabled.
+- Enhanced Animations: Quick Snap, Smooth Flow, Diabolical, Springy, and Liquid Bounce apply across existing transitions, dialogs, drawers, controls, and navigation, with an optional window-opening animation.
+- Motion guide: Quick Snap is immediate, Smooth Flow is critically damped, Diabolical is brisk with stronger depth, Springy settles gently, and Liquid Bounce adds the strongest controlled overshoot.
 - Accessibility: IntelGram's reduced-motion and power-saving switch remains authoritative and disables the added motion behavior.
 - Export Center: selected-message, chat, and account HTML/PDF/Markdown/JSON/ZIP export.
 - Frozen Account Backup: streamed AES-256-GCM `.intelvault` output with permitted cached media and no plaintext destination files.
@@ -30,9 +33,10 @@
 - Icon pack: pink primary and profile-art icons plus twelve color variants include native macOS, multi-resolution Windows, and Linux resources; macOS artwork is full-bleed and no longer receives a second white frame or inset.
 - Settings cleanup: inherited Boosty and cryptocurrency donation rows were removed and replaced with IntelGram community, source, and changelog links.
 - Community badge: joining `@intelgrams` through Telegram's normal channel page unlocks a local supporter badge; IntelGram performs no automatic join request.
+- Local channel showcase: choose a public `@channel` or `t.me` link to render it on your own profile with an explicit **Local showcase** label; lookup is read-only and does not claim ownership, join the channel, grant permissions, or modify Telegram.
 - In-app update log: **IntelGram Preferences -> Update log** opens a bundled native summary without requiring GitHub.
-- Current source patch SHA-256: `a749b1673bc93f057f0da292680f2884fac956d64229554272b0bb2666995599`.
-- Privacy boundary: no Telegram profile mutation, contact import, automatic channel join, collectible transaction, or protected-content bypass.
+- Current source patch SHA-256: `e339a5394158b784ff25b693548d0c1061d4529fee0d780273806fbf6f3c6bed`.
+- Privacy boundary: no Telegram profile mutation, contact import, automatic channel join, channel ownership or permission mutation, collectible transaction, or protected-content bypass.
 - Protected content: Restrict Saving Content and self-destructing items remain metadata-only jump-back references; bodies, links, filenames, revisions, and media are excluded from rules, exports, and backups.
 - Branding consistency: product-facing window, settings, version, and notification-preview titles use IntelGram while upstream attribution remains intact.
 - Login and platform branding: the login footer, application menus, About and crash dialogs, tray labels, updater identity, and Windows shortcut metadata now consistently use IntelGram.
