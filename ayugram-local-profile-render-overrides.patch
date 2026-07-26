@@ -4309,7 +4309,7 @@ index a4b1e7ad4..8b0f3d579 100644
  	builder.addSkip();
  }
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-index 929cf4609..284e1eb44 100644
+index 929cf4609..9d609d81c 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 @@ -6,33 +6,46 @@
@@ -5505,12 +5505,12 @@ index 929cf4609..284e1eb44 100644
 +		.title = tr::ayu_LocalProfileChannelEnabled(),
 +		.getter = &AyuSettings::localProfileChannelEnabled,
 +		.setter = &AyuSettings::setLocalProfileChannelEnabled,
-+		.icon = { &st::menuIconMediaChannel },
++		.icon = { &st::menuIconChannel },
 +	});
 +	builder.addButton({
 +		.id = u"ayu/localProfileChannel"_q,
 +		.title = tr::ayu_LocalProfileChannelChoose(),
-+		.icon = { &st::menuIconMediaChannel },
++		.icon = { &st::menuIconChannel },
 +		.label = AyuSettings::getInstance().localProfileChannelValue(
 +		) | rpl::map([](const QString &username) {
 +			return username.isEmpty()
