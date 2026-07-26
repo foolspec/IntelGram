@@ -703,6 +703,31 @@ void AyuSettings::setTransparentOpacity(int val) {
 	save();
 }
 
+void AyuSettings::setTransparentAdaptiveMaterial(bool val) {
+	if (_transparentAdaptiveMaterial.current() == val) return;
+	_transparentAdaptiveMaterial = val;
+	save();
+}
+
+void AyuSettings::setTransparentDynamicHighlights(bool val) {
+	if (_transparentDynamicHighlights.current() == val) return;
+	_transparentDynamicHighlights = val;
+	save();
+}
+
+void AyuSettings::setTransparentRefraction(bool val) {
+	if (_transparentRefraction.current() == val) return;
+	_transparentRefraction = val;
+	save();
+}
+
+void AyuSettings::setTransparentMaterialIntensity(int val) {
+	val = std::clamp(val, 0, 100);
+	if (_transparentMaterialIntensity.current() == val) return;
+	_transparentMaterialIntensity = val;
+	save();
+}
+
 void AyuSettings::setTransparentTint(const QString &val) {
 	const auto color = QColor(val.trimmed());
 	if (!color.isValid()) {
@@ -854,6 +879,19 @@ void AyuSettings::setLocalProfileCloneId(const QString &val) {
 	const auto normalized = Ayu::NormalizeLocalProfileCloneId(val);
 	if (_localProfileCloneId.current() == normalized) return;
 	_localProfileCloneId = normalized;
+	save();
+}
+
+void AyuSettings::setLocalProfileChannelEnabled(bool val) {
+	if (_localProfileChannelEnabled.current() == val) return;
+	_localProfileChannelEnabled = val;
+	save();
+}
+
+void AyuSettings::setLocalProfileChannel(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalProfileUsername(val);
+	if (_localProfileChannel.current() == normalized) return;
+	_localProfileChannel = normalized;
 	save();
 }
 
@@ -1282,6 +1320,10 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
 		{"transparentChat", s._transparentChat.current()},
 		{"transparentPanels", s._transparentPanels.current()},
 		{"transparentOpacity", s._transparentOpacity.current()},
+		{"transparentAdaptiveMaterial", s._transparentAdaptiveMaterial.current()},
+		{"transparentDynamicHighlights", s._transparentDynamicHighlights.current()},
+		{"transparentRefraction", s._transparentRefraction.current()},
+		{"transparentMaterialIntensity", s._transparentMaterialIntensity.current()},
 		{"transparentTint", s._transparentTint.current()},
 		{"transparentBackgroundPath", s._transparentBackgroundPath.current()},
 		{"transparentBackgroundOpacity", s._transparentBackgroundOpacity.current()},
@@ -1305,6 +1347,8 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
 		{"localProfileAbout", s._localProfileAbout.current()},
 		{"localProfilePhoto", s._localProfilePhoto.current()},
 		{"localProfileCloneId", s._localProfileCloneId.current()},
+		{"localProfileChannelEnabled", s._localProfileChannelEnabled.current()},
+		{"localProfileChannel", s._localProfileChannel.current()},
 		{"localProfileGiftEnabled", s._localProfileGiftEnabled.current()},
 		{"localProfileGift", s._localProfileGift.current()},
 		{"localProfileGifts", s._localProfileGifts.current()},
@@ -1414,6 +1458,21 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
 		j.value("transparentOpacity", defaults._transparentOpacity.current()),
 		20,
 		100);
+	s._transparentAdaptiveMaterial = j.value(
+		"transparentAdaptiveMaterial",
+		defaults._transparentAdaptiveMaterial.current());
+	s._transparentDynamicHighlights = j.value(
+		"transparentDynamicHighlights",
+		defaults._transparentDynamicHighlights.current());
+	s._transparentRefraction = j.value(
+		"transparentRefraction",
+		defaults._transparentRefraction.current());
+	s._transparentMaterialIntensity = std::clamp(
+		j.value(
+			"transparentMaterialIntensity",
+			defaults._transparentMaterialIntensity.current()),
+		0,
+		100);
 	const auto tint = QColor(
 		j.value("transparentTint", defaults._transparentTint.current()));
 	s._transparentTint = tint.isValid()
@@ -1457,6 +1516,12 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
 	s._localProfileAbout = Ayu::NormalizeLocalProfileAbout(j.value("localProfileAbout", defaults._localProfileAbout.current()));
 	s._localProfilePhoto = Ayu::NormalizeLocalProfilePhoto(j.value("localProfilePhoto", defaults._localProfilePhoto.current()));
 	s._localProfileCloneId = Ayu::NormalizeLocalProfileCloneId(j.value("localProfileCloneId", defaults._localProfileCloneId.current()));
+	s._localProfileChannelEnabled = j.value(
+		"localProfileChannelEnabled",
+		defaults._localProfileChannelEnabled.current());
+	s._localProfileChannel = Ayu::NormalizeLocalProfileUsername(j.value(
+		"localProfileChannel",
+		defaults._localProfileChannel.current()));
 	s._localProfileGiftEnabled = j.value("localProfileGiftEnabled", defaults._localProfileGiftEnabled.current());
 	s._localProfileGift = Ayu::NormalizeLocalProfileGift(j.value("localProfileGift", defaults._localProfileGift.current()));
 	s._localProfileGifts = Ayu::NormalizeLocalProfileGifts(j.value("localProfileGifts", defaults._localProfileGifts.current()));

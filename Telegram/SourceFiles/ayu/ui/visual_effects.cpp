@@ -2,6 +2,7 @@
 
 #include "ayu/ayu_settings.h"
 #include "platform/platform_specific.h"
+#include "styles/style_ayu_styles.h"
 #include "styles/style_basic.h"
 #include "ui/effects/animation_value.h"
 #include "ui/image/image_prepare.h"
@@ -10,7 +11,14 @@
 
 #include <algorithm>
 #include <array>
+#include <cmath>
+#include <QtGui/QBrush>
+#include <QtGui/QCursor>
+#include <QtGui/QLinearGradient>
 #include <QtGui/QPainter>
+#include <QtGui/QPainterPath>
+#include <QtGui/QRadialGradient>
+#include <QtGui/QScreen>
 #include <QtWidgets/QWidget>
 
 namespace Ayu::VisualEffects {
@@ -28,6 +36,8 @@ struct State {
 	QString imagePath;
 	int imageBlur = -1;
 	QImage image;
+	QColor imageAverage;
+	QImage grain;
 	bool applyingPalette = false;
 };
 
@@ -39,6 +49,123 @@ struct State {
 [[nodiscard]] int SurfaceAlpha(int offset = 0) {
 	const auto opacity = AyuSettings::getInstance().transparentOpacity();
 	return std::clamp((255 * opacity / 100) + offset, 0, 255);
+}
+
+[[nodiscard]] float64 ColorLuminance(const QColor &color) {
+	const auto linear = [](int channel) {
+		const auto value = channel / 255.;
+		return (value <= 0.04045)
+			? (value / 12.92)
+			: std::pow((value + 0.055) / 1.055, 2.4);
+	};
+	return (0.2126 * linear(color.red()))
+		+ (0.7152 * linear(color.green()))
+		+ (0.0722 * linear(color.blue()));
+}
+
+[[nodiscard]] QColor BlendColors(
+		const QColor &from,
+		const QColor &to,
+		float64 amount) {
+	amount = std::clamp(amount, 0., 1.);
+	const auto blend = [=](int first, int second) {
+		return int(std::round(first + (second - first) * amount));
+	};
+	return QColor(
+		blend(from.red(), to.red()),
+		blend(from.green(), to.green()),
+		blend(from.blue(), to.blue()));
+}
+
+[[nodiscard]] QImage CreateGrain() {
+	const auto side = st::liquidGlassNoiseTileSize;
+	auto result = QImage(
+		side,
+		side,
+		QImage::Format_ARGB32_Premultiplied);
+	auto seed = uint32(0x7f4a7c15);
+	for (auto y = 0; y != side; ++y) {
+		for (auto x = 0; x != side; ++x) {
+			seed = (seed * uint32(1664525)) + uint32(1013904223);
+			const auto light = ((seed >> 30) & 1) != 0;
+			const auto alpha = 3 + int((seed >> 27) & 3);
+			result.setPixelColor(
+				x,
+				y,
+				QColor(
+					light ? 255 : 0,
+					light ? 255 : 0,
+					light ? 255 : 0,
+					alpha));
+		}
+	}
+	return result;
+}
+
+[[nodiscard]] QRectF CoverSource(
+		const QImage &image,
+		const QRectF &target) {
+	if (image.isNull() || target.isEmpty()) {
+		return QRectF();
+	}
+	const auto targetRatio = target.width() / target.height();
+	const auto imageRatio = image.width() / float64(image.height());
+	auto source = QRectF(QPointF(), QSizeF(image.size()));
+	if (imageRatio > targetRatio) {
+		const auto width = source.height() * targetRatio;
+		source.setLeft((source.width() - width) / 2.);
+		source.setWidth(width);
+	} else {
+		const auto height = source.width() / targetRatio;
+		source.setTop((source.height() - height) / 2.);
+		source.setHeight(height);
+	}
+	return source;
+}
+
+[[nodiscard]] QColor AdaptiveTint(
+		const AyuSettings &settings,
+		const State &state) {
+	auto tint = QColor(settings.transparentTint());
+	if (!tint.isValid()) {
+		tint = QColor(22, 25, 34);
+	}
+	if (!settings.transparentAdaptiveMaterial()) {
+		return tint;
+	}
+	const auto sample = state.imageAverage.isValid()
+		? state.imageAverage
+		: st::windowBg->c;
+	const auto luminance = ColorLuminance(sample);
+	const auto sampled = BlendColors(tint, sample, 0.18);
+	const auto contrast = (luminance > 0.58)
+		? QColor(12, 15, 22)
+		: QColor(238, 244, 255);
+	return BlendColors(sampled, contrast, luminance > 0.58 ? 0.13 : 0.06);
+}
+
+[[nodiscard]] QPainterPath WindowPath(const QRectF &rect) {
+	auto result = QPainterPath();
+	result.addRoundedRect(
+		rect,
+		st::liquidGlassCornerRadius,
+		st::liquidGlassCornerRadius);
+	return result;
+}
+
+[[nodiscard]] QPainterPath EdgePath(const QRectF &rect) {
+	auto result = WindowPath(rect);
+	const auto inset = st::liquidGlassEdgeThickness;
+	const auto inner = rect.adjusted(inset, inset, -inset, -inset);
+	if (!inner.isEmpty()) {
+		auto innerPath = QPainterPath();
+		innerPath.addRoundedRect(
+			inner,
+			std::max(st::liquidGlassCornerRadius - inset, 0),
+			std::max(st::liquidGlassCornerRadius - inset, 0));
+		result = result.subtracted(innerPath);
+	}
+	return result;
 }
 
 void SetEntryAlpha(const PaletteEntry &entry) {
@@ -174,6 +301,19 @@ void RefreshImage() {
 	if (!state.image.isNull() && blur > 0) {
 		state.image = Images::BlurLargeImage(std::move(state.image), blur);
 	}
+	if (state.image.isNull()) {
+		state.imageAverage = QColor();
+	} else {
+		const auto sample = state.image.scaled(
+			1,
+			1,
+			Qt::IgnoreAspectRatio,
+			Qt::SmoothTransformation);
+		state.imageAverage = sample.pixelColor(0, 0);
+	}
+	if (state.grain.isNull()) {
+		state.grain = CreateGrain();
+	}
 }
 
 [[nodiscard]] anim::MotionStyle ResolveMotionStyle() {
@@ -190,6 +330,8 @@ void RefreshImage() {
 		return anim::MotionStyle::Dynamic;
 	case IntelGramMotionStyle::Springy:
 		return anim::MotionStyle::Springy;
+	case IntelGramMotionStyle::LiquidBounce:
+		return anim::MotionStyle::LiquidBounce;
 	}
 	Unexpected("IntelGramMotionStyle value.");
 }
@@ -230,21 +372,14 @@ void PaintWindow(QWidget *window, QPainter &painter) {
 	}
 
 	RefreshImage();
-	const auto &image = CurrentState().image;
-	if (!image.isNull() && !window->rect().isEmpty()) {
-		const auto target = QRectF(window->rect());
-		const auto targetRatio = target.width() / target.height();
-		const auto imageRatio = image.width() / float64(image.height());
-		auto source = QRectF(QPointF(), QSizeF(image.size()));
-		if (imageRatio > targetRatio) {
-			const auto width = source.height() * targetRatio;
-			source.setLeft((source.width() - width) / 2.);
-			source.setWidth(width);
-		} else {
-			const auto height = source.width() / targetRatio;
-			source.setTop((source.height() - height) / 2.);
-			source.setHeight(height);
-		}
+	auto &state = CurrentState();
+	const auto &image = state.image;
+	const auto target = QRectF(window->rect());
+	if (target.isEmpty()) {
+		return;
+	}
+	const auto source = CoverSource(image, target);
+	if (!image.isNull()) {
 		painter.save();
 		painter.setRenderHint(QPainter::SmoothPixmapTransform);
 		painter.setOpacity(settings.transparentBackgroundOpacity() / 100.);
@@ -252,16 +387,182 @@ void PaintWindow(QWidget *window, QPainter &painter) {
 		painter.restore();
 	}
 
-	auto tint = QColor(settings.transparentTint());
-	if (!tint.isValid()) {
-		tint = QColor(22, 25, 34);
+	const auto intensity = settings.transparentMaterialIntensity() / 100.;
+	const auto sample = state.imageAverage.isValid()
+		? state.imageAverage
+		: st::windowBg->c;
+	const auto luminance = ColorLuminance(sample);
+	auto tint = AdaptiveTint(settings, state);
+	const auto tintAlphaBase = image.isNull() ? 52 : 28;
+	const auto tintAlphaRange = image.isNull() ? 46 : 36;
+	const auto luminanceAdjustment = settings.transparentAdaptiveMaterial()
+		? int(std::round((luminance - 0.5) * 22.))
+		: 0;
+	tint.setAlpha(std::clamp(
+		tintAlphaBase
+			+ int(std::round(tintAlphaRange * intensity))
+			+ luminanceAdjustment,
+		18,
+		112));
+	painter.fillRect(target, tint);
+
+	const auto phase = settings.transparentDynamicHighlights()
+			&& !anim::Disabled()
+		? (crl::now() % crl::time(120000)) / 1000.
+		: 0.;
+	const auto cursor = window->mapFromGlobal(QCursor::pos());
+	const auto cursorInside = target.contains(QPointF(cursor));
+	const auto focus = cursorInside
+		? QPointF(cursor)
+		: QPointF(
+			target.center().x() + std::sin(phase * 0.21) * target.width() * 0.18,
+			target.center().y() + std::cos(phase * 0.17) * target.height() * 0.12);
+	const auto light = QColor(255, 255, 255);
+	const auto cool = BlendColors(
+		QColor(104, 194, 255),
+		sample,
+		0.22);
+
+	{
+		const auto radius = std::max(
+			float64(st::liquidGlassHighlightRadius),
+			std::hypot(target.width(), target.height()) * 0.36);
+		auto diffusion = QRadialGradient(focus, radius);
+		auto center = light;
+		center.setAlpha(int(std::round((12. + 18. * intensity)
+			* (luminance > 0.72 ? 0.55 : 1.))));
+		auto middle = cool;
+		middle.setAlpha(int(std::round(7. + 11. * intensity)));
+		diffusion.setColorAt(0., center);
+		diffusion.setColorAt(0.46, middle);
+		diffusion.setColorAt(1., Qt::transparent);
+		painter.fillRect(target, diffusion);
 	}
-	tint.setAlpha(image.isNull() ? 76 : 42);
-	painter.fillRect(window->rect(), tint);
+
+	if (settings.transparentDynamicHighlights() && !anim::Disabled()) {
+		const auto travel = std::fmod(phase * 0.055, 1.4) - 0.2;
+		const auto start = QPointF(
+			target.left() + target.width() * (travel - 0.24),
+			target.top());
+		const auto end = QPointF(
+			start.x() + target.width() * 0.4,
+			target.bottom());
+		auto reflection = QLinearGradient(start, end);
+		auto highlight = light;
+		highlight.setAlpha(int(std::round(14. * intensity)));
+		reflection.setColorAt(0., Qt::transparent);
+		reflection.setColorAt(0.46, Qt::transparent);
+		reflection.setColorAt(0.5, highlight);
+		reflection.setColorAt(0.54, Qt::transparent);
+		reflection.setColorAt(1., Qt::transparent);
+		painter.fillRect(target, reflection);
+	}
+
+	if (settings.transparentRefraction()) {
+		const auto edge = EdgePath(target.adjusted(0.5, 0.5, -0.5, -0.5));
+		if (!image.isNull()) {
+			const auto offset = st::liquidGlassRefractionOffset * intensity;
+			const auto shift = QPointF(
+				std::sin(phase * 0.43) * offset,
+				std::cos(phase * 0.37) * offset);
+			painter.save();
+			painter.setRenderHint(QPainter::SmoothPixmapTransform);
+			painter.setClipPath(edge);
+			painter.setOpacity(0.16 + (0.2 * intensity));
+			painter.drawImage(target.translated(shift), image, source);
+			painter.restore();
+		}
+		auto edgeMaterial = QLinearGradient(
+			target.topLeft(),
+			target.bottomRight());
+		auto nearLight = light;
+		nearLight.setAlpha(int(std::round(30. + 34. * intensity)));
+		auto quietLight = light;
+		quietLight.setAlpha(int(std::round(5. + 8. * intensity)));
+		auto farLight = cool;
+		farLight.setAlpha(int(std::round(15. + 18. * intensity)));
+		edgeMaterial.setColorAt(0., nearLight);
+		edgeMaterial.setColorAt(0.42, quietLight);
+		edgeMaterial.setColorAt(1., farLight);
+		painter.fillPath(edge, edgeMaterial);
+	}
+
+	{
+		auto topReflection = QLinearGradient(
+			target.topLeft(),
+			QPointF(target.left(), target.top() + target.height() * 0.32));
+		auto top = light;
+		top.setAlpha(int(std::round(19. + 18. * intensity)));
+		topReflection.setColorAt(0., top);
+		topReflection.setColorAt(0.18, QColor(255, 255, 255, 7));
+		topReflection.setColorAt(1., Qt::transparent);
+		painter.save();
+		painter.setClipPath(WindowPath(target));
+		painter.fillRect(target, topReflection);
+		painter.restore();
+	}
+
+	if (!state.grain.isNull()) {
+		painter.save();
+		painter.setOpacity(0.55 + (0.35 * intensity));
+		painter.fillRect(target, QBrush(state.grain));
+		painter.restore();
+	}
+
+	{
+		const auto outline = target.adjusted(0.5, 0.5, -0.5, -0.5);
+		auto outer = light;
+		outer.setAlpha(int(std::round(34. + 35. * intensity)));
+		painter.save();
+		painter.setRenderHint(QPainter::Antialiasing);
+		painter.setBrush(Qt::NoBrush);
+		painter.setPen(QPen(outer, 1.));
+		painter.drawRoundedRect(
+			outline,
+			st::liquidGlassCornerRadius,
+			st::liquidGlassCornerRadius);
+		auto inner = BlendColors(sample, QColor(255, 255, 255), 0.38);
+		inner.setAlpha(int(std::round(10. + 16. * intensity)));
+		painter.setPen(QPen(inner, 1.));
+		const auto inset = target.adjusted(
+			st::liquidGlassEdgeThickness,
+			st::liquidGlassEdgeThickness,
+			-st::liquidGlassEdgeThickness,
+			-st::liquidGlassEdgeThickness);
+		painter.drawRoundedRect(
+			inset,
+			std::max(
+				st::liquidGlassCornerRadius
+					- st::liquidGlassEdgeThickness,
+				0),
+			std::max(
+				st::liquidGlassCornerRadius
+					- st::liquidGlassEdgeThickness,
+				0));
+		painter.restore();
+	}
 }
 
 void ApplyMotionSettings() {
 	anim::SetMotionStyle(ResolveMotionStyle());
+}
+
+bool WindowAnimationEnabled(QWidget *window) {
+	const auto &settings = AyuSettings::getInstance();
+	return settings.transparentMode()
+		&& settings.transparentDynamicHighlights()
+		&& !anim::Disabled()
+		&& window->isVisible()
+		&& window->isActiveWindow();
+}
+
+int WindowAnimationRefreshInterval(QWidget *window) {
+	const auto screen = window->screen();
+	const auto refreshRate = screen
+		? screen->refreshRate()
+		: 60.;
+	const auto capped = std::clamp(refreshRate, 30., 120.);
+	return std::max(int(std::round(1000. / capped)), 8);
 }
 
 } // namespace Ayu::VisualEffects

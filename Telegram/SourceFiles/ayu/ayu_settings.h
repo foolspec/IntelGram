@@ -56,6 +56,7 @@ enum class IntelGramMotionStyle {
 	Smooth = 1,
 	Dynamic = 2,
 	Springy = 3,
+	LiquidBounce = 4,
 };
 
 NLOHMANN_JSON_SERIALIZE_ENUM(PeerIdDisplay, {
@@ -94,6 +95,7 @@ NLOHMANN_JSON_SERIALIZE_ENUM(IntelGramMotionStyle, {
 	{IntelGramMotionStyle::Smooth, "smooth"},
 	{IntelGramMotionStyle::Dynamic, "dynamic"},
 	{IntelGramMotionStyle::Springy, "springy"},
+	{IntelGramMotionStyle::LiquidBounce, "liquid_bounce"},
 })
 
 class GhostModeAccountSettings {
@@ -308,6 +310,10 @@ public:
 	[[nodiscard]] bool transparentChat() const { return _transparentChat.current(); }
 	[[nodiscard]] bool transparentPanels() const { return _transparentPanels.current(); }
 	[[nodiscard]] int transparentOpacity() const { return _transparentOpacity.current(); }
+	[[nodiscard]] bool transparentAdaptiveMaterial() const { return _transparentAdaptiveMaterial.current(); }
+	[[nodiscard]] bool transparentDynamicHighlights() const { return _transparentDynamicHighlights.current(); }
+	[[nodiscard]] bool transparentRefraction() const { return _transparentRefraction.current(); }
+	[[nodiscard]] int transparentMaterialIntensity() const { return _transparentMaterialIntensity.current(); }
 	[[nodiscard]] const QString &transparentTint() const { return _transparentTint.current(); }
 	[[nodiscard]] const QString &transparentBackgroundPath() const { return _transparentBackgroundPath.current(); }
 	[[nodiscard]] int transparentBackgroundOpacity() const { return _transparentBackgroundOpacity.current(); }
@@ -331,6 +337,8 @@ public:
 	[[nodiscard]] const QString &localProfileAbout() const { return _localProfileAbout.current(); }
 	[[nodiscard]] const QString &localProfilePhoto() const { return _localProfilePhoto.current(); }
 	[[nodiscard]] const QString &localProfileCloneId() const { return _localProfileCloneId.current(); }
+	[[nodiscard]] bool localProfileChannelEnabled() const { return _localProfileChannelEnabled.current(); }
+	[[nodiscard]] const QString &localProfileChannel() const { return _localProfileChannel.current(); }
 	[[nodiscard]] bool localProfileGiftEnabled() const { return _localProfileGiftEnabled.current(); }
 	[[nodiscard]] const QString &localProfileGift() const { return _localProfileGift.current(); }
 	[[nodiscard]] const QString &localProfileGifts() const { return _localProfileGifts.current(); }
@@ -421,6 +429,10 @@ public:
 	void setTransparentChat(bool val);
 	void setTransparentPanels(bool val);
 	void setTransparentOpacity(int val);
+	void setTransparentAdaptiveMaterial(bool val);
+	void setTransparentDynamicHighlights(bool val);
+	void setTransparentRefraction(bool val);
+	void setTransparentMaterialIntensity(int val);
 	void setTransparentTint(const QString &val);
 	void setTransparentBackgroundPath(const QString &val);
 	void setTransparentBackgroundOpacity(int val);
@@ -444,6 +456,8 @@ public:
 	void setLocalProfileAbout(const QString &val);
 	void setLocalProfilePhoto(const QString &val);
 	void setLocalProfileCloneId(const QString &val);
+	void setLocalProfileChannelEnabled(bool val);
+	void setLocalProfileChannel(const QString &val);
 	void setLocalProfileGiftEnabled(bool val);
 	void setLocalProfileGift(const QString &val);
 	void setLocalProfileGifts(const QString &val);
@@ -563,6 +577,14 @@ public:
 	[[nodiscard]] rpl::producer<bool> transparentPanelsChanges() const { return _transparentPanels.changes(); }
 	[[nodiscard]] rpl::producer<int> transparentOpacityValue() const { return _transparentOpacity.value(); }
 	[[nodiscard]] rpl::producer<int> transparentOpacityChanges() const { return _transparentOpacity.changes(); }
+	[[nodiscard]] rpl::producer<bool> transparentAdaptiveMaterialValue() const { return _transparentAdaptiveMaterial.value(); }
+	[[nodiscard]] rpl::producer<bool> transparentAdaptiveMaterialChanges() const { return _transparentAdaptiveMaterial.changes(); }
+	[[nodiscard]] rpl::producer<bool> transparentDynamicHighlightsValue() const { return _transparentDynamicHighlights.value(); }
+	[[nodiscard]] rpl::producer<bool> transparentDynamicHighlightsChanges() const { return _transparentDynamicHighlights.changes(); }
+	[[nodiscard]] rpl::producer<bool> transparentRefractionValue() const { return _transparentRefraction.value(); }
+	[[nodiscard]] rpl::producer<bool> transparentRefractionChanges() const { return _transparentRefraction.changes(); }
+	[[nodiscard]] rpl::producer<int> transparentMaterialIntensityValue() const { return _transparentMaterialIntensity.value(); }
+	[[nodiscard]] rpl::producer<int> transparentMaterialIntensityChanges() const { return _transparentMaterialIntensity.changes(); }
 	[[nodiscard]] rpl::producer<QString> transparentTintValue() const { return _transparentTint.value(); }
 	[[nodiscard]] rpl::producer<QString> transparentTintChanges() const { return _transparentTint.changes(); }
 	[[nodiscard]] rpl::producer<QString> transparentBackgroundPathValue() const { return _transparentBackgroundPath.value(); }
@@ -609,6 +631,10 @@ public:
 	[[nodiscard]] rpl::producer<QString> localProfilePhotoChanges() const { return _localProfilePhoto.changes(); }
 	[[nodiscard]] rpl::producer<QString> localProfileCloneIdValue() const { return _localProfileCloneId.value(); }
 	[[nodiscard]] rpl::producer<QString> localProfileCloneIdChanges() const { return _localProfileCloneId.changes(); }
+	[[nodiscard]] rpl::producer<bool> localProfileChannelEnabledValue() const { return _localProfileChannelEnabled.value(); }
+	[[nodiscard]] rpl::producer<bool> localProfileChannelEnabledChanges() const { return _localProfileChannelEnabled.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileChannelValue() const { return _localProfileChannel.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfileChannelChanges() const { return _localProfileChannel.changes(); }
 	[[nodiscard]] rpl::producer<bool> localProfileGiftEnabledValue() const { return _localProfileGiftEnabled.value(); }
 	[[nodiscard]] rpl::producer<bool> localProfileGiftEnabledChanges() const { return _localProfileGiftEnabled.changes(); }
 	[[nodiscard]] rpl::producer<QString> localProfileGiftValue() const { return _localProfileGift.value(); }
@@ -769,6 +795,10 @@ private:
 	rpl::variable<bool> _transparentChat = true;
 	rpl::variable<bool> _transparentPanels = true;
 	rpl::variable<int> _transparentOpacity = 78;
+	rpl::variable<bool> _transparentAdaptiveMaterial = true;
+	rpl::variable<bool> _transparentDynamicHighlights = true;
+	rpl::variable<bool> _transparentRefraction = true;
+	rpl::variable<int> _transparentMaterialIntensity = 72;
 	rpl::variable<QString> _transparentTint = QString::fromLatin1("#161922");
 	rpl::variable<QString> _transparentBackgroundPath;
 	rpl::variable<int> _transparentBackgroundOpacity = 72;
@@ -792,6 +822,8 @@ private:
 	rpl::variable<QString> _localProfileAbout;
 	rpl::variable<QString> _localProfilePhoto;
 	rpl::variable<QString> _localProfileCloneId;
+	rpl::variable<bool> _localProfileChannelEnabled = false;
+	rpl::variable<QString> _localProfileChannel;
 	rpl::variable<bool> _localProfileGiftEnabled = false;
 	rpl::variable<QString> _localProfileGift;
 	rpl::variable<QString> _localProfileGifts;

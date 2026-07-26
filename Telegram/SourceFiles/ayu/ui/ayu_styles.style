@@ -18,6 +18,12 @@ iconPickerSelectedRounding: 12px;
 iconPickerImagePadding: 4px;
 iconPickerIconSize: 64px;
 
+liquidGlassCornerRadius: 22px;
+liquidGlassEdgeThickness: 8px;
+liquidGlassRefractionOffset: 3px;
+liquidGlassNoiseTileSize: 64px;
+liquidGlassHighlightRadius: 320px;
+
 recentStickersLimitPadding: margins(22px, 4px, 22px, 8px);
 imageViewPadding: margins(22px, 10px, 22px, 10px);
 imageViewInnerPadding: margins(16px, 16px, 16px, 16px);

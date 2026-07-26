@@ -644,7 +644,23 @@ UserData *LocalProfileCloneUser(not_null<PeerData*> peer) {
 	return ResolveLocalProfileCloneUser(peer);
 }
 
+bool LocalProfileChannelShowcaseActive(not_null<UserData*> user) {
+	if (!user->isSelf() || ResolveLocalProfileCloneUser(user)) {
+		return false;
+	}
+	const auto &settings = AyuSettings::getInstance();
+	return settings.localProfileChannelEnabled()
+		&& !NormalizeLocalProfileUsername(
+			settings.localProfileChannel()).isEmpty();
+}
+
 ChannelData *LocalProfilePersonalChannel(not_null<UserData*> user) {
+	if (LocalProfileChannelShowcaseActive(user)) {
+		const auto username = NormalizeLocalProfileUsername(
+			AyuSettings::getInstance().localProfileChannel());
+		const auto peer = user->owner().peerByUsername(username);
+		return peer ? peer->asChannel() : nullptr;
+	}
 	const auto clone = ResolveLocalProfileCloneUser(user);
 	const auto source = clone ? clone : user.get();
 	const auto channelId = source->personalChannelId();
@@ -652,6 +668,9 @@ ChannelData *LocalProfilePersonalChannel(not_null<UserData*> user) {
 }
 
 MsgId LocalProfilePersonalChannelMessageId(not_null<UserData*> user) {
+	if (LocalProfileChannelShowcaseActive(user)) {
+		return 0;
+	}
 	const auto clone = ResolveLocalProfileCloneUser(user);
 	const auto source = clone ? clone : user.get();
 	return source->personalChannelMessageId();
@@ -969,6 +988,9 @@ rpl::producer<QString> LocalProfileCloneIdValue(
 rpl::producer<ChannelData*> LocalProfilePersonalChannelValue(
 		not_null<UserData*> user) {
 	const auto sourceValue = [=]() -> rpl::producer<ChannelData*> {
+		if (LocalProfileChannelShowcaseActive(user)) {
+			return rpl::single(LocalProfilePersonalChannel(user));
+		}
 		const auto clone = ResolveLocalProfileCloneUser(user);
 		const auto source = clone ? clone : user.get();
 		return source->session().changes().peerFlagsValue(
@@ -981,7 +1003,12 @@ rpl::producer<ChannelData*> LocalProfilePersonalChannelValue(
 				: nullptr;
 		});
 	};
-	return LocalProfileCloneIdValue(user) | rpl::map([=](const QString &) {
+	auto &settings = AyuSettings::getInstance();
+	return rpl::combine(
+		LocalProfileCloneIdValue(user),
+		settings.localProfileChannelEnabledValue(),
+		settings.localProfileChannelValue()
+	) | rpl::map([=](const QString &, bool, const QString &) {
 		return sourceValue();
 	}) | rpl::flatten_latest();
 }

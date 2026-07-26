@@ -137,6 +137,36 @@ void BuildGlass(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 			return QString::number(value) + '%';
 		},
 	});
+	ayu.addSettingToggle({
+		.id = u"ayu/transparentAdaptiveMaterial"_q,
+		.title = tr::ayu_VisualEffectsAdaptiveMaterial(),
+		.getter = &AyuSettings::transparentAdaptiveMaterial,
+		.setter = &AyuSettings::setTransparentAdaptiveMaterial,
+	});
+	ayu.addSettingToggle({
+		.id = u"ayu/transparentDynamicHighlights"_q,
+		.title = tr::ayu_VisualEffectsDynamicHighlights(),
+		.getter = &AyuSettings::transparentDynamicHighlights,
+		.setter = &AyuSettings::setTransparentDynamicHighlights,
+	});
+	ayu.addSettingToggle({
+		.id = u"ayu/transparentRefraction"_q,
+		.title = tr::ayu_VisualEffectsRefraction(),
+		.getter = &AyuSettings::transparentRefraction,
+		.setter = &AyuSettings::setTransparentRefraction,
+	});
+	ayu.addSlider({
+		.id = u"ayu/transparentMaterialIntensity"_q,
+		.title = tr::ayu_VisualEffectsMaterialIntensity(),
+		.steps = 101,
+		.current = settings.transparentMaterialIntensity(),
+		.onChanged = [](int value) {
+			AyuSettings::getInstance().setTransparentMaterialIntensity(value);
+		},
+		.formatLabel = [](int value) {
+			return QString::number(value) + '%';
+		},
+	});
 	builder.addDividerText(tr::ayu_VisualEffectsGlassDescription());
 	ayu.addSectionDivider();
 }
@@ -232,6 +262,7 @@ void BuildMotion(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 			tr::ayu_VisualEffectsMotionSmooth(tr::now),
 			tr::ayu_VisualEffectsMotionDynamic(tr::now),
 			tr::ayu_VisualEffectsMotionSpringy(tr::now),
+			tr::ayu_VisualEffectsMotionLiquidBounce(tr::now),
 		},
 		.setter = [](int value) {
 			AyuSettings::getInstance().setMotionStyle(
@@ -246,6 +277,7 @@ void BuildMotion(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		.setter = &AyuSettings::setAnimateWindowOpening,
 	});
 	builder.addDividerText(tr::ayu_VisualEffectsMotionDescription());
+	builder.addDividerText(tr::ayu_VisualEffectsMotionPacksDescription());
 }
 
 const auto kMeta = BuildHelper({

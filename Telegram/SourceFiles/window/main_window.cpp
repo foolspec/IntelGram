@@ -373,6 +373,7 @@ QImage WithSmallCounter(QImage image, CounterLayerArgs &&args) {
 MainWindow::MainWindow(not_null<Controller*> controller)
 : _controller(controller)
 , _positionUpdatedTimer([=] { savePosition(); })
+, _glassAnimationTimer([=] { update(); })
 , _outdated(Ui::CreateOutdatedBar(body(), cWorkingDir()))
 , _screenReaderBar(Ui::CreateScreenReaderBar(body(), [=] {
 	controller->show(Ui::MakeConfirmBox({
@@ -405,6 +406,10 @@ MainWindow::MainWindow(not_null<Controller*> controller)
 		ayu.transparentChatChanges() | rpl::to_empty,
 		ayu.transparentPanelsChanges() | rpl::to_empty,
 		ayu.transparentOpacityChanges() | rpl::to_empty,
+		ayu.transparentAdaptiveMaterialChanges() | rpl::to_empty,
+		ayu.transparentDynamicHighlightsChanges() | rpl::to_empty,
+		ayu.transparentRefractionChanges() | rpl::to_empty,
+		ayu.transparentMaterialIntensityChanges() | rpl::to_empty,
 		ayu.transparentTintChanges() | rpl::to_empty,
 		ayu.transparentBackgroundPathChanges() | rpl::to_empty,
 		ayu.transparentBackgroundOpacityChanges() | rpl::to_empty,
@@ -414,6 +419,7 @@ MainWindow::MainWindow(not_null<Controller*> controller)
 		ayu.animateWindowOpeningChanges() | rpl::to_empty
 	) | rpl::on_next([=] {
 		Ayu::VisualEffects::RefreshWindow(this);
+		refreshGlassAnimationTimer();
 	}, lifetime());
 	ayu.transparentModeChanges(
 	) | rpl::on_next([=] {
@@ -441,6 +447,7 @@ MainWindow::MainWindow(not_null<Controller*> controller)
 	) | rpl::skip(1) | rpl::on_next([=](bool active) {
 		InvokeQueued(this, [=] {
 			handleActiveChanged(active);
+			refreshGlassAnimationTimer();
 		});
 	}, lifetime());
 
@@ -448,6 +455,7 @@ MainWindow::MainWindow(not_null<Controller*> controller)
 	) | rpl::skip(1) | rpl::on_next([=](bool visible) {
 		InvokeQueued(this, [=] {
 			handleVisibleChanged(visible);
+			refreshGlassAnimationTimer();
 		});
 	}, lifetime());
 
@@ -664,6 +672,15 @@ void MainWindow::paintEvent(QPaintEvent *e) {
 	auto p = QPainter(this);
 	p.setClipRect(e->rect());
 	Ayu::VisualEffects::PaintWindow(this, p);
+}
+
+void MainWindow::refreshGlassAnimationTimer() {
+	if (Ayu::VisualEffects::WindowAnimationEnabled(this)) {
+		_glassAnimationTimer.callEach(
+			Ayu::VisualEffects::WindowAnimationRefreshInterval(this));
+	} else {
+		_glassAnimationTimer.cancel();
+	}
 }
 
 int MainWindow::computeMinWidth() const {

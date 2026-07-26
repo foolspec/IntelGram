@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "info/profile/info_profile_actions.h"
 
+#include "ayu/ayu_settings.h"
 #include "ayu/ui/utils/ayu_profile_values.h"
 #include "api/api_blocked_peers.h"
 #include "api/api_chat_participants.h"
@@ -2023,8 +2024,24 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 	const auto channelLabelFactory = [=](rpl::producer<ChannelData*> c) {
 		return rpl::combine(
 			tr::lng_info_personal_channel_label(tr::marked),
-			std::move(c)
-		) | rpl::map([](TextWithEntities &&text, ChannelData *channel) {
+			tr::ayu_LocalProfileChannelProfileLabel(tr::marked),
+			std::move(c),
+			AyuSettings::getInstance().localProfileChannelEnabledValue(),
+			AyuSettings::getInstance().localProfileChannelValue(),
+			AyuSettings::getInstance().localProfileCloneIdValue()
+		) | rpl::map([=](
+				TextWithEntities &&personal,
+				TextWithEntities &&showcase,
+				ChannelData *channel,
+				bool enabled,
+				const QString &username,
+				const QString &cloneId) {
+			auto text = (user->isSelf()
+				&& enabled
+				&& !username.isEmpty()
+				&& cloneId.isEmpty())
+				? std::move(showcase)
+				: std::move(personal);
 			const auto count = channel ? channel->membersCount() : 0;
 			if (count > 1) {
 				text.append(' ')
@@ -2054,12 +2071,24 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 				state->menu = base::make_unique_q<Ui::PopupMenu>(
 					container,
 					st::defaultPopupMenu);
-				state->menu->addAction(
-					tr::lng_settings_channel_menu_remove(tr::now),
-					[] {
-						UrlClickHandler::Open(
-							u"internal:edit_personal_channel:remove"_q);
-					});
+				if (Ayu::LocalProfileChannelShowcaseActive(user)) {
+					state->menu->addAction(
+						tr::ayu_LocalProfileChannelClear(tr::now),
+						[=] {
+							auto &settings = AyuSettings::getInstance();
+							settings.setLocalProfileChannelEnabled(false);
+							settings.setLocalProfileChannel(QString());
+							Ayu::RefreshLocalProfilePresentation(
+								&user->session());
+						});
+				} else {
+					state->menu->addAction(
+						tr::lng_settings_channel_menu_remove(tr::now),
+						[] {
+							UrlClickHandler::Open(
+								u"internal:edit_personal_channel:remove"_q);
+						});
+				}
 				state->menu->popup(ce->globalPos());
 				return base::EventFilterResult::Cancel;
 			}

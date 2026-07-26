@@ -17,6 +17,7 @@
 #include "boxes/star_gift_box.h"
 #include "core/application.h"
 #include "core/file_utilities.h"
+#include "data/data_channel.h"
 #include "data/data_changes.h"
 #include "data/data_session.h"
 #include "data/data_star_gift.h"
@@ -706,6 +707,91 @@ void ShowLocalProfileCloneBox(
 	}));
 }
 
+void ShowLocalProfileChannelBox(
+		not_null<Window::SessionController*> controller) {
+	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
+		box->setTitle(tr::ayu_LocalProfileChannelTitle());
+		const auto field = box->addRow(
+			object_ptr<Ui::InputField>(
+				box,
+				st::defaultInputField,
+				tr::ayu_LocalProfileChannelPlaceholder(),
+				AyuSettings::getInstance().localProfileChannel()),
+			st::boxRowPadding);
+		field->setMaxLength(Ayu::kMaxLocalProfileUsernameLength);
+		box->setFocusCallback([=] {
+			field->setFocusFast();
+		});
+		AddDividerText(
+			box->verticalLayout(),
+			tr::ayu_LocalProfileChannelDescription());
+		const auto weak = QPointer<Ui::GenericBox>(box.get());
+		const auto apply = [=](PeerData *peer) {
+			if (!weak) {
+				return;
+			}
+			const auto channel = peer ? peer->asChannel() : nullptr;
+			if (!channel) {
+				controller->showToast(
+					tr::ayu_LocalProfileChannelNotFound(tr::now));
+				return;
+			}
+			const auto username = Ayu::NormalizeLocalProfileUsername(
+				field->getLastText());
+			auto &settings = AyuSettings::getInstance();
+			settings.setLocalProfileChannel(username);
+			settings.setLocalProfileChannelEnabled(true);
+			controller->session().api().requestFullPeer(channel);
+			Ayu::RefreshLocalProfilePresentation(&controller->session());
+			controller->showToast(tr::ayu_LocalProfileChannelSaved(
+				tr::now,
+				lt_channel,
+				channel->name()));
+			weak->closeBox();
+		};
+		const auto save = [=] {
+			const auto username = Ayu::NormalizeLocalProfileUsername(
+				field->getLastText());
+			if (username.isEmpty()) {
+				controller->showToast(
+					tr::ayu_LocalProfileChannelNotFound(tr::now));
+				return;
+			}
+			if (const auto peer = controller->session(
+					).data().peerByUsername(username)) {
+				apply(peer);
+				return;
+			}
+			controller->session().api().request(
+				MTPcontacts_ResolveUsername(
+					MTP_flags(0),
+					MTP_string(username),
+					MTP_string())
+			).done([=](const MTPcontacts_ResolvedPeer &result) {
+				if (!weak) {
+					return;
+				}
+				const auto &data = result.data();
+				auto &owner = controller->session().data();
+				owner.processUsers(data.vusers());
+				owner.processChats(data.vchats());
+				apply(owner.peerLoaded(peerFromMTP(data.vpeer())));
+			}).fail([=](const MTP::Error &) {
+				if (weak) {
+					controller->showToast(
+						tr::ayu_LocalProfileChannelNotFound(tr::now));
+				}
+			}).send();
+		};
+		field->submits(
+		) | rpl::on_next(save, field->lifetime());
+		box->addButton(tr::ayu_LocalProfileChannelUse(), save);
+		box->addButton(tr::lng_cancel(), [=] {
+			box->closeBox();
+		});
+	}));
+}
+
 void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 	const auto controller = builder.controller();
 
@@ -963,6 +1049,46 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		},
 	});
 	builder.addDividerText(tr::ayu_LocalProfileDescription());
+	builder.addSkip();
+	builder.addDivider();
+	builder.addSkip();
+	builder.addSubsectionTitle(tr::ayu_LocalProfileChannelHeader());
+	ayu.addSettingToggle({
+		.id = u"ayu/localProfileChannelEnabled"_q,
+		.title = tr::ayu_LocalProfileChannelEnabled(),
+		.getter = &AyuSettings::localProfileChannelEnabled,
+		.setter = &AyuSettings::setLocalProfileChannelEnabled,
+		.icon = { &st::menuIconMediaChannel },
+	});
+	builder.addButton({
+		.id = u"ayu/localProfileChannel"_q,
+		.title = tr::ayu_LocalProfileChannelChoose(),
+		.icon = { &st::menuIconMediaChannel },
+		.label = AyuSettings::getInstance().localProfileChannelValue(
+		) | rpl::map([](const QString &username) {
+			return username.isEmpty()
+				? tr::ayu_LocalProfileChannelNone(tr::now)
+				: (u"@"_q + username);
+		}),
+		.onClick = [=] {
+			ShowLocalProfileChannelBox(controller);
+		},
+	});
+	builder.addButton({
+		.id = u"ayu/localProfileChannelClear"_q,
+		.title = tr::ayu_LocalProfileChannelClear(),
+		.icon = { &st::menuIconDelete },
+		.onClick = [=] {
+			auto &settings = AyuSettings::getInstance();
+			settings.setLocalProfileChannelEnabled(false);
+			settings.setLocalProfileChannel(QString());
+			Ayu::RefreshLocalProfilePresentation(&controller->session());
+			controller->showToast(tr::lng_box_done(tr::now));
+		},
+	});
+	builder.addDividerText(tr::ayu_LocalProfileChannelLocalOnly());
+	builder.addSkip();
+	builder.addDivider();
 	builder.addSkip();
 	builder.addSubsectionTitle(tr::ayu_LocalProfileCollectiblesHeader());
 	ayu.addSettingToggle({

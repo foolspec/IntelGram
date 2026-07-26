@@ -198,6 +198,7 @@ private:
 	void refreshTitleWidget();
 	void updateMinimumSize();
 	void updatePalette();
+	void refreshGlassAnimationTimer();
 	[[nodiscard]] bool windowEntranceAnimationsEnabled() const;
 	void prepareWindowEntranceAnimation();
 	void startWindowEntranceAnimation();
@@ -212,6 +213,7 @@ private:
 	not_null<Window::Controller*> _controller;
 
 	base::Timer _positionUpdatedTimer;
+	base::Timer _glassAnimationTimer;
 	bool _positionInited = false;
 
 	object_ptr<Ui::PlainShadow> _titleShadow = { nullptr };

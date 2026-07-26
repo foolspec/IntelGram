@@ -58,6 +58,8 @@ constexpr auto kMaxLocalProfileGiftsLength = 4096;
 [[nodiscard]] bool LocalProfilePhotoActive(not_null<PeerData*> peer);
 [[nodiscard]] bool LocalProfileUserpicActive(not_null<PeerData*> peer);
 [[nodiscard]] UserData *LocalProfileCloneUser(not_null<PeerData*> peer);
+[[nodiscard]] bool LocalProfileChannelShowcaseActive(
+	not_null<UserData*> user);
 [[nodiscard]] ChannelData *LocalProfilePersonalChannel(
 	not_null<UserData*> user);
 [[nodiscard]] MsgId LocalProfilePersonalChannelMessageId(
