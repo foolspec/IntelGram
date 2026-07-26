@@ -31,12 +31,13 @@
 - Settings cleanup: inherited Boosty and cryptocurrency donation rows were removed and replaced with IntelGram community, source, and changelog links.
 - Community badge: joining `@intelgrams` through Telegram's normal channel page unlocks a local supporter badge; IntelGram performs no automatic join request.
 - In-app update log: **IntelGram Preferences -> Update log** opens a bundled native summary without requiring GitHub.
-- Current source patch SHA-256: `362ac5558d2cabea490f8576776a41b48666724c88b0fc31022c08e310c8c102`.
+- Current source patch SHA-256: `a749b1673bc93f057f0da292680f2884fac956d64229554272b0bb2666995599`.
 - Privacy boundary: no Telegram profile mutation, contact import, automatic channel join, collectible transaction, or protected-content bypass.
 - Protected content: Restrict Saving Content and self-destructing items remain metadata-only jump-back references; bodies, links, filenames, revisions, and media are excluded from rules, exports, and backups.
 - Branding consistency: product-facing window, settings, version, and notification-preview titles use IntelGram while upstream attribution remains intact.
 - Login and platform branding: the login footer, application menus, About and crash dialogs, tray labels, updater identity, and Windows shortcut metadata now consistently use IntelGram.
-- Windows reliability: the final Qt dependency stage is serialized to prevent the `qtimageformats` generated-directory race seen in the previous run.
+- macOS glass reliability: the native blur material is ordered as a sibling behind Qt's native content view, keeping text, controls, avatars, and media visible when transparent mode is enabled.
+- Windows reliability: the final Qt dependency stage pre-creates generated module metadata directories and runs serialized to prevent the `qtimageformats` race seen in the previous run.
 
 ## Validation Recorded For Each Release
 

@@ -7,11 +7,11 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 ### Source Baseline And Patch
 
 - Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
-- Source commit: `71c6fcb8f` on the recovered local implementation branch.
+- Source commit: `1ce3fa9ea` on the recovered local implementation branch.
 - Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
 - Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
-- Patch SHA-256: `362ac5558d2cabea490f8576776a41b48666724c88b0fc31022c08e310c8c102`.
-- Patch footprint: 74 files, 8,431 insertions, and 488 deletions relative to the pinned source.
+- Patch SHA-256: `a749b1673bc93f057f0da292680f2884fac956d64229554272b0bb2666995599`.
+- Patch footprint: 74 files, 8,436 insertions, and 488 deletions relative to the pinned source.
 - `Telegram/lib_ui` now points to public fork [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui), pinned at `2324a08c969967f62148b013eda0ae12507753ab`.
 
 ### Settings And Persistence
@@ -32,7 +32,7 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 
 ### Native Backdrop Backends
 
-- macOS inserts one associated `NSVisualEffectView` behind Qt content, using behind-window blending and the under-window-background material where available.
+- macOS inserts one associated `NSVisualEffectView` as a sibling ordered behind Qt's native content view, using behind-window blending and the under-window-background material where available. This avoids compositing the native material over Qt's text, controls, avatars, and media.
 - Windows requests the DWM system backdrop and falls back to `DwmEnableBlurBehindWindow` on systems without the newer attribute.
 - Linux leaves the Qt ARGB window transparent for the running compositor and does not assume a desktop-specific blur protocol.
 - Every platform can render the same local image backdrop independently of the native blur path.
