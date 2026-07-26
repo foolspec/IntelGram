@@ -18,12 +18,19 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 namespace Ui {
 
-SilentToggle::SilentToggle(QWidget *parent, not_null<ChannelData*> channel)
+SilentToggle::SilentToggle(
+	QWidget *parent,
+	not_null<ChannelData*> channel,
+	bool localOnly)
 : RippleButton(parent, st::historySilentToggle.ripple)
 , _st(st::historySilentToggle)
 , _channel(channel)
-, _checked(channel->owner().notifySettings().silentPosts(_channel)) {
-	Expects(!channel->owner().notifySettings().silentPostsUnknown(_channel));
+, _checked(localOnly
+	? false
+	: channel->owner().notifySettings().silentPosts(_channel))
+, _localOnly(localOnly) {
+	Expects(_localOnly
+		|| !channel->owner().notifySettings().silentPostsUnknown(_channel));
 
 	resize(_st.width, _st.height);
 
@@ -34,7 +41,12 @@ SilentToggle::SilentToggle(QWidget *parent, not_null<ChannelData*> channel)
 	) | rpl::on_next([=] {
 		setChecked(!_checked);
 		Ui::Tooltip::Show(0, this);
-		_channel->owner().notifySettings().update(_channel, {}, _checked);
+		if (!_localOnly) {
+			_channel->owner().notifySettings().update(
+				_channel,
+				{},
+				_checked);
+		}
 	}, lifetime());
 }
 

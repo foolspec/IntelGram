@@ -16,11 +16,17 @@ class SilentToggle final
 	: public RippleButton
 	, public AbstractTooltipShower {
 public:
-	SilentToggle(QWidget *parent, not_null<ChannelData*> channel);
+	SilentToggle(
+		QWidget *parent,
+		not_null<ChannelData*> channel,
+		bool localOnly = false);
 
 	void setChecked(bool checked);
 	bool checked() const {
 		return _checked;
+	}
+	[[nodiscard]] bool localOnly() const {
+		return _localOnly;
 	}
 
 	// AbstractTooltipShower interface
@@ -43,6 +49,7 @@ private:
 
 	not_null<ChannelData*> _channel;
 	bool _checked = false;
+	bool _localOnly = false;
 
 	// Animations::Simple _crossLineAnimation;
 

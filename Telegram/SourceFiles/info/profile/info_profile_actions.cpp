@@ -8,6 +8,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "info/profile/info_profile_actions.h"
 
 #include "ayu/ayu_settings.h"
+#include "ayu/ui/local_channel_ownership.h"
 #include "ayu/ui/local_channel_workspace.h"
 #include "ayu/ui/utils/ayu_profile_values.h"
 #include "api/api_blocked_peers.h"
@@ -3031,10 +3032,18 @@ void ActionsFiller::addBlockAction(not_null<UserData*> user) {
 void ActionsFiller::addLeaveChannelAction(not_null<ChannelData*> channel) {
 	Expects(_controller->parentController());
 
+	auto visible = rpl::combine(
+		AmInChannelValue(channel),
+		channel->session().changes().peerFlagsValue(
+			channel,
+			Data::PeerUpdate::Flag::Rights)
+	) | rpl::map([=](bool amIn, const auto &) {
+		return amIn && !Ayu::LocalChannelOwnershipActive(channel);
+	});
 	AddActionButton(
 		_wrap,
 		tr::lng_profile_leave_channel(),
-		AmInChannelValue(channel),
+		std::move(visible),
 		Window::DeleteAndLeaveHandler(
 			_controller->parentController(),
 			channel),
@@ -3043,9 +3052,14 @@ void ActionsFiller::addLeaveChannelAction(not_null<ChannelData*> channel) {
 
 void ActionsFiller::addJoinChannelAction(
 		not_null<ChannelData*> channel) {
-	using namespace rpl::mappers;
-	auto joinVisible = AmInChannelValue(channel)
-		| rpl::map(!_1)
+	auto joinVisible = rpl::combine(
+		AmInChannelValue(channel),
+		channel->session().changes().peerFlagsValue(
+			channel,
+			Data::PeerUpdate::Flag::Rights)
+	) | rpl::map([=](bool amIn, const auto &) {
+		return !amIn && !Ayu::LocalChannelOwnershipActive(channel);
+	})
 		| rpl::start_spawning(_wrap->lifetime());
 	AddActionButton(
 		_wrap,
@@ -3092,7 +3106,8 @@ void ActionsFiller::fillChannelActions(
 
 	addJoinChannelAction(channel);
 	addLeaveChannelAction(channel);
-	if (!channel->amCreator()) {
+	if (!channel->amCreator()
+		&& !Ayu::LocalChannelOwnershipActive(channel)) {
 		addReportAction();
 	}
 }

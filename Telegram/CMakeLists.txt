@@ -138,6 +138,8 @@ set(ayugram_files
         ayu/ui/toasts.h
         ayu/ui/ayu_userpic.cpp
         ayu/ui/ayu_userpic.h
+        ayu/ui/local_channel_ownership.cpp
+        ayu/ui/local_channel_ownership.h
         ayu/ui/local_channel_workspace.cpp
         ayu/ui/local_channel_workspace.h
         ayu/ui/visual_effects.cpp

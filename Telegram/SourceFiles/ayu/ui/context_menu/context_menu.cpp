@@ -17,6 +17,7 @@
 #include "ayu/features/filters/filters_controller.h"
 #include "ayu/features/forward/ayu_forward.h"
 #include "ayu/ui/context_menu/menu_item_subtext.h"
+#include "ayu/ui/local_channel_ownership.h"
 #include "ayu/ui/message_history/history_section.h"
 #include "ayu/ui/settings/filters/edit_filter.h"
 #include "ayu/ui/settings/filters/settings_filters_list.h"
@@ -240,7 +241,8 @@ void AddAyuGramActions(PeerData *peerData,
 	const auto showFilters = settings.filtersEnabled()
 		&& (!user || user->isBot());
 	const auto saveDeletedMessages = settings.saveDeletedMessages();
-	if (!showFilters && !saveDeletedMessages) {
+	const auto localOwnership = peerData->asBroadcast();
+	if (!showFilters && !saveDeletedMessages && !localOwnership) {
 		return;
 	}
 
@@ -248,11 +250,28 @@ void AddAyuGramActions(PeerData *peerData,
 	const auto topicId = topic ? topic->rootId().bare : 0;
 
 	addCallback(Window::PeerMenuCallback::Args{
-		.text = u"AyuGram"_q,
+		.text = u"IntelGram"_q,
 		.handler = nullptr,
 		.icon = &st::menuIconGroupReactions,
 		.fillSubmenu = [=](not_null<Ui::PopupMenu*> menu) {
 			const auto addAction = Ui::Menu::CreateAddActionCallback(menu);
+			const auto filteredToggleShown
+				= FiltersController::filteredMessagesShown(peerData);
+			if (localOwnership) {
+				addAction(
+					tr::ayu_LocalChannelOwnershipMenu(tr::now),
+					[=] {
+						Ayu::ShowLocalChannelOwnership(
+							sessionController,
+							localOwnership);
+					},
+					&st::menuIconManage);
+				if (showFilters
+					|| filteredToggleShown
+					|| saveDeletedMessages) {
+					addAction({ .isSeparator = true });
+				}
+			}
 			if (showFilters) {
 				addAction(
 					tr::ayu_ViewFiltersMenuText(tr::now),
@@ -265,7 +284,6 @@ void AddAyuGramActions(PeerData *peerData,
 					},
 					&st::menuIconAddToFolder);
 			}
-			const auto filteredToggleShown = FiltersController::filteredMessagesShown(peerData);
 			if (filteredToggleShown) {
 				addAction(
 					*filteredToggleShown
@@ -471,7 +489,17 @@ void AddDeleteOwnMessagesAction(PeerData *peerData,
 }
 
 void AddHistoryAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item) {
-	if (!item || IsProtectedContent(item) || item->hideEditedBadge()) {
+	if (!item) {
+		return;
+	} else if (Ayu::IsLocalChannelBroadcast(item)) {
+		menu->addAction(
+			tr::ayu_LocalChannelOwnershipDelete(tr::now),
+			[=] {
+				Ayu::DeleteLocalChannelBroadcast(item);
+			},
+			&st::menuIconClearAttention);
+		return;
+	} else if (IsProtectedContent(item) || item->hideEditedBadge()) {
 		return;
 	}
 
@@ -526,7 +554,8 @@ void AddHideMessageAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item) {
 		return;
 	}
 
-	if (item->history()->peer->isSelf()) {
+	if (Ayu::IsLocalChannelBroadcast(item)
+		|| item->history()->peer->isSelf()) {
 		return;
 	}
 

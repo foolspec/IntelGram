@@ -115,6 +115,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 // AyuGram includes
 #include "ayu/ayu_settings.h"
+#include "ayu/ui/local_channel_ownership.h"
 #include "history/history_item_components.h"
 
 
@@ -1210,7 +1211,8 @@ void ComposeControls::setHistory(SetHistoryArgs &&args) {
 	} else if (hasSilentBroadcastToggle()) {
 		_silent = std::make_unique<Ui::SilentToggle>(
 			_wrap.get(),
-			peer->asChannel());
+			peer->asChannel(),
+			Ayu::LocalChannelOwnershipActive(peer));
 	}
 	session().local().readDraftsWithCursors(_history);
 	applyDraft();
@@ -2669,6 +2671,10 @@ void ComposeControls::saveDraft(bool delayed) {
 }
 
 void ComposeControls::saveCloudDraft() {
+	if (_history
+		&& Ayu::LocalChannelOwnershipActive(_history->peer.get())) {
+		return;
+	}
 	session().api().saveCurrentDraftToCloud();
 }
 
@@ -4483,8 +4489,9 @@ bool ComposeControls::hasSilentBroadcastToggle() const {
 	const auto &peer = _history->peer;
 	return peer
 		&& peer->isBroadcast()
-		&& Data::CanSendAnything(peer)
-		&& !session().data().notifySettings().silentPostsUnknown(peer);
+		&& (Ayu::LocalChannelOwnershipActive(peer)
+			|| (Data::CanSendAnything(peer)
+				&& !session().data().notifySettings().silentPostsUnknown(peer)));
 }
 
 void ComposeControls::updateInlineBotQuery() {

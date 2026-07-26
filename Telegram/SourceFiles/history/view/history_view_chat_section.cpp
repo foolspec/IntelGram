@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "history/view/history_view_chat_section.h"
 
+#include "ayu/ui/local_channel_ownership.h"
 #include "ayu/ui/utils/ayu_profile_values.h"
 #include "history/view/controls/history_view_compose_controls.h"
 #include "history/view/controls/history_view_compose_search.h"
@@ -763,6 +764,7 @@ bool ChatWidget::computeAreComments() const {
 }
 
 void ChatWidget::setupComposeControls() {
+	Ayu::EnsureLocalChannelBroadcasts(_history);
 	auto topicWriteRestrictions = rpl::single(
 	) | rpl::then(session().changes().topicUpdates(
 		Data::TopicUpdate::Flag::Closed
@@ -791,6 +793,9 @@ void ChatWidget::setupComposeControls() {
 			auto,
 			auto,
 			Data::SendError topicRestriction) {
+		if (Ayu::LocalChannelOwnershipActive(_peer)) {
+			return Controls::WriteRestriction();
+		}
 		if (info) {
 			return Controls::WriteRestriction{
 				.type = Controls::WriteRestrictionType::Frozen,
@@ -870,6 +875,11 @@ void ChatWidget::setupComposeControls() {
 
 	_composeControls->sendCommandRequests(
 	) | rpl::on_next([=](const QString &command) {
+		if (Ayu::InterceptLocalChannelUnsupportedSend(
+				controller(),
+				_peer)) {
+			return;
+		}
 		if (showSlowmodeError()) {
 			return;
 		}
@@ -890,6 +900,11 @@ void ChatWidget::setupComposeControls() {
 	) | rpl::filter([=] {
 		return !_choosingAttach;
 	}) | rpl::on_next([=](std::optional<bool> overrideCompress) {
+		if (Ayu::InterceptLocalChannelUnsupportedSend(
+				controller(),
+				_peer)) {
+			return;
+		}
 		_choosingAttach = true;
 		base::call_delayed(
 			st::historyAttach.ripple.hideDuration,
@@ -906,6 +921,11 @@ void ChatWidget::setupComposeControls() {
 	_composeControls->fileChosen(
 	) | rpl::on_next([=](ChatHelpers::FileChosen data) {
 		controller()->hideLayer(anim::type::normal);
+		if (Ayu::InterceptLocalChannelUnsupportedSend(
+				controller(),
+				_peer)) {
+			return;
+		}
 		controller()->sendingAnimation().appendSending(
 			data.messageSendingFrom);
 		auto messageToSend = Api::MessageToSend(
@@ -924,6 +944,11 @@ void ChatWidget::setupComposeControls() {
 
 	_composeControls->inlineResultChosen(
 	) | rpl::on_next([=](ChatHelpers::InlineChosen chosen) {
+		if (Ayu::InterceptLocalChannelUnsupportedSend(
+				controller(),
+				_peer)) {
+			return;
+		}
 		controller()->sendingAnimation().appendSending(
 			chosen.messageSendingFrom);
 		const auto localId = chosen.messageSendingFrom.localId;
@@ -1113,7 +1138,9 @@ void ChatWidget::setupSwipeReplyAndBack() {
 void ChatWidget::chooseAttach(
 		std::optional<bool> overrideSendImagesAsPhotos) {
 	_choosingAttach = false;
-	if (const auto error = Data::AnyFileRestrictionError(_peer)) {
+	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
+		return;
+	} else if (const auto error = Data::AnyFileRestrictionError(_peer)) {
 		Data::ShowSendErrorToast(controller(), _peer, error);
 		return;
 	} else if (showSlowmodeError()) {
@@ -1190,7 +1217,9 @@ bool ChatWidget::confirmSendingFiles(
 bool ChatWidget::confirmSendingFiles(
 		Ui::PreparedList &&list,
 		const QString &insertTextOnCancel) {
-	if (_composeControls->confirmMediaEdit(list)) {
+	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
+		return true;
+	} else if (_composeControls->confirmMediaEdit(list)) {
 		return true;
 	} else if (showSendingFilesError(list)) {
 		return false;
@@ -1243,7 +1272,9 @@ bool ChatWidget::checkSendPayment(
 void ChatWidget::sendingFilesConfirmed(
 		std::shared_ptr<Ui::PreparedBundle> bundle,
 		Api::SendOptions options) {
-	if (showSendingFilesError(*bundle)) {
+	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
+		return;
+	} else if (showSendingFilesError(*bundle)) {
 		return;
 	}
 
@@ -1375,6 +1406,11 @@ void ChatWidget::send() {
 }
 
 void ChatWidget::sendVoice(const ComposeControls::VoiceToSend &data) {
+	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
+		_composeControls->clearListenState();
+		finishSending();
+		return;
+	}
 	const auto withPaymentApproved = [=](int approved) {
 		auto copy = data;
 		copy.options.starsApproved = approved;
@@ -1420,6 +1456,27 @@ void ChatWidget::sendTextWithTags(
 		Fn<void()> done) {
 	if (!options.scheduled) {
 		_cornerButtons.clearReplyReturns();
+	}
+	if (Ayu::LocalChannelOwnershipActive(_peer)
+		&& !_composeControls->forwardItems().empty()) {
+		(void)Ayu::InterceptLocalChannelUnsupportedSend(
+			controller(),
+			_peer);
+		return;
+	}
+	const auto localResult = Ayu::HandleLocalChannelBroadcast(
+		_history,
+		textWithTags,
+		options.scheduled != 0);
+	if (localResult != Ayu::LocalChannelBroadcastResult::NotHandled) {
+		if (localResult == Ayu::LocalChannelBroadcastResult::Saved) {
+			_composeControls->clear();
+			finishSending();
+			if (done) {
+				done();
+			}
+		}
+		return;
 	}
 
 	auto message = Api::MessageToSend(prepareSendAction(options));
@@ -1667,7 +1724,9 @@ void ChatWidget::refreshJoinGroupButton() {
 	const auto canSend = !channel->isForum()
 		? Data::CanSendAnything(channel)
 		: (_topic && Data::CanSendAnything(_topic));
-	if (channel->amIn() || canSend) {
+	if (Ayu::LocalChannelOwnershipActive(channel)
+		|| channel->amIn()
+		|| canSend) {
 		_canSendTexts = true;
 		set(nullptr);
 	} else {
@@ -1693,6 +1752,9 @@ bool ChatWidget::sendExistingDocument(
 		not_null<DocumentData*> document,
 		Api::MessageToSend messageToSend,
 		std::optional<MsgId> localId) {
+	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
+		return true;
+	}
 	const auto error = Data::RestrictionError(
 		_peer,
 		ChatRestriction::SendStickers);
@@ -1733,6 +1795,9 @@ void ChatWidget::sendExistingPhoto(not_null<PhotoData*> photo) {
 bool ChatWidget::sendExistingPhoto(
 		not_null<PhotoData*> photo,
 		Api::SendOptions options) {
+	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
+		return true;
+	}
 	const auto error = Data::RestrictionError(
 		_peer,
 		ChatRestriction::SendPhotos);
@@ -1786,6 +1851,9 @@ void ChatWidget::sendInlineResult(
 		not_null<UserData*> bot,
 		Api::SendOptions options,
 		std::optional<MsgId> localMessageId) {
+	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
+		return;
+	}
 	const auto withPaymentApproved = [=](int approved) {
 		auto copy = options;
 		copy.starsApproved = approved;
@@ -3207,7 +3275,9 @@ bool ChatWidget::listIsGoodForAroundPosition(
 void ChatWidget::listSendBotCommand(
 		const QString &command,
 		const FullMsgId &context) {
-	if (!_sublist || _sublist->parentChat()) {
+	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
+		return;
+	} else if (!_sublist || _sublist->parentChat()) {
 		sendBotCommandWithOptions(command, context, {});
 	}
 }
@@ -3216,6 +3286,9 @@ void ChatWidget::sendBotCommandWithOptions(
 		const QString &command,
 		const FullMsgId &context,
 		Api::SendOptions options) {
+	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
+		return;
+	}
 	const auto withPaymentApproved = [=](int approved) {
 		auto copy = options;
 		copy.starsApproved = approved;

@@ -11,6 +11,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "api/api_peer_photo.h"
 #include "api/api_user_privacy.h"
 #include "apiwrap.h"
+#include "ayu/ui/local_channel_ownership.h"
 #include "base/call_delayed.h"
 #include "base/timer_rpl.h"
 #include "base/timer.h"
@@ -955,7 +956,11 @@ void TopBar::setupActions(not_null<Window::SessionController*> controller) {
 	if (chechMax()) {
 		return;
 	}
-	if (topic ? topic->canEdit() : EditPeerInfoBox::Available(peer)) {
+	const auto localOwnership = !topic
+		&& Ayu::LocalChannelOwnershipActive(peer);
+	if (topic
+		? topic->canEdit()
+		: (EditPeerInfoBox::Available(peer) || localOwnership)) {
 		const auto manage = Ui::CreateChild<TopBarActionButton>(
 			this,
 			tr::lng_profile_action_short_manage(tr::now),
@@ -967,6 +972,8 @@ void TopBar::setupActions(not_null<Window::SessionController*> controller) {
 					window,
 					peer->owner().history(peer),
 					topic->rootId()));
+			} else if (localOwnership) {
+				Ayu::ShowLocalChannelOwnership(window, peer->asBroadcast());
 			} else {
 				window->showEditPeerBox(peer);
 			}

@@ -130,10 +130,12 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include <QtWidgets/QApplication>
 
 // AyuGram includes
-#include "ayu/utils/telegram_helpers.h"
-#include "styles/style_ayu_icons.h"
-#include "ayu/ui/context_menu/context_menu.h"
 #include "ayu/features/forward/ayu_forward.h"
+#include "ayu/ui/context_menu/context_menu.h"
+#include "ayu/ui/local_channel_ownership.h"
+#include "ayu/utils/telegram_helpers.h"
+
+#include "styles/style_ayu_icons.h"
 
 
 namespace Window {
@@ -1154,7 +1156,8 @@ void Filler::addManageTopic() {
 }
 
 void Filler::addManageChat() {
-	if (!EditPeerInfoBox::Available(_peer)) {
+	const auto localOwnership = Ayu::LocalChannelOwnershipActive(_peer);
+	if (!EditPeerInfoBox::Available(_peer) && !localOwnership) {
 		return;
 	}
 	const auto peer = _peer;
@@ -1165,7 +1168,13 @@ void Filler::addManageChat() {
 		? tr::lng_manage_group_title(tr::now)
 		: tr::lng_manage_channel_title(tr::now);
 	_addAction(text, [=] {
-		navigation->showEditPeerBox(peer);
+		if (localOwnership) {
+			Ayu::ShowLocalChannelOwnership(
+				navigation,
+				peer->asBroadcast());
+		} else {
+			navigation->showEditPeerBox(peer);
+		}
 	}, &st::menuIconManage);
 }
 

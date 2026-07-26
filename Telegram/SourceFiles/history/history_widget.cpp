@@ -205,6 +205,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 // AyuGram includes
 #include "ayu/ayu_settings.h"
 #include "ayu/features/filters/filters_cache_controller.h"
+#include "ayu/ui/local_channel_ownership.h"
 #include "ayu/utils/telegram_helpers.h"
 #include "ayu/features/message_shot/message_shot.h"
 #include "ayu/features/forward/ayu_forward.h"
@@ -481,6 +482,11 @@ HistoryWidget::HistoryWidget(
 	initTabbedSelector();
 
 	_attachToggle->setClickedCallback([=] {
+		if (Ayu::InterceptLocalChannelUnsupportedSend(
+				controller(),
+				_peer)) {
+			return;
+		}
 		const auto toggle = _attachBotsMenu && _attachBotsMenu->isHidden();
 		base::call_delayed(st::historyAttach.ripple.hideDuration, this, [=] {
 			if (_attachBotsMenu && toggle) {
@@ -1354,7 +1360,7 @@ void HistoryWidget::initVoiceRecordBar() {
 
 	_voiceRecordBar->sendActionUpdates(
 	) | rpl::on_next([=](const auto &data) {
-		if (!_history) {
+		if (!_history || Ayu::LocalChannelOwnershipActive(_peer)) {
 			return;
 		}
 		session().sendProgressManager().update(
@@ -1576,7 +1582,7 @@ void HistoryWidget::initTabbedSelector() {
 
 	selector->choosingStickerUpdated(
 	) | rpl::on_next([=](const Selector::Action &data) {
-		if (!_history) {
+		if (!_history || Ayu::LocalChannelOwnershipActive(_peer)) {
 			return;
 		}
 		const auto type = Api::SendProgressType::ChooseSticker;
@@ -1833,6 +1839,10 @@ void HistoryWidget::initFieldAutocomplete() {
 	const auto processShortcut = [=](QString shortcut) {
 		if (!_peer) {
 			return;
+		} else if (Ayu::InterceptLocalChannelUnsupportedSend(
+			controller(),
+			_peer)) {
+			return;
 		}
 		const auto messages = &_peer->owner().shortcutMessages();
 		const auto shortcutId = messages->lookupShortcutId(shortcut);
@@ -1871,7 +1881,7 @@ void HistoryWidget::initFieldAutocomplete() {
 		},
 		.sendMenuDetails = [=] { return sendMenuDetails(); },
 		.stickerChoosing = [=] {
-			if (_history) {
+			if (_history && !Ayu::LocalChannelOwnershipActive(_peer)) {
 				session().sendProgressManager().update(
 					_history,
 					Api::SendProgressType::ChooseSticker);
@@ -1882,7 +1892,9 @@ void HistoryWidget::initFieldAutocomplete() {
 		},
 		.setText = [=](TextWithTags text) { if (_peer) setFieldText(text); },
 		.sendBotCommand = [=](QString command) {
-			if (_peer) {
+			if (_peer && !Ayu::InterceptLocalChannelUnsupportedSend(
+					controller(),
+					_peer)) {
 				sendBotCommand({ _peer, command, FullMsgId(), replyTo() });
 				session().api().finishForwarding(prepareSendAction({}));
 			}
@@ -2133,6 +2145,7 @@ void HistoryWidget::fieldChanged() {
 			&& !_inlineBot
 			&& !_editMsgId
 			&& (!_autocomplete || !_autocomplete->stickersEmoji())
+			&& !Ayu::LocalChannelOwnershipActive(_peer)
 			&& updateTyping) {
 			session().sendProgressManager().update(
 				_history,
@@ -2244,6 +2257,11 @@ void HistoryWidget::fileChosen(ChatHelpers::FileChosen &&data) {
 			Data::InsertCustomEmoji(_field.data(), data.document);
 		}
 	} else if (_history) {
+		if (Ayu::InterceptLocalChannelUnsupportedSend(
+				controller(),
+				_peer)) {
+			return;
+		}
 		controller()->sendingAnimation().appendSending(
 			data.messageSendingFrom);
 		const auto localId = data.messageSendingFrom.localId;
@@ -2258,6 +2276,9 @@ void HistoryWidget::fileChosen(ChatHelpers::FileChosen &&data) {
 }
 
 void HistoryWidget::saveCloudDraft() {
+	if (Ayu::LocalChannelOwnershipActive(_peer)) {
+		return;
+	}
 	controller()->session().api().saveCurrentDraftToCloud();
 }
 
@@ -2801,12 +2822,14 @@ void HistoryWidget::showHistory(
 			session().data().hideShownSpoilers();
 			_composeSearch = nullptr;
 		}
-		session().sendProgressManager().update(
-			_history,
-			Api::SendProgressType::Typing,
-			-1);
+		if (!Ayu::LocalChannelOwnershipActive(_peer)) {
+			session().sendProgressManager().update(
+				_history,
+				Api::SendProgressType::Typing,
+				-1);
+			session().sendProgressManager().cancelTyping(_history);
+		}
 		session().data().histories().sendPendingReadInbox(_history);
-		session().sendProgressManager().cancelTyping(_history);
 	}
 
 	_cornerButtons.clearReplyReturns();
@@ -2815,7 +2838,9 @@ void HistoryWidget::showHistory(
 			// Removing focus from list clears selected and updates top bar.
 			setFocus();
 		}
-		controller()->session().api().saveCurrentDraftToCloud();
+		if (!Ayu::LocalChannelOwnershipActive(_peer)) {
+			controller()->session().api().saveCurrentDraftToCloud();
+		}
 		if (_migrated) {
 			_migrated->clearDrafts(); // use migrated draft only once
 		}
@@ -3421,11 +3446,15 @@ void HistoryWidget::updateNotifyControls() {
 }
 
 void HistoryWidget::refreshSilentToggle() {
-	if (!_silent && hasSilentToggle()) {
-		_silent.create(this, _peer->asChannel());
-		orderWidgets();
-	} else if (_silent && !hasSilentToggle()) {
+	const auto localOnly = Ayu::LocalChannelOwnershipActive(_peer);
+	const auto has = hasSilentToggle();
+	if (_silent
+		&& (!has || _silent->localOnly() != localOnly)) {
 		_silent.destroy();
+	}
+	if (!_silent && has) {
+		_silent.create(this, _peer->asChannel(), localOnly);
+		orderWidgets();
 	}
 }
 
@@ -5139,6 +5168,11 @@ Api::SendAction HistoryWidget::prepareSendAction(
 void HistoryWidget::sendVoice(const VoiceToSend &data) {
 	if (!canWriteMessage() || data.bytes.isEmpty() || !_history) {
 		return;
+	} else if (Ayu::InterceptLocalChannelUnsupportedSend(
+			controller(),
+			_peer)) {
+		_voiceRecordBar->clearListenState();
+		return;
 	}
 
 	const auto withPaymentApproved = [=](int approved) {
@@ -5191,6 +5225,32 @@ void HistoryWidget::sendTextWithTags(
 		Fn<void()> done) {
 	if (!options.scheduled) {
 		_cornerButtons.clearReplyReturns();
+	}
+	if (Ayu::LocalChannelOwnershipActive(_peer)
+		&& !_forwardPanel->items().empty()) {
+		(void)Ayu::InterceptLocalChannelUnsupportedSend(
+			controller(),
+			_peer);
+		return;
+	}
+	const auto localResult = Ayu::HandleLocalChannelBroadcast(
+		_history,
+		textWithTags,
+		options.scheduled != 0);
+	if (localResult != Ayu::LocalChannelBroadcastResult::NotHandled) {
+		if (localResult == Ayu::LocalChannelBroadcastResult::Saved) {
+			clearFieldText();
+			if (_preview) {
+				_preview->apply({ .removed = true });
+			}
+			saveDraftWithTextNow();
+			hideSelectorControlsAnimated();
+			setInnerFocus();
+			if (done) {
+				done();
+			}
+		}
+		return;
 	}
 
 	auto message = Api::MessageToSend(prepareSendAction(options));
@@ -5657,7 +5717,9 @@ void HistoryWidget::finishAnimating() {
 
 void HistoryWidget::chooseAttach(
 		std::optional<bool> overrideSendImagesAsPhotos) {
-	if (_editMsgId) {
+	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
+		return;
+	} else if (_editMsgId) {
 		controller()->showToast(tr::lng_edit_caption_attach(tr::now));
 		return;
 	}
@@ -5793,6 +5855,10 @@ void HistoryWidget::sendBotCommand(
 		Api::SendOptions options) {
 	// replyTo != 0 from ReplyKeyboardMarkup, == 0 from command links
 	if (_peer != request.peer.get()) {
+		return;
+	} else if (Ayu::InterceptLocalChannelUnsupportedSend(
+			controller(),
+			_peer)) {
 		return;
 	} else if (showSlowmodeError()) {
 		return;
@@ -5978,10 +6044,12 @@ bool HistoryWidget::readyToForward() const {
 }
 
 bool HistoryWidget::hasSilentToggle() const {
-	return _peer
-		&& _peer->isBroadcast()
-		&& Data::CanSendAnything(_peer)
-		&& !session().data().notifySettings().silentPostsUnknown(_peer);
+	if (!_peer || !_peer->isBroadcast()) {
+		return false;
+	}
+	return Ayu::LocalChannelOwnershipActive(_peer)
+		|| (Data::CanSendAnything(_peer)
+			&& !session().data().notifySettings().silentPostsUnknown(_peer));
 }
 
 void HistoryWidget::handleSupportSwitch(not_null<History*> updated) {
@@ -6018,6 +6086,9 @@ bool HistoryWidget::isBlocked() const {
 }
 
 bool HistoryWidget::isJoinChannel() const {
+	if (Ayu::LocalChannelOwnershipActive(_peer)) {
+		return false;
+	}
 	if (const auto channel = _peer ? _peer->asChannel() : nullptr) {
 		return !channel->amIn() && !channel->isMonoforum();
 	}
@@ -6029,6 +6100,9 @@ bool HistoryWidget::isChoosingTheme() const {
 }
 
 bool HistoryWidget::isMuteUnmute() const {
+	if (Ayu::LocalChannelOwnershipActive(_peer)) {
+		return false;
+	}
 	const auto &settings = AyuSettings::getInstance();
 	if (settings.channelBottomButton() == ChannelBottomButton::Hidden) {
 		return false;
@@ -6950,7 +7024,9 @@ bool HistoryWidget::confirmSendingFiles(
 bool HistoryWidget::confirmSendingFiles(
 		Ui::PreparedList &&list,
 		const QString &insertTextOnCancel) {
-	if (_editMsgId) {
+	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
+		return true;
+	} else if (_editMsgId) {
 		if (_canReplaceMedia || _canAddMedia) {
 			EditCaptionBox::StartMediaReplace(
 				controller(),
@@ -7017,7 +7093,9 @@ bool HistoryWidget::confirmSendingFiles(
 void HistoryWidget::sendingFilesConfirmed(
 		std::shared_ptr<Ui::PreparedBundle> bundle,
 		Api::SendOptions options) {
-	if (!_peer || showSendingFilesError(*bundle)) {
+	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
+		return;
+	} else if (!_peer || showSendingFilesError(*bundle)) {
 		return;
 	}
 
@@ -8382,6 +8460,10 @@ bool HistoryWidget::showSlowmodeError() {
 void HistoryWidget::sendInlineResult(InlineBots::ResultSelected result) {
 	if (!_peer || !_canSendMessages) {
 		return;
+	} else if (Ayu::InterceptLocalChannelUnsupportedSend(
+			controller(),
+			_peer)) {
+		return;
 	} else if (showSlowmodeError()) {
 		return;
 	} else if (const auto error = result.result->getErrorOnSend(_history)) {
@@ -9000,6 +9082,9 @@ bool HistoryWidget::sendExistingDocument(
 		not_null<DocumentData*> document,
 		Api::MessageToSend messageToSend,
 		std::optional<MsgId> localId) {
+	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
+		return true;
+	}
 	const auto error = _peer
 		? Data::RestrictionError(_peer, ChatRestriction::SendStickers)
 		: Data::SendError();
@@ -9047,6 +9132,9 @@ bool HistoryWidget::sendExistingDocument(
 bool HistoryWidget::sendExistingPhoto(
 		not_null<PhotoData*> photo,
 		Api::SendOptions options) {
+	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
+		return true;
+	}
 	const auto error = _peer
 		? Data::RestrictionError(_peer, ChatRestriction::SendPhotos)
 		: Data::SendError();
@@ -9726,18 +9814,26 @@ bool HistoryWidget::updateCanSendMessage() {
 	if (!_peer) {
 		return false;
 	}
+	const auto localOwnership = Ayu::LocalChannelOwnershipActive(_peer);
+	if (localOwnership) {
+		Ayu::EnsureLocalChannelBroadcasts(_history);
+	}
 	const auto topic = resolveReplyToTopic();
 	const auto allWithoutPolls = Data::AllSendRestrictions()
 		& ~ChatRestriction::SendPolls;
 	const auto onlyReplies = _peer->amMonoforumAdmin();
 	const auto restrictedOnlyReplies = onlyReplies
 		&& (!_replyTo.messageId || _replyTo.messageId.peer != _peer->id);
-	const auto newCanSendMessages = restrictedOnlyReplies
+	const auto newCanSendMessages = localOwnership
+		? true
+		: restrictedOnlyReplies
 		? false
 		: topic
 		? Data::CanSendAnyOf(topic, allWithoutPolls)
 		: Data::CanSendAnyOf(_peer, allWithoutPolls);
-	const auto newCanSendTexts = restrictedOnlyReplies
+	const auto newCanSendTexts = localOwnership
+		? true
+		: restrictedOnlyReplies
 		? false
 		: topic
 		? Data::CanSend(topic, ChatRestriction::SendOther)
