@@ -232,12 +232,9 @@ jobs:
           test "$(git -C tdesktop/Telegram/lib_ui rev-parse HEAD)" = "$LIB_UI_COMMIT"
           (cd tdesktop && python3 "$GITHUB_WORKSPACE/build_intelgram_branding.py")
           git -C tdesktop diff --check
-          if git -C tdesktop diff --no-ext-diff | grep -E 'updateProfile|updateUsername|MTPaccount_|MTPusers_|account\.update|users\..*update'; then
-            echo "Unexpected Telegram profile mutation reference."
-            exit 1
-          fi
-          if git -C tdesktop diff --no-ext-diff | grep -E 'MTPchannels_JoinChannel|channels\.joinChannel|JoinChannel'; then
-            echo "Unexpected Telegram channel join reference."
+          added="$(git -C tdesktop diff --unified=0 --no-ext-diff | sed -n '/^+/ { /^+++/d; p; }')"
+          if printf '%s\n' "$added" | grep -E 'MTP(account_(CheckUsername|Update(Profile|Username|EmojiStatus|PersonalChannel))|channels_(JoinChannel|CreateChannel|DeleteChannel|Edit(Admin|Photo|Title)|InviteToChannel)|contacts_ImportContacts|messages_(EditMessage|SendMessage|UpdatePinnedMessage)|payments_(TransferStarGift|ToggleStarGiftsPinnedToTop))'; then
+            echo "Unexpected Telegram mutation reference."
             exit 1
           fi
           python3 validate_intelgram_patch.py tdesktop
@@ -556,9 +553,9 @@ jobs:
           python "$env:GITHUB_WORKSPACE/build_intelgram_branding.py"
           Pop-Location
           git -C tdesktop diff --check
-          $diff = git -C tdesktop diff --no-ext-diff
-          if ($diff | Select-String -Pattern 'updateProfile|updateUsername|MTPaccount_|MTPusers_|account\.update|users\..*update') { throw "Unexpected Telegram profile mutation reference" }
-          if ($diff | Select-String -Pattern 'MTPchannels_JoinChannel|channels\.joinChannel|JoinChannel') { throw "Unexpected Telegram channel join reference" }
+          $added = git -C tdesktop diff --unified=0 --no-ext-diff |
+            Where-Object { $_.StartsWith('+') -and -not $_.StartsWith('+++') }
+          if ($added | Select-String -Pattern 'MTP(account_(CheckUsername|Update(Profile|Username|EmojiStatus|PersonalChannel))|channels_(JoinChannel|CreateChannel|DeleteChannel|Edit(Admin|Photo|Title)|InviteToChannel)|contacts_ImportContacts|messages_(EditMessage|SendMessage|UpdatePinnedMessage)|payments_(TransferStarGift|ToggleStarGiftsPinnedToTop))') { throw "Unexpected Telegram mutation reference" }
           python validate_intelgram_patch.py tdesktop
           Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp -Pattern ayu_LocalProfileIdEnabled
           Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp -Pattern ShowLocalProfileUsernameEditor
@@ -668,12 +665,9 @@ jobs:
           test "$(git -C tdesktop/Telegram/lib_ui rev-parse HEAD)" = "$LIB_UI_COMMIT"
           (cd tdesktop && python3 "$GITHUB_WORKSPACE/build_intelgram_branding.py")
           git -C tdesktop diff --check
-          if git -C tdesktop diff --no-ext-diff | grep -E 'updateProfile|updateUsername|MTPaccount_|MTPusers_|account\.update|users\..*update'; then
-            echo "Unexpected Telegram profile mutation reference."
-            exit 1
-          fi
-          if git -C tdesktop diff --no-ext-diff | grep -E 'MTPchannels_JoinChannel|channels\.joinChannel|JoinChannel'; then
-            echo "Unexpected Telegram channel join reference."
+          added="$(git -C tdesktop diff --unified=0 --no-ext-diff | sed -n '/^+/ { /^+++/d; p; }')"
+          if printf '%s\n' "$added" | grep -E 'MTP(account_(CheckUsername|Update(Profile|Username|EmojiStatus|PersonalChannel))|channels_(JoinChannel|CreateChannel|DeleteChannel|Edit(Admin|Photo|Title)|InviteToChannel)|contacts_ImportContacts|messages_(EditMessage|SendMessage|UpdatePinnedMessage)|payments_(TransferStarGift|ToggleStarGiftsPinnedToTop))'; then
+            echo "Unexpected Telegram mutation reference."
             exit 1
           fi
           python3 validate_intelgram_patch.py tdesktop
