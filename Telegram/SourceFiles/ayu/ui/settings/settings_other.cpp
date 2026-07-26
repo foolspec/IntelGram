@@ -1058,12 +1058,12 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		.title = tr::ayu_LocalProfileChannelEnabled(),
 		.getter = &AyuSettings::localProfileChannelEnabled,
 		.setter = &AyuSettings::setLocalProfileChannelEnabled,
-		.icon = { &st::menuIconMediaChannel },
+		.icon = { &st::menuIconChannel },
 	});
 	builder.addButton({
 		.id = u"ayu/localProfileChannel"_q,
 		.title = tr::ayu_LocalProfileChannelChoose(),
-		.icon = { &st::menuIconMediaChannel },
+		.icon = { &st::menuIconChannel },
 		.label = AyuSettings::getInstance().localProfileChannelValue(
 		) | rpl::map([](const QString &username) {
 			return username.isEmpty()
