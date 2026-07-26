@@ -38,6 +38,8 @@ struct State {
 	QImage image;
 	QColor imageAverage;
 	QImage grain;
+	QSize coverSize;
+	QImage cover;
 	bool applyingPalette = false;
 };
 
@@ -102,25 +104,28 @@ struct State {
 	return result;
 }
 
-[[nodiscard]] QRectF CoverSource(
-		const QImage &image,
-		const QRectF &target) {
-	if (image.isNull() || target.isEmpty()) {
-		return QRectF();
+[[nodiscard]] const QImage &CoverImage(
+		State &state,
+		QSize size) {
+	if (state.image.isNull() || size.isEmpty()) {
+		state.coverSize = QSize();
+		state.cover = QImage();
+		return state.cover;
 	}
-	const auto targetRatio = target.width() / target.height();
-	const auto imageRatio = image.width() / float64(image.height());
-	auto source = QRectF(QPointF(), QSizeF(image.size()));
-	if (imageRatio > targetRatio) {
-		const auto width = source.height() * targetRatio;
-		source.setLeft((source.width() - width) / 2.);
-		source.setWidth(width);
-	} else {
-		const auto height = source.width() / targetRatio;
-		source.setTop((source.height() - height) / 2.);
-		source.setHeight(height);
+	if (state.coverSize == size && !state.cover.isNull()) {
+		return state.cover;
 	}
-	return source;
+	state.coverSize = size;
+	const auto scaled = state.image.scaled(
+		size,
+		Qt::KeepAspectRatioByExpanding,
+		Qt::SmoothTransformation);
+	state.cover = scaled.copy(
+		std::max((scaled.width() - size.width()) / 2, 0),
+		std::max((scaled.height() - size.height()) / 2, 0),
+		size.width(),
+		size.height());
+	return state.cover;
 }
 
 [[nodiscard]] QColor AdaptiveTint(
@@ -295,6 +300,8 @@ void RefreshImage() {
 	}
 	state.imagePath = path;
 	state.imageBlur = blur;
+	state.coverSize = QSize();
+	state.cover = QImage();
 	state.image = path.isEmpty()
 		? QImage()
 		: Images::Read({ .path = path }).image;
@@ -378,12 +385,12 @@ void PaintWindow(QWidget *window, QPainter &painter) {
 	if (target.isEmpty()) {
 		return;
 	}
-	const auto source = CoverSource(image, target);
+	const auto &cover = CoverImage(state, window->size());
 	if (!image.isNull()) {
 		painter.save();
 		painter.setRenderHint(QPainter::SmoothPixmapTransform);
 		painter.setOpacity(settings.transparentBackgroundOpacity() / 100.);
-		painter.drawImage(target, image, source);
+		painter.drawImage(target, cover);
 		painter.restore();
 	}
 
@@ -469,7 +476,7 @@ void PaintWindow(QWidget *window, QPainter &painter) {
 			painter.setRenderHint(QPainter::SmoothPixmapTransform);
 			painter.setClipPath(edge);
 			painter.setOpacity(0.16 + (0.2 * intensity));
-			painter.drawImage(target.translated(shift), image, source);
+			painter.drawImage(target.translated(shift), cover);
 			painter.restore();
 		}
 		auto edgeMaterial = QLinearGradient(
