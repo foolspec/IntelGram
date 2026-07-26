@@ -51,6 +51,7 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - `validate_intelgram_patch.py` now requires the Glass & Motion settings, palette compositor, native platform backends, shared motion hooks, and exact `lib_ui` commit in addition to every previous mutation and protected-content boundary.
 - Local validation includes patch alias equality, patch SHA-256, `git diff --check`, localization-key uniqueness, clean application to the pinned source, exact submodule checkout, validator execution, and reverse-application.
 - Full compilation, packaging, isolated launch smoke tests, and public release-asset verification remain delegated to GitHub Actions under the upstream no-local-full-build instruction.
+- Release `intelgram-v6.7.8-glass-motion-20260725` combines successful macOS run `30178929833`, Windows run `30178932569`, and Linux run `30178931089`; every package records patch `a749b1673bc93f057f0da292680f2884fac956d64229554272b0bb2666995599` and a passed launch smoke test. Publisher run `30181760408` uploaded all 19 permanent assets, and public-asset validation run `30181808944` passed every digest, checksum, report, asset-presence, latest-release, and patch-hash check.
 
 ## IntelGram v6.7.8 Appearance And Settings Refresh - 2026-07-24
 
