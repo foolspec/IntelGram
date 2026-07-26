@@ -2,6 +2,40 @@
 
 This file records implementation-level changes to IntelGram's custom layer. Product-facing changes are summarized in [`CHANGELOG.md`](CHANGELOG.md).
 
+## IntelGram v6.7.8 Native Local Channel Ownership - 2026-07-26
+
+### Source Baseline And Patch
+
+- Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
+- Source commit: `e5cd92ca9b86c407a4777faa1979cbddef386acb` on the recovered local implementation branch.
+- Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
+- Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
+- Patch SHA-256: `d9ecc14859dc68f055abdc69e1a27000a5b8df62be99535d131a389edd07561e`.
+- Patch footprint: 85 files, 10,836 insertions, and 551 deletions relative to the pinned source.
+- `Telegram/lib_ui` remains pinned to public fork commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
+
+### Native Channel Integration
+
+- `Ayu::ShowLocalChannelOwnership` is exposed from the existing IntelGram channel submenu and persists one enabled state plus up to 100 bounded text posts per account and broadcast peer.
+- `HistoryWidget` and `HistoryView::ChatWidget` treat an enabled local channel as text-sendable, restore its local posts, expose the native composer, and intercept text before constructing or dispatching a Telegram send request.
+- Local broadcasts use `History::addNewLocalMessage`, client-local message IDs, `MessageFlag::Post`, and native channel history rendering. The runtime registry connects those messages to their local vault record for deletion.
+- The legacy and current history context menus expose only the dedicated local deletion path for injected broadcasts. Normal forwarding, server deletion, report, export, selection, and revision actions remain unavailable because the items are marked local by Telegram's own history constructor.
+- `Window::PeerMenu` and `Info::Profile::TopBar` expose native **Manage channel** affordances while active, but route them to the local settings box instead of `EditPeerInfoBox`.
+- Channel profile actions suppress Join, Leave, and Report while active and react to the local rights-refresh signal without changing `ChannelData` rights or membership state.
+- `Ui::SilentToggle` accepts a local-only mode. It preserves the native bell control but skips `NotifySettings::update`, so clicking it cannot issue a Telegram settings mutation.
+
+### Send Boundary
+
+- Text-only interception occurs before `Api::MessageToSend` and before every Telegram message-send call.
+- Attach picker, prepared-file confirmation, existing photo/document, voice, sticker, inline result, bot command, forward, and scheduled-send paths are blocked with a local-mode toast.
+- Typing, sticker-selection progress, and cloud-draft updates are suppressed while local ownership is active.
+- The feature adds no MTProto channel/account mutation, creator/admin flag, permission change, membership update, or Telegram history write.
+
+### Validation
+
+- The complete patch applies and reverses cleanly against the pinned source, passes whitespace checks, and keeps both patch aliases byte-identical.
+- `validate_intelgram_patch.py` requires the local ownership storage, menu, history, composer, profile, and silent-toggle guards in addition to the existing IntelGram feature checks.
+
 ## IntelGram v6.7.8 Liquid Glass And Local Channels - 2026-07-26
 
 ### Source Baseline And Patch

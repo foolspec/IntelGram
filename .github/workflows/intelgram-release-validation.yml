@@ -13,8 +13,8 @@ permissions:
   contents: read
 
 env:
-  SOURCE_PATCH_SHA256: 3481f2177ad41a055654b7a4c962d16073e70fbf0e12fe99013ebe56f88a3dc6
-  RELEASE_PATCH_SHA256: 3481f2177ad41a055654b7a4c962d16073e70fbf0e12fe99013ebe56f88a3dc6
+  SOURCE_PATCH_SHA256: d9ecc14859dc68f055abdc69e1a27000a5b8df62be99535d131a389edd07561e
+  RELEASE_PATCH_SHA256: d9ecc14859dc68f055abdc69e1a27000a5b8df62be99535d131a389edd07561e
 
 jobs:
   verify-release:
@@ -40,7 +40,7 @@ jobs:
           tag="$(jq -r '.tag_name' <<<"$release")"
           test "$(jq -r '.draft' <<<"$release")" = "false"
           test "$(jq -r '.prerelease' <<<"$release")" = "false"
-          test "$(jq -r '.name' <<<"$release")" = "IntelGram v6.7.8 - Local Channel Workspace"
+          test "$(jq -r '.name' <<<"$release")" = "IntelGram v6.7.8 - Native Local Ownership"
 
           required_assets=(
             IntelGram-macOS-Apple-Silicon.dmg

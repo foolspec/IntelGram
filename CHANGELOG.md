@@ -2,6 +2,29 @@
 
 All notable IntelGram custom-feature changes are recorded here.
 
+## IntelGram v6.7.8 Native Local Channel Ownership - 2026-07-26
+
+### Added
+
+- **Local ownership** in the IntelGram submenu of every broadcast channel.
+- Telegram's native **Broadcast a message...** composer inside the selected channel.
+- Persistent local text broadcasts rendered directly in the channel's real timeline.
+- Owner-style **Manage channel** entries in channel menus and profile actions.
+- Per-account, per-channel local storage with individual delete and clear-all actions.
+- A local-only silent-broadcast toggle that never updates Telegram notification settings.
+
+### Changed
+
+- Join, Leave, and Report controls are hidden while local ownership is active.
+- Saved local broadcasts are restored when the channel is reopened and removed from the live timeline when the mode is disabled.
+- The in-app update log now separates native local ownership from the existing profile showcase workspace.
+
+### Local-Only Boundary
+
+- Text broadcasts are intercepted before Telegram's send API and use client-local message IDs.
+- Media, files, voice messages, stickers, inline results, forwards, and scheduled posts are blocked before upload or send paths.
+- No creator/admin flag, channel right, membership value, channel information, or Telegram message is changed.
+
 ## IntelGram v6.7.8 Liquid Glass And Local Channels - 2026-07-26
 
 ### Added

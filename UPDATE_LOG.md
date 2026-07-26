@@ -33,10 +33,14 @@
 - Icon pack: pink primary and profile-art icons plus twelve color variants include native macOS, multi-resolution Windows, and Linux resources; macOS artwork is full-bleed and no longer receives a second white frame or inset.
 - Settings cleanup: inherited Boosty and cryptocurrency donation rows were removed and replaced with IntelGram community, source, and changelog links.
 - Community badge: joining `@intelgrams` through Telegram's normal channel page unlocks a local supporter badge; IntelGram performs no automatic join request.
+- Native local ownership: open a broadcast channel's three-dot menu, choose **IntelGram -> Local ownership**, and enable an owner-style view in that channel itself.
+- Native channel composer: **Broadcast a message...** stores text in IntelGram's local vault and renders it in the channel's real timeline without calling Telegram's send API.
+- Owner controls: native **Manage channel** actions open the local ownership panel, while contradictory Join, Leave, and Report rows are hidden until the mode is disabled.
+- Local post boundary: media, files, voice messages, stickers, inline results, forwards, and scheduled posts are blocked before Telegram upload or send paths.
 - Local channel showcase: choose a public `@channel` or `t.me` link to render it on your own profile with an explicit **Local showcase** label; lookup is read-only and does not claim ownership, join the channel, grant permissions, or modify Telegram.
 - Local channel workspace: open the showcase as a private local feed, create text posts with optional local-file attachments, edit/delete/pin/copy them, and configure a local title, description, and photo without publishing or modifying a Telegram channel.
 - In-app update log: **IntelGram Preferences -> Update log** opens a bundled native summary without requiring GitHub.
-- Current source patch SHA-256: `3481f2177ad41a055654b7a4c962d16073e70fbf0e12fe99013ebe56f88a3dc6`.
+- Current source patch SHA-256: `d9ecc14859dc68f055abdc69e1a27000a5b8df62be99535d131a389edd07561e`.
 - Privacy boundary: no Telegram profile mutation, contact import, automatic channel join, channel ownership or permission mutation, collectible transaction, or protected-content bypass.
 - Protected content: Restrict Saving Content and self-destructing items remain metadata-only jump-back references; bodies, links, filenames, revisions, and media are excluded from rules, exports, and backups.
 - Branding consistency: product-facing window, settings, version, and notification-preview titles use IntelGram while upstream attribution remains intact.

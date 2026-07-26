@@ -30,6 +30,12 @@ Click the **Local showcase** row on your profile or choose **Open local channel*
 
 These are private IntelGram records, not Telegram messages. They do not publish to the selected channel, create ownership or administrator rights, alter public channel settings, affect subscribers, or appear to anyone else.
 
+## How do I use local ownership in a real channel view?
+
+Open any broadcast channel, click the three-dot menu, open **IntelGram**, and choose **Local ownership**. Turn on **Enable local ownership**. The same channel screen now shows Telegram's native **Broadcast a message...** composer, a local-only bell control, and **Manage channel** actions. Type a text post and send it normally; IntelGram intercepts it before Telegram's API and inserts it into that channel's timeline as a persistent local client message.
+
+Right-click a local broadcast to delete it, or use **Clear local broadcasts** in the ownership settings. Turn off local ownership to return to the ordinary subscriber view. Media, files, voice messages, stickers, inline results, forwards, and scheduled posts are intentionally blocked in this mode so they cannot upload or become Telegram channel activity.
+
 ## How do I find somebody by UID or phone?
 
 Use the normal search field above the chat list. Paste a UID, `id: UID`, or a phone number. A known matching profile appears under **Found by ID or phone**. This cannot discover strangers or hidden phone numbers; the peer must already be loaded and the phone must already be visible.

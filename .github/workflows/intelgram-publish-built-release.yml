@@ -88,7 +88,7 @@ jobs:
           mapfile -d '' RELEASE_ASSETS < <(find release-assets -maxdepth 1 -type f ! -empty -print0)
           test "${#RELEASE_ASSETS[@]}" -gt 0
           cat > release-notes.md <<'EOF'
-          ## IntelGram v6.7.8 Local Channel Workspace
+          ## IntelGram v6.7.8 Native Local Ownership
 
           This release contains launch-tested IntelGram packages for macOS Apple Silicon, Windows x64, and Linux x64.
 
@@ -110,6 +110,10 @@ jobs:
           - A clearly labeled local channel showcase that resolves a public channel read-only and displays it on your own IntelGram profile without claiming server ownership or changing membership and permissions.
           - A dedicated **Local-only channel** workspace with private local text posts, local-file attachments, edit/delete/pin/copy actions, and local title, description, and photo settings.
           - Local channel workspace actions never publish, edit, pin, delete, or forward a Telegram message and never synthesize owner, administrator, member, invite, or permission state.
+          - Per-channel **Local ownership** under the native three-dot **IntelGram** submenu.
+          - Telegram's native **Broadcast a message...** composer, owner-style Manage actions, and persistent local text broadcasts inside the selected channel's real timeline.
+          - Local ownership text is intercepted before Telegram's send API; media, files, voice, stickers, inline results, forwards, and scheduled posts are blocked before upload or send paths.
+          - No creator/admin flag, channel right, membership state, channel information, or Telegram message is changed by local ownership.
           - A profile username editor matching Telegram's native title, `@username` field, validation row, help copy, spacing, and buttons, backed only by IntelGram's local render setting and no server-side username check or update.
           - A native in-app collectible browser with Telegram's read-only live catalog, exact numbered gifts, native previews and details, and Telegram, Getgems, and TON link input.
           - A visual collection gallery and scrollable exact-item gallery that selects collectibles without leaving IntelGram.
@@ -121,7 +125,7 @@ jobs:
 
           ### Local-only boundary
 
-          IntelGram does not update your Telegram name, photo, username, UID, phone, bio, emoji status, contacts, collectible ownership, channel ownership, permissions, or membership. Local channel posts and settings remain private IntelGram records and are never submitted as Telegram channel actions. Restrict Saving Content and self-destruct rules are preserved: protected message bodies and media never enter the vault, rules, exports, or backups.
+          IntelGram does not update your Telegram name, photo, username, UID, phone, bio, emoji status, contacts, collectible ownership, server-side channel ownership, permissions, or membership. Local ownership controls, broadcasts, workspace posts, and settings remain private IntelGram records and are never submitted as Telegram channel actions. Restrict Saving Content and self-destruct rules are preserved: protected message bodies and media never enter the vault, rules, exports, or backups.
 
           See the [complete feature list](https://github.com/foolspec/IntelGram/blob/main/FEATURES.md), [changelog](https://github.com/foolspec/IntelGram/blob/main/CHANGELOG.md), and [technical changelog](https://github.com/foolspec/IntelGram/blob/main/TECHNICAL_CHANGELOG.md).
 
@@ -131,6 +135,6 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
             --latest \
-            --title "IntelGram v6.7.8 - Local Channel Workspace" \
+            --title "IntelGram v6.7.8 - Native Local Ownership" \
             --notes-file release-notes.md \
             "${RELEASE_ASSETS[@]}"

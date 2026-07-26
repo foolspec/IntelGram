@@ -16,6 +16,19 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - An optional public-channel showcase rendered on your own profile with an explicit **Local showcase** label.
 - Public channels are resolved read-only from an `@channel` or `t.me` link; the showcase does not grant ownership, administration, permissions, or membership.
 
+## Native Local Channel Ownership
+
+- Opens from an existing broadcast channel's three-dot menu under **IntelGram -> Local ownership**.
+- Enables Telegram's native **Broadcast a message...** composer in the selected channel instead of opening a separate mock feed.
+- Adds owner-style **Manage channel** actions in the channel menu and profile header; those actions open IntelGram's local ownership settings, never Telegram's channel mutation form.
+- Stores up to 100 text broadcasts per account and channel in IntelGram's versioned local vault data.
+- Injects those broadcasts as local client messages in the channel's real history, with native channel-post layout and local deletion.
+- Restores saved local broadcasts when the channel is reopened and removes them from the live history when the mode is disabled.
+- Suppresses contradictory Join, Leave, and Report controls while local ownership is active.
+- Provides a local-only silent-broadcast control that never updates Telegram notification settings.
+- Blocks attachments, media, files, voice messages, stickers, inline results, forwards, and scheduled posts before Telegram upload or send paths.
+- Does not set creator or administrator flags, grant rights, change membership, edit channel information, or submit a Telegram message.
+
 ## Local Channel Workspace
 
 - Opens from the showcased channel on your profile or **Open local channel** in Local Profile settings.

@@ -60,7 +60,7 @@ permissions:
 
 env:
   SOURCE_TAG: v6.7.8
-  PATCH_SHA256: 3481f2177ad41a055654b7a4c962d16073e70fbf0e12fe99013ebe56f88a3dc6
+  PATCH_SHA256: d9ecc14859dc68f055abdc69e1a27000a5b8df62be99535d131a389edd07561e
   LIB_UI_COMMIT: b9a30917daf2bd8fdc17ccd9682acca178882b7b
   LIB_UI_REF: codex/intelgram-liquid-bounce-20260726
 
@@ -797,11 +797,11 @@ jobs:
           find release-assets -maxdepth 1 -type f -print -exec ls -lh {} \;
           mapfile -d '' RELEASE_ASSETS < <(find release-assets -maxdepth 1 -type f ! -empty -print0)
           test "${#RELEASE_ASSETS[@]}" -gt 0
-          TAG="intelgram-v6.7.8-local-channel-workspace-${GITHUB_RUN_ID}"
+          TAG="intelgram-v6.7.8-native-local-ownership-${GITHUB_RUN_ID}"
           gh release create "$TAG" \
             --repo "$GITHUB_REPOSITORY" \
             --target "$TARGET_SHA" \
             --latest \
-            --title "IntelGram v6.7.8 - Local Channel Workspace" \
-            --notes "IntelGram adds a clearly labeled Local-only channel workspace to the existing read-only public-channel showcase. Open it from your profile or Local Profile settings to create, edit, pin, copy, or delete private local posts, attach local files, and configure a local title, description, and photo. Nothing is published to Telegram, no owner or administrator state is synthesized, and channel membership and permissions remain unchanged. This build also retains the layered Liquid Glass renderer, five motion packs, local profile and collectible rendering, vault, timelines, automation, export, Frozen Account Backup, native themes, and protected-content boundaries." \
+            --title "IntelGram v6.7.8 - Native Local Ownership" \
+            --notes "IntelGram adds per-channel Local ownership under the native three-dot IntelGram submenu. Enabled broadcast channels expose Telegram's Broadcast a message composer, owner-style Manage actions, and persistent local text broadcasts directly in the real timeline. Text is intercepted before Telegram's send API; media, files, voice, stickers, inline results, forwards, and scheduled posts are blocked before upload. No creator/admin rights, membership, channel information, or Telegram messages are changed. This build also retains the local showcase workspace, layered Liquid Glass renderer, five motion packs, local profile and collectible rendering, vault, timelines, automation, export, Frozen Account Backup, native themes, and protected-content boundaries." \
             "${RELEASE_ASSETS[@]}"

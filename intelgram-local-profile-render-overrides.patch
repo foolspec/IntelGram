@@ -12,13 +12,15 @@ index b839a6b75..7e0cc43f9 100644
  	path = Telegram/lib_lottie
  	url = https://github.com/desktop-app/lib_lottie.git
 diff --git a/Telegram/CMakeLists.txt b/Telegram/CMakeLists.txt
-index 3ac3f4ba0..979d072d6 100644
+index 3ac3f4ba0..a811c4b32 100644
 --- a/Telegram/CMakeLists.txt
 +++ b/Telegram/CMakeLists.txt
-@@ -138,6 +138,10 @@ set(ayugram_files
+@@ -138,6 +138,12 @@ set(ayugram_files
          ayu/ui/toasts.h
          ayu/ui/ayu_userpic.cpp
          ayu/ui/ayu_userpic.h
++        ayu/ui/local_channel_ownership.cpp
++        ayu/ui/local_channel_ownership.h
 +        ayu/ui/local_channel_workspace.cpp
 +        ayu/ui/local_channel_workspace.h
 +        ayu/ui/visual_effects.cpp
@@ -26,7 +28,7 @@ index 3ac3f4ba0..979d072d6 100644
          ayu/ui/utils/ayu_profile_values.cpp
          ayu/ui/utils/ayu_profile_values.h
          ayu/ui/utils/color_cut_quantizer.cpp
-@@ -166,6 +170,10 @@ set(ayugram_files
+@@ -166,6 +172,10 @@ set(ayugram_files
          ayu/ui/settings/settings_main.h
          ayu/ui/settings/settings_other.cpp
          ayu/ui/settings/settings_other.h
@@ -37,7 +39,7 @@ index 3ac3f4ba0..979d072d6 100644
          ayu/ui/settings/filters/settings_filters_list.cpp
          ayu/ui/settings/filters/settings_filters_list.h
          ayu/ui/settings/filters/per_dialog_filter.cpp
-@@ -249,6 +257,10 @@ set(ayugram_files
+@@ -249,6 +259,10 @@ set(ayugram_files
          ayu/features/filters/filters_utils.h
          ayu/data/messages_storage.cpp
          ayu/data/messages_storage.h
@@ -49,7 +51,7 @@ index 3ac3f4ba0..979d072d6 100644
          ayu/data/ayu_database.cpp
          ayu/data/ayu_database.h
 diff --git a/Telegram/Resources/langs/lang.strings b/Telegram/Resources/langs/lang.strings
-index 7380587e7..2fce99ab6 100644
+index 7380587e7..0fb006c92 100644
 --- a/Telegram/Resources/langs/lang.strings
 +++ b/Telegram/Resources/langs/lang.strings
 @@ -7971,14 +7971,60 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -147,17 +149,17 @@ index 7380587e7..2fce99ab6 100644
 +"ayu_IntelGramUpdateLogLabel" = "Open in IntelGram";
 +"ayu_IntelGramUpdateLogTitle" = "IntelGram update log";
 +"ayu_IntelGramUpdateLogCurrentTitle" = "Latest update";
-+"ayu_IntelGramUpdateLogCurrent" = "**Liquid Glass & Motion**\n- Liquid Glass layers adaptive tint and contrast, wallpaper-aware diffusion, cursor-reactive specular light, refractive edges, internal reflections, and subtle film grain over native desktop blur.\n- Material animation follows the active display refresh rate up to 120 Hz and pauses while IntelGram is hidden, inactive, or respecting reduced-motion and power-saving settings.\n- Control sidebar, chat, menu, dialog, and panel transparency separately; choose a private local backdrop and tune image opacity, blur, tint, surface opacity, and optical intensity without fading text, icons, avatars, or media.\n- Quick Snap is compact and immediate. Smooth Flow is calm and critically damped. Diabolical is brisk with stronger depth. Springy settles gently. The optional Liquid Bounce pack adds the most elastic lift and a controlled overshoot.\n- Local channel showcase can display a selected public channel on your own IntelGram profile with a Local showcase label. It never claims ownership, joins the channel, changes permissions, or modifies Telegram.\n- Open the showcase as a local-only channel workspace to create, edit, pin, copy, or delete private local posts, attach local files, and configure a local title, description, and photo. None of those actions are sent to Telegram.\n- The profile username editor matches Telegram's native title, @username field, validation row, help text, and button layout while saving only IntelGram's local render value.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
++"ayu_IntelGramUpdateLogCurrent" = "**Native local channel ownership**\n- Open a broadcast channel's three-dot menu, choose IntelGram, then Local ownership.\n- The existing channel view gains Telegram's native Broadcast a message composer, owner-style Manage actions, and persistent local text broadcasts inside the real timeline.\n- Local ownership hides contradictory Join, Leave, and Report rows while active and can be disabled independently for every channel.\n- Local broadcasts can be deleted individually or cleared together. Media, voice, stickers, inline results, scheduled posts, and files remain blocked so nothing can upload to Telegram.\n- This mode changes only IntelGram's rendering and local vault. It never grants Telegram rights, updates the channel, or transmits a local broadcast.\n\n**Liquid Glass & Motion**\n- Liquid Glass layers adaptive tint and contrast, wallpaper-aware diffusion, cursor-reactive specular light, refractive edges, internal reflections, and subtle film grain over native desktop blur.\n- Material animation follows the active display refresh rate up to 120 Hz and pauses while IntelGram is hidden, inactive, or respecting reduced-motion and power-saving settings.\n- Control sidebar, chat, menu, dialog, and panel transparency separately; choose a private local backdrop and tune image opacity, blur, tint, surface opacity, and optical intensity without fading text, icons, avatars, or media.\n- Quick Snap is compact and immediate. Smooth Flow is calm and critically damped. Diabolical is brisk with stronger depth. Springy settles gently. The optional Liquid Bounce pack adds the most elastic lift and a controlled overshoot.\n- The profile username editor matches Telegram's native title, @username field, validation row, help text, and button layout while saving only IntelGram's local render value.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
 +"ayu_IntelGramUpdateLogFeaturesTitle" = "Main IntelGram features";
-+"ayu_IntelGramUpdateLogFeatures" = "**Local profile and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, badges, emoji status, personal channel rendering, a clearly labeled local public-channel showcase, and its private local-only posting workspace.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity and customization**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native themes, cloud theme browsing, chat wallpapers, adaptive Liquid Glass, native blur, five motion packs, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
++"ayu_IntelGramUpdateLogFeatures" = "**Local profile, channels, and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, badges, emoji status, personal channel rendering, and public-channel showcase rendering.\n- Per-channel local ownership with native owner-style controls and persistent text broadcasts rendered inside the selected channel's real timeline.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity and customization**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native themes, cloud theme browsing, chat wallpapers, adaptive Liquid Glass, native blur, five motion packs, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
 +"ayu_IntelGramUpdateLogPrivacyTitle" = "Local-only boundary";
-+"ayu_IntelGramUpdateLogPrivacy" = "Local profile tools never update your Telegram profile, import contacts, claim channel ownership, change channel permissions, change collectible ownership, or join a channel automatically. The channel showcase uses only a public read-only lookup. Its local posts, files, pins, and appearance settings remain private IntelGram data and never become Telegram channel activity. Vault tools only process data already received by this client. Restrict Saving Content and self-destructing media are preserved: IntelGram stores a jump-back reference and basic metadata, never the protected body or media.";
++"ayu_IntelGramUpdateLogPrivacy" = "Local profile and ownership tools never update your Telegram profile, obtain Telegram channel ownership, change channel permissions, change collectible ownership, or join a channel automatically. Owner-style channel controls and text broadcasts are private IntelGram render data only; they never become Telegram channel activity. Unsupported channel post types are blocked before Telegram upload paths. Vault tools only process data already received by this client. Restrict Saving Content and self-destructing media are preserved: IntelGram stores a jump-back reference and basic metadata, never the protected body or media.";
 +"ayu_IntelGramUpdateLogCredit" = "IntelGram local profile tools by fool.";
 +"ayu_IntelGramUpdateLogFull" = "View full changelog";
  "ayu_CategoriesHeader" = "Categories";
  "ayu_SupportHeader" = "Support";
  "ayu_SupportDescription1" = "Support Development";
-@@ -8070,8 +8134,118 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8070,8 +8134,132 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SupportBoxReceiveBadgeInfo" = "After payment verification, you will receive a unique badge that will be displayed on your profile and visible to other users.";
  "ayu_CrashReporting" = "Crash Reporting";
  "ayu_CrashReportingDescription" = "When this option is enabled, you'll be prompted to send a report after the app crashes. You can decide whether to send it or not.";
@@ -238,6 +240,20 @@ index 7380587e7..2fce99ab6 100644
 +"ayu_LocalChannelWorkspaceSettingsReset" = "Reset local appearance";
 +"ayu_LocalChannelWorkspacePostsClear" = "Delete all local posts";
 +"ayu_LocalChannelWorkspacePostsClearConfirm" = "Delete every local post for this channel from IntelGram?";
++"ayu_LocalChannelOwnershipMenu" = "Local ownership";
++"ayu_LocalChannelOwnershipTitle" = "Local ownership";
++"ayu_LocalChannelOwnershipToggle" = "Enable local ownership";
++"ayu_LocalChannelOwnershipDescription" = "Shows local owner controls for this channel and places local broadcasts in its real timeline. This does not grant Telegram ownership, change permissions, or send channel mutations.";
++"ayu_LocalChannelOwnershipTextOnlyDescription" = "Local ownership currently supports text broadcasts. Media, voice, stickers, inline results, scheduled posts, and files remain blocked so they cannot upload to Telegram.";
++"ayu_LocalChannelOwnershipEnabled" = "Local ownership enabled.";
++"ayu_LocalChannelOwnershipDisabled" = "Local ownership disabled.";
++"ayu_LocalChannelOwnershipTextOnly" = "Only text broadcasts are available in local ownership mode.";
++"ayu_LocalChannelOwnershipScheduleBlocked" = "Scheduled local broadcasts are not available.";
++"ayu_LocalChannelOwnershipClear" = "Clear local broadcasts";
++"ayu_LocalChannelOwnershipClearConfirm" = "Delete every local broadcast for this channel from IntelGram?";
++"ayu_LocalChannelOwnershipCleared" = "Local broadcasts cleared.";
++"ayu_LocalChannelOwnershipDelete" = "Delete local broadcast";
++"ayu_LocalChannelOwnershipDeleted" = "Local broadcast deleted.";
 +"ayu_LocalProfileDescription" = "Changes how your own profile details appear in this IntelGram client. Your Telegram profile, photo, bio, username, UID, and phone number are not changed.";
 +"ayu_LocalProfileGiftEnabled" = "Use local collectible gifts";
 +"ayu_LocalProfileGift" = "Featured collectible gift";
@@ -277,7 +293,7 @@ index 7380587e7..2fce99ab6 100644
  "ayu_DisableColorfulCover" = "Disable adaptive color";
  "ayu_EnableColorfulCover" = "Enable adaptive color";
  "ayu_CustomizationHeader" = "Customization";
-@@ -8130,14 +8304,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8130,14 +8318,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SettingsBiggerWindow" = "Bigger Window";
  "ayu_SettingsIncreaseWebviewHeight" = "Increase Content Height";
  "ayu_SettingsIncreaseWebviewWidth" = "Increase Content Width";
@@ -294,7 +310,7 @@ index 7380587e7..2fce99ab6 100644
  "ayu_ImportDataDescription" = "It will replace the current database.";
  "ayu_ImportDataConfirm" = "Yes, replace existing";
  "ayu_ImportDataCancel" = "No, close window";
-@@ -8204,7 +8378,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8204,7 +8392,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_FiltersClearPopupAltActionText" = "Clear unknown";
  "ayu_AppIconHeader" = "App Icon";
  "ayu_IconDefault" = "Default";
@@ -303,7 +319,7 @@ index 7380587e7..2fce99ab6 100644
  "ayu_IconDiscord" = "Discord";
  "ayu_IconSpotify" = "Spotify";
  "ayu_IconExtera" = "extera";
-@@ -8214,8 +8388,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8214,8 +8402,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_IconAyuTyan" = "AyuTyan";
  "ayu_WALMode" = "Enable WAL mode";
  "ayu_PushNotificationCount" = "FCM notifications received";
@@ -314,7 +330,7 @@ index 7380587e7..2fce99ab6 100644
  "ayu_TelegramCacheDatabase" = "Telegram Messages Database";
  "ayu_ConfirmationsTitle" = "Confirmations";
  "ayu_StickerConfirmation" = "For Stickers";
-@@ -8288,9 +8462,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8288,9 +8476,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SuggestGhostModeStoryText" = "Do you want to enable **Ghost Mode** before viewing the story?";
  "ayu_SuggestGhostModeStoryActionTextYes" = "Yes";
  "ayu_SuggestGhostModeStoryActionTextNo" = "No";
@@ -326,7 +342,7 @@ index 7380587e7..2fce99ab6 100644
  "ayu_HideNextViewsDescriptionAyu" = "Hide my views forever, until Ghost Mode is disabled.";
  "ayu_EnableGhostModeStories" = "Enable Ghost Mode";
  "ayu_GhostModeIsActive" = "Ghost Mode is Active";
-@@ -8355,28 +8529,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8355,28 +8543,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_ContextCopyID" = "Copy ID";
  "ayu_IDCopiedToast" = "ID copied to clipboard.";
  "ayu_ContextHideMessage" = "Hide";
@@ -3816,10 +3832,10 @@ index 66059b446..29dea0703 100644
  imageViewPadding: margins(22px, 10px, 22px, 10px);
  imageViewInnerPadding: margins(16px, 16px, 16px, 16px);
 diff --git a/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp b/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp
-index 8fceff22c..22eb1d05c 100644
+index 8fceff22c..66196da85 100644
 --- a/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp
-@@ -13,6 +13,7 @@
+@@ -13,9 +13,11 @@
  #include "ayu/ayu_settings.h"
  #include "ayu/ayu_state.h"
  #include "ayu/data/messages_storage.h"
@@ -3827,7 +3843,11 @@ index 8fceff22c..22eb1d05c 100644
  #include "ayu/features/filters/filters_controller.h"
  #include "ayu/features/forward/ayu_forward.h"
  #include "ayu/ui/context_menu/menu_item_subtext.h"
-@@ -49,6 +50,15 @@ namespace AyuUi {
++#include "ayu/ui/local_channel_ownership.h"
+ #include "ayu/ui/message_history/history_section.h"
+ #include "ayu/ui/settings/filters/edit_filter.h"
+ #include "ayu/ui/settings/filters/settings_filters_list.h"
+@@ -49,6 +51,15 @@ namespace AyuUi {
  
  namespace {
  
@@ -3843,16 +3863,74 @@ index 8fceff22c..22eb1d05c 100644
  Fn<void()> ClearDeletedMessagesHandler(not_null<Window::SessionController*> controller, not_null<PeerData*> peer, ID topicId) {
  	return [=] {
  		controller->show(Ui::MakeConfirmBox({
-@@ -461,7 +471,7 @@ void AddDeleteOwnMessagesAction(PeerData *peerData,
+@@ -230,7 +241,8 @@ void AddAyuGramActions(PeerData *peerData,
+ 	const auto showFilters = settings.filtersEnabled()
+ 		&& (!user || user->isBot());
+ 	const auto saveDeletedMessages = settings.saveDeletedMessages();
+-	if (!showFilters && !saveDeletedMessages) {
++	const auto localOwnership = peerData->asBroadcast();
++	if (!showFilters && !saveDeletedMessages && !localOwnership) {
+ 		return;
+ 	}
+ 
+@@ -238,11 +250,28 @@ void AddAyuGramActions(PeerData *peerData,
+ 	const auto topicId = topic ? topic->rootId().bare : 0;
+ 
+ 	addCallback(Window::PeerMenuCallback::Args{
+-		.text = u"AyuGram"_q,
++		.text = u"IntelGram"_q,
+ 		.handler = nullptr,
+ 		.icon = &st::menuIconGroupReactions,
+ 		.fillSubmenu = [=](not_null<Ui::PopupMenu*> menu) {
+ 			const auto addAction = Ui::Menu::CreateAddActionCallback(menu);
++			const auto filteredToggleShown
++				= FiltersController::filteredMessagesShown(peerData);
++			if (localOwnership) {
++				addAction(
++					tr::ayu_LocalChannelOwnershipMenu(tr::now),
++					[=] {
++						Ayu::ShowLocalChannelOwnership(
++							sessionController,
++							localOwnership);
++					},
++					&st::menuIconManage);
++				if (showFilters
++					|| filteredToggleShown
++					|| saveDeletedMessages) {
++					addAction({ .isSeparator = true });
++				}
++			}
+ 			if (showFilters) {
+ 				addAction(
+ 					tr::ayu_ViewFiltersMenuText(tr::now),
+@@ -255,7 +284,6 @@ void AddAyuGramActions(PeerData *peerData,
+ 					},
+ 					&st::menuIconAddToFolder);
+ 			}
+-			const auto filteredToggleShown = FiltersController::filteredMessagesShown(peerData);
+ 			if (filteredToggleShown) {
+ 				addAction(
+ 					*filteredToggleShown
+@@ -461,7 +489,17 @@ void AddDeleteOwnMessagesAction(PeerData *peerData,
  }
  
  void AddHistoryAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item) {
 -	if (item->hideEditedBadge()) {
-+	if (!item || IsProtectedContent(item) || item->hideEditedBadge()) {
++	if (!item) {
++		return;
++	} else if (Ayu::IsLocalChannelBroadcast(item)) {
++		menu->addAction(
++			tr::ayu_LocalChannelOwnershipDelete(tr::now),
++			[=] {
++				Ayu::DeleteLocalChannelBroadcast(item);
++			},
++			&st::menuIconClearAttention);
++		return;
++	} else if (IsProtectedContent(item) || item->hideEditedBadge()) {
  		return;
  	}
  
-@@ -487,6 +497,29 @@ void AddHistoryAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item) {
+@@ -487,13 +525,37 @@ void AddHistoryAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item) {
  		&st::ayuEditsHistoryIcon);
  }
  
@@ -3882,7 +3960,16 @@ index 8fceff22c..22eb1d05c 100644
  void AddHideMessageAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item) {
  	const auto &settings = AyuSettings::getInstance();
  	if (!needToShowItem(settings.showHideMessageInContextMenu())) {
-@@ -929,7 +962,7 @@ void AddCreateFilterAction(not_null<Ui::PopupMenu*> menu,
+ 		return;
+ 	}
+ 
+-	if (item->history()->peer->isSelf()) {
++	if (Ayu::IsLocalChannelBroadcast(item)
++		|| item->history()->peer->isSelf()) {
+ 		return;
+ 	}
+ 
+@@ -929,7 +991,7 @@ void AddCreateFilterAction(not_null<Ui::PopupMenu*> menu,
  		return;
  	}
  
@@ -3903,6 +3990,543 @@ index 02133dda3..175c706d8 100644
  void AddHideMessageAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
  void AddUserMessagesAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
  void AddMessageDetailsAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
+diff --git a/Telegram/SourceFiles/ayu/ui/local_channel_ownership.cpp b/Telegram/SourceFiles/ayu/ui/local_channel_ownership.cpp
+new file mode 100644
+index 000000000..05dfae5f3
+--- /dev/null
++++ b/Telegram/SourceFiles/ayu/ui/local_channel_ownership.cpp
+@@ -0,0 +1,489 @@
++#include "ayu/ui/local_channel_ownership.h"
++
++#include "ayu/data/intelgram_vault.h"
++#include "base/unixtime.h"
++#include "data/data_changes.h"
++#include "data/data_channel.h"
++#include "data/data_session.h"
++#include "history/history.h"
++#include "history/history_item.h"
++#include "lang_auto.h"
++#include "main/main_session.h"
++#include "ui/boxes/confirm_box.h"
++#include "ui/layers/generic_box.h"
++#include "ui/text/text_entity.h"
++#include "ui/vertical_list.h"
++#include "ui/widgets/buttons.h"
++#include "ui/wrap/vertical_layout.h"
++#include "window/window_session_controller.h"
++
++#include "styles/style_boxes.h"
++#include "styles/style_settings.h"
++
++#include <QtCore/QDateTime>
++#include <QtCore/QJsonArray>
++#include <QtCore/QJsonDocument>
++#include <QtCore/QJsonObject>
++
++#include <algorithm>
++#include <map>
++#include <optional>
++#include <utility>
++#include <vector>
++
++namespace Ayu {
++namespace {
++
++constexpr auto kMaxPosts = 100;
++constexpr auto kMaxPostLength = 4096;
++constexpr auto kMaxTagIdLength = 512;
++constexpr auto kMaxStoredStateLength = 1'000'000;
++
++struct LocalBroadcast {
++	qint64 uid = 0;
++	TimeId date = 0;
++	TextWithTags text;
++};
++
++struct LocalOwnershipState {
++	bool enabled = false;
++	std::vector<LocalBroadcast> posts;
++};
++
++struct RuntimeBroadcast {
++	qint64 uid = 0;
++	FullMsgId fullId;
++};
++
++[[nodiscard]] QString StorageKey(not_null<ChannelData*> channel) {
++	return u"local_channel_ownership/%1/%2"_q
++		.arg(QString::number(channel->session().userId().bare))
++		.arg(QString::number(channel->id.value));
++}
++
++[[nodiscard]] TextWithTags ReadText(const QJsonObject &object) {
++	auto result = TextWithTags{
++		.text = object.value(u"text"_q).toString().left(kMaxPostLength),
++	};
++	const auto tags = object.value(u"tags"_q).toArray();
++	for (const auto &value : tags) {
++		const auto tag = value.toObject();
++		const auto offset = tag.value(u"offset"_q).toInt(-1);
++		const auto length = tag.value(u"length"_q).toInt();
++		const auto id = tag.value(u"id"_q).toString().left(kMaxTagIdLength);
++		if (offset >= 0
++			&& length > 0
++			&& offset + length <= result.text.size()
++			&& !id.isEmpty()) {
++			result.tags.push_back({
++				.offset = offset,
++				.length = length,
++				.id = id,
++			});
++		}
++	}
++	return result;
++}
++
++[[nodiscard]] QJsonObject WriteText(const TextWithTags &text) {
++	auto tags = QJsonArray();
++	for (const auto &tag : text.tags) {
++		if (tag.offset < 0
++			|| tag.length <= 0
++			|| tag.offset + tag.length > text.text.size()
++			|| tag.id.isEmpty()) {
++			continue;
++		}
++		tags.push_back(QJsonObject{
++			{ u"offset"_q, tag.offset },
++			{ u"length"_q, tag.length },
++			{ u"id"_q, tag.id.left(kMaxTagIdLength) },
++		});
++	}
++	return {
++		{ u"text"_q, text.text.left(kMaxPostLength) },
++		{ u"tags"_q, tags },
++	};
++}
++
++[[nodiscard]] LocalOwnershipState ParseState(const QString &encoded) {
++	if (encoded.isEmpty() || encoded.size() > kMaxStoredStateLength) {
++		return {};
++	}
++	QJsonParseError error;
++	const auto document = QJsonDocument::fromJson(encoded.toUtf8(), &error);
++	if (error.error != QJsonParseError::NoError || !document.isObject()) {
++		return {};
++	}
++	const auto object = document.object();
++	auto result = LocalOwnershipState{
++		.enabled = object.value(u"enabled"_q).toBool(),
++	};
++	const auto posts = object.value(u"posts"_q).toArray();
++	result.posts.reserve(std::min(int(posts.size()), kMaxPosts));
++	for (const auto &value : posts) {
++		if (result.posts.size() >= kMaxPosts) {
++			break;
++		}
++		const auto post = value.toObject();
++		auto parsed = LocalBroadcast{
++			.uid = post.value(u"uid"_q).toString().toLongLong(),
++			.date = TimeId(post.value(u"date"_q).toInt()),
++			.text = ReadText(post),
++		};
++		if (parsed.uid && parsed.date && !parsed.text.text.trimmed().isEmpty()) {
++			result.posts.push_back(std::move(parsed));
++		}
++	}
++	return result;
++}
++
++[[nodiscard]] QByteArray SerializeState(const LocalOwnershipState &state) {
++	auto posts = QJsonArray();
++	for (const auto &post : state.posts) {
++		auto object = WriteText(post.text);
++		object.insert(u"uid"_q, QString::number(post.uid));
++		object.insert(u"date"_q, int(post.date));
++		posts.push_back(object);
++	}
++	return QJsonDocument(QJsonObject{
++		{ u"version"_q, 1 },
++		{ u"enabled"_q, state.enabled },
++		{ u"posts"_q, posts },
++	}).toJson(QJsonDocument::Compact);
++}
++
++[[nodiscard]] std::map<QString, LocalOwnershipState> &StoredStates() {
++	static auto result = std::map<QString, LocalOwnershipState>();
++	return result;
++}
++
++[[nodiscard]] LocalOwnershipState &StateFor(
++		not_null<ChannelData*> channel) {
++	const auto key = StorageKey(channel);
++	auto &states = StoredStates();
++	const auto i = states.find(key);
++	if (i != states.end()) {
++		return i->second;
++	}
++	return states.emplace(
++		key,
++		ParseState(IntelGram::Vault::Option(key))
++	).first->second;
++}
++
++void SaveState(
++		not_null<ChannelData*> channel,
++		LocalOwnershipState state) {
++	while (state.posts.size() > kMaxPosts) {
++		state.posts.erase(state.posts.begin());
++	}
++	auto encoded = SerializeState(state);
++	while (encoded.size() > kMaxStoredStateLength && !state.posts.empty()) {
++		state.posts.erase(state.posts.begin());
++		encoded = SerializeState(state);
++	}
++	const auto key = StorageKey(channel);
++	StoredStates()[key] = std::move(state);
++	IntelGram::Vault::SetOption(key, QString::fromUtf8(encoded));
++}
++
++[[nodiscard]] std::map<History*, std::vector<RuntimeBroadcast>>
++		&RuntimeBroadcasts() {
++	static auto result
++		= std::map<History*, std::vector<RuntimeBroadcast>>();
++	return result;
++}
++
++void CleanRuntimeBroadcasts(not_null<History*> history) {
++	const auto i = RuntimeBroadcasts().find(history);
++	if (i == RuntimeBroadcasts().end()) {
++		return;
++	}
++	auto &runtime = i->second;
++	runtime.erase(
++		std::remove_if(
++			runtime.begin(),
++			runtime.end(),
++			[=](const RuntimeBroadcast &entry) {
++				return !history->owner().message(entry.fullId);
++			}),
++		runtime.end());
++}
++
++void AddRuntimeBroadcast(
++		not_null<History*> history,
++		const LocalBroadcast &post) {
++	auto text = tr::marked(post.text.text);
++	text.entities = TextUtilities::ConvertTextTagsToEntities(post.text.tags);
++	TextUtilities::Trim(text);
++	const auto item = history->addNewLocalMessage({
++		.id = history->owner().nextLocalMessageId(),
++		.flags = MessageFlag::Post | MessageFlag::HasViews,
++		.date = post.date,
++	}, text, MTP_messageMediaEmpty());
++	RuntimeBroadcasts()[history].push_back({
++		.uid = post.uid,
++		.fullId = item->fullId(),
++	});
++}
++
++void RemoveRuntimeBroadcasts(not_null<History*> history) {
++	const auto i = RuntimeBroadcasts().find(history);
++	if (i == RuntimeBroadcasts().end()) {
++		return;
++	}
++	const auto entries = i->second;
++	RuntimeBroadcasts().erase(i);
++	for (const auto &entry : entries) {
++		if (const auto item = history->owner().message(entry.fullId)) {
++			item->destroy();
++		}
++	}
++}
++
++void ShowToast(not_null<History*> history, rpl::producer<QString> text) {
++	if (const auto window = history->session().tryResolveWindow()) {
++		window->showToast(std::move(text));
++	}
++}
++
++void NotifyOwnershipChanged(
++		not_null<ChannelData*> channel,
++		bool enabled) {
++	const auto history = channel->owner().history(channel);
++	if (enabled) {
++		EnsureLocalChannelBroadcasts(history);
++	} else {
++		RemoveRuntimeBroadcasts(history);
++	}
++	channel->session().changes().peerUpdated(
++		channel,
++		Data::PeerUpdate::Flag::Rights
++			| Data::PeerUpdate::Flag::FullInfo);
++	channel->session().changes().historyUpdated(
++		history,
++		Data::HistoryUpdate::Flag::ClientSideMessages);
++}
++
++void SetOwnershipEnabled(
++		not_null<ChannelData*> channel,
++		bool enabled) {
++	auto state = StateFor(channel);
++	if (state.enabled == enabled) {
++		return;
++	}
++	state.enabled = enabled;
++	SaveState(channel, std::move(state));
++	NotifyOwnershipChanged(channel, enabled);
++}
++
++void ClearBroadcasts(not_null<ChannelData*> channel) {
++	auto state = StateFor(channel);
++	state.posts.clear();
++	SaveState(channel, std::move(state));
++	RemoveRuntimeBroadcasts(channel->owner().history(channel));
++}
++
++[[nodiscard]] std::optional<qint64> RuntimeUid(HistoryItem *item) {
++	if (!item) {
++		return std::nullopt;
++	}
++	const auto history = item->history();
++	CleanRuntimeBroadcasts(history);
++	const auto i = RuntimeBroadcasts().find(history);
++	if (i == RuntimeBroadcasts().end()) {
++		return std::nullopt;
++	}
++	const auto fullId = item->fullId();
++	const auto found = std::find_if(
++		i->second.begin(),
++		i->second.end(),
++		[&](const RuntimeBroadcast &entry) {
++			return entry.fullId == fullId;
++		});
++	return (found == i->second.end())
++		? std::nullopt
++		: std::make_optional(found->uid);
++}
++
++} // namespace
++
++bool LocalChannelOwnershipActive(PeerData *peer) {
++	const auto channel = peer ? peer->asBroadcast() : nullptr;
++	return channel && StateFor(channel).enabled;
++}
++
++void EnsureLocalChannelBroadcasts(not_null<History*> history) {
++	const auto channel = history->peer->asBroadcast();
++	if (!channel || !StateFor(channel).enabled) {
++		return;
++	}
++	CleanRuntimeBroadcasts(history);
++	auto &runtime = RuntimeBroadcasts()[history];
++	auto added = false;
++	for (const auto &post : StateFor(channel).posts) {
++		const auto exists = std::any_of(
++			runtime.begin(),
++			runtime.end(),
++			[&](const RuntimeBroadcast &entry) {
++				return entry.uid == post.uid;
++			});
++		if (!exists) {
++			AddRuntimeBroadcast(history, post);
++			added = true;
++		}
++	}
++	if (added) {
++		history->session().changes().historyUpdated(
++			history,
++			Data::HistoryUpdate::Flag::MessageSent);
++	}
++}
++
++LocalChannelBroadcastResult HandleLocalChannelBroadcast(
++		not_null<History*> history,
++		const TextWithTags &text,
++		bool scheduled) {
++	const auto channel = history->peer->asBroadcast();
++	if (!channel || !StateFor(channel).enabled) {
++		return LocalChannelBroadcastResult::NotHandled;
++	} else if (scheduled) {
++		ShowToast(history, tr::ayu_LocalChannelOwnershipScheduleBlocked());
++		return LocalChannelBroadcastResult::Blocked;
++	}
++	auto prepared = tr::marked(text.text);
++	prepared.entities = TextUtilities::ConvertTextTagsToEntities(text.tags);
++	TextUtilities::Trim(prepared);
++	if (prepared.text.isEmpty()) {
++		ShowToast(history, tr::ayu_LocalChannelOwnershipTextOnly());
++		return LocalChannelBroadcastResult::Blocked;
++	}
++	const auto preserveTags = prepared.text.size() <= kMaxPostLength;
++	auto storedText = TextWithTags{
++		.text = prepared.text.left(kMaxPostLength),
++		.tags = preserveTags
++			? TextUtilities::ConvertEntitiesToTextTags(prepared.entities)
++			: TextWithTags::Tags(),
++	};
++	auto state = StateFor(channel);
++	auto uid = QDateTime::currentMSecsSinceEpoch();
++	while (std::any_of(
++			state.posts.begin(),
++			state.posts.end(),
++			[&](const LocalBroadcast &post) {
++				return post.uid == uid;
++			})) {
++		++uid;
++	}
++	auto post = LocalBroadcast{
++		.uid = uid,
++		.date = base::unixtime::now(),
++		.text = std::move(storedText),
++	};
++	state.posts.push_back(post);
++	SaveState(channel, std::move(state));
++	AddRuntimeBroadcast(history, post);
++	history->session().changes().historyUpdated(
++		history,
++		Data::HistoryUpdate::Flag::MessageSent);
++	return LocalChannelBroadcastResult::Saved;
++}
++
++bool InterceptLocalChannelUnsupportedSend(
++		not_null<Window::SessionController*> controller,
++		PeerData *peer) {
++	if (!LocalChannelOwnershipActive(peer)) {
++		return false;
++	}
++	controller->showToast(tr::ayu_LocalChannelOwnershipTextOnly(tr::now));
++	return true;
++}
++
++void ShowLocalChannelOwnership(
++		not_null<Window::SessionController*> controller,
++		not_null<ChannelData*> channel) {
++	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
++		box->setWidth(st::boxWideWidth);
++		box->setTitle(tr::ayu_LocalChannelOwnershipTitle());
++		const auto content = box->verticalLayout();
++		const auto toggle = content->add(
++			object_ptr<Ui::SettingsButton>(
++				content,
++				tr::ayu_LocalChannelOwnershipToggle(),
++				st::settingsButtonNoIcon));
++		toggle->toggleOn(rpl::single(StateFor(channel).enabled));
++		toggle->toggledChanges(
++		) | rpl::on_next([=](bool enabled) {
++			SetOwnershipEnabled(channel, enabled);
++			controller->showToast(enabled
++				? tr::ayu_LocalChannelOwnershipEnabled(tr::now)
++				: tr::ayu_LocalChannelOwnershipDisabled(tr::now));
++		}, toggle->lifetime());
++		Ui::AddDividerText(
++			content,
++			tr::ayu_LocalChannelOwnershipDescription());
++		Ui::AddDividerText(
++			content,
++			tr::ayu_LocalChannelOwnershipTextOnlyDescription());
++		if (!StateFor(channel).posts.empty()) {
++			box->addButton(
++				tr::ayu_LocalChannelOwnershipClear(),
++				[=] {
++					controller->show(Ui::MakeConfirmBox({
++						.text = tr::ayu_LocalChannelOwnershipClearConfirm(
++							tr::now),
++						.confirmed = [=](Fn<void()> &&close) {
++							ClearBroadcasts(channel);
++							controller->showToast(
++								tr::ayu_LocalChannelOwnershipCleared(
++									tr::now));
++							close();
++						},
++						.confirmText = tr::lng_box_delete(),
++						.cancelText = tr::lng_cancel(),
++						.confirmStyle = &st::attentionBoxButton,
++					}));
++				});
++		}
++		box->addButton(tr::lng_box_done(), [=] {
++			box->closeBox();
++		});
++	}));
++}
++
++bool IsLocalChannelBroadcast(HistoryItem *item) {
++	return RuntimeUid(item).has_value();
++}
++
++void DeleteLocalChannelBroadcast(not_null<HistoryItem*> item) {
++	const auto uid = RuntimeUid(item);
++	const auto history = item->history();
++	const auto channel = history->peer->asBroadcast();
++	if (!uid || !channel) {
++		return;
++	}
++	auto state = StateFor(channel);
++	state.posts.erase(
++		std::remove_if(
++			state.posts.begin(),
++			state.posts.end(),
++			[&](const LocalBroadcast &post) {
++				return post.uid == *uid;
++			}),
++		state.posts.end());
++	SaveState(channel, std::move(state));
++	auto &runtime = RuntimeBroadcasts()[history];
++	runtime.erase(
++		std::remove_if(
++			runtime.begin(),
++			runtime.end(),
++			[&](const RuntimeBroadcast &entry) {
++				return entry.uid == *uid;
++			}),
++		runtime.end());
++	item->destroy();
++	ShowToast(history, tr::ayu_LocalChannelOwnershipDeleted());
++}
++
++} // namespace Ayu
+diff --git a/Telegram/SourceFiles/ayu/ui/local_channel_ownership.h b/Telegram/SourceFiles/ayu/ui/local_channel_ownership.h
+new file mode 100644
+index 000000000..b51c4f27e
+--- /dev/null
++++ b/Telegram/SourceFiles/ayu/ui/local_channel_ownership.h
+@@ -0,0 +1,36 @@
++#pragma once
++
++class ChannelData;
++class History;
++class HistoryItem;
++class PeerData;
++struct TextWithTags;
++
++namespace Window {
++class SessionController;
++} // namespace Window
++
++namespace Ayu {
++
++enum class LocalChannelBroadcastResult {
++	NotHandled,
++	Saved,
++	Blocked,
++};
++
++[[nodiscard]] bool LocalChannelOwnershipActive(PeerData *peer);
++void EnsureLocalChannelBroadcasts(not_null<History*> history);
++[[nodiscard]] LocalChannelBroadcastResult HandleLocalChannelBroadcast(
++	not_null<History*> history,
++	const TextWithTags &text,
++	bool scheduled);
++[[nodiscard]] bool InterceptLocalChannelUnsupportedSend(
++	not_null<Window::SessionController*> controller,
++	PeerData *peer);
++void ShowLocalChannelOwnership(
++	not_null<Window::SessionController*> controller,
++	not_null<ChannelData*> channel);
++[[nodiscard]] bool IsLocalChannelBroadcast(HistoryItem *item);
++void DeleteLocalChannelBroadcast(not_null<HistoryItem*> item);
++
++} // namespace Ayu
 diff --git a/Telegram/SourceFiles/ayu/ui/local_channel_workspace.cpp b/Telegram/SourceFiles/ayu/ui/local_channel_workspace.cpp
 new file mode 100644
 index 000000000..f707cf887
@@ -10993,6 +11617,29 @@ index bc28b73e4..a3a61e8c8 100644
  		videoUserpic->paintLeft(p, view, x, y, outerWidth, size, paused);
  	} else {
  		peer->paintUserpicLeft(p, view, x, y, outerWidth, size);
+diff --git a/Telegram/SourceFiles/history/history_inner_widget.cpp b/Telegram/SourceFiles/history/history_inner_widget.cpp
+index ea3be71c9..519ee0b1d 100644
+--- a/Telegram/SourceFiles/history/history_inner_widget.cpp
++++ b/Telegram/SourceFiles/history/history_inner_widget.cpp
+@@ -130,6 +130,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "ayu/ayu_settings.h"
+ #include "ayu/features/filters/filters_cache_controller.h"
+ #include "ayu/ui/context_menu/context_menu.h"
++#include "ayu/ui/local_channel_ownership.h"
+ #include "ayu/ui/settings/filters/edit_filter.h"
+ #include "ayu/utils/telegram_helpers.h"
+ #include "data/data_document_media.h"
+@@ -2686,6 +2687,10 @@ void HistoryInner::showContextMenu(QContextMenuEvent *e, bool showFromTouch) {
+ 	const auto addItemActions = [&](
+ 			HistoryItem *item,
+ 			HistoryItem *albumPartItem) {
++		if (Ayu::IsLocalChannelBroadcast(item)) {
++			AyuUi::AddHistoryAction(_menu, item);
++			return;
++		}
+ 		if (!item
+ 			|| !item->isRegular()
+ 			|| isUponSelected == 2
 diff --git a/Telegram/SourceFiles/history/history_item.cpp b/Telegram/SourceFiles/history/history_item.cpp
 index 2a84434d4..65697e61a 100644
 --- a/Telegram/SourceFiles/history/history_item.cpp
@@ -11023,6 +11670,392 @@ index 21c158039..50ab04eed 100644
  		| (flags & MTP::f_noforwards ? Flag::AyuNoForwards : Flag())
  		| ((flags & MTP::f_invert_media) ? Flag::InvertMedia : Flag())
  		| ((flags & MTP::f_video_processing_pending)
+diff --git a/Telegram/SourceFiles/history/history_widget.cpp b/Telegram/SourceFiles/history/history_widget.cpp
+index 1c8463845..cf30a7001 100644
+--- a/Telegram/SourceFiles/history/history_widget.cpp
++++ b/Telegram/SourceFiles/history/history_widget.cpp
+@@ -205,6 +205,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ // AyuGram includes
+ #include "ayu/ayu_settings.h"
+ #include "ayu/features/filters/filters_cache_controller.h"
++#include "ayu/ui/local_channel_ownership.h"
+ #include "ayu/utils/telegram_helpers.h"
+ #include "ayu/features/message_shot/message_shot.h"
+ #include "ayu/features/forward/ayu_forward.h"
+@@ -481,6 +482,11 @@ HistoryWidget::HistoryWidget(
+ 	initTabbedSelector();
+ 
+ 	_attachToggle->setClickedCallback([=] {
++		if (Ayu::InterceptLocalChannelUnsupportedSend(
++				controller(),
++				_peer)) {
++			return;
++		}
+ 		const auto toggle = _attachBotsMenu && _attachBotsMenu->isHidden();
+ 		base::call_delayed(st::historyAttach.ripple.hideDuration, this, [=] {
+ 			if (_attachBotsMenu && toggle) {
+@@ -1354,7 +1360,7 @@ void HistoryWidget::initVoiceRecordBar() {
+ 
+ 	_voiceRecordBar->sendActionUpdates(
+ 	) | rpl::on_next([=](const auto &data) {
+-		if (!_history) {
++		if (!_history || Ayu::LocalChannelOwnershipActive(_peer)) {
+ 			return;
+ 		}
+ 		session().sendProgressManager().update(
+@@ -1576,7 +1582,7 @@ void HistoryWidget::initTabbedSelector() {
+ 
+ 	selector->choosingStickerUpdated(
+ 	) | rpl::on_next([=](const Selector::Action &data) {
+-		if (!_history) {
++		if (!_history || Ayu::LocalChannelOwnershipActive(_peer)) {
+ 			return;
+ 		}
+ 		const auto type = Api::SendProgressType::ChooseSticker;
+@@ -1833,6 +1839,10 @@ void HistoryWidget::initFieldAutocomplete() {
+ 	const auto processShortcut = [=](QString shortcut) {
+ 		if (!_peer) {
+ 			return;
++		} else if (Ayu::InterceptLocalChannelUnsupportedSend(
++			controller(),
++			_peer)) {
++			return;
+ 		}
+ 		const auto messages = &_peer->owner().shortcutMessages();
+ 		const auto shortcutId = messages->lookupShortcutId(shortcut);
+@@ -1871,7 +1881,7 @@ void HistoryWidget::initFieldAutocomplete() {
+ 		},
+ 		.sendMenuDetails = [=] { return sendMenuDetails(); },
+ 		.stickerChoosing = [=] {
+-			if (_history) {
++			if (_history && !Ayu::LocalChannelOwnershipActive(_peer)) {
+ 				session().sendProgressManager().update(
+ 					_history,
+ 					Api::SendProgressType::ChooseSticker);
+@@ -1882,7 +1892,9 @@ void HistoryWidget::initFieldAutocomplete() {
+ 		},
+ 		.setText = [=](TextWithTags text) { if (_peer) setFieldText(text); },
+ 		.sendBotCommand = [=](QString command) {
+-			if (_peer) {
++			if (_peer && !Ayu::InterceptLocalChannelUnsupportedSend(
++					controller(),
++					_peer)) {
+ 				sendBotCommand({ _peer, command, FullMsgId(), replyTo() });
+ 				session().api().finishForwarding(prepareSendAction({}));
+ 			}
+@@ -2133,6 +2145,7 @@ void HistoryWidget::fieldChanged() {
+ 			&& !_inlineBot
+ 			&& !_editMsgId
+ 			&& (!_autocomplete || !_autocomplete->stickersEmoji())
++			&& !Ayu::LocalChannelOwnershipActive(_peer)
+ 			&& updateTyping) {
+ 			session().sendProgressManager().update(
+ 				_history,
+@@ -2244,6 +2257,11 @@ void HistoryWidget::fileChosen(ChatHelpers::FileChosen &&data) {
+ 			Data::InsertCustomEmoji(_field.data(), data.document);
+ 		}
+ 	} else if (_history) {
++		if (Ayu::InterceptLocalChannelUnsupportedSend(
++				controller(),
++				_peer)) {
++			return;
++		}
+ 		controller()->sendingAnimation().appendSending(
+ 			data.messageSendingFrom);
+ 		const auto localId = data.messageSendingFrom.localId;
+@@ -2258,6 +2276,9 @@ void HistoryWidget::fileChosen(ChatHelpers::FileChosen &&data) {
+ }
+ 
+ void HistoryWidget::saveCloudDraft() {
++	if (Ayu::LocalChannelOwnershipActive(_peer)) {
++		return;
++	}
+ 	controller()->session().api().saveCurrentDraftToCloud();
+ }
+ 
+@@ -2801,12 +2822,14 @@ void HistoryWidget::showHistory(
+ 			session().data().hideShownSpoilers();
+ 			_composeSearch = nullptr;
+ 		}
+-		session().sendProgressManager().update(
+-			_history,
+-			Api::SendProgressType::Typing,
+-			-1);
++		if (!Ayu::LocalChannelOwnershipActive(_peer)) {
++			session().sendProgressManager().update(
++				_history,
++				Api::SendProgressType::Typing,
++				-1);
++			session().sendProgressManager().cancelTyping(_history);
++		}
+ 		session().data().histories().sendPendingReadInbox(_history);
+-		session().sendProgressManager().cancelTyping(_history);
+ 	}
+ 
+ 	_cornerButtons.clearReplyReturns();
+@@ -2815,7 +2838,9 @@ void HistoryWidget::showHistory(
+ 			// Removing focus from list clears selected and updates top bar.
+ 			setFocus();
+ 		}
+-		controller()->session().api().saveCurrentDraftToCloud();
++		if (!Ayu::LocalChannelOwnershipActive(_peer)) {
++			controller()->session().api().saveCurrentDraftToCloud();
++		}
+ 		if (_migrated) {
+ 			_migrated->clearDrafts(); // use migrated draft only once
+ 		}
+@@ -3421,12 +3446,16 @@ void HistoryWidget::updateNotifyControls() {
+ }
+ 
+ void HistoryWidget::refreshSilentToggle() {
+-	if (!_silent && hasSilentToggle()) {
+-		_silent.create(this, _peer->asChannel());
+-		orderWidgets();
+-	} else if (_silent && !hasSilentToggle()) {
++	const auto localOnly = Ayu::LocalChannelOwnershipActive(_peer);
++	const auto has = hasSilentToggle();
++	if (_silent
++		&& (!has || _silent->localOnly() != localOnly)) {
+ 		_silent.destroy();
+ 	}
++	if (!_silent && has) {
++		_silent.create(this, _peer->asChannel(), localOnly);
++		orderWidgets();
++	}
+ }
+ 
+ void HistoryWidget::setupFastButtonMode() {
+@@ -5139,6 +5168,11 @@ Api::SendAction HistoryWidget::prepareSendAction(
+ void HistoryWidget::sendVoice(const VoiceToSend &data) {
+ 	if (!canWriteMessage() || data.bytes.isEmpty() || !_history) {
+ 		return;
++	} else if (Ayu::InterceptLocalChannelUnsupportedSend(
++			controller(),
++			_peer)) {
++		_voiceRecordBar->clearListenState();
++		return;
+ 	}
+ 
+ 	const auto withPaymentApproved = [=](int approved) {
+@@ -5192,6 +5226,32 @@ void HistoryWidget::sendTextWithTags(
+ 	if (!options.scheduled) {
+ 		_cornerButtons.clearReplyReturns();
+ 	}
++	if (Ayu::LocalChannelOwnershipActive(_peer)
++		&& !_forwardPanel->items().empty()) {
++		(void)Ayu::InterceptLocalChannelUnsupportedSend(
++			controller(),
++			_peer);
++		return;
++	}
++	const auto localResult = Ayu::HandleLocalChannelBroadcast(
++		_history,
++		textWithTags,
++		options.scheduled != 0);
++	if (localResult != Ayu::LocalChannelBroadcastResult::NotHandled) {
++		if (localResult == Ayu::LocalChannelBroadcastResult::Saved) {
++			clearFieldText();
++			if (_preview) {
++				_preview->apply({ .removed = true });
++			}
++			saveDraftWithTextNow();
++			hideSelectorControlsAnimated();
++			setInnerFocus();
++			if (done) {
++				done();
++			}
++		}
++		return;
++	}
+ 
+ 	auto message = Api::MessageToSend(prepareSendAction(options));
+ 	message.textWithTags = textWithTags;
+@@ -5657,7 +5717,9 @@ void HistoryWidget::finishAnimating() {
+ 
+ void HistoryWidget::chooseAttach(
+ 		std::optional<bool> overrideSendImagesAsPhotos) {
+-	if (_editMsgId) {
++	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
++		return;
++	} else if (_editMsgId) {
+ 		controller()->showToast(tr::lng_edit_caption_attach(tr::now));
+ 		return;
+ 	}
+@@ -5794,6 +5856,10 @@ void HistoryWidget::sendBotCommand(
+ 	// replyTo != 0 from ReplyKeyboardMarkup, == 0 from command links
+ 	if (_peer != request.peer.get()) {
+ 		return;
++	} else if (Ayu::InterceptLocalChannelUnsupportedSend(
++			controller(),
++			_peer)) {
++		return;
+ 	} else if (showSlowmodeError()) {
+ 		return;
+ 	}
+@@ -5978,10 +6044,12 @@ bool HistoryWidget::readyToForward() const {
+ }
+ 
+ bool HistoryWidget::hasSilentToggle() const {
+-	return _peer
+-		&& _peer->isBroadcast()
+-		&& Data::CanSendAnything(_peer)
+-		&& !session().data().notifySettings().silentPostsUnknown(_peer);
++	if (!_peer || !_peer->isBroadcast()) {
++		return false;
++	}
++	return Ayu::LocalChannelOwnershipActive(_peer)
++		|| (Data::CanSendAnything(_peer)
++			&& !session().data().notifySettings().silentPostsUnknown(_peer));
+ }
+ 
+ void HistoryWidget::handleSupportSwitch(not_null<History*> updated) {
+@@ -6018,6 +6086,9 @@ bool HistoryWidget::isBlocked() const {
+ }
+ 
+ bool HistoryWidget::isJoinChannel() const {
++	if (Ayu::LocalChannelOwnershipActive(_peer)) {
++		return false;
++	}
+ 	if (const auto channel = _peer ? _peer->asChannel() : nullptr) {
+ 		return !channel->amIn() && !channel->isMonoforum();
+ 	}
+@@ -6029,6 +6100,9 @@ bool HistoryWidget::isChoosingTheme() const {
+ }
+ 
+ bool HistoryWidget::isMuteUnmute() const {
++	if (Ayu::LocalChannelOwnershipActive(_peer)) {
++		return false;
++	}
+ 	const auto &settings = AyuSettings::getInstance();
+ 	if (settings.channelBottomButton() == ChannelBottomButton::Hidden) {
+ 		return false;
+@@ -6950,7 +7024,9 @@ bool HistoryWidget::confirmSendingFiles(
+ bool HistoryWidget::confirmSendingFiles(
+ 		Ui::PreparedList &&list,
+ 		const QString &insertTextOnCancel) {
+-	if (_editMsgId) {
++	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
++		return true;
++	} else if (_editMsgId) {
+ 		if (_canReplaceMedia || _canAddMedia) {
+ 			EditCaptionBox::StartMediaReplace(
+ 				controller(),
+@@ -7017,7 +7093,9 @@ bool HistoryWidget::confirmSendingFiles(
+ void HistoryWidget::sendingFilesConfirmed(
+ 		std::shared_ptr<Ui::PreparedBundle> bundle,
+ 		Api::SendOptions options) {
+-	if (!_peer || showSendingFilesError(*bundle)) {
++	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
++		return;
++	} else if (!_peer || showSendingFilesError(*bundle)) {
+ 		return;
+ 	}
+ 
+@@ -8382,6 +8460,10 @@ bool HistoryWidget::showSlowmodeError() {
+ void HistoryWidget::sendInlineResult(InlineBots::ResultSelected result) {
+ 	if (!_peer || !_canSendMessages) {
+ 		return;
++	} else if (Ayu::InterceptLocalChannelUnsupportedSend(
++			controller(),
++			_peer)) {
++		return;
+ 	} else if (showSlowmodeError()) {
+ 		return;
+ 	} else if (const auto error = result.result->getErrorOnSend(_history)) {
+@@ -9000,6 +9082,9 @@ bool HistoryWidget::sendExistingDocument(
+ 		not_null<DocumentData*> document,
+ 		Api::MessageToSend messageToSend,
+ 		std::optional<MsgId> localId) {
++	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
++		return true;
++	}
+ 	const auto error = _peer
+ 		? Data::RestrictionError(_peer, ChatRestriction::SendStickers)
+ 		: Data::SendError();
+@@ -9047,6 +9132,9 @@ bool HistoryWidget::sendExistingDocument(
+ bool HistoryWidget::sendExistingPhoto(
+ 		not_null<PhotoData*> photo,
+ 		Api::SendOptions options) {
++	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
++		return true;
++	}
+ 	const auto error = _peer
+ 		? Data::RestrictionError(_peer, ChatRestriction::SendPhotos)
+ 		: Data::SendError();
+@@ -9726,18 +9814,26 @@ bool HistoryWidget::updateCanSendMessage() {
+ 	if (!_peer) {
+ 		return false;
+ 	}
++	const auto localOwnership = Ayu::LocalChannelOwnershipActive(_peer);
++	if (localOwnership) {
++		Ayu::EnsureLocalChannelBroadcasts(_history);
++	}
+ 	const auto topic = resolveReplyToTopic();
+ 	const auto allWithoutPolls = Data::AllSendRestrictions()
+ 		& ~ChatRestriction::SendPolls;
+ 	const auto onlyReplies = _peer->amMonoforumAdmin();
+ 	const auto restrictedOnlyReplies = onlyReplies
+ 		&& (!_replyTo.messageId || _replyTo.messageId.peer != _peer->id);
+-	const auto newCanSendMessages = restrictedOnlyReplies
++	const auto newCanSendMessages = localOwnership
++		? true
++		: restrictedOnlyReplies
+ 		? false
+ 		: topic
+ 		? Data::CanSendAnyOf(topic, allWithoutPolls)
+ 		: Data::CanSendAnyOf(_peer, allWithoutPolls);
+-	const auto newCanSendTexts = restrictedOnlyReplies
++	const auto newCanSendTexts = localOwnership
++		? true
++		: restrictedOnlyReplies
+ 		? false
+ 		: topic
+ 		? Data::CanSend(topic, ChatRestriction::SendOther)
+diff --git a/Telegram/SourceFiles/history/view/controls/history_view_compose_controls.cpp b/Telegram/SourceFiles/history/view/controls/history_view_compose_controls.cpp
+index e63b4a2b8..b87c3d5af 100644
+--- a/Telegram/SourceFiles/history/view/controls/history_view_compose_controls.cpp
++++ b/Telegram/SourceFiles/history/view/controls/history_view_compose_controls.cpp
+@@ -115,6 +115,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ 
+ // AyuGram includes
+ #include "ayu/ayu_settings.h"
++#include "ayu/ui/local_channel_ownership.h"
+ #include "history/history_item_components.h"
+ 
+ 
+@@ -1210,7 +1211,8 @@ void ComposeControls::setHistory(SetHistoryArgs &&args) {
+ 	} else if (hasSilentBroadcastToggle()) {
+ 		_silent = std::make_unique<Ui::SilentToggle>(
+ 			_wrap.get(),
+-			peer->asChannel());
++			peer->asChannel(),
++			Ayu::LocalChannelOwnershipActive(peer));
+ 	}
+ 	session().local().readDraftsWithCursors(_history);
+ 	applyDraft();
+@@ -2669,6 +2671,10 @@ void ComposeControls::saveDraft(bool delayed) {
+ }
+ 
+ void ComposeControls::saveCloudDraft() {
++	if (_history
++		&& Ayu::LocalChannelOwnershipActive(_history->peer.get())) {
++		return;
++	}
+ 	session().api().saveCurrentDraftToCloud();
+ }
+ 
+@@ -4483,8 +4489,9 @@ bool ComposeControls::hasSilentBroadcastToggle() const {
+ 	const auto &peer = _history->peer;
+ 	return peer
+ 		&& peer->isBroadcast()
+-		&& Data::CanSendAnything(peer)
+-		&& !session().data().notifySettings().silentPostsUnknown(peer);
++		&& (Ayu::LocalChannelOwnershipActive(peer)
++			|| (Data::CanSendAnything(peer)
++				&& !session().data().notifySettings().silentPostsUnknown(peer)));
+ }
+ 
+ void ComposeControls::updateInlineBotQuery() {
 diff --git a/Telegram/SourceFiles/history/view/history_view_about_view.cpp b/Telegram/SourceFiles/history/view/history_view_about_view.cpp
 index c30fcf259..f2a647a30 100644
 --- a/Telegram/SourceFiles/history/view/history_view_about_view.cpp
@@ -11060,18 +12093,19 @@ index c30fcf259..f2a647a30 100644
  		tr::bold(parentName),
  		tr::rich);
 diff --git a/Telegram/SourceFiles/history/view/history_view_chat_section.cpp b/Telegram/SourceFiles/history/view/history_view_chat_section.cpp
-index 2c52f4b73..9dcd1e765 100644
+index 2c52f4b73..491371eb8 100644
 --- a/Telegram/SourceFiles/history/view/history_view_chat_section.cpp
 +++ b/Telegram/SourceFiles/history/view/history_view_chat_section.cpp
-@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -7,6 +7,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  */
  #include "history/view/history_view_chat_section.h"
  
++#include "ayu/ui/local_channel_ownership.h"
 +#include "ayu/ui/utils/ayu_profile_values.h"
  #include "history/view/controls/history_view_compose_controls.h"
  #include "history/view/controls/history_view_compose_search.h"
  #include "history/view/controls/history_view_draft_options.h"
-@@ -118,9 +119,10 @@ rpl::producer<Ui::MessageBarContent> RootViewContent(
+@@ -118,9 +120,10 @@ rpl::producer<Ui::MessageBarContent> RootViewContent(
  		const auto sender = (item && item->discussionPostOriginalSender())
  			? item->discussionPostOriginalSender()
  			: history->peer.get();
@@ -11084,6 +12118,207 @@ index 2c52f4b73..9dcd1e765 100644
  		return std::move(content);
  	});
  }
+@@ -761,6 +764,7 @@ bool ChatWidget::computeAreComments() const {
+ }
+ 
+ void ChatWidget::setupComposeControls() {
++	Ayu::EnsureLocalChannelBroadcasts(_history);
+ 	auto topicWriteRestrictions = rpl::single(
+ 	) | rpl::then(session().changes().topicUpdates(
+ 		Data::TopicUpdate::Flag::Closed
+@@ -789,6 +793,9 @@ void ChatWidget::setupComposeControls() {
+ 			auto,
+ 			auto,
+ 			Data::SendError topicRestriction) {
++		if (Ayu::LocalChannelOwnershipActive(_peer)) {
++			return Controls::WriteRestriction();
++		}
+ 		if (info) {
+ 			return Controls::WriteRestriction{
+ 				.type = Controls::WriteRestrictionType::Frozen,
+@@ -868,6 +875,11 @@ void ChatWidget::setupComposeControls() {
+ 
+ 	_composeControls->sendCommandRequests(
+ 	) | rpl::on_next([=](const QString &command) {
++		if (Ayu::InterceptLocalChannelUnsupportedSend(
++				controller(),
++				_peer)) {
++			return;
++		}
+ 		if (showSlowmodeError()) {
+ 			return;
+ 		}
+@@ -888,6 +900,11 @@ void ChatWidget::setupComposeControls() {
+ 	) | rpl::filter([=] {
+ 		return !_choosingAttach;
+ 	}) | rpl::on_next([=](std::optional<bool> overrideCompress) {
++		if (Ayu::InterceptLocalChannelUnsupportedSend(
++				controller(),
++				_peer)) {
++			return;
++		}
+ 		_choosingAttach = true;
+ 		base::call_delayed(
+ 			st::historyAttach.ripple.hideDuration,
+@@ -904,6 +921,11 @@ void ChatWidget::setupComposeControls() {
+ 	_composeControls->fileChosen(
+ 	) | rpl::on_next([=](ChatHelpers::FileChosen data) {
+ 		controller()->hideLayer(anim::type::normal);
++		if (Ayu::InterceptLocalChannelUnsupportedSend(
++				controller(),
++				_peer)) {
++			return;
++		}
+ 		controller()->sendingAnimation().appendSending(
+ 			data.messageSendingFrom);
+ 		auto messageToSend = Api::MessageToSend(
+@@ -922,6 +944,11 @@ void ChatWidget::setupComposeControls() {
+ 
+ 	_composeControls->inlineResultChosen(
+ 	) | rpl::on_next([=](ChatHelpers::InlineChosen chosen) {
++		if (Ayu::InterceptLocalChannelUnsupportedSend(
++				controller(),
++				_peer)) {
++			return;
++		}
+ 		controller()->sendingAnimation().appendSending(
+ 			chosen.messageSendingFrom);
+ 		const auto localId = chosen.messageSendingFrom.localId;
+@@ -1111,7 +1138,9 @@ void ChatWidget::setupSwipeReplyAndBack() {
+ void ChatWidget::chooseAttach(
+ 		std::optional<bool> overrideSendImagesAsPhotos) {
+ 	_choosingAttach = false;
+-	if (const auto error = Data::AnyFileRestrictionError(_peer)) {
++	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
++		return;
++	} else if (const auto error = Data::AnyFileRestrictionError(_peer)) {
+ 		Data::ShowSendErrorToast(controller(), _peer, error);
+ 		return;
+ 	} else if (showSlowmodeError()) {
+@@ -1188,7 +1217,9 @@ bool ChatWidget::confirmSendingFiles(
+ bool ChatWidget::confirmSendingFiles(
+ 		Ui::PreparedList &&list,
+ 		const QString &insertTextOnCancel) {
+-	if (_composeControls->confirmMediaEdit(list)) {
++	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
++		return true;
++	} else if (_composeControls->confirmMediaEdit(list)) {
+ 		return true;
+ 	} else if (showSendingFilesError(list)) {
+ 		return false;
+@@ -1241,7 +1272,9 @@ bool ChatWidget::checkSendPayment(
+ void ChatWidget::sendingFilesConfirmed(
+ 		std::shared_ptr<Ui::PreparedBundle> bundle,
+ 		Api::SendOptions options) {
+-	if (showSendingFilesError(*bundle)) {
++	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
++		return;
++	} else if (showSendingFilesError(*bundle)) {
+ 		return;
+ 	}
+ 
+@@ -1373,6 +1406,11 @@ void ChatWidget::send() {
+ }
+ 
+ void ChatWidget::sendVoice(const ComposeControls::VoiceToSend &data) {
++	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
++		_composeControls->clearListenState();
++		finishSending();
++		return;
++	}
+ 	const auto withPaymentApproved = [=](int approved) {
+ 		auto copy = data;
+ 		copy.options.starsApproved = approved;
+@@ -1419,6 +1457,27 @@ void ChatWidget::sendTextWithTags(
+ 	if (!options.scheduled) {
+ 		_cornerButtons.clearReplyReturns();
+ 	}
++	if (Ayu::LocalChannelOwnershipActive(_peer)
++		&& !_composeControls->forwardItems().empty()) {
++		(void)Ayu::InterceptLocalChannelUnsupportedSend(
++			controller(),
++			_peer);
++		return;
++	}
++	const auto localResult = Ayu::HandleLocalChannelBroadcast(
++		_history,
++		textWithTags,
++		options.scheduled != 0);
++	if (localResult != Ayu::LocalChannelBroadcastResult::NotHandled) {
++		if (localResult == Ayu::LocalChannelBroadcastResult::Saved) {
++			_composeControls->clear();
++			finishSending();
++			if (done) {
++				done();
++			}
++		}
++		return;
++	}
+ 
+ 	auto message = Api::MessageToSend(prepareSendAction(options));
+ 	message.textWithTags = textWithTags;
+@@ -1665,7 +1724,9 @@ void ChatWidget::refreshJoinGroupButton() {
+ 	const auto canSend = !channel->isForum()
+ 		? Data::CanSendAnything(channel)
+ 		: (_topic && Data::CanSendAnything(_topic));
+-	if (channel->amIn() || canSend) {
++	if (Ayu::LocalChannelOwnershipActive(channel)
++		|| channel->amIn()
++		|| canSend) {
+ 		_canSendTexts = true;
+ 		set(nullptr);
+ 	} else {
+@@ -1691,6 +1752,9 @@ bool ChatWidget::sendExistingDocument(
+ 		not_null<DocumentData*> document,
+ 		Api::MessageToSend messageToSend,
+ 		std::optional<MsgId> localId) {
++	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
++		return true;
++	}
+ 	const auto error = Data::RestrictionError(
+ 		_peer,
+ 		ChatRestriction::SendStickers);
+@@ -1731,6 +1795,9 @@ void ChatWidget::sendExistingPhoto(not_null<PhotoData*> photo) {
+ bool ChatWidget::sendExistingPhoto(
+ 		not_null<PhotoData*> photo,
+ 		Api::SendOptions options) {
++	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
++		return true;
++	}
+ 	const auto error = Data::RestrictionError(
+ 		_peer,
+ 		ChatRestriction::SendPhotos);
+@@ -1784,6 +1851,9 @@ void ChatWidget::sendInlineResult(
+ 		not_null<UserData*> bot,
+ 		Api::SendOptions options,
+ 		std::optional<MsgId> localMessageId) {
++	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
++		return;
++	}
+ 	const auto withPaymentApproved = [=](int approved) {
+ 		auto copy = options;
+ 		copy.starsApproved = approved;
+@@ -3205,7 +3275,9 @@ bool ChatWidget::listIsGoodForAroundPosition(
+ void ChatWidget::listSendBotCommand(
+ 		const QString &command,
+ 		const FullMsgId &context) {
+-	if (!_sublist || _sublist->parentChat()) {
++	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
++		return;
++	} else if (!_sublist || _sublist->parentChat()) {
+ 		sendBotCommandWithOptions(command, context, {});
+ 	}
+ }
+@@ -3214,6 +3286,9 @@ void ChatWidget::sendBotCommandWithOptions(
+ 		const QString &command,
+ 		const FullMsgId &context,
+ 		Api::SendOptions options) {
++	if (Ayu::InterceptLocalChannelUnsupportedSend(controller(), _peer)) {
++		return;
++	}
+ 	const auto withPaymentApproved = [=](int approved) {
+ 		auto copy = options;
+ 		copy.starsApproved = approved;
 diff --git a/Telegram/SourceFiles/history/view/history_view_context_menu.cpp b/Telegram/SourceFiles/history/view/history_view_context_menu.cpp
 index 0b39a579c..895351d87 100644
 --- a/Telegram/SourceFiles/history/view/history_view_context_menu.cpp
@@ -11341,20 +12576,21 @@ index 63b23a43a..9c7dee66b 100644
  			_title.setText(
  				st::msgNameStyle,
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_actions.cpp b/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
-index 594061dbb..83634e77f 100644
+index 594061dbb..b126bad66 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
-@@ -7,6 +7,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -7,6 +7,10 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  */
  #include "info/profile/info_profile_actions.h"
  
 +#include "ayu/ayu_settings.h"
++#include "ayu/ui/local_channel_ownership.h"
 +#include "ayu/ui/local_channel_workspace.h"
 +#include "ayu/ui/utils/ayu_profile_values.h"
  #include "api/api_blocked_peers.h"
  #include "api/api_chat_participants.h"
  #include "api/api_credits.h"
-@@ -1766,7 +1769,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
+@@ -1766,7 +1770,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
  			st::infoProfileLabeledButtonQr);
  		qrButton->setAccessibleName(tr::lng_group_invite_context_qr(tr::now));
  		UsernamesValue(_peer) | rpl::on_next([=](const auto &u) {
@@ -11364,7 +12600,7 @@ index 594061dbb..83634e77f 100644
  		}, qrButton->lifetime());
  		const auto rightSkip = st::infoProfileLabeledButtonQrRightSkip;
  		fitLabelToButton(qrButton, usernameLine.text, rightSkip);
-@@ -2009,20 +2013,36 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2009,20 +2014,36 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  	const auto window = _controller->parentController();
  	const auto duration = st::slideWrapDuration;
  
@@ -11405,7 +12641,7 @@ index 594061dbb..83634e77f 100644
  			const auto count = channel ? channel->membersCount() : 0;
  			if (count > 1) {
  				text.append(' ')
-@@ -2045,16 +2065,31 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2045,16 +2066,31 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  		base::install_event_filter(container, [=](
  				not_null<QEvent*> e) {
  			if (e->type() == QEvent::ContextMenu) {
@@ -11443,7 +12679,7 @@ index 594061dbb..83634e77f 100644
  				state->menu->popup(ce->globalPos());
  				return base::EventFilterResult::Cancel;
  			}
-@@ -2068,16 +2103,21 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2068,16 +2104,21 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  				container,
  				object_ptr<Ui::VerticalLayout>(container)));
  		onlyChannelWrap->toggleOn(rpl::duplicate(channel) | rpl::map([=] {
@@ -11472,7 +12708,7 @@ index 594061dbb..83634e77f 100644
  			return name.isEmpty() ? TextWithEntities() : tr::link(name);
  		});
  		auto line = CreateTextWithLabel(
-@@ -2092,8 +2132,12 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2092,8 +2133,12 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  		line.text->setClickHandlerFilter([=](
  				const ClickHandlerPtr &handler,
  				Qt::MouseButton button) {
@@ -11487,7 +12723,7 @@ index 594061dbb..83634e77f 100644
  			}
  			return false;
  		});
-@@ -2113,8 +2157,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2113,8 +2158,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  				object_ptr<Ui::VerticalLayout>(container)));
  		messageChannelWrap->setDuration(duration);
  		messageChannelWrap->toggleOn(rpl::duplicate(channel) | rpl::map([=] {
@@ -11498,7 +12734,7 @@ index 594061dbb..83634e77f 100644
  		}));
  		messageChannelWrap->finishAnimating();
  		messageChannelWrap->toggledValue(
-@@ -2291,16 +2335,25 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2291,16 +2336,25 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  			if (!channel) {
  				return;
  			}
@@ -11526,6 +12762,54 @@ index 594061dbb..83634e77f 100644
  					if (const auto i = user->session().data().message(id)) {
  						rebuild(i, anim::type::normal);
  					}
+@@ -2978,10 +3032,18 @@ void ActionsFiller::addBlockAction(not_null<UserData*> user) {
+ void ActionsFiller::addLeaveChannelAction(not_null<ChannelData*> channel) {
+ 	Expects(_controller->parentController());
+ 
++	auto visible = rpl::combine(
++		AmInChannelValue(channel),
++		channel->session().changes().peerFlagsValue(
++			channel,
++			Data::PeerUpdate::Flag::Rights)
++	) | rpl::map([=](bool amIn, const auto &) {
++		return amIn && !Ayu::LocalChannelOwnershipActive(channel);
++	});
+ 	AddActionButton(
+ 		_wrap,
+ 		tr::lng_profile_leave_channel(),
+-		AmInChannelValue(channel),
++		std::move(visible),
+ 		Window::DeleteAndLeaveHandler(
+ 			_controller->parentController(),
+ 			channel),
+@@ -2990,9 +3052,14 @@ void ActionsFiller::addLeaveChannelAction(not_null<ChannelData*> channel) {
+ 
+ void ActionsFiller::addJoinChannelAction(
+ 		not_null<ChannelData*> channel) {
+-	using namespace rpl::mappers;
+-	auto joinVisible = AmInChannelValue(channel)
+-		| rpl::map(!_1)
++	auto joinVisible = rpl::combine(
++		AmInChannelValue(channel),
++		channel->session().changes().peerFlagsValue(
++			channel,
++			Data::PeerUpdate::Flag::Rights)
++	) | rpl::map([=](bool amIn, const auto &) {
++		return !amIn && !Ayu::LocalChannelOwnershipActive(channel);
++	})
+ 		| rpl::start_spawning(_wrap->lifetime());
+ 	AddActionButton(
+ 		_wrap,
+@@ -3039,7 +3106,8 @@ void ActionsFiller::fillChannelActions(
+ 
+ 	addJoinChannelAction(channel);
+ 	addLeaveChannelAction(channel);
+-	if (!channel->amCreator()) {
++	if (!channel->amCreator()
++		&& !Ayu::LocalChannelOwnershipActive(channel)) {
+ 		addReportAction();
+ 	}
+ }
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_badge.cpp b/Telegram/SourceFiles/info/profile/info_profile_badge.cpp
 index 4855a6aab..133953851 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_badge.cpp
@@ -11576,10 +12860,18 @@ index 4855a6aab..133953851 100644
  
  } // namespace Info::Profile
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp b/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp
-index a410a35ca..4087aac79 100644
+index a410a35ca..0f762bd46 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp
-@@ -23,6 +23,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -11,6 +11,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "api/api_peer_photo.h"
+ #include "api/api_user_privacy.h"
+ #include "apiwrap.h"
++#include "ayu/ui/local_channel_ownership.h"
+ #include "base/call_delayed.h"
+ #include "base/timer_rpl.h"
+ #include "base/timer.h"
+@@ -23,6 +24,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "calls/calls_instance.h"
  #include "chat_helpers/stickers_lottie.h"
  #include "core/application.h"
@@ -11587,7 +12879,7 @@ index a410a35ca..4087aac79 100644
  #include "core/shortcuts.h"
  #include "data/components/recent_shared_media_gifts.h"
  #include "data/data_changes.h"
-@@ -107,6 +108,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -107,6 +109,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include <QtGui/QGuiApplication>
  
  // AyuGram includes
@@ -11595,7 +12887,7 @@ index a410a35ca..4087aac79 100644
  #include "ayu/utils/telegram_helpers.h"
  
  
-@@ -415,8 +417,35 @@ TopBar::TopBar(
+@@ -415,8 +418,35 @@ TopBar::TopBar(
  			std::move(badgeUpdates),
  			_badge->updated());
  
@@ -11633,7 +12925,7 @@ index a410a35ca..4087aac79 100644
  		});
  	}
  	if (_verified) {
-@@ -430,12 +459,7 @@ TopBar::TopBar(
+@@ -430,12 +460,7 @@ TopBar::TopBar(
  			_botVerify->updated());
  	}
  	if (_exteraBadge) {
@@ -11647,7 +12939,7 @@ index a410a35ca..4087aac79 100644
  		badgeUpdates = rpl::merge(
  			std::move(badgeUpdates),
  			_exteraBadge->updated());
-@@ -475,6 +499,7 @@ TopBar::TopBar(
+@@ -475,6 +500,7 @@ TopBar::TopBar(
  
  	rpl::merge(
  		style::PaletteChanged(),
@@ -11655,7 +12947,29 @@ index a410a35ca..4087aac79 100644
  		_peer->session().data().giftUpdates() | rpl::filter([=](
  				const Data::GiftUpdate &update) {
  			if (update.action == Data::GiftUpdate::Action::Pin) {
-@@ -1409,8 +1434,9 @@ void TopBar::setupUniqueBadgeTooltip() {
+@@ -930,7 +956,11 @@ void TopBar::setupActions(not_null<Window::SessionController*> controller) {
+ 	if (chechMax()) {
+ 		return;
+ 	}
+-	if (topic ? topic->canEdit() : EditPeerInfoBox::Available(peer)) {
++	const auto localOwnership = !topic
++		&& Ayu::LocalChannelOwnershipActive(peer);
++	if (topic
++		? topic->canEdit()
++		: (EditPeerInfoBox::Available(peer) || localOwnership)) {
+ 		const auto manage = Ui::CreateChild<TopBarActionButton>(
+ 			this,
+ 			tr::lng_profile_action_short_manage(tr::now),
+@@ -942,6 +972,8 @@ void TopBar::setupActions(not_null<Window::SessionController*> controller) {
+ 					window,
+ 					peer->owner().history(peer),
+ 					topic->rootId()));
++			} else if (localOwnership) {
++				Ayu::ShowLocalChannelOwnership(window, peer->asBroadcast());
+ 			} else {
+ 				window->showEditPeerBox(peer);
+ 			}
+@@ -1409,8 +1441,9 @@ void TopBar::setupUniqueBadgeTooltip() {
  		if (_badgeCollectibleId == id) {
  			return;
  		}
@@ -11666,7 +12980,7 @@ index a410a35ca..4087aac79 100644
  			return;
  		}
  		_badgeTooltip = std::make_unique<BadgeTooltip>(
-@@ -1489,17 +1515,29 @@ void TopBar::setPatternEmojiId(std::optional<DocumentId> patternEmojiId) {
+@@ -1489,17 +1522,29 @@ void TopBar::setPatternEmojiId(std::optional<DocumentId> patternEmojiId) {
  
  void TopBar::setLocalEmojiStatusId(EmojiStatusId emojiStatusId) {
  	_localCollectible = emojiStatusId.collectible;
@@ -11704,7 +13018,7 @@ index a410a35ca..4087aac79 100644
  }
  
  auto TopBar::effectiveCollectible() const
-@@ -1508,7 +1546,7 @@ auto TopBar::effectiveCollectible() const
+@@ -1508,7 +1553,7 @@ auto TopBar::effectiveCollectible() const
  		? _localCollectible
  		: _localColorProfileIndex
  		? nullptr
@@ -11713,7 +13027,7 @@ index a410a35ca..4087aac79 100644
  }
  
  void TopBar::paintEdges(QPainter &p, const QBrush &brush) const {
-@@ -2360,14 +2398,63 @@ void TopBar::setupPinnedToTopGifts(
+@@ -2360,14 +2405,63 @@ void TopBar::setupPinnedToTopGifts(
  		updateCollectibleStatus();
  		setupNewGifts(controller, gifts);
  	});
@@ -11780,7 +13094,7 @@ index a410a35ca..4087aac79 100644
  		: CollectibleId(0);
  	auto filteredGifts = std::vector<Data::SavedStarGift>();
  	const auto subtract = emojiStatusId ? 1 : 0;
-@@ -2440,8 +2527,39 @@ void TopBar::setupNewGifts(
+@@ -2440,8 +2534,39 @@ void TopBar::setupNewGifts(
  		}());
  		entry.button->show();
  
@@ -12307,6 +13621,79 @@ index f517eb4c8..6723023b2 100644
  	bool forceTon = false;
  };
  void GlobalStarGiftBox(
+diff --git a/Telegram/SourceFiles/ui/controls/silent_toggle.cpp b/Telegram/SourceFiles/ui/controls/silent_toggle.cpp
+index be67a3da7..3d89491a4 100644
+--- a/Telegram/SourceFiles/ui/controls/silent_toggle.cpp
++++ b/Telegram/SourceFiles/ui/controls/silent_toggle.cpp
+@@ -18,12 +18,19 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ 
+ namespace Ui {
+ 
+-SilentToggle::SilentToggle(QWidget *parent, not_null<ChannelData*> channel)
++SilentToggle::SilentToggle(
++	QWidget *parent,
++	not_null<ChannelData*> channel,
++	bool localOnly)
+ : RippleButton(parent, st::historySilentToggle.ripple)
+ , _st(st::historySilentToggle)
+ , _channel(channel)
+-, _checked(channel->owner().notifySettings().silentPosts(_channel)) {
+-	Expects(!channel->owner().notifySettings().silentPostsUnknown(_channel));
++, _checked(localOnly
++	? false
++	: channel->owner().notifySettings().silentPosts(_channel))
++, _localOnly(localOnly) {
++	Expects(_localOnly
++		|| !channel->owner().notifySettings().silentPostsUnknown(_channel));
+ 
+ 	resize(_st.width, _st.height);
+ 
+@@ -34,7 +41,12 @@ SilentToggle::SilentToggle(QWidget *parent, not_null<ChannelData*> channel)
+ 	) | rpl::on_next([=] {
+ 		setChecked(!_checked);
+ 		Ui::Tooltip::Show(0, this);
+-		_channel->owner().notifySettings().update(_channel, {}, _checked);
++		if (!_localOnly) {
++			_channel->owner().notifySettings().update(
++				_channel,
++				{},
++				_checked);
++		}
+ 	}, lifetime());
+ }
+ 
+diff --git a/Telegram/SourceFiles/ui/controls/silent_toggle.h b/Telegram/SourceFiles/ui/controls/silent_toggle.h
+index 22995beda..587d87be8 100644
+--- a/Telegram/SourceFiles/ui/controls/silent_toggle.h
++++ b/Telegram/SourceFiles/ui/controls/silent_toggle.h
+@@ -16,12 +16,18 @@ class SilentToggle final
+ 	: public RippleButton
+ 	, public AbstractTooltipShower {
+ public:
+-	SilentToggle(QWidget *parent, not_null<ChannelData*> channel);
++	SilentToggle(
++		QWidget *parent,
++		not_null<ChannelData*> channel,
++		bool localOnly = false);
+ 
+ 	void setChecked(bool checked);
+ 	bool checked() const {
+ 		return _checked;
+ 	}
++	[[nodiscard]] bool localOnly() const {
++		return _localOnly;
++	}
+ 
+ 	// AbstractTooltipShower interface
+ 	QString tooltipText() const override;
+@@ -43,6 +49,7 @@ private:
+ 
+ 	not_null<ChannelData*> _channel;
+ 	bool _checked = false;
++	bool _localOnly = false;
+ 
+ 	// Animations::Simple _crossLineAnimation;
+ 
 diff --git a/Telegram/SourceFiles/ui/controls/table_rows.cpp b/Telegram/SourceFiles/ui/controls/table_rows.cpp
 index 40692d96e..744bcccbb 100644
 --- a/Telegram/SourceFiles/ui/controls/table_rows.cpp
@@ -12695,6 +14082,50 @@ index 61524ae69..387ae7c45 100644
  			Ui::NameTextOptions());
  		moveBadge();
  	}
+diff --git a/Telegram/SourceFiles/window/window_peer_menu.cpp b/Telegram/SourceFiles/window/window_peer_menu.cpp
+index b2d30e29c..49c3912c3 100644
+--- a/Telegram/SourceFiles/window/window_peer_menu.cpp
++++ b/Telegram/SourceFiles/window/window_peer_menu.cpp
+@@ -130,10 +130,12 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include <QtWidgets/QApplication>
+ 
+ // AyuGram includes
++#include "ayu/features/forward/ayu_forward.h"
++#include "ayu/ui/context_menu/context_menu.h"
++#include "ayu/ui/local_channel_ownership.h"
+ #include "ayu/utils/telegram_helpers.h"
++
+ #include "styles/style_ayu_icons.h"
+-#include "ayu/ui/context_menu/context_menu.h"
+-#include "ayu/features/forward/ayu_forward.h"
+ 
+ 
+ namespace Window {
+@@ -1154,7 +1156,8 @@ void Filler::addManageTopic() {
+ }
+ 
+ void Filler::addManageChat() {
+-	if (!EditPeerInfoBox::Available(_peer)) {
++	const auto localOwnership = Ayu::LocalChannelOwnershipActive(_peer);
++	if (!EditPeerInfoBox::Available(_peer) && !localOwnership) {
+ 		return;
+ 	}
+ 	const auto peer = _peer;
+@@ -1165,7 +1168,13 @@ void Filler::addManageChat() {
+ 		? tr::lng_manage_group_title(tr::now)
+ 		: tr::lng_manage_channel_title(tr::now);
+ 	_addAction(text, [=] {
+-		navigation->showEditPeerBox(peer);
++		if (localOwnership) {
++			Ayu::ShowLocalChannelOwnership(
++				navigation,
++				peer->asBroadcast());
++		} else {
++			navigation->showEditPeerBox(peer);
++		}
+ 	}, &st::menuIconManage);
+ }
+ 
 diff --git a/Telegram/SourceFiles/window/window_session_controller.cpp b/Telegram/SourceFiles/window/window_session_controller.cpp
 index 3cb7dc4ff..c8cb3cd8a 100644
 --- a/Telegram/SourceFiles/window/window_session_controller.cpp

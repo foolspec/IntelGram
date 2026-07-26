@@ -5,7 +5,7 @@ patch relative to official AyuGram Desktop `v6.7.8` commit
 `b25513a06ff88be0b3f4c928252b56c3da39cec7`.
 
 Patch SHA-256:
-`3481f2177ad41a055654b7a4c962d16073e70fbf0e12fe99013ebe56f88a3dc6`
+`d9ecc14859dc68f055abdc69e1a27000a5b8df62be99535d131a389edd07561e`
 
 ## Added
 
@@ -13,6 +13,8 @@ Patch SHA-256:
 - `Telegram/SourceFiles/ayu/data/intelgram_export.h`
 - `Telegram/SourceFiles/ayu/data/intelgram_vault.cpp`
 - `Telegram/SourceFiles/ayu/data/intelgram_vault.h`
+- `Telegram/SourceFiles/ayu/ui/local_channel_ownership.cpp`
+- `Telegram/SourceFiles/ayu/ui/local_channel_ownership.h`
 - `Telegram/SourceFiles/ayu/ui/local_channel_workspace.cpp`
 - `Telegram/SourceFiles/ayu/ui/local_channel_workspace.h`
 - `Telegram/SourceFiles/ayu/ui/settings/settings_vault.cpp`
@@ -58,8 +60,11 @@ Patch SHA-256:
 - `Telegram/SourceFiles/dialogs/dialogs_widget.cpp`
 - `Telegram/SourceFiles/dialogs/dialogs_widget.h`
 - `Telegram/SourceFiles/dialogs/ui/dialogs_video_userpic.cpp`
+- `Telegram/SourceFiles/history/history_inner_widget.cpp`
 - `Telegram/SourceFiles/history/history_item.cpp`
 - `Telegram/SourceFiles/history/history_item_helpers.cpp`
+- `Telegram/SourceFiles/history/history_widget.cpp`
+- `Telegram/SourceFiles/history/view/controls/history_view_compose_controls.cpp`
 - `Telegram/SourceFiles/history/view/history_view_about_view.cpp`
 - `Telegram/SourceFiles/history/view/history_view_chat_section.cpp`
 - `Telegram/SourceFiles/history/view/history_view_context_menu.cpp`
@@ -80,6 +85,8 @@ Patch SHA-256:
 - `Telegram/SourceFiles/settings/sections/settings_main.cpp`
 - `Telegram/SourceFiles/settings/settings_credits_graphics.cpp`
 - `Telegram/SourceFiles/settings/settings_credits_graphics.h`
+- `Telegram/SourceFiles/ui/controls/silent_toggle.cpp`
+- `Telegram/SourceFiles/ui/controls/silent_toggle.h`
 - `Telegram/SourceFiles/ui/controls/table_rows.cpp`
 - `Telegram/SourceFiles/ui/unread_badge.cpp`
 - `Telegram/SourceFiles/window/main_window.cpp`
@@ -87,7 +94,8 @@ Patch SHA-256:
 - `Telegram/SourceFiles/window/notifications_manager.cpp`
 - `Telegram/SourceFiles/window/notifications_manager_default.cpp`
 - `Telegram/SourceFiles/window/window_main_menu.cpp`
+- `Telegram/SourceFiles/window/window_peer_menu.cpp`
 - `Telegram/SourceFiles/window/window_session_controller.cpp`
 - `Telegram/lib_ui` (submodule pointer)
 
-Total: 77 paths, including 12 added files and 65 modified paths.
+Total: 85 paths, including 14 added files and 71 modified paths.
