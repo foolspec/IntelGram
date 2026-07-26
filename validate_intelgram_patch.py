@@ -7,7 +7,7 @@ import subprocess
 import sys
 
 BASELINE = "b25513a06ff88be0b3f4c928252b56c3da39cec7"
-LIB_UI_COMMIT = "2324a08c969967f62148b013eda0ae12507753ab"
+LIB_UI_COMMIT = "b9a30917daf2bd8fdc17ccd9682acca178882b7b"
 
 
 def fail(message: str) -> None:
@@ -43,8 +43,10 @@ def main() -> None:
             '"ayu_CategoryAppearance" = "Appearance & Backgrounds";',
             '"ayu_RemoveCurrentTheme" = "Remove current custom theme";',
             '"ayu_VisualEffectsTitle" = "Glass & Motion";',
-            '"ayu_VisualEffectsEnableGlass" = "Enable transparent mode";',
+            '"ayu_VisualEffectsEnableGlass" = "Enable Liquid Glass";',
             '"ayu_VisualEffectsMotionDynamic" = "Diabolical";',
+            '"ayu_VisualEffectsMotionLiquidBounce" = "Liquid Bounce";',
+            '"ayu_LocalProfileChannelProfileLabel" = "Local showcase";',
             '"ayu_VaultTitle" = "Vault & Search";',
             '"ayu_AutomationTitle" = "Contacts & Automation";',
             '"ayu_ExportTitle" = "Export & Backup";',
@@ -94,6 +96,10 @@ def main() -> None:
             "AyuSettings::transparentSidebar",
             "AyuSettings::transparentChat",
             "AyuSettings::transparentPanels",
+            "AyuSettings::transparentAdaptiveMaterial",
+            "AyuSettings::transparentDynamicHighlights",
+            "AyuSettings::transparentRefraction",
+            "setTransparentMaterialIntensity(value);",
             "AyuSettings::enhancedAnimations",
             "AyuSettings::animateWindowOpening",
             "ChooseBackdrop(",
@@ -102,7 +108,20 @@ def main() -> None:
             "Images::BlurLargeImage",
             "Platform::SetWindowVisualEffect",
             "anim::SetMotionStyle",
+            "AdaptiveTint(",
+            "EdgePath(",
+            "WindowAnimationEnabled(",
             "void PaintWindow(",
+        ),
+        "Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp": (
+            "ShowLocalProfileChannelBox(",
+            "MTPcontacts_ResolveUsername(",
+            "settings.setLocalProfileChannelEnabled(true);",
+            "ayu_LocalProfileChannelLocalOnly",
+        ),
+        "Telegram/SourceFiles/info/profile/info_profile_actions.cpp": (
+            "LocalProfileChannelShowcaseActive(user)",
+            "ayu_LocalProfileChannelProfileLabel",
         ),
         "Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp": (
             "void ShowLocalProfileUsernameEditor(",
@@ -140,6 +159,7 @@ def main() -> None:
             "MotionDuration(",
             "MotionTransition(",
             "MotionStyle::Springy",
+            "MotionStyle::LiquidBounce",
         ),
         "Telegram/lib_ui/ui/effects/animations.h": (
             "anim::MotionDuration(duration)",

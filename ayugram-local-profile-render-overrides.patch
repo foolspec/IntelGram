@@ -47,10 +47,10 @@ index 3ac3f4ba0..5abcbf159 100644
          ayu/data/ayu_database.cpp
          ayu/data/ayu_database.h
 diff --git a/Telegram/Resources/langs/lang.strings b/Telegram/Resources/langs/lang.strings
-index 7380587e7..b51dee488 100644
+index 7380587e7..9e06d0f2e 100644
 --- a/Telegram/Resources/langs/lang.strings
 +++ b/Telegram/Resources/langs/lang.strings
-@@ -7971,14 +7971,54 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -7971,14 +7971,60 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  // Keys finished
  
  
@@ -64,14 +64,18 @@ index 7380587e7..b51dee488 100644
 -"ayu_CategoryAppearance" = "Appearance";
 +"ayu_CategoryAppearance" = "Appearance & Backgrounds";
 +"ayu_VisualEffectsTitle" = "Glass & Motion";
-+"ayu_VisualEffectsGlassHeader" = "Transparent mode";
-+"ayu_VisualEffectsEnableGlass" = "Enable transparent mode";
++"ayu_VisualEffectsGlassHeader" = "Liquid Glass material";
++"ayu_VisualEffectsEnableGlass" = "Enable Liquid Glass";
 +"ayu_VisualEffectsNativeBlur" = "Blur what is behind IntelGram";
 +"ayu_VisualEffectsSidebar" = "Transparent chat list and sidebar";
 +"ayu_VisualEffectsChat" = "Transparent chats and message surfaces";
 +"ayu_VisualEffectsPanels" = "Transparent menus, dialogs, and panels";
 +"ayu_VisualEffectsOpacity" = "Glass surface opacity";
-+"ayu_VisualEffectsGlassDescription" = "Uses native macOS and Windows blur when available. Linux uses compositor transparency. Text, icons, avatars, and media stay fully opaque.";
++"ayu_VisualEffectsAdaptiveMaterial" = "Adaptive tint and contrast";
++"ayu_VisualEffectsDynamicHighlights" = "Cursor and motion-reactive highlights";
++"ayu_VisualEffectsRefraction" = "Refractive glass edges";
++"ayu_VisualEffectsMaterialIntensity" = "Optical material intensity";
++"ayu_VisualEffectsGlassDescription" = "Builds a layered optical material over native macOS and Windows blur when available. Linux uses compositor transparency. Adaptive tinting, edge refraction, soft reflections, and film grain stay behind fully opaque text, icons, avatars, and media.";
 +"ayu_VisualEffectsBackdropHeader" = "Window backdrop";
 +"ayu_VisualEffectsTint" = "Glass tint";
 +"ayu_VisualEffectsTintTitle" = "Glass tint";
@@ -92,8 +96,10 @@ index 7380587e7..b51dee488 100644
 +"ayu_VisualEffectsMotionSmooth" = "Smooth Flow";
 +"ayu_VisualEffectsMotionDynamic" = "Diabolical";
 +"ayu_VisualEffectsMotionSpringy" = "Springy";
++"ayu_VisualEffectsMotionLiquidBounce" = "Liquid Bounce";
 +"ayu_VisualEffectsAnimateWindows" = "Animate window opening";
 +"ayu_VisualEffectsMotionDescription" = "Applies the selected timing and easing across IntelGram transitions, dialogs, drawers, controls, and navigation. Reduced-motion and power-saving settings are always respected.";
++"ayu_VisualEffectsMotionPacksDescription" = "Quick Snap is compact and immediate. Smooth Flow is calm and critically damped. Diabolical is brisk with stronger depth. Springy settles gently without overshoot. Liquid Bounce adds the most elastic lift and a controlled overshoot.";
 +"ayu_CategoryNavigation" = "Navigation & Layout";
  "ayu_CategoryChats" = "Chats";
 -"ayu_CategoryOther" = "Other";
@@ -109,7 +115,7 @@ index 7380587e7..b51dee488 100644
  "ayu_CategoryGhostMode" = "Ghost Mode";
  "ayu_CategorySpy" = "Spy";
  "ayu_CategoryFilters" = "Filters";
-@@ -8031,12 +8071,13 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8031,12 +8077,13 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_ExportDatabaseButton" = "Export Database";
  "ayu_ImportDatabaseButton" = "Import Database";
  "ayu_QoLTogglesHeader" = "Useful features";
@@ -125,7 +131,7 @@ index 7380587e7..b51dee488 100644
  "ayu_HidePremiumStatuses" = "Hide Premium Statuses";
  "ayu_SmoothScroll" = "Smooth Scroll";
  "ayu_DisableNotificationsDelay" = "Disable Notify Delay";
-@@ -8056,6 +8097,23 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8056,6 +8103,23 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_LinksChats" = "Chats";
  "ayu_LinksTranslate" = "Translate";
  "ayu_LinksDocumentation" = "Documentation";
@@ -149,7 +155,7 @@ index 7380587e7..b51dee488 100644
  "ayu_CategoriesHeader" = "Categories";
  "ayu_SupportHeader" = "Support";
  "ayu_SupportDescription1" = "Support Development";
-@@ -8070,8 +8128,70 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8070,8 +8134,83 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SupportBoxReceiveBadgeInfo" = "After payment verification, you will receive a unique badge that will be displayed on your profile and visible to other users.";
  "ayu_CrashReporting" = "Crash Reporting";
  "ayu_CrashReportingDescription" = "When this option is enabled, you'll be prompted to send a report after the app crashes. You can decide whether to send it or not.";
@@ -182,6 +188,19 @@ index 7380587e7..b51dee488 100644
 +"ayu_LocalProfileCloneNotFound" = "Open that user's profile in IntelGram first, then try the UID again.";
 +"ayu_LocalProfileCloneSaved" = "{user} is now mirrored on your local profile.";
 +"ayu_LocalProfileCloneLocalOnly" = "Profile cloning changes only your own local rendering. Stop cloning to return to the individual local fields below.";
++"ayu_LocalProfileChannelHeader" = "Local channel showcase";
++"ayu_LocalProfileChannelEnabled" = "Show a public channel on my local profile";
++"ayu_LocalProfileChannelChoose" = "Choose showcase channel";
++"ayu_LocalProfileChannelClear" = "Clear showcase channel";
++"ayu_LocalProfileChannelNone" = "None";
++"ayu_LocalProfileChannelTitle" = "Local channel showcase";
++"ayu_LocalProfileChannelPlaceholder" = "@channel or t.me link";
++"ayu_LocalProfileChannelUse" = "Show locally";
++"ayu_LocalProfileChannelDescription" = "Choose a public Telegram channel to preview on your own profile in IntelGram.";
++"ayu_LocalProfileChannelNotFound" = "That public channel could not be found.";
++"ayu_LocalProfileChannelSaved" = "{channel} is now shown on your local profile.";
++"ayu_LocalProfileChannelLocalOnly" = "This is a local showcase, not channel ownership. IntelGram does not join the channel, change permissions, or modify Telegram.";
++"ayu_LocalProfileChannelProfileLabel" = "Local showcase";
 +"ayu_LocalProfileDescription" = "Changes how your own profile details appear in this IntelGram client. Your Telegram profile, photo, bio, username, UID, and phone number are not changed.";
 +"ayu_LocalProfileGiftEnabled" = "Use local collectible gifts";
 +"ayu_LocalProfileGift" = "Featured collectible gift";
@@ -221,7 +240,7 @@ index 7380587e7..b51dee488 100644
  "ayu_DisableColorfulCover" = "Disable adaptive color";
  "ayu_EnableColorfulCover" = "Enable adaptive color";
  "ayu_CustomizationHeader" = "Customization";
-@@ -8130,14 +8250,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8130,14 +8269,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SettingsBiggerWindow" = "Bigger Window";
  "ayu_SettingsIncreaseWebviewHeight" = "Increase Content Height";
  "ayu_SettingsIncreaseWebviewWidth" = "Increase Content Width";
@@ -238,7 +257,7 @@ index 7380587e7..b51dee488 100644
  "ayu_ImportDataDescription" = "It will replace the current database.";
  "ayu_ImportDataConfirm" = "Yes, replace existing";
  "ayu_ImportDataCancel" = "No, close window";
-@@ -8204,7 +8324,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8204,7 +8343,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_FiltersClearPopupAltActionText" = "Clear unknown";
  "ayu_AppIconHeader" = "App Icon";
  "ayu_IconDefault" = "Default";
@@ -247,7 +266,7 @@ index 7380587e7..b51dee488 100644
  "ayu_IconDiscord" = "Discord";
  "ayu_IconSpotify" = "Spotify";
  "ayu_IconExtera" = "extera";
-@@ -8214,8 +8334,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8214,8 +8353,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_IconAyuTyan" = "AyuTyan";
  "ayu_WALMode" = "Enable WAL mode";
  "ayu_PushNotificationCount" = "FCM notifications received";
@@ -258,7 +277,7 @@ index 7380587e7..b51dee488 100644
  "ayu_TelegramCacheDatabase" = "Telegram Messages Database";
  "ayu_ConfirmationsTitle" = "Confirmations";
  "ayu_StickerConfirmation" = "For Stickers";
-@@ -8288,9 +8408,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8288,9 +8427,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SuggestGhostModeStoryText" = "Do you want to enable **Ghost Mode** before viewing the story?";
  "ayu_SuggestGhostModeStoryActionTextYes" = "Yes";
  "ayu_SuggestGhostModeStoryActionTextNo" = "No";
@@ -270,7 +289,7 @@ index 7380587e7..b51dee488 100644
  "ayu_HideNextViewsDescriptionAyu" = "Hide my views forever, until Ghost Mode is disabled.";
  "ayu_EnableGhostModeStories" = "Enable Ghost Mode";
  "ayu_GhostModeIsActive" = "Ghost Mode is Active";
-@@ -8355,28 +8475,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8355,28 +8494,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_ContextCopyID" = "Copy ID";
  "ayu_IDCopiedToast" = "ID copied to clipboard.";
  "ayu_ContextHideMessage" = "Hide";
@@ -489,7 +508,7 @@ index 2fa8a2a3f..a34d572f2 100644
  
  void initWorker() {
 diff --git a/Telegram/SourceFiles/ayu/ayu_settings.cpp b/Telegram/SourceFiles/ayu/ayu_settings.cpp
-index 2280020ce..e26115200 100644
+index 2280020ce..768669d37 100644
 --- a/Telegram/SourceFiles/ayu/ayu_settings.cpp
 +++ b/Telegram/SourceFiles/ayu/ayu_settings.cpp
 @@ -11,6 +11,7 @@
@@ -511,7 +530,7 @@ index 2280020ce..e26115200 100644
  
  using json = nlohmann::json;
  
-@@ -663,6 +666,93 @@ void AyuSettings::setMaterialSwitches(bool val) {
+@@ -663,6 +666,118 @@ void AyuSettings::setMaterialSwitches(bool val) {
  	save();
  }
  
@@ -549,6 +568,31 @@ index 2280020ce..e26115200 100644
 +	val = std::clamp(val, 20, 100);
 +	if (_transparentOpacity.current() == val) return;
 +	_transparentOpacity = val;
++	save();
++}
++
++void AyuSettings::setTransparentAdaptiveMaterial(bool val) {
++	if (_transparentAdaptiveMaterial.current() == val) return;
++	_transparentAdaptiveMaterial = val;
++	save();
++}
++
++void AyuSettings::setTransparentDynamicHighlights(bool val) {
++	if (_transparentDynamicHighlights.current() == val) return;
++	_transparentDynamicHighlights = val;
++	save();
++}
++
++void AyuSettings::setTransparentRefraction(bool val) {
++	if (_transparentRefraction.current() == val) return;
++	_transparentRefraction = val;
++	save();
++}
++
++void AyuSettings::setTransparentMaterialIntensity(int val) {
++	val = std::clamp(val, 0, 100);
++	if (_transparentMaterialIntensity.current() == val) return;
++	_transparentMaterialIntensity = val;
 +	save();
 +}
 +
@@ -605,7 +649,7 @@ index 2280020ce..e26115200 100644
  void AyuSettings::setRemoveMessageTail(bool val) {
  	if (_removeMessageTail.current() == val) return;
  	_removeMessageTail = val;
-@@ -681,6 +771,112 @@ void AyuSettings::setLocalPremium(bool val) {
+@@ -681,6 +796,125 @@ void AyuSettings::setLocalPremium(bool val) {
  	save();
  }
  
@@ -695,6 +739,19 @@ index 2280020ce..e26115200 100644
 +	save();
 +}
 +
++void AyuSettings::setLocalProfileChannelEnabled(bool val) {
++	if (_localProfileChannelEnabled.current() == val) return;
++	_localProfileChannelEnabled = val;
++	save();
++}
++
++void AyuSettings::setLocalProfileChannel(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfileUsername(val);
++	if (_localProfileChannel.current() == normalized) return;
++	_localProfileChannel = normalized;
++	save();
++}
++
 +void AyuSettings::setLocalProfileGiftEnabled(bool val) {
 +	if (_localProfileGiftEnabled.current() == val) return;
 +	_localProfileGiftEnabled = val;
@@ -718,7 +775,7 @@ index 2280020ce..e26115200 100644
  void AyuSettings::setShowChannelReactions(bool val) {
  	if (_showChannelReactions.current() == val) return;
  	_showChannelReactions = val;
-@@ -1080,9 +1276,38 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
+@@ -1080,9 +1314,44 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
  		{"increaseWebviewHeight", s._increaseWebviewHeight.current()},
  		{"increaseWebviewWidth", s._increaseWebviewWidth.current()},
  		{"materialSwitches", s._materialSwitches.current()},
@@ -728,6 +785,10 @@ index 2280020ce..e26115200 100644
 +		{"transparentChat", s._transparentChat.current()},
 +		{"transparentPanels", s._transparentPanels.current()},
 +		{"transparentOpacity", s._transparentOpacity.current()},
++		{"transparentAdaptiveMaterial", s._transparentAdaptiveMaterial.current()},
++		{"transparentDynamicHighlights", s._transparentDynamicHighlights.current()},
++		{"transparentRefraction", s._transparentRefraction.current()},
++		{"transparentMaterialIntensity", s._transparentMaterialIntensity.current()},
 +		{"transparentTint", s._transparentTint.current()},
 +		{"transparentBackgroundPath", s._transparentBackgroundPath.current()},
 +		{"transparentBackgroundOpacity", s._transparentBackgroundOpacity.current()},
@@ -751,13 +812,15 @@ index 2280020ce..e26115200 100644
 +		{"localProfileAbout", s._localProfileAbout.current()},
 +		{"localProfilePhoto", s._localProfilePhoto.current()},
 +		{"localProfileCloneId", s._localProfileCloneId.current()},
++		{"localProfileChannelEnabled", s._localProfileChannelEnabled.current()},
++		{"localProfileChannel", s._localProfileChannel.current()},
 +		{"localProfileGiftEnabled", s._localProfileGiftEnabled.current()},
 +		{"localProfileGift", s._localProfileGift.current()},
 +		{"localProfileGifts", s._localProfileGifts.current()},
  		{"showChannelReactions", s._showChannelReactions.current()},
  		{"showGroupReactions", s._showGroupReactions.current()},
  		{"showPrivateChatReactions", s._showPrivateChatReactions.current()},
-@@ -1180,9 +1405,61 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
+@@ -1180,9 +1449,82 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
  	s._increaseWebviewHeight = j.value("increaseWebviewHeight", defaults._increaseWebviewHeight.current());
  	s._increaseWebviewWidth = j.value("increaseWebviewWidth", defaults._increaseWebviewWidth.current());
  	s._materialSwitches = j.value("materialSwitches", defaults._materialSwitches.current());
@@ -769,6 +832,21 @@ index 2280020ce..e26115200 100644
 +	s._transparentOpacity = std::clamp(
 +		j.value("transparentOpacity", defaults._transparentOpacity.current()),
 +		20,
++		100);
++	s._transparentAdaptiveMaterial = j.value(
++		"transparentAdaptiveMaterial",
++		defaults._transparentAdaptiveMaterial.current());
++	s._transparentDynamicHighlights = j.value(
++		"transparentDynamicHighlights",
++		defaults._transparentDynamicHighlights.current());
++	s._transparentRefraction = j.value(
++		"transparentRefraction",
++		defaults._transparentRefraction.current());
++	s._transparentMaterialIntensity = std::clamp(
++		j.value(
++			"transparentMaterialIntensity",
++			defaults._transparentMaterialIntensity.current()),
++		0,
 +		100);
 +	const auto tint = QColor(
 +		j.value("transparentTint", defaults._transparentTint.current()));
@@ -813,6 +891,12 @@ index 2280020ce..e26115200 100644
 +	s._localProfileAbout = Ayu::NormalizeLocalProfileAbout(j.value("localProfileAbout", defaults._localProfileAbout.current()));
 +	s._localProfilePhoto = Ayu::NormalizeLocalProfilePhoto(j.value("localProfilePhoto", defaults._localProfilePhoto.current()));
 +	s._localProfileCloneId = Ayu::NormalizeLocalProfileCloneId(j.value("localProfileCloneId", defaults._localProfileCloneId.current()));
++	s._localProfileChannelEnabled = j.value(
++		"localProfileChannelEnabled",
++		defaults._localProfileChannelEnabled.current());
++	s._localProfileChannel = Ayu::NormalizeLocalProfileUsername(j.value(
++		"localProfileChannel",
++		defaults._localProfileChannel.current()));
 +	s._localProfileGiftEnabled = j.value("localProfileGiftEnabled", defaults._localProfileGiftEnabled.current());
 +	s._localProfileGift = Ayu::NormalizeLocalProfileGift(j.value("localProfileGift", defaults._localProfileGift.current()));
 +	s._localProfileGifts = Ayu::NormalizeLocalProfileGifts(j.value("localProfileGifts", defaults._localProfileGifts.current()));
@@ -820,10 +904,10 @@ index 2280020ce..e26115200 100644
  	s._showGroupReactions = j.value("showGroupReactions", defaults._showGroupReactions.current());
  	s._showPrivateChatReactions = j.value("showPrivateChatReactions", defaults._showPrivateChatReactions.current());
 diff --git a/Telegram/SourceFiles/ayu/ayu_settings.h b/Telegram/SourceFiles/ayu/ayu_settings.h
-index 97a043921..eab1e9e50 100644
+index 97a043921..bcc1eb0cc 100644
 --- a/Telegram/SourceFiles/ayu/ayu_settings.h
 +++ b/Telegram/SourceFiles/ayu/ayu_settings.h
-@@ -51,6 +51,13 @@ enum class SendWithoutSoundOption {
+@@ -51,6 +51,14 @@ enum class SendWithoutSoundOption {
  	Always = 2,
  };
  
@@ -832,12 +916,13 @@ index 97a043921..eab1e9e50 100644
 +	Smooth = 1,
 +	Dynamic = 2,
 +	Springy = 3,
++	LiquidBounce = 4,
 +};
 +
  NLOHMANN_JSON_SERIALIZE_ENUM(PeerIdDisplay, {
  	{PeerIdDisplay::Hidden, 0},
  	{PeerIdDisplay::TelegramApi, 1},
-@@ -82,6 +89,13 @@ NLOHMANN_JSON_SERIALIZE_ENUM(SendWithoutSoundOption, {
+@@ -82,6 +90,14 @@ NLOHMANN_JSON_SERIALIZE_ENUM(SendWithoutSoundOption, {
  	{SendWithoutSoundOption::Always, 2},
  })
  
@@ -846,12 +931,13 @@ index 97a043921..eab1e9e50 100644
 +	{IntelGramMotionStyle::Smooth, "smooth"},
 +	{IntelGramMotionStyle::Dynamic, "dynamic"},
 +	{IntelGramMotionStyle::Springy, "springy"},
++	{IntelGramMotionStyle::LiquidBounce, "liquid_bounce"},
 +})
 +
  class GhostModeAccountSettings {
  public:
  	GhostModeAccountSettings();
-@@ -288,9 +302,38 @@ public:
+@@ -288,9 +304,44 @@ public:
  	[[nodiscard]] bool increaseWebviewHeight() const { return _increaseWebviewHeight.current(); }
  	[[nodiscard]] bool increaseWebviewWidth() const { return _increaseWebviewWidth.current(); }
  	[[nodiscard]] bool materialSwitches() const { return _materialSwitches.current(); }
@@ -861,6 +947,10 @@ index 97a043921..eab1e9e50 100644
 +	[[nodiscard]] bool transparentChat() const { return _transparentChat.current(); }
 +	[[nodiscard]] bool transparentPanels() const { return _transparentPanels.current(); }
 +	[[nodiscard]] int transparentOpacity() const { return _transparentOpacity.current(); }
++	[[nodiscard]] bool transparentAdaptiveMaterial() const { return _transparentAdaptiveMaterial.current(); }
++	[[nodiscard]] bool transparentDynamicHighlights() const { return _transparentDynamicHighlights.current(); }
++	[[nodiscard]] bool transparentRefraction() const { return _transparentRefraction.current(); }
++	[[nodiscard]] int transparentMaterialIntensity() const { return _transparentMaterialIntensity.current(); }
 +	[[nodiscard]] const QString &transparentTint() const { return _transparentTint.current(); }
 +	[[nodiscard]] const QString &transparentBackgroundPath() const { return _transparentBackgroundPath.current(); }
 +	[[nodiscard]] int transparentBackgroundOpacity() const { return _transparentBackgroundOpacity.current(); }
@@ -884,13 +974,15 @@ index 97a043921..eab1e9e50 100644
 +	[[nodiscard]] const QString &localProfileAbout() const { return _localProfileAbout.current(); }
 +	[[nodiscard]] const QString &localProfilePhoto() const { return _localProfilePhoto.current(); }
 +	[[nodiscard]] const QString &localProfileCloneId() const { return _localProfileCloneId.current(); }
++	[[nodiscard]] bool localProfileChannelEnabled() const { return _localProfileChannelEnabled.current(); }
++	[[nodiscard]] const QString &localProfileChannel() const { return _localProfileChannel.current(); }
 +	[[nodiscard]] bool localProfileGiftEnabled() const { return _localProfileGiftEnabled.current(); }
 +	[[nodiscard]] const QString &localProfileGift() const { return _localProfileGift.current(); }
 +	[[nodiscard]] const QString &localProfileGifts() const { return _localProfileGifts.current(); }
  	[[nodiscard]] bool showChannelReactions() const { return _showChannelReactions.current(); }
  	[[nodiscard]] bool showGroupReactions() const { return _showGroupReactions.current(); }
  	[[nodiscard]] bool showPrivateChatReactions() const { return _showPrivateChatReactions.current(); }
-@@ -372,9 +415,38 @@ public:
+@@ -372,9 +423,44 @@ public:
  	void setIncreaseWebviewHeight(bool val);
  	void setIncreaseWebviewWidth(bool val);
  	void setMaterialSwitches(bool val);
@@ -900,6 +992,10 @@ index 97a043921..eab1e9e50 100644
 +	void setTransparentChat(bool val);
 +	void setTransparentPanels(bool val);
 +	void setTransparentOpacity(int val);
++	void setTransparentAdaptiveMaterial(bool val);
++	void setTransparentDynamicHighlights(bool val);
++	void setTransparentRefraction(bool val);
++	void setTransparentMaterialIntensity(int val);
 +	void setTransparentTint(const QString &val);
 +	void setTransparentBackgroundPath(const QString &val);
 +	void setTransparentBackgroundOpacity(int val);
@@ -923,13 +1019,15 @@ index 97a043921..eab1e9e50 100644
 +	void setLocalProfileAbout(const QString &val);
 +	void setLocalProfilePhoto(const QString &val);
 +	void setLocalProfileCloneId(const QString &val);
++	void setLocalProfileChannelEnabled(bool val);
++	void setLocalProfileChannel(const QString &val);
 +	void setLocalProfileGiftEnabled(bool val);
 +	void setLocalProfileGift(const QString &val);
 +	void setLocalProfileGifts(const QString &val);
  	void setShowChannelReactions(bool val);
  	void setShowGroupReactions(bool val);
  	void setShowPrivateChatReactions(bool val);
-@@ -479,12 +551,70 @@ public:
+@@ -479,12 +565,82 @@ public:
  	[[nodiscard]] rpl::producer<bool> increaseWebviewWidthChanges() const { return _increaseWebviewWidth.changes(); }
  	[[nodiscard]] rpl::producer<bool> materialSwitchesValue() const { return _materialSwitches.value(); }
  	[[nodiscard]] rpl::producer<bool> materialSwitchesChanges() const { return _materialSwitches.changes(); }
@@ -945,6 +1043,14 @@ index 97a043921..eab1e9e50 100644
 +	[[nodiscard]] rpl::producer<bool> transparentPanelsChanges() const { return _transparentPanels.changes(); }
 +	[[nodiscard]] rpl::producer<int> transparentOpacityValue() const { return _transparentOpacity.value(); }
 +	[[nodiscard]] rpl::producer<int> transparentOpacityChanges() const { return _transparentOpacity.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentAdaptiveMaterialValue() const { return _transparentAdaptiveMaterial.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentAdaptiveMaterialChanges() const { return _transparentAdaptiveMaterial.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentDynamicHighlightsValue() const { return _transparentDynamicHighlights.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentDynamicHighlightsChanges() const { return _transparentDynamicHighlights.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentRefractionValue() const { return _transparentRefraction.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentRefractionChanges() const { return _transparentRefraction.changes(); }
++	[[nodiscard]] rpl::producer<int> transparentMaterialIntensityValue() const { return _transparentMaterialIntensity.value(); }
++	[[nodiscard]] rpl::producer<int> transparentMaterialIntensityChanges() const { return _transparentMaterialIntensity.changes(); }
 +	[[nodiscard]] rpl::producer<QString> transparentTintValue() const { return _transparentTint.value(); }
 +	[[nodiscard]] rpl::producer<QString> transparentTintChanges() const { return _transparentTint.changes(); }
 +	[[nodiscard]] rpl::producer<QString> transparentBackgroundPathValue() const { return _transparentBackgroundPath.value(); }
@@ -991,6 +1097,10 @@ index 97a043921..eab1e9e50 100644
 +	[[nodiscard]] rpl::producer<QString> localProfilePhotoChanges() const { return _localProfilePhoto.changes(); }
 +	[[nodiscard]] rpl::producer<QString> localProfileCloneIdValue() const { return _localProfileCloneId.value(); }
 +	[[nodiscard]] rpl::producer<QString> localProfileCloneIdChanges() const { return _localProfileCloneId.changes(); }
++	[[nodiscard]] rpl::producer<bool> localProfileChannelEnabledValue() const { return _localProfileChannelEnabled.value(); }
++	[[nodiscard]] rpl::producer<bool> localProfileChannelEnabledChanges() const { return _localProfileChannelEnabled.changes(); }
++	[[nodiscard]] rpl::producer<QString> localProfileChannelValue() const { return _localProfileChannel.value(); }
++	[[nodiscard]] rpl::producer<QString> localProfileChannelChanges() const { return _localProfileChannel.changes(); }
 +	[[nodiscard]] rpl::producer<bool> localProfileGiftEnabledValue() const { return _localProfileGiftEnabled.value(); }
 +	[[nodiscard]] rpl::producer<bool> localProfileGiftEnabledChanges() const { return _localProfileGiftEnabled.changes(); }
 +	[[nodiscard]] rpl::producer<QString> localProfileGiftValue() const { return _localProfileGift.value(); }
@@ -1000,7 +1110,7 @@ index 97a043921..eab1e9e50 100644
  	[[nodiscard]] rpl::producer<bool> showChannelReactionsValue() const { return _showChannelReactions.value(); }
  	[[nodiscard]] rpl::producer<bool> showChannelReactionsChanges() const { return _showChannelReactions.changes(); }
  	[[nodiscard]] rpl::producer<bool> showGroupReactionsValue() const { return _showGroupReactions.value(); }
-@@ -633,9 +763,38 @@ private:
+@@ -633,9 +789,44 @@ private:
  	rpl::variable<bool> _increaseWebviewHeight = false;
  	rpl::variable<bool> _increaseWebviewWidth = false;
  	rpl::variable<bool> _materialSwitches = true;
@@ -1010,6 +1120,10 @@ index 97a043921..eab1e9e50 100644
 +	rpl::variable<bool> _transparentChat = true;
 +	rpl::variable<bool> _transparentPanels = true;
 +	rpl::variable<int> _transparentOpacity = 78;
++	rpl::variable<bool> _transparentAdaptiveMaterial = true;
++	rpl::variable<bool> _transparentDynamicHighlights = true;
++	rpl::variable<bool> _transparentRefraction = true;
++	rpl::variable<int> _transparentMaterialIntensity = 72;
 +	rpl::variable<QString> _transparentTint = QString::fromLatin1("#161922");
 +	rpl::variable<QString> _transparentBackgroundPath;
 +	rpl::variable<int> _transparentBackgroundOpacity = 72;
@@ -1033,6 +1147,8 @@ index 97a043921..eab1e9e50 100644
 +	rpl::variable<QString> _localProfileAbout;
 +	rpl::variable<QString> _localProfilePhoto;
 +	rpl::variable<QString> _localProfileCloneId;
++	rpl::variable<bool> _localProfileChannelEnabled = false;
++	rpl::variable<QString> _localProfileChannel;
 +	rpl::variable<bool> _localProfileGiftEnabled = false;
 +	rpl::variable<QString> _localProfileGift;
 +	rpl::variable<QString> _localProfileGifts;
@@ -3622,6 +3738,23 @@ index 5258d4436..148380c22 100644
  }
  
  struct ForwardChunk
+diff --git a/Telegram/SourceFiles/ayu/ui/ayu_styles.style b/Telegram/SourceFiles/ayu/ui/ayu_styles.style
+index 66059b446..29dea0703 100644
+--- a/Telegram/SourceFiles/ayu/ui/ayu_styles.style
++++ b/Telegram/SourceFiles/ayu/ui/ayu_styles.style
+@@ -18,6 +18,12 @@ iconPickerSelectedRounding: 12px;
+ iconPickerImagePadding: 4px;
+ iconPickerIconSize: 64px;
+ 
++liquidGlassCornerRadius: 22px;
++liquidGlassEdgeThickness: 8px;
++liquidGlassRefractionOffset: 3px;
++liquidGlassNoiseTileSize: 64px;
++liquidGlassHighlightRadius: 320px;
++
+ recentStickersLimitPadding: margins(22px, 4px, 22px, 8px);
+ imageViewPadding: margins(22px, 10px, 22px, 10px);
+ imageViewInnerPadding: margins(16px, 16px, 16px, 16px);
 diff --git a/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp b/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp
 index 8fceff22c..22eb1d05c 100644
 --- a/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp
@@ -4176,10 +4309,10 @@ index a4b1e7ad4..8b0f3d579 100644
  	builder.addSkip();
  }
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-index 929cf4609..6e391186c 100644
+index 929cf4609..284e1eb44 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-@@ -6,33 +6,45 @@
+@@ -6,33 +6,46 @@
  // Copyright @Radolyn, 2026
  #include "ayu/ui/settings/settings_other.h"
  
@@ -4196,6 +4329,7 @@ index 929cf4609..6e391186c 100644
 +#include "boxes/star_gift_box.h"
  #include "core/application.h"
 +#include "core/file_utilities.h"
++#include "data/data_channel.h"
 +#include "data/data_changes.h"
 +#include "data/data_session.h"
 +#include "data/data_star_gift.h"
@@ -4237,7 +4371,7 @@ index 929cf4609..6e391186c 100644
  
  namespace Settings {
  
-@@ -41,162 +53,964 @@ using namespace AyuBuilder;
+@@ -41,162 +54,1089 @@ using namespace AyuBuilder;
  
  namespace {
  
@@ -4269,13 +4403,8 @@ index 929cf4609..6e391186c 100644
 +struct LocalGiftCollection {
 +	QString title;
 +	QString slug;
- };
- 
--Asset getAsset(const QString &name) {
--	const auto isNightMode = Window::Theme::IsNightMode();
--	const auto normalized = name.toLower();
--	QString icon = QString(":/gui/icons/ayu/donates/%1.svg").arg(normalized);
--	QColor background = isNightMode ? QColor(0xEEEEEE) : QColor(0x242B2C);
++};
++
 +struct LocalGiftBrowserState {
 +	rpl::variable<Ui::GiftsDescriptor> gifts;
 +	std::vector<Info::PeerGifts::GiftDescriptor> items;
@@ -4285,8 +4414,13 @@ index 929cf4609..6e391186c 100644
 +	int nextNumber = 1;
 +	bool loading = false;
 +	bool exhausted = false;
-+};
-+
+ };
+ 
+-Asset getAsset(const QString &name) {
+-	const auto isNightMode = Window::Theme::IsNightMode();
+-	const auto normalized = name.toLower();
+-	QString icon = QString(":/gui/icons/ayu/donates/%1.svg").arg(normalized);
+-	QColor background = isNightMode ? QColor(0xEEEEEE) : QColor(0x242B2C);
 +constexpr auto kLocalGiftBrowserPageSize = 12;
 +
 +[[nodiscard]] std::vector<LocalGiftCollection> LocalGiftCollections() {
@@ -4344,53 +4478,20 @@ index 929cf4609..6e391186c 100644
 +		if (!reference.isEmpty()) {
 +			result.push_back(reference);
 +		}
- 	}
++	}
 +	return result;
 +}
- 
--	return image;
++
 +[[nodiscard]] QString SerializeLocalGiftReferences(
 +		const std::vector<QString> &references) {
 +	auto result = QStringList();
 +	result.reserve(references.size());
 +	for (const auto &reference : references) {
 +		result.push_back(reference);
-+	}
+ 	}
 +	return result.join(u", "_q);
- }
- 
--[[nodiscard]] not_null<Ui::SettingsButton*> AddDonate(
--		not_null<Ui::SettingsButton*> button,
--		const QString &name) {
--	const auto btnContainer = Ui::CreateChild<Ui::RpWidget>(button);
--	const auto &buttonSt = button->st();
--	const auto fullHeight = buttonSt.height
--		+ rect::m::sum::v(buttonSt.padding);
--
--	const auto iconWidget = Ui::CreateChild<Ui::RpWidget>(button.get());
--
--	auto icon = getImage(name);
--	iconWidget->resize(icon.size() / style::DevicePixelRatio());
--	iconWidget->paintRequest(
--	) | rpl::on_next([=] {
--		auto p = QPainter(iconWidget);
--		p.drawImage(0, 0, icon);
--	}, iconWidget->lifetime());
--
--	button->sizeValue(
--	) | rpl::on_next([=](const QSize &s) {
--		iconWidget->moveToLeft(
--			button->st().iconLeft
--				+ (st::menuIconShop.width() - iconWidget->width()) / 2,
--			(s.height() - iconWidget->height()) / 2);
--		btnContainer->moveToLeft(
--			iconWidget->x() - (fullHeight - iconWidget->height()) / 2,
--			0);
--	}, iconWidget->lifetime());
--
--	btnContainer->resize(fullHeight, fullHeight);
--
--	return button;
++}
++
 +[[nodiscard]] QString LocalGiftReferenceLabel(QString reference) {
 +	reference = Ayu::NormalizeLocalProfileGift(std::move(reference));
 +	static const auto Slug = QRegularExpression(u"^(.+)-([0-9]+)$"_q);
@@ -4405,29 +4506,13 @@ index 929cf4609..6e391186c 100644
 +	return (reference.size() > 38)
 +		? (reference.left(24) + u"..."_q + reference.right(8))
 +		: reference;
- }
- 
--void AddCryptoDonate(
--		const QString &name,
--		const QString &address,
--		not_null<Ui::VerticalLayout*> container) {
--	const auto button = AddDonate(
--		AddButtonWithIcon(
--			container,
--			rpl::single(name),
--			st::settingsButton),
--		name);
--	button->setClickedCallback([=] {
--		auto box = Box(
--			Ui::FillDonateQrBox,
--			address,
--			getAsset(name).icon);
--		Ui::show(std::move(box));
--	});
++}
++
 +void ShowLocalGiftCollectionPicker(
 +	not_null<Window::SessionController*> controller,
 +	LocalGiftTarget target);
-+
+ 
+-	return image;
 +[[nodiscard]] bool StoreLocalGift(
 +		not_null<Window::SessionController*> controller,
 +		LocalGiftTarget target,
@@ -4467,20 +4552,38 @@ index 929cf4609..6e391186c 100644
 +	return true;
  }
  
--void BuildDonations(SectionBuilder &builder) {
--	builder.add([](const BuildContext &ctx) {
--		v::match(ctx, [&](const WidgetContext &wctx) {
--			const auto container = wctx.container;
+-[[nodiscard]] not_null<Ui::SettingsButton*> AddDonate(
+-		not_null<Ui::SettingsButton*> button,
+-		const QString &name) {
+-	const auto btnContainer = Ui::CreateChild<Ui::RpWidget>(button);
+-	const auto &buttonSt = button->st();
+-	const auto fullHeight = buttonSt.height
+-		+ rect::m::sum::v(buttonSt.padding);
 -
--			AddSubsectionTitle(container, tr::ayu_SupportHeader());
--			AddDonate(
--				AddButtonWithIcon(
--					container,
--					rpl::single(QString("Boosty")),
--					st::settingsButton),
--				"boosty"
--			)->setClickedCallback([=] {
--				QDesktopServices::openUrl(QString("https://boosty.to/alexeyzavar"));
+-	const auto iconWidget = Ui::CreateChild<Ui::RpWidget>(button.get());
+-
+-	auto icon = getImage(name);
+-	iconWidget->resize(icon.size() / style::DevicePixelRatio());
+-	iconWidget->paintRequest(
+-	) | rpl::on_next([=] {
+-		auto p = QPainter(iconWidget);
+-		p.drawImage(0, 0, icon);
+-	}, iconWidget->lifetime());
+-
+-	button->sizeValue(
+-	) | rpl::on_next([=](const QSize &s) {
+-		iconWidget->moveToLeft(
+-			button->st().iconLeft
+-				+ (st::menuIconShop.width() - iconWidget->width()) / 2,
+-			(s.height() - iconWidget->height()) / 2);
+-		btnContainer->moveToLeft(
+-			iconWidget->x() - (fullHeight - iconWidget->height()) / 2,
+-			0);
+-	}, iconWidget->lifetime());
+-
+-	btnContainer->resize(fullHeight, fullHeight);
+-
+-	return button;
 +[[nodiscard]] QString ResolveLocalGiftReference(
 +		QString reference,
 +		const LocalGiftCollection &collection) {
@@ -4499,8 +4602,25 @@ index 929cf4609..6e391186c 100644
 +		reference = collection.slug + '-' + reference;
 +	}
 +	return Ayu::NormalizeLocalProfileGift(std::move(reference));
-+}
-+
+ }
+ 
+-void AddCryptoDonate(
+-		const QString &name,
+-		const QString &address,
+-		not_null<Ui::VerticalLayout*> container) {
+-	const auto button = AddDonate(
+-		AddButtonWithIcon(
+-			container,
+-			rpl::single(name),
+-			st::settingsButton),
+-		name);
+-	button->setClickedCallback([=] {
+-		auto box = Box(
+-			Ui::FillDonateQrBox,
+-			address,
+-			getAsset(name).icon);
+-		Ui::show(std::move(box));
+-	});
 +void LoadLocalGiftBrowserPage(
 +		not_null<Window::SessionController*> controller,
 +		LocalGiftCollection collection,
@@ -4535,8 +4655,22 @@ index 929cf4609..6e391186c 100644
 +			state->exhausted = (resolved == 0);
 +			state->gifts = Ui::GiftsDescriptor{ .list = state->items };
 +		});
-+}
-+
+ }
+ 
+-void BuildDonations(SectionBuilder &builder) {
+-	builder.add([](const BuildContext &ctx) {
+-		v::match(ctx, [&](const WidgetContext &wctx) {
+-			const auto container = wctx.container;
+-
+-			AddSubsectionTitle(container, tr::ayu_SupportHeader());
+-			AddDonate(
+-				AddButtonWithIcon(
+-					container,
+-					rpl::single(QString("Boosty")),
+-					st::settingsButton),
+-				"boosty"
+-			)->setClickedCallback([=] {
+-				QDesktopServices::openUrl(QString("https://boosty.to/alexeyzavar"));
 +void LoadLocalGiftCollectionFallback(
 +		not_null<Window::SessionController*> controller,
 +		QPointer<Ui::GenericBox> box,
@@ -5011,10 +5145,96 @@ index 929cf4609..6e391186c 100644
 +	}));
 +}
 +
++void ShowLocalProfileChannelBox(
++		not_null<Window::SessionController*> controller) {
++	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
++		box->setTitle(tr::ayu_LocalProfileChannelTitle());
++		const auto field = box->addRow(
++			object_ptr<Ui::InputField>(
++				box,
++				st::defaultInputField,
++				tr::ayu_LocalProfileChannelPlaceholder(),
++				AyuSettings::getInstance().localProfileChannel()),
++			st::boxRowPadding);
++		field->setMaxLength(Ayu::kMaxLocalProfileUsernameLength);
++		box->setFocusCallback([=] {
++			field->setFocusFast();
++		});
++		AddDividerText(
++			box->verticalLayout(),
++			tr::ayu_LocalProfileChannelDescription());
++		const auto weak = QPointer<Ui::GenericBox>(box.get());
++		const auto apply = [=](PeerData *peer) {
++			if (!weak) {
++				return;
++			}
++			const auto channel = peer ? peer->asChannel() : nullptr;
++			if (!channel) {
++				controller->showToast(
++					tr::ayu_LocalProfileChannelNotFound(tr::now));
++				return;
++			}
++			const auto username = Ayu::NormalizeLocalProfileUsername(
++				field->getLastText());
++			auto &settings = AyuSettings::getInstance();
++			settings.setLocalProfileChannel(username);
++			settings.setLocalProfileChannelEnabled(true);
++			controller->session().api().requestFullPeer(channel);
++			Ayu::RefreshLocalProfilePresentation(&controller->session());
++			controller->showToast(tr::ayu_LocalProfileChannelSaved(
++				tr::now,
++				lt_channel,
++				channel->name()));
++			weak->closeBox();
++		};
++		const auto save = [=] {
++			const auto username = Ayu::NormalizeLocalProfileUsername(
++				field->getLastText());
++			if (username.isEmpty()) {
++				controller->showToast(
++					tr::ayu_LocalProfileChannelNotFound(tr::now));
++				return;
++			}
++			if (const auto peer = controller->session(
++					).data().peerByUsername(username)) {
++				apply(peer);
++				return;
++			}
++			controller->session().api().request(
++				MTPcontacts_ResolveUsername(
++					MTP_flags(0),
++					MTP_string(username),
++					MTP_string())
++			).done([=](const MTPcontacts_ResolvedPeer &result) {
++				if (!weak) {
++					return;
++				}
++				const auto &data = result.data();
++				auto &owner = controller->session().data();
++				owner.processUsers(data.vusers());
++				owner.processChats(data.vchats());
++				apply(owner.peerLoaded(peerFromMTP(data.vpeer())));
++			}).fail([=](const MTP::Error &) {
++				if (weak) {
++					controller->showToast(
++						tr::ayu_LocalProfileChannelNotFound(tr::now));
++				}
++			}).send();
++		};
++		field->submits(
++		) | rpl::on_next(save, field->lifetime());
++		box->addButton(tr::ayu_LocalProfileChannelUse(), save);
++		box->addButton(tr::lng_cancel(), [=] {
++			box->closeBox();
++		});
++	}));
++}
++
 +void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 +	const auto controller = builder.controller();
 +
-+	builder.addSkip();
+ 	builder.addSkip();
+-	builder.addSubsectionTitle(tr::ayu_CategoryOther());
 +	builder.addSubsectionTitle(tr::ayu_LocalProfileHeader());
 +	builder.addButton({
 +		.id = u"ayu/localProfileClone"_q,
@@ -5035,8 +5255,7 @@ index 929cf4609..6e391186c 100644
 +		},
 +	});
 +	builder.addDividerText(tr::ayu_LocalProfileCloneLocalOnly());
- 	builder.addSkip();
--	builder.addSubsectionTitle(tr::ayu_CategoryOther());
++	builder.addSkip();
 +	builder.addSubsectionTitle(tr::ayu_LocalProfileIdentityHeader());
  
  	ayu.addSettingToggle({
@@ -5278,6 +5497,46 @@ index 929cf4609..6e391186c 100644
 +	});
 +	builder.addDividerText(tr::ayu_LocalProfileDescription());
 +	builder.addSkip();
++	builder.addDivider();
++	builder.addSkip();
++	builder.addSubsectionTitle(tr::ayu_LocalProfileChannelHeader());
++	ayu.addSettingToggle({
++		.id = u"ayu/localProfileChannelEnabled"_q,
++		.title = tr::ayu_LocalProfileChannelEnabled(),
++		.getter = &AyuSettings::localProfileChannelEnabled,
++		.setter = &AyuSettings::setLocalProfileChannelEnabled,
++		.icon = { &st::menuIconMediaChannel },
++	});
++	builder.addButton({
++		.id = u"ayu/localProfileChannel"_q,
++		.title = tr::ayu_LocalProfileChannelChoose(),
++		.icon = { &st::menuIconMediaChannel },
++		.label = AyuSettings::getInstance().localProfileChannelValue(
++		) | rpl::map([](const QString &username) {
++			return username.isEmpty()
++				? tr::ayu_LocalProfileChannelNone(tr::now)
++				: (u"@"_q + username);
++		}),
++		.onClick = [=] {
++			ShowLocalProfileChannelBox(controller);
++		},
++	});
++	builder.addButton({
++		.id = u"ayu/localProfileChannelClear"_q,
++		.title = tr::ayu_LocalProfileChannelClear(),
++		.icon = { &st::menuIconDelete },
++		.onClick = [=] {
++			auto &settings = AyuSettings::getInstance();
++			settings.setLocalProfileChannelEnabled(false);
++			settings.setLocalProfileChannel(QString());
++			Ayu::RefreshLocalProfilePresentation(&controller->session());
++			controller->showToast(tr::lng_box_done(tr::now));
++		},
++	});
++	builder.addDividerText(tr::ayu_LocalProfileChannelLocalOnly());
++	builder.addSkip();
++	builder.addDivider();
++	builder.addSkip();
 +	builder.addSubsectionTitle(tr::ayu_LocalProfileCollectiblesHeader());
 +	ayu.addSettingToggle({
 +		.id = u"ayu/localProfileGiftEnabled"_q,
@@ -5328,7 +5587,7 @@ index 929cf4609..6e391186c 100644
  	builder.addButton({
  		.id = u"ayu/registerUrlScheme"_q,
  		.title = tr::ayu_RegisterURLScheme(),
-@@ -228,13 +1042,23 @@ void BuildOtherThings(SectionBuilder &builder) {
+@@ -228,13 +1168,23 @@ void BuildOtherThings(SectionBuilder &builder) {
  const auto kMeta = BuildHelper({
  	.id = AyuOther::Id(),
  	.parentId = AyuMain::Id(),
@@ -5355,7 +5614,7 @@ index 929cf4609..6e391186c 100644
  	BuildCrashReporting(builder, ayu);
  	BuildOtherThings(builder);
  });
-@@ -242,7 +1066,7 @@ const auto kMeta = BuildHelper({
+@@ -242,7 +1192,7 @@ const auto kMeta = BuildHelper({
  } // namespace
  
  rpl::producer<QString> AyuOther::title() {
@@ -5364,7 +5623,7 @@ index 929cf4609..6e391186c 100644
  }
  
  AyuOther::AyuOther(
-@@ -258,6 +1082,23 @@ void AyuOther::setupContent() {
+@@ -258,6 +1208,23 @@ void AyuOther::setupContent() {
  	Ui::ResizeFitChild(this, content);
  }
  
@@ -6500,10 +6759,10 @@ index 000000000..b4a7a0919
 +} // namespace Settings
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_visual_effects.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_visual_effects.cpp
 new file mode 100644
-index 000000000..dd80127b2
+index 000000000..8ee9f94cb
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_visual_effects.cpp
-@@ -0,0 +1,285 @@
+@@ -0,0 +1,317 @@
 +#include "ayu/ui/settings/settings_visual_effects.h"
 +
 +#include "ayu/ayu_settings.h"
@@ -6643,6 +6902,36 @@ index 000000000..dd80127b2
 +			return QString::number(value) + '%';
 +		},
 +	});
++	ayu.addSettingToggle({
++		.id = u"ayu/transparentAdaptiveMaterial"_q,
++		.title = tr::ayu_VisualEffectsAdaptiveMaterial(),
++		.getter = &AyuSettings::transparentAdaptiveMaterial,
++		.setter = &AyuSettings::setTransparentAdaptiveMaterial,
++	});
++	ayu.addSettingToggle({
++		.id = u"ayu/transparentDynamicHighlights"_q,
++		.title = tr::ayu_VisualEffectsDynamicHighlights(),
++		.getter = &AyuSettings::transparentDynamicHighlights,
++		.setter = &AyuSettings::setTransparentDynamicHighlights,
++	});
++	ayu.addSettingToggle({
++		.id = u"ayu/transparentRefraction"_q,
++		.title = tr::ayu_VisualEffectsRefraction(),
++		.getter = &AyuSettings::transparentRefraction,
++		.setter = &AyuSettings::setTransparentRefraction,
++	});
++	ayu.addSlider({
++		.id = u"ayu/transparentMaterialIntensity"_q,
++		.title = tr::ayu_VisualEffectsMaterialIntensity(),
++		.steps = 101,
++		.current = settings.transparentMaterialIntensity(),
++		.onChanged = [](int value) {
++			AyuSettings::getInstance().setTransparentMaterialIntensity(value);
++		},
++		.formatLabel = [](int value) {
++			return QString::number(value) + '%';
++		},
++	});
 +	builder.addDividerText(tr::ayu_VisualEffectsGlassDescription());
 +	ayu.addSectionDivider();
 +}
@@ -6738,6 +7027,7 @@ index 000000000..dd80127b2
 +			tr::ayu_VisualEffectsMotionSmooth(tr::now),
 +			tr::ayu_VisualEffectsMotionDynamic(tr::now),
 +			tr::ayu_VisualEffectsMotionSpringy(tr::now),
++			tr::ayu_VisualEffectsMotionLiquidBounce(tr::now),
 +		},
 +		.setter = [](int value) {
 +			AyuSettings::getInstance().setMotionStyle(
@@ -6752,6 +7042,7 @@ index 000000000..dd80127b2
 +		.setter = &AyuSettings::setAnimateWindowOpening,
 +	});
 +	builder.addDividerText(tr::ayu_VisualEffectsMotionDescription());
++	builder.addDividerText(tr::ayu_VisualEffectsMotionPacksDescription());
 +}
 +
 +const auto kMeta = BuildHelper({
@@ -6820,10 +7111,10 @@ index 000000000..57e78a5ff
 +
 +} // namespace Settings
 diff --git a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
-index c9d247a20..dd449083b 100644
+index c9d247a20..26d5f6d38 100644
 --- a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
-@@ -6,15 +6,1141 @@
+@@ -6,15 +6,1168 @@
  // Copyright @Radolyn, 2026
  #include "ayu/ui/utils/ayu_profile_values.h"
  
@@ -7465,7 +7756,23 @@ index c9d247a20..dd449083b 100644
 +	return ResolveLocalProfileCloneUser(peer);
 +}
 +
++bool LocalProfileChannelShowcaseActive(not_null<UserData*> user) {
++	if (!user->isSelf() || ResolveLocalProfileCloneUser(user)) {
++		return false;
++	}
++	const auto &settings = AyuSettings::getInstance();
++	return settings.localProfileChannelEnabled()
++		&& !NormalizeLocalProfileUsername(
++			settings.localProfileChannel()).isEmpty();
++}
++
 +ChannelData *LocalProfilePersonalChannel(not_null<UserData*> user) {
++	if (LocalProfileChannelShowcaseActive(user)) {
++		const auto username = NormalizeLocalProfileUsername(
++			AyuSettings::getInstance().localProfileChannel());
++		const auto peer = user->owner().peerByUsername(username);
++		return peer ? peer->asChannel() : nullptr;
++	}
 +	const auto clone = ResolveLocalProfileCloneUser(user);
 +	const auto source = clone ? clone : user.get();
 +	const auto channelId = source->personalChannelId();
@@ -7473,6 +7780,9 @@ index c9d247a20..dd449083b 100644
 +}
 +
 +MsgId LocalProfilePersonalChannelMessageId(not_null<UserData*> user) {
++	if (LocalProfileChannelShowcaseActive(user)) {
++		return 0;
++	}
 +	const auto clone = ResolveLocalProfileCloneUser(user);
 +	const auto source = clone ? clone : user.get();
 +	return source->personalChannelMessageId();
@@ -7790,6 +8100,9 @@ index c9d247a20..dd449083b 100644
 +rpl::producer<ChannelData*> LocalProfilePersonalChannelValue(
 +		not_null<UserData*> user) {
 +	const auto sourceValue = [=]() -> rpl::producer<ChannelData*> {
++		if (LocalProfileChannelShowcaseActive(user)) {
++			return rpl::single(LocalProfilePersonalChannel(user));
++		}
 +		const auto clone = ResolveLocalProfileCloneUser(user);
 +		const auto source = clone ? clone : user.get();
 +		return source->session().changes().peerFlagsValue(
@@ -7802,7 +8115,12 @@ index c9d247a20..dd449083b 100644
 +				: nullptr;
 +		});
 +	};
-+	return LocalProfileCloneIdValue(user) | rpl::map([=](const QString &) {
++	auto &settings = AyuSettings::getInstance();
++	return rpl::combine(
++		LocalProfileCloneIdValue(user),
++		settings.localProfileChannelEnabledValue(),
++		settings.localProfileChannelValue()
++	) | rpl::map([=](const QString &, bool, const QString &) {
 +		return sourceValue();
 +	}) | rpl::flatten_latest();
 +}
@@ -7966,7 +8284,7 @@ index c9d247a20..dd449083b 100644
  
  	const auto &settings = AyuSettings::getInstance();
  	if (settings.showPeerId() == PeerIdDisplay::BotApi) {
-@@ -33,8 +1159,12 @@ QString IDString(MsgId topicRootId) {
+@@ -33,8 +1186,12 @@ QString IDString(MsgId topicRootId) {
  }
  
  rpl::producer<TextWithEntities> IDValue(not_null<PeerData*> peer) {
@@ -7982,10 +8300,10 @@ index c9d247a20..dd449083b 100644
  			? TextWithEntities()
  			: tr::marked(IDString(peer));
 diff --git a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h
-index 950f22d7e..8f7aec9e6 100644
+index 950f22d7e..5fb0e268e 100644
 --- a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h
 +++ b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h
-@@ -6,8 +6,110 @@
+@@ -6,8 +6,112 @@
  // Copyright @Radolyn, 2026
  #pragma once
  
@@ -8041,6 +8359,8 @@ index 950f22d7e..8f7aec9e6 100644
 +[[nodiscard]] bool LocalProfilePhotoActive(not_null<PeerData*> peer);
 +[[nodiscard]] bool LocalProfileUserpicActive(not_null<PeerData*> peer);
 +[[nodiscard]] UserData *LocalProfileCloneUser(not_null<PeerData*> peer);
++[[nodiscard]] bool LocalProfileChannelShowcaseActive(
++	not_null<UserData*> user);
 +[[nodiscard]] ChannelData *LocalProfilePersonalChannel(
 +	not_null<UserData*> user);
 +[[nodiscard]] MsgId LocalProfilePersonalChannelMessageId(
@@ -8100,14 +8420,15 @@ index 950f22d7e..8f7aec9e6 100644
 +rpl::producer<TextWithEntities> IDValue(MsgId topicRootId);
 diff --git a/Telegram/SourceFiles/ayu/ui/visual_effects.cpp b/Telegram/SourceFiles/ayu/ui/visual_effects.cpp
 new file mode 100644
-index 000000000..c8098370d
+index 000000000..16ea764b4
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/visual_effects.cpp
-@@ -0,0 +1,267 @@
+@@ -0,0 +1,568 @@
 +#include "ayu/ui/visual_effects.h"
 +
 +#include "ayu/ayu_settings.h"
 +#include "platform/platform_specific.h"
++#include "styles/style_ayu_styles.h"
 +#include "styles/style_basic.h"
 +#include "ui/effects/animation_value.h"
 +#include "ui/image/image_prepare.h"
@@ -8116,7 +8437,14 @@ index 000000000..c8098370d
 +
 +#include <algorithm>
 +#include <array>
++#include <cmath>
++#include <QtGui/QBrush>
++#include <QtGui/QCursor>
++#include <QtGui/QLinearGradient>
 +#include <QtGui/QPainter>
++#include <QtGui/QPainterPath>
++#include <QtGui/QRadialGradient>
++#include <QtGui/QScreen>
 +#include <QtWidgets/QWidget>
 +
 +namespace Ayu::VisualEffects {
@@ -8134,6 +8462,8 @@ index 000000000..c8098370d
 +	QString imagePath;
 +	int imageBlur = -1;
 +	QImage image;
++	QColor imageAverage;
++	QImage grain;
 +	bool applyingPalette = false;
 +};
 +
@@ -8145,6 +8475,123 @@ index 000000000..c8098370d
 +[[nodiscard]] int SurfaceAlpha(int offset = 0) {
 +	const auto opacity = AyuSettings::getInstance().transparentOpacity();
 +	return std::clamp((255 * opacity / 100) + offset, 0, 255);
++}
++
++[[nodiscard]] float64 ColorLuminance(const QColor &color) {
++	const auto linear = [](int channel) {
++		const auto value = channel / 255.;
++		return (value <= 0.04045)
++			? (value / 12.92)
++			: std::pow((value + 0.055) / 1.055, 2.4);
++	};
++	return (0.2126 * linear(color.red()))
++		+ (0.7152 * linear(color.green()))
++		+ (0.0722 * linear(color.blue()));
++}
++
++[[nodiscard]] QColor BlendColors(
++		const QColor &from,
++		const QColor &to,
++		float64 amount) {
++	amount = std::clamp(amount, 0., 1.);
++	const auto blend = [=](int first, int second) {
++		return int(std::round(first + (second - first) * amount));
++	};
++	return QColor(
++		blend(from.red(), to.red()),
++		blend(from.green(), to.green()),
++		blend(from.blue(), to.blue()));
++}
++
++[[nodiscard]] QImage CreateGrain() {
++	const auto side = st::liquidGlassNoiseTileSize;
++	auto result = QImage(
++		side,
++		side,
++		QImage::Format_ARGB32_Premultiplied);
++	auto seed = uint32(0x7f4a7c15);
++	for (auto y = 0; y != side; ++y) {
++		for (auto x = 0; x != side; ++x) {
++			seed = (seed * uint32(1664525)) + uint32(1013904223);
++			const auto light = ((seed >> 30) & 1) != 0;
++			const auto alpha = 3 + int((seed >> 27) & 3);
++			result.setPixelColor(
++				x,
++				y,
++				QColor(
++					light ? 255 : 0,
++					light ? 255 : 0,
++					light ? 255 : 0,
++					alpha));
++		}
++	}
++	return result;
++}
++
++[[nodiscard]] QRectF CoverSource(
++		const QImage &image,
++		const QRectF &target) {
++	if (image.isNull() || target.isEmpty()) {
++		return QRectF();
++	}
++	const auto targetRatio = target.width() / target.height();
++	const auto imageRatio = image.width() / float64(image.height());
++	auto source = QRectF(QPointF(), QSizeF(image.size()));
++	if (imageRatio > targetRatio) {
++		const auto width = source.height() * targetRatio;
++		source.setLeft((source.width() - width) / 2.);
++		source.setWidth(width);
++	} else {
++		const auto height = source.width() / targetRatio;
++		source.setTop((source.height() - height) / 2.);
++		source.setHeight(height);
++	}
++	return source;
++}
++
++[[nodiscard]] QColor AdaptiveTint(
++		const AyuSettings &settings,
++		const State &state) {
++	auto tint = QColor(settings.transparentTint());
++	if (!tint.isValid()) {
++		tint = QColor(22, 25, 34);
++	}
++	if (!settings.transparentAdaptiveMaterial()) {
++		return tint;
++	}
++	const auto sample = state.imageAverage.isValid()
++		? state.imageAverage
++		: st::windowBg->c;
++	const auto luminance = ColorLuminance(sample);
++	const auto sampled = BlendColors(tint, sample, 0.18);
++	const auto contrast = (luminance > 0.58)
++		? QColor(12, 15, 22)
++		: QColor(238, 244, 255);
++	return BlendColors(sampled, contrast, luminance > 0.58 ? 0.13 : 0.06);
++}
++
++[[nodiscard]] QPainterPath WindowPath(const QRectF &rect) {
++	auto result = QPainterPath();
++	result.addRoundedRect(
++		rect,
++		st::liquidGlassCornerRadius,
++		st::liquidGlassCornerRadius);
++	return result;
++}
++
++[[nodiscard]] QPainterPath EdgePath(const QRectF &rect) {
++	auto result = WindowPath(rect);
++	const auto inset = st::liquidGlassEdgeThickness;
++	const auto inner = rect.adjusted(inset, inset, -inset, -inset);
++	if (!inner.isEmpty()) {
++		auto innerPath = QPainterPath();
++		innerPath.addRoundedRect(
++			inner,
++			std::max(st::liquidGlassCornerRadius - inset, 0),
++			std::max(st::liquidGlassCornerRadius - inset, 0));
++		result = result.subtracted(innerPath);
++	}
++	return result;
 +}
 +
 +void SetEntryAlpha(const PaletteEntry &entry) {
@@ -8280,6 +8727,19 @@ index 000000000..c8098370d
 +	if (!state.image.isNull() && blur > 0) {
 +		state.image = Images::BlurLargeImage(std::move(state.image), blur);
 +	}
++	if (state.image.isNull()) {
++		state.imageAverage = QColor();
++	} else {
++		const auto sample = state.image.scaled(
++			1,
++			1,
++			Qt::IgnoreAspectRatio,
++			Qt::SmoothTransformation);
++		state.imageAverage = sample.pixelColor(0, 0);
++	}
++	if (state.grain.isNull()) {
++		state.grain = CreateGrain();
++	}
 +}
 +
 +[[nodiscard]] anim::MotionStyle ResolveMotionStyle() {
@@ -8296,6 +8756,8 @@ index 000000000..c8098370d
 +		return anim::MotionStyle::Dynamic;
 +	case IntelGramMotionStyle::Springy:
 +		return anim::MotionStyle::Springy;
++	case IntelGramMotionStyle::LiquidBounce:
++		return anim::MotionStyle::LiquidBounce;
 +	}
 +	Unexpected("IntelGramMotionStyle value.");
 +}
@@ -8336,21 +8798,14 @@ index 000000000..c8098370d
 +	}
 +
 +	RefreshImage();
-+	const auto &image = CurrentState().image;
-+	if (!image.isNull() && !window->rect().isEmpty()) {
-+		const auto target = QRectF(window->rect());
-+		const auto targetRatio = target.width() / target.height();
-+		const auto imageRatio = image.width() / float64(image.height());
-+		auto source = QRectF(QPointF(), QSizeF(image.size()));
-+		if (imageRatio > targetRatio) {
-+			const auto width = source.height() * targetRatio;
-+			source.setLeft((source.width() - width) / 2.);
-+			source.setWidth(width);
-+		} else {
-+			const auto height = source.width() / targetRatio;
-+			source.setTop((source.height() - height) / 2.);
-+			source.setHeight(height);
-+		}
++	auto &state = CurrentState();
++	const auto &image = state.image;
++	const auto target = QRectF(window->rect());
++	if (target.isEmpty()) {
++		return;
++	}
++	const auto source = CoverSource(image, target);
++	if (!image.isNull()) {
 +		painter.save();
 +		painter.setRenderHint(QPainter::SmoothPixmapTransform);
 +		painter.setOpacity(settings.transparentBackgroundOpacity() / 100.);
@@ -8358,25 +8813,191 @@ index 000000000..c8098370d
 +		painter.restore();
 +	}
 +
-+	auto tint = QColor(settings.transparentTint());
-+	if (!tint.isValid()) {
-+		tint = QColor(22, 25, 34);
++	const auto intensity = settings.transparentMaterialIntensity() / 100.;
++	const auto sample = state.imageAverage.isValid()
++		? state.imageAverage
++		: st::windowBg->c;
++	const auto luminance = ColorLuminance(sample);
++	auto tint = AdaptiveTint(settings, state);
++	const auto tintAlphaBase = image.isNull() ? 52 : 28;
++	const auto tintAlphaRange = image.isNull() ? 46 : 36;
++	const auto luminanceAdjustment = settings.transparentAdaptiveMaterial()
++		? int(std::round((luminance - 0.5) * 22.))
++		: 0;
++	tint.setAlpha(std::clamp(
++		tintAlphaBase
++			+ int(std::round(tintAlphaRange * intensity))
++			+ luminanceAdjustment,
++		18,
++		112));
++	painter.fillRect(target, tint);
++
++	const auto phase = settings.transparentDynamicHighlights()
++			&& !anim::Disabled()
++		? (crl::now() % crl::time(120000)) / 1000.
++		: 0.;
++	const auto cursor = window->mapFromGlobal(QCursor::pos());
++	const auto cursorInside = target.contains(QPointF(cursor));
++	const auto focus = cursorInside
++		? QPointF(cursor)
++		: QPointF(
++			target.center().x() + std::sin(phase * 0.21) * target.width() * 0.18,
++			target.center().y() + std::cos(phase * 0.17) * target.height() * 0.12);
++	const auto light = QColor(255, 255, 255);
++	const auto cool = BlendColors(
++		QColor(104, 194, 255),
++		sample,
++		0.22);
++
++	{
++		const auto radius = std::max(
++			float64(st::liquidGlassHighlightRadius),
++			std::hypot(target.width(), target.height()) * 0.36);
++		auto diffusion = QRadialGradient(focus, radius);
++		auto center = light;
++		center.setAlpha(int(std::round((12. + 18. * intensity)
++			* (luminance > 0.72 ? 0.55 : 1.))));
++		auto middle = cool;
++		middle.setAlpha(int(std::round(7. + 11. * intensity)));
++		diffusion.setColorAt(0., center);
++		diffusion.setColorAt(0.46, middle);
++		diffusion.setColorAt(1., Qt::transparent);
++		painter.fillRect(target, diffusion);
 +	}
-+	tint.setAlpha(image.isNull() ? 76 : 42);
-+	painter.fillRect(window->rect(), tint);
++
++	if (settings.transparentDynamicHighlights() && !anim::Disabled()) {
++		const auto travel = std::fmod(phase * 0.055, 1.4) - 0.2;
++		const auto start = QPointF(
++			target.left() + target.width() * (travel - 0.24),
++			target.top());
++		const auto end = QPointF(
++			start.x() + target.width() * 0.4,
++			target.bottom());
++		auto reflection = QLinearGradient(start, end);
++		auto highlight = light;
++		highlight.setAlpha(int(std::round(14. * intensity)));
++		reflection.setColorAt(0., Qt::transparent);
++		reflection.setColorAt(0.46, Qt::transparent);
++		reflection.setColorAt(0.5, highlight);
++		reflection.setColorAt(0.54, Qt::transparent);
++		reflection.setColorAt(1., Qt::transparent);
++		painter.fillRect(target, reflection);
++	}
++
++	if (settings.transparentRefraction()) {
++		const auto edge = EdgePath(target.adjusted(0.5, 0.5, -0.5, -0.5));
++		if (!image.isNull()) {
++			const auto offset = st::liquidGlassRefractionOffset * intensity;
++			const auto shift = QPointF(
++				std::sin(phase * 0.43) * offset,
++				std::cos(phase * 0.37) * offset);
++			painter.save();
++			painter.setRenderHint(QPainter::SmoothPixmapTransform);
++			painter.setClipPath(edge);
++			painter.setOpacity(0.16 + (0.2 * intensity));
++			painter.drawImage(target.translated(shift), image, source);
++			painter.restore();
++		}
++		auto edgeMaterial = QLinearGradient(
++			target.topLeft(),
++			target.bottomRight());
++		auto nearLight = light;
++		nearLight.setAlpha(int(std::round(30. + 34. * intensity)));
++		auto quietLight = light;
++		quietLight.setAlpha(int(std::round(5. + 8. * intensity)));
++		auto farLight = cool;
++		farLight.setAlpha(int(std::round(15. + 18. * intensity)));
++		edgeMaterial.setColorAt(0., nearLight);
++		edgeMaterial.setColorAt(0.42, quietLight);
++		edgeMaterial.setColorAt(1., farLight);
++		painter.fillPath(edge, edgeMaterial);
++	}
++
++	{
++		auto topReflection = QLinearGradient(
++			target.topLeft(),
++			QPointF(target.left(), target.top() + target.height() * 0.32));
++		auto top = light;
++		top.setAlpha(int(std::round(19. + 18. * intensity)));
++		topReflection.setColorAt(0., top);
++		topReflection.setColorAt(0.18, QColor(255, 255, 255, 7));
++		topReflection.setColorAt(1., Qt::transparent);
++		painter.save();
++		painter.setClipPath(WindowPath(target));
++		painter.fillRect(target, topReflection);
++		painter.restore();
++	}
++
++	if (!state.grain.isNull()) {
++		painter.save();
++		painter.setOpacity(0.55 + (0.35 * intensity));
++		painter.fillRect(target, QBrush(state.grain));
++		painter.restore();
++	}
++
++	{
++		const auto outline = target.adjusted(0.5, 0.5, -0.5, -0.5);
++		auto outer = light;
++		outer.setAlpha(int(std::round(34. + 35. * intensity)));
++		painter.save();
++		painter.setRenderHint(QPainter::Antialiasing);
++		painter.setBrush(Qt::NoBrush);
++		painter.setPen(QPen(outer, 1.));
++		painter.drawRoundedRect(
++			outline,
++			st::liquidGlassCornerRadius,
++			st::liquidGlassCornerRadius);
++		auto inner = BlendColors(sample, QColor(255, 255, 255), 0.38);
++		inner.setAlpha(int(std::round(10. + 16. * intensity)));
++		painter.setPen(QPen(inner, 1.));
++		const auto inset = target.adjusted(
++			st::liquidGlassEdgeThickness,
++			st::liquidGlassEdgeThickness,
++			-st::liquidGlassEdgeThickness,
++			-st::liquidGlassEdgeThickness);
++		painter.drawRoundedRect(
++			inset,
++			std::max(
++				st::liquidGlassCornerRadius
++					- st::liquidGlassEdgeThickness,
++				0),
++			std::max(
++				st::liquidGlassCornerRadius
++					- st::liquidGlassEdgeThickness,
++				0));
++		painter.restore();
++	}
 +}
 +
 +void ApplyMotionSettings() {
 +	anim::SetMotionStyle(ResolveMotionStyle());
 +}
 +
++bool WindowAnimationEnabled(QWidget *window) {
++	const auto &settings = AyuSettings::getInstance();
++	return settings.transparentMode()
++		&& settings.transparentDynamicHighlights()
++		&& !anim::Disabled()
++		&& window->isVisible()
++		&& window->isActiveWindow();
++}
++
++int WindowAnimationRefreshInterval(QWidget *window) {
++	const auto screen = window->screen();
++	const auto refreshRate = screen
++		? screen->refreshRate()
++		: 60.;
++	const auto capped = std::clamp(refreshRate, 30., 120.);
++	return std::max(int(std::round(1000. / capped)), 8);
++}
++
 +} // namespace Ayu::VisualEffects
 diff --git a/Telegram/SourceFiles/ayu/ui/visual_effects.h b/Telegram/SourceFiles/ayu/ui/visual_effects.h
 new file mode 100644
-index 000000000..b62f8a804
+index 000000000..fb06376f2
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/visual_effects.h
-@@ -0,0 +1,14 @@
+@@ -0,0 +1,16 @@
 +#pragma once
 +
 +class QPainter;
@@ -8389,6 +9010,8 @@ index 000000000..b62f8a804
 +void HandlePaletteChanged(QWidget *window);
 +void PaintWindow(QWidget *window, QPainter &painter);
 +void ApplyMotionSettings();
++[[nodiscard]] bool WindowAnimationEnabled(QWidget *window);
++[[nodiscard]] int WindowAnimationRefreshInterval(QWidget *window);
 +
 +} // namespace Ayu::VisualEffects
 diff --git a/Telegram/SourceFiles/ayu/utils/telegram_helpers.cpp b/Telegram/SourceFiles/ayu/utils/telegram_helpers.cpp
@@ -9835,18 +10458,19 @@ index 63b23a43a..9c7dee66b 100644
  			_title.setText(
  				st::msgNameStyle,
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_actions.cpp b/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
-index 594061dbb..85a22a448 100644
+index 594061dbb..a6b7df09b 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
-@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -7,6 +7,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  */
  #include "info/profile/info_profile_actions.h"
  
++#include "ayu/ayu_settings.h"
 +#include "ayu/ui/utils/ayu_profile_values.h"
  #include "api/api_blocked_peers.h"
  #include "api/api_chat_participants.h"
  #include "api/api_credits.h"
-@@ -1766,7 +1767,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
+@@ -1766,7 +1768,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
  			st::infoProfileLabeledButtonQr);
  		qrButton->setAccessibleName(tr::lng_group_invite_context_qr(tr::now));
  		UsernamesValue(_peer) | rpl::on_next([=](const auto &u) {
@@ -9856,7 +10480,7 @@ index 594061dbb..85a22a448 100644
  		}, qrButton->lifetime());
  		const auto rightSkip = st::infoProfileLabeledButtonQrRightSkip;
  		fitLabelToButton(qrButton, usernameLine.text, rightSkip);
-@@ -2009,12 +2011,12 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2009,20 +2012,36 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  	const auto window = _controller->parentController();
  	const auto duration = st::slideWrapDuration;
  
@@ -9871,7 +10495,33 @@ index 594061dbb..85a22a448 100644
  		user
  	) | rpl::start_spawning(result->lifetime());
  
-@@ -2045,6 +2047,9 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+ 	const auto channelLabelFactory = [=](rpl::producer<ChannelData*> c) {
+ 		return rpl::combine(
+ 			tr::lng_info_personal_channel_label(tr::marked),
+-			std::move(c)
+-		) | rpl::map([](TextWithEntities &&text, ChannelData *channel) {
++			tr::ayu_LocalProfileChannelProfileLabel(tr::marked),
++			std::move(c),
++			AyuSettings::getInstance().localProfileChannelEnabledValue(),
++			AyuSettings::getInstance().localProfileChannelValue(),
++			AyuSettings::getInstance().localProfileCloneIdValue()
++		) | rpl::map([=](
++				TextWithEntities &&personal,
++				TextWithEntities &&showcase,
++				ChannelData *channel,
++				bool enabled,
++				const QString &username,
++				const QString &cloneId) {
++			auto text = (user->isSelf()
++				&& enabled
++				&& !username.isEmpty()
++				&& cloneId.isEmpty())
++				? std::move(showcase)
++				: std::move(personal);
+ 			const auto count = channel ? channel->membersCount() : 0;
+ 			if (count > 1) {
+ 				text.append(' ')
+@@ -2045,16 +2064,31 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  		base::install_event_filter(container, [=](
  				not_null<QEvent*> e) {
  			if (e->type() == QEvent::ContextMenu) {
@@ -9881,7 +10531,35 @@ index 594061dbb..85a22a448 100644
  				const auto ce = static_cast<QContextMenuEvent*>(e.get());
  				state->menu = base::make_unique_q<Ui::PopupMenu>(
  					container,
-@@ -2068,8 +2073,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+ 					st::defaultPopupMenu);
+-				state->menu->addAction(
+-					tr::lng_settings_channel_menu_remove(tr::now),
+-					[] {
+-						UrlClickHandler::Open(
+-							u"internal:edit_personal_channel:remove"_q);
+-					});
++				if (Ayu::LocalProfileChannelShowcaseActive(user)) {
++					state->menu->addAction(
++						tr::ayu_LocalProfileChannelClear(tr::now),
++						[=] {
++							auto &settings = AyuSettings::getInstance();
++							settings.setLocalProfileChannelEnabled(false);
++							settings.setLocalProfileChannel(QString());
++							Ayu::RefreshLocalProfilePresentation(
++								&user->session());
++						});
++				} else {
++					state->menu->addAction(
++						tr::lng_settings_channel_menu_remove(tr::now),
++						[] {
++							UrlClickHandler::Open(
++								u"internal:edit_personal_channel:remove"_q);
++						});
++				}
+ 				state->menu->popup(ce->globalPos());
+ 				return base::EventFilterResult::Cancel;
+ 			}
+@@ -2068,8 +2102,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  				container,
  				object_ptr<Ui::VerticalLayout>(container)));
  		onlyChannelWrap->toggleOn(rpl::duplicate(channel) | rpl::map([=] {
@@ -9892,7 +10570,7 @@ index 594061dbb..85a22a448 100644
  		}));
  		onlyChannelWrap->finishAnimating();
  
-@@ -2092,8 +2097,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2092,8 +2126,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  		line.text->setClickHandlerFilter([=](
  				const ClickHandlerPtr &handler,
  				Qt::MouseButton button) {
@@ -9903,7 +10581,7 @@ index 594061dbb..85a22a448 100644
  			}
  			return false;
  		});
-@@ -2113,8 +2118,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2113,8 +2147,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  				object_ptr<Ui::VerticalLayout>(container)));
  		messageChannelWrap->setDuration(duration);
  		messageChannelWrap->toggleOn(rpl::duplicate(channel) | rpl::map([=] {
@@ -9914,7 +10592,7 @@ index 594061dbb..85a22a448 100644
  		}));
  		messageChannelWrap->finishAnimating();
  		messageChannelWrap->toggledValue(
-@@ -2291,16 +2296,25 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2291,16 +2325,25 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  			if (!channel) {
  				return;
  			}
@@ -10760,7 +11438,7 @@ index 297c37bdd..69a22b6a5 100644
  		&& !hidePremiumStatuses;
  	const auto paintExtera = paintExteraDev || paintExteraSupporter;
 diff --git a/Telegram/SourceFiles/window/main_window.cpp b/Telegram/SourceFiles/window/main_window.cpp
-index 1330fcabd..6b351e504 100644
+index 1330fcabd..31239c39e 100644
 --- a/Telegram/SourceFiles/window/main_window.cpp
 +++ b/Telegram/SourceFiles/window/main_window.cpp
 @@ -57,8 +57,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -10774,7 +11452,15 @@ index 1330fcabd..6b351e504 100644
  
  namespace Window {
  namespace {
-@@ -388,11 +389,38 @@ MainWindow::MainWindow(not_null<Controller*> controller)
+@@ -372,6 +373,7 @@ QImage WithSmallCounter(QImage image, CounterLayerArgs &&args) {
+ MainWindow::MainWindow(not_null<Controller*> controller)
+ : _controller(controller)
+ , _positionUpdatedTimer([=] { savePosition(); })
++, _glassAnimationTimer([=] { update(); })
+ , _outdated(Ui::CreateOutdatedBar(body(), cWorkingDir()))
+ , _screenReaderBar(Ui::CreateScreenReaderBar(body(), [=] {
+ 	controller->show(Ui::MakeConfirmBox({
+@@ -388,11 +390,43 @@ MainWindow::MainWindow(not_null<Controller*> controller)
  	}));
  }))
  , _body(body()) {
@@ -10794,6 +11480,10 @@ index 1330fcabd..6b351e504 100644
 +		ayu.transparentChatChanges() | rpl::to_empty,
 +		ayu.transparentPanelsChanges() | rpl::to_empty,
 +		ayu.transparentOpacityChanges() | rpl::to_empty,
++		ayu.transparentAdaptiveMaterialChanges() | rpl::to_empty,
++		ayu.transparentDynamicHighlightsChanges() | rpl::to_empty,
++		ayu.transparentRefractionChanges() | rpl::to_empty,
++		ayu.transparentMaterialIntensityChanges() | rpl::to_empty,
 +		ayu.transparentTintChanges() | rpl::to_empty,
 +		ayu.transparentBackgroundPathChanges() | rpl::to_empty,
 +		ayu.transparentBackgroundOpacityChanges() | rpl::to_empty,
@@ -10803,6 +11493,7 @@ index 1330fcabd..6b351e504 100644
 +		ayu.animateWindowOpeningChanges() | rpl::to_empty
 +	) | rpl::on_next([=] {
 +		Ayu::VisualEffects::RefreshWindow(this);
++		refreshGlassAnimationTimer();
 +	}, lifetime());
 +	ayu.transparentModeChanges(
 +	) | rpl::on_next([=] {
@@ -10813,7 +11504,23 @@ index 1330fcabd..6b351e504 100644
  	Core::App().unreadBadgeChanges(
  	) | rpl::on_next([=] {
  		updateTitle();
-@@ -533,6 +561,7 @@ QRect MainWindow::desktopRect() const {
+@@ -413,6 +447,7 @@ MainWindow::MainWindow(not_null<Controller*> controller)
+ 	) | rpl::skip(1) | rpl::on_next([=](bool active) {
+ 		InvokeQueued(this, [=] {
+ 			handleActiveChanged(active);
++			refreshGlassAnimationTimer();
+ 		});
+ 	}, lifetime());
+ 
+@@ -420,6 +455,7 @@ MainWindow::MainWindow(not_null<Controller*> controller)
+ 	) | rpl::skip(1) | rpl::on_next([=](bool visible) {
+ 		InvokeQueued(this, [=] {
+ 			handleVisibleChanged(visible);
++			refreshGlassAnimationTimer();
+ 		});
+ 	}, lifetime());
+ 
+@@ -533,6 +569,7 @@ QRect MainWindow::desktopRect() const {
  void MainWindow::init() {
  	initHook();
  
@@ -10821,7 +11528,7 @@ index 1330fcabd..6b351e504 100644
  	updatePalette();
  
  	if (Ui::Platform::NativeWindowFrameSupported()) {
-@@ -604,7 +633,13 @@ void MainWindow::quitFromTray() {
+@@ -604,7 +641,13 @@ void MainWindow::quitFromTray() {
  void MainWindow::activate() {
  	bool wasHidden = !isVisible();
  	setWindowState(windowState() & ~Qt::WindowMinimized);
@@ -10835,7 +11542,7 @@ index 1330fcabd..6b351e504 100644
  	Platform::ActivateThisProcess();
  	raise();
  	activateWindow();
-@@ -624,6 +659,13 @@ void MainWindow::updatePalette() {
+@@ -624,6 +667,22 @@ void MainWindow::updatePalette() {
  	setPalette(p);
  }
  
@@ -10846,10 +11553,19 @@ index 1330fcabd..6b351e504 100644
 +	Ayu::VisualEffects::PaintWindow(this, p);
 +}
 +
++void MainWindow::refreshGlassAnimationTimer() {
++	if (Ayu::VisualEffects::WindowAnimationEnabled(this)) {
++		_glassAnimationTimer.callEach(
++			Ayu::VisualEffects::WindowAnimationRefreshInterval(this));
++	} else {
++		_glassAnimationTimer.cancel();
++	}
++}
++
  int MainWindow::computeMinWidth() const {
  	auto result = st::windowMinWidth;
  	if (_rightColumn) {
-@@ -651,7 +693,8 @@ int MainWindow::computeMinHeight() const {
+@@ -651,7 +710,8 @@ int MainWindow::computeMinHeight() const {
  }
  
  void MainWindow::refreshTitleWidget() {
@@ -10859,7 +11575,7 @@ index 1330fcabd..6b351e504 100644
  		&& Core::App().settings().nativeWindowFrame()) {
  		setNativeFrame(true);
  		if (Platform::NativeTitleRequiresShadow()) {
-@@ -752,7 +795,9 @@ QRect MainWindow::countInitialGeometry(WindowPosition position) {
+@@ -752,7 +812,9 @@ QRect MainWindow::countInitialGeometry(WindowPosition position) {
  void MainWindow::firstShow() {
  	updateMinimumSize();
  	if (initGeometryFromSystem()) {
@@ -10869,7 +11585,7 @@ index 1330fcabd..6b351e504 100644
  		return;
  	}
  	const auto geometry = countInitialGeometry(initialPosition());
-@@ -762,7 +807,39 @@ void MainWindow::firstShow() {
+@@ -762,7 +824,39 @@ void MainWindow::firstShow() {
  		).arg(geometry.width()
  		).arg(geometry.height()));
  	setGeometry(geometry);
@@ -10910,7 +11626,7 @@ index 1330fcabd..6b351e504 100644
  
  void MainWindow::positionUpdated() {
 diff --git a/Telegram/SourceFiles/window/main_window.h b/Telegram/SourceFiles/window/main_window.h
-index 22302c9bc..7e25b5ac7 100644
+index 22302c9bc..f6d0327ca 100644
 --- a/Telegram/SourceFiles/window/main_window.h
 +++ b/Telegram/SourceFiles/window/main_window.h
 @@ -11,6 +11,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -10929,17 +11645,26 @@ index 22302c9bc..7e25b5ac7 100644
  	void leaveEventHook(QEvent *e) override;
  
  	void savePosition(Qt::WindowState state = Qt::WindowActive);
-@@ -196,6 +198,9 @@ private:
+@@ -196,6 +198,10 @@ private:
  	void refreshTitleWidget();
  	void updateMinimumSize();
  	void updatePalette();
++	void refreshGlassAnimationTimer();
 +	[[nodiscard]] bool windowEntranceAnimationsEnabled() const;
 +	void prepareWindowEntranceAnimation();
 +	void startWindowEntranceAnimation();
  
  	[[nodiscard]] Core::WindowPosition initialPosition() const;
  	[[nodiscard]] Core::WindowPosition nextInitialChildPosition(
-@@ -221,6 +226,7 @@ private:
+@@ -207,6 +213,7 @@ private:
+ 	not_null<Window::Controller*> _controller;
+ 
+ 	base::Timer _positionUpdatedTimer;
++	base::Timer _glassAnimationTimer;
+ 	bool _positionInited = false;
+ 
+ 	object_ptr<Ui::PlainShadow> _titleShadow = { nullptr };
+@@ -221,6 +228,7 @@ private:
  	rpl::event_stream<> _imeCompositionStartReceived;
  
  	bool _maximizedBeforeHide = false;
@@ -11086,9 +11811,9 @@ index 3cb7dc4ff..c8cb3cd8a 100644
  		.amount = data.vamount().v,
  		.cryptoCurrency = qs(data.vcrypto_currency()),
 diff --git a/Telegram/lib_ui b/Telegram/lib_ui
-index 51673cadc..2324a08c9 160000
+index 51673cadc..b9a30917d 160000
 --- a/Telegram/lib_ui
 +++ b/Telegram/lib_ui
 @@ -1 +1 @@
 -Subproject commit 51673cadc14c3a45a67c37364b33b0d572d9b1cf
-+Subproject commit 2324a08c969967f62148b013eda0ae12507753ab
++Subproject commit b9a30917daf2bd8fdc17ccd9682acca178882b7b

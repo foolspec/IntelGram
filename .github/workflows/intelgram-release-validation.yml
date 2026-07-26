@@ -13,8 +13,8 @@ permissions:
   contents: read
 
 env:
-  SOURCE_PATCH_SHA256: a749b1673bc93f057f0da292680f2884fac956d64229554272b0bb2666995599
-  RELEASE_PATCH_SHA256: a749b1673bc93f057f0da292680f2884fac956d64229554272b0bb2666995599
+  SOURCE_PATCH_SHA256: ee01a150c3ae7a09fe3e55a72b5993902c7017110e617d735f4a2d35f0adbe8e
+  RELEASE_PATCH_SHA256: ee01a150c3ae7a09fe3e55a72b5993902c7017110e617d735f4a2d35f0adbe8e
 
 jobs:
   verify-release:
@@ -40,7 +40,7 @@ jobs:
           tag="$(jq -r '.tag_name' <<<"$release")"
           test "$(jq -r '.draft' <<<"$release")" = "false"
           test "$(jq -r '.prerelease' <<<"$release")" = "false"
-          test "$(jq -r '.name' <<<"$release")" = "IntelGram v6.7.8 - Glass & Motion"
+          test "$(jq -r '.name' <<<"$release")" = "IntelGram v6.7.8 - Liquid Glass"
 
           required_assets=(
             IntelGram-macOS-Apple-Silicon.dmg
