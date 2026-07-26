@@ -134,22 +134,27 @@ void SetWindowVisualEffect(QWidget *widget, bool enabled, bool blur) {
 		&WindowVisualEffectKey);
 	const auto useEffect = enabled && blur;
 	if (useEffect && !effect) {
-		effect = [[NSVisualEffectView alloc] initWithFrame:nativeView.bounds];
-		effect.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
-		effect.blendingMode = NSVisualEffectBlendingModeBehindWindow;
-		if (@available(macOS 10.14, *)) {
-			effect.material = NSVisualEffectMaterialUnderWindowBackground;
-		} else {
-			effect.material = NSVisualEffectMaterialAppearanceBased;
+		const auto host = nativeView.superview;
+		if (host) {
+			effect = [[NSVisualEffectView alloc] initWithFrame:nativeView.frame];
+			effect.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+			effect.blendingMode = NSVisualEffectBlendingModeBehindWindow;
+			if (@available(macOS 10.14, *)) {
+				effect.material = NSVisualEffectMaterialUnderWindowBackground;
+			} else {
+				effect.material = NSVisualEffectMaterialAppearanceBased;
+			}
+			effect.state = NSVisualEffectStateActive;
+			[host addSubview:effect
+				positioned:NSWindowBelow
+				relativeTo:nativeView];
+			objc_setAssociatedObject(
+				window,
+				&WindowVisualEffectKey,
+				effect,
+				OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+			[effect release];
 		}
-		effect.state = NSVisualEffectStateActive;
-		[nativeView addSubview:effect positioned:NSWindowBelow relativeTo:nil];
-		objc_setAssociatedObject(
-			window,
-			&WindowVisualEffectKey,
-			effect,
-			OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-		[effect release];
 	} else if (!useEffect && effect) {
 		[effect removeFromSuperview];
 		objc_setAssociatedObject(
