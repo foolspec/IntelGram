@@ -24,6 +24,12 @@ First open the other user's profile so IntelGram has loaded it. Copy their UID, 
 
 Under **Local Profile & Collectibles**, enable **Show a public channel on my local profile**, choose **Choose showcase channel**, and enter a public `@channel` or `t.me` link. IntelGram resolves the public channel read-only and shows it in the profile row labeled **Local showcase**. This is presentation only: it does not make you the owner or an administrator, join the channel, grant permissions, or change Telegram.
 
+## How do I post in the local channel?
+
+Click the **Local showcase** row on your profile or choose **Open local channel** in Local Profile settings. The **Local-only channel** workspace has **New local post** and **Channel settings** actions. A local post can contain text and one local-file attachment; click a post to edit, pin, copy, open its attachment, or delete it. Channel settings can override the title, description, and photo shown inside the workspace.
+
+These are private IntelGram records, not Telegram messages. They do not publish to the selected channel, create ownership or administrator rights, alter public channel settings, affect subscribers, or appear to anyone else.
+
 ## How do I find somebody by UID or phone?
 
 Use the normal search field above the chat list. Paste a UID, `id: UID`, or a phone number. A known matching profile appears under **Found by ID or phone**. This cannot discover strangers or hidden phone numbers; the peer must already be loaded and the phone must already be visible.

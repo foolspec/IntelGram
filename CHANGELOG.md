@@ -2,7 +2,7 @@
 
 All notable IntelGram custom-feature changes are recorded here.
 
-## IntelGram v6.7.8 Liquid Glass - 2026-07-26
+## IntelGram v6.7.8 Liquid Glass And Local Channels - 2026-07-26
 
 ### Added
 
@@ -11,6 +11,9 @@ All notable IntelGram custom-feature changes are recorded here.
 - **Liquid Bounce**, an optional high-elasticity animation pack with controlled overshoot.
 - Plain-language descriptions of Quick Snap, Smooth Flow, Diabolical, Springy, and Liquid Bounce inside **Glass & Motion**.
 - A clearly labeled local channel showcase that can render a public channel on your own IntelGram profile after a read-only public username lookup.
+- A **Local-only channel** workspace opened from the showcase or Local Profile settings.
+- Local channel posts with text and optional local-file attachments, plus edit, delete, pin, unpin, copy, and open-attachment actions.
+- Local channel settings for a private title, description, and photo, with reset and delete-all controls.
 
 ### Changed
 
@@ -18,6 +21,7 @@ All notable IntelGram custom-feature changes are recorded here.
 - Material animation follows the active display refresh rate up to 120 Hz and pauses while the window is hidden, inactive, or reduced motion is enabled.
 - The whole-window renderer now reacts to backdrop luminance and theme colors instead of applying one fixed transparent tint.
 - The local channel showcase explicitly states that it is not ownership and does not join a channel, grant permissions, or modify Telegram.
+- Local channel workspaces persist separately for up to eight selected channels and retain up to 100 posts per channel without issuing Telegram channel-write requests.
 
 ### Motion Packs
 

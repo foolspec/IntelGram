@@ -12,19 +12,21 @@ index b839a6b75..7e0cc43f9 100644
  	path = Telegram/lib_lottie
  	url = https://github.com/desktop-app/lib_lottie.git
 diff --git a/Telegram/CMakeLists.txt b/Telegram/CMakeLists.txt
-index 3ac3f4ba0..5abcbf159 100644
+index 3ac3f4ba0..979d072d6 100644
 --- a/Telegram/CMakeLists.txt
 +++ b/Telegram/CMakeLists.txt
-@@ -138,6 +138,8 @@ set(ayugram_files
+@@ -138,6 +138,10 @@ set(ayugram_files
          ayu/ui/toasts.h
          ayu/ui/ayu_userpic.cpp
          ayu/ui/ayu_userpic.h
++        ayu/ui/local_channel_workspace.cpp
++        ayu/ui/local_channel_workspace.h
 +        ayu/ui/visual_effects.cpp
 +        ayu/ui/visual_effects.h
          ayu/ui/utils/ayu_profile_values.cpp
          ayu/ui/utils/ayu_profile_values.h
          ayu/ui/utils/color_cut_quantizer.cpp
-@@ -166,6 +168,10 @@ set(ayugram_files
+@@ -166,6 +170,10 @@ set(ayugram_files
          ayu/ui/settings/settings_main.h
          ayu/ui/settings/settings_other.cpp
          ayu/ui/settings/settings_other.h
@@ -35,7 +37,7 @@ index 3ac3f4ba0..5abcbf159 100644
          ayu/ui/settings/filters/settings_filters_list.cpp
          ayu/ui/settings/filters/settings_filters_list.h
          ayu/ui/settings/filters/per_dialog_filter.cpp
-@@ -249,6 +255,10 @@ set(ayugram_files
+@@ -249,6 +257,10 @@ set(ayugram_files
          ayu/features/filters/filters_utils.h
          ayu/data/messages_storage.cpp
          ayu/data/messages_storage.h
@@ -47,7 +49,7 @@ index 3ac3f4ba0..5abcbf159 100644
          ayu/data/ayu_database.cpp
          ayu/data/ayu_database.h
 diff --git a/Telegram/Resources/langs/lang.strings b/Telegram/Resources/langs/lang.strings
-index 7380587e7..77dc95924 100644
+index 7380587e7..2fce99ab6 100644
 --- a/Telegram/Resources/langs/lang.strings
 +++ b/Telegram/Resources/langs/lang.strings
 @@ -7971,14 +7971,60 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -145,17 +147,17 @@ index 7380587e7..77dc95924 100644
 +"ayu_IntelGramUpdateLogLabel" = "Open in IntelGram";
 +"ayu_IntelGramUpdateLogTitle" = "IntelGram update log";
 +"ayu_IntelGramUpdateLogCurrentTitle" = "Latest update";
-+"ayu_IntelGramUpdateLogCurrent" = "**Liquid Glass & Motion**\n- Liquid Glass layers adaptive tint and contrast, wallpaper-aware diffusion, cursor-reactive specular light, refractive edges, internal reflections, and subtle film grain over native desktop blur.\n- Material animation follows the active display refresh rate up to 120 Hz and pauses while IntelGram is hidden, inactive, or respecting reduced-motion and power-saving settings.\n- Control sidebar, chat, menu, dialog, and panel transparency separately; choose a private local backdrop and tune image opacity, blur, tint, surface opacity, and optical intensity without fading text, icons, avatars, or media.\n- Quick Snap is compact and immediate. Smooth Flow is calm and critically damped. Diabolical is brisk with stronger depth. Springy settles gently. The optional Liquid Bounce pack adds the most elastic lift and a controlled overshoot.\n- Local channel showcase can display a selected public channel on your own IntelGram profile with a Local showcase label. It never claims ownership, joins the channel, changes permissions, or modifies Telegram.\n- The profile username editor matches Telegram's native title, @username field, validation row, help text, and button layout while saving only IntelGram's local render value.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
++"ayu_IntelGramUpdateLogCurrent" = "**Liquid Glass & Motion**\n- Liquid Glass layers adaptive tint and contrast, wallpaper-aware diffusion, cursor-reactive specular light, refractive edges, internal reflections, and subtle film grain over native desktop blur.\n- Material animation follows the active display refresh rate up to 120 Hz and pauses while IntelGram is hidden, inactive, or respecting reduced-motion and power-saving settings.\n- Control sidebar, chat, menu, dialog, and panel transparency separately; choose a private local backdrop and tune image opacity, blur, tint, surface opacity, and optical intensity without fading text, icons, avatars, or media.\n- Quick Snap is compact and immediate. Smooth Flow is calm and critically damped. Diabolical is brisk with stronger depth. Springy settles gently. The optional Liquid Bounce pack adds the most elastic lift and a controlled overshoot.\n- Local channel showcase can display a selected public channel on your own IntelGram profile with a Local showcase label. It never claims ownership, joins the channel, changes permissions, or modifies Telegram.\n- Open the showcase as a local-only channel workspace to create, edit, pin, copy, or delete private local posts, attach local files, and configure a local title, description, and photo. None of those actions are sent to Telegram.\n- The profile username editor matches Telegram's native title, @username field, validation row, help text, and button layout while saving only IntelGram's local render value.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
 +"ayu_IntelGramUpdateLogFeaturesTitle" = "Main IntelGram features";
-+"ayu_IntelGramUpdateLogFeatures" = "**Local profile and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, badges, emoji status, personal channel rendering, and a clearly labeled local public-channel showcase.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity and customization**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native themes, cloud theme browsing, chat wallpapers, adaptive Liquid Glass, native blur, five motion packs, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
++"ayu_IntelGramUpdateLogFeatures" = "**Local profile and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, badges, emoji status, personal channel rendering, a clearly labeled local public-channel showcase, and its private local-only posting workspace.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity and customization**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native themes, cloud theme browsing, chat wallpapers, adaptive Liquid Glass, native blur, five motion packs, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
 +"ayu_IntelGramUpdateLogPrivacyTitle" = "Local-only boundary";
-+"ayu_IntelGramUpdateLogPrivacy" = "Local profile tools never update your Telegram profile, import contacts, claim channel ownership, change channel permissions, change collectible ownership, or join a channel automatically. The channel showcase uses only a public read-only lookup. Vault tools only process data already received by this client. Restrict Saving Content and self-destructing media are preserved: IntelGram stores a jump-back reference and basic metadata, never the protected body or media.";
++"ayu_IntelGramUpdateLogPrivacy" = "Local profile tools never update your Telegram profile, import contacts, claim channel ownership, change channel permissions, change collectible ownership, or join a channel automatically. The channel showcase uses only a public read-only lookup. Its local posts, files, pins, and appearance settings remain private IntelGram data and never become Telegram channel activity. Vault tools only process data already received by this client. Restrict Saving Content and self-destructing media are preserved: IntelGram stores a jump-back reference and basic metadata, never the protected body or media.";
 +"ayu_IntelGramUpdateLogCredit" = "IntelGram local profile tools by fool.";
 +"ayu_IntelGramUpdateLogFull" = "View full changelog";
  "ayu_CategoriesHeader" = "Categories";
  "ayu_SupportHeader" = "Support";
  "ayu_SupportDescription1" = "Support Development";
-@@ -8070,8 +8134,83 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8070,8 +8134,118 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SupportBoxReceiveBadgeInfo" = "After payment verification, you will receive a unique badge that will be displayed on your profile and visible to other users.";
  "ayu_CrashReporting" = "Crash Reporting";
  "ayu_CrashReportingDescription" = "When this option is enabled, you'll be prompted to send a report after the app crashes. You can decide whether to send it or not.";
@@ -201,6 +203,41 @@ index 7380587e7..77dc95924 100644
 +"ayu_LocalProfileChannelSaved" = "{channel} is now shown on your local profile.";
 +"ayu_LocalProfileChannelLocalOnly" = "This is a local showcase, not channel ownership. IntelGram does not join the channel, change permissions, or modify Telegram.";
 +"ayu_LocalProfileChannelProfileLabel" = "Local showcase";
++"ayu_LocalChannelWorkspaceOpen" = "Open local channel";
++"ayu_LocalChannelWorkspaceTitle" = "Local-only channel";
++"ayu_LocalChannelWorkspaceSettings" = "Channel settings";
++"ayu_LocalChannelWorkspaceLocalOnly" = "Posts, attachments, pins, and settings on this screen exist only in IntelGram. Nothing here is sent to Telegram, changes the public channel, or grants channel ownership or permissions.";
++"ayu_LocalChannelWorkspaceMissing" = "Choose a showcase channel first.";
++"ayu_LocalChannelWorkspacePosts" = "Local posts";
++"ayu_LocalChannelWorkspacePinned" = "Pinned locally";
++"ayu_LocalChannelWorkspaceEmpty" = "No local posts yet.";
++"ayu_LocalChannelWorkspaceNewPost" = "New local post";
++"ayu_LocalChannelWorkspacePostTitle" = "Local post";
++"ayu_LocalChannelWorkspacePostPlaceholder" = "Write a local channel post";
++"ayu_LocalChannelWorkspacePostSave" = "Post locally";
++"ayu_LocalChannelWorkspacePostSaved" = "Local post saved.";
++"ayu_LocalChannelWorkspaceAttachment" = "Attach local file";
++"ayu_LocalChannelWorkspaceAttachmentNone" = "No local attachment";
++"ayu_LocalChannelWorkspaceAttachmentOpen" = "Open local attachment";
++"ayu_LocalChannelWorkspaceEditPost" = "Edit local post";
++"ayu_LocalChannelWorkspaceDeletePost" = "Delete local post";
++"ayu_LocalChannelWorkspaceDeleteConfirm" = "Delete this local post from IntelGram?";
++"ayu_LocalChannelWorkspacePin" = "Pin locally";
++"ayu_LocalChannelWorkspaceUnpin" = "Unpin locally";
++"ayu_LocalChannelWorkspaceCopy" = "Copy post text";
++"ayu_LocalChannelWorkspaceBack" = "Back to local channel";
++"ayu_LocalChannelWorkspaceEdited" = "Edited locally";
++"ayu_LocalChannelWorkspaceSettingsTitle" = "Local channel settings";
++"ayu_LocalChannelWorkspaceTitleField" = "Local channel title";
++"ayu_LocalChannelWorkspaceAboutField" = "Local channel description";
++"ayu_LocalChannelWorkspacePhotoChoose" = "Choose local channel photo";
++"ayu_LocalChannelWorkspacePhotoClear" = "Clear local channel photo";
++"ayu_LocalChannelWorkspacePhotoInvalid" = "That image could not be used.";
++"ayu_LocalChannelWorkspaceSettingsSave" = "Save local settings";
++"ayu_LocalChannelWorkspaceSettingsSaved" = "Local channel settings saved.";
++"ayu_LocalChannelWorkspaceSettingsReset" = "Reset local appearance";
++"ayu_LocalChannelWorkspacePostsClear" = "Delete all local posts";
++"ayu_LocalChannelWorkspacePostsClearConfirm" = "Delete every local post for this channel from IntelGram?";
 +"ayu_LocalProfileDescription" = "Changes how your own profile details appear in this IntelGram client. Your Telegram profile, photo, bio, username, UID, and phone number are not changed.";
 +"ayu_LocalProfileGiftEnabled" = "Use local collectible gifts";
 +"ayu_LocalProfileGift" = "Featured collectible gift";
@@ -240,7 +277,7 @@ index 7380587e7..77dc95924 100644
  "ayu_DisableColorfulCover" = "Disable adaptive color";
  "ayu_EnableColorfulCover" = "Enable adaptive color";
  "ayu_CustomizationHeader" = "Customization";
-@@ -8130,14 +8269,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8130,14 +8304,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SettingsBiggerWindow" = "Bigger Window";
  "ayu_SettingsIncreaseWebviewHeight" = "Increase Content Height";
  "ayu_SettingsIncreaseWebviewWidth" = "Increase Content Width";
@@ -257,7 +294,7 @@ index 7380587e7..77dc95924 100644
  "ayu_ImportDataDescription" = "It will replace the current database.";
  "ayu_ImportDataConfirm" = "Yes, replace existing";
  "ayu_ImportDataCancel" = "No, close window";
-@@ -8204,7 +8343,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8204,7 +8378,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_FiltersClearPopupAltActionText" = "Clear unknown";
  "ayu_AppIconHeader" = "App Icon";
  "ayu_IconDefault" = "Default";
@@ -266,7 +303,7 @@ index 7380587e7..77dc95924 100644
  "ayu_IconDiscord" = "Discord";
  "ayu_IconSpotify" = "Spotify";
  "ayu_IconExtera" = "extera";
-@@ -8214,8 +8353,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8214,8 +8388,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_IconAyuTyan" = "AyuTyan";
  "ayu_WALMode" = "Enable WAL mode";
  "ayu_PushNotificationCount" = "FCM notifications received";
@@ -277,7 +314,7 @@ index 7380587e7..77dc95924 100644
  "ayu_TelegramCacheDatabase" = "Telegram Messages Database";
  "ayu_ConfirmationsTitle" = "Confirmations";
  "ayu_StickerConfirmation" = "For Stickers";
-@@ -8288,9 +8427,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8288,9 +8462,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SuggestGhostModeStoryText" = "Do you want to enable **Ghost Mode** before viewing the story?";
  "ayu_SuggestGhostModeStoryActionTextYes" = "Yes";
  "ayu_SuggestGhostModeStoryActionTextNo" = "No";
@@ -289,7 +326,7 @@ index 7380587e7..77dc95924 100644
  "ayu_HideNextViewsDescriptionAyu" = "Hide my views forever, until Ghost Mode is disabled.";
  "ayu_EnableGhostModeStories" = "Enable Ghost Mode";
  "ayu_GhostModeIsActive" = "Ghost Mode is Active";
-@@ -8355,28 +8494,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8355,28 +8529,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_ContextCopyID" = "Copy ID";
  "ayu_IDCopiedToast" = "ID copied to clipboard.";
  "ayu_ContextHideMessage" = "Hide";
@@ -508,7 +545,7 @@ index 2fa8a2a3f..a34d572f2 100644
  
  void initWorker() {
 diff --git a/Telegram/SourceFiles/ayu/ayu_settings.cpp b/Telegram/SourceFiles/ayu/ayu_settings.cpp
-index 2280020ce..768669d37 100644
+index 2280020ce..e2959e993 100644
 --- a/Telegram/SourceFiles/ayu/ayu_settings.cpp
 +++ b/Telegram/SourceFiles/ayu/ayu_settings.cpp
 @@ -11,6 +11,7 @@
@@ -519,7 +556,7 @@ index 2280020ce..768669d37 100644
  #include "core/application.h"
  #include "features/filters/filters_cache_controller.h"
  #include "features/translator/ayu_translator.h"
-@@ -20,8 +21,10 @@
+@@ -20,13 +21,17 @@
  #include "rpl/combine.h"
  #include "window/window_controller.h"
  
@@ -530,7 +567,14 @@ index 2280020ce..768669d37 100644
  
  using json = nlohmann::json;
  
-@@ -663,6 +666,118 @@ void AyuSettings::setMaterialSwitches(bool val) {
+ namespace {
+ 
++constexpr auto kMaxLocalProfileChannelWorkspaceLength = 1'500'000;
++
+ std::string getSettingsPath() {
+ 	return (cWorkingDir() + u"tdata/ayu_settings.json"_q).toStdString();
+ }
+@@ -663,6 +668,118 @@ void AyuSettings::setMaterialSwitches(bool val) {
  	save();
  }
  
@@ -649,7 +693,7 @@ index 2280020ce..768669d37 100644
  void AyuSettings::setRemoveMessageTail(bool val) {
  	if (_removeMessageTail.current() == val) return;
  	_removeMessageTail = val;
-@@ -681,6 +796,125 @@ void AyuSettings::setLocalPremium(bool val) {
+@@ -681,6 +798,132 @@ void AyuSettings::setLocalPremium(bool val) {
  	save();
  }
  
@@ -752,6 +796,13 @@ index 2280020ce..768669d37 100644
 +	save();
 +}
 +
++void AyuSettings::setLocalProfileChannelWorkspace(const QString &val) {
++	const auto normalized = val.left(kMaxLocalProfileChannelWorkspaceLength);
++	if (_localProfileChannelWorkspace.current() == normalized) return;
++	_localProfileChannelWorkspace = normalized;
++	save();
++}
++
 +void AyuSettings::setLocalProfileGiftEnabled(bool val) {
 +	if (_localProfileGiftEnabled.current() == val) return;
 +	_localProfileGiftEnabled = val;
@@ -775,7 +826,7 @@ index 2280020ce..768669d37 100644
  void AyuSettings::setShowChannelReactions(bool val) {
  	if (_showChannelReactions.current() == val) return;
  	_showChannelReactions = val;
-@@ -1080,9 +1314,44 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
+@@ -1080,9 +1323,45 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
  		{"increaseWebviewHeight", s._increaseWebviewHeight.current()},
  		{"increaseWebviewWidth", s._increaseWebviewWidth.current()},
  		{"materialSwitches", s._materialSwitches.current()},
@@ -814,13 +865,14 @@ index 2280020ce..768669d37 100644
 +		{"localProfileCloneId", s._localProfileCloneId.current()},
 +		{"localProfileChannelEnabled", s._localProfileChannelEnabled.current()},
 +		{"localProfileChannel", s._localProfileChannel.current()},
++		{"localProfileChannelWorkspace", s._localProfileChannelWorkspace.current()},
 +		{"localProfileGiftEnabled", s._localProfileGiftEnabled.current()},
 +		{"localProfileGift", s._localProfileGift.current()},
 +		{"localProfileGifts", s._localProfileGifts.current()},
  		{"showChannelReactions", s._showChannelReactions.current()},
  		{"showGroupReactions", s._showGroupReactions.current()},
  		{"showPrivateChatReactions", s._showPrivateChatReactions.current()},
-@@ -1180,9 +1449,82 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
+@@ -1180,9 +1459,86 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
  	s._increaseWebviewHeight = j.value("increaseWebviewHeight", defaults._increaseWebviewHeight.current());
  	s._increaseWebviewWidth = j.value("increaseWebviewWidth", defaults._increaseWebviewWidth.current());
  	s._materialSwitches = j.value("materialSwitches", defaults._materialSwitches.current());
@@ -897,6 +949,10 @@ index 2280020ce..768669d37 100644
 +	s._localProfileChannel = Ayu::NormalizeLocalProfileUsername(j.value(
 +		"localProfileChannel",
 +		defaults._localProfileChannel.current()));
++	s._localProfileChannelWorkspace = j.value(
++		"localProfileChannelWorkspace",
++		defaults._localProfileChannelWorkspace.current()).left(
++			kMaxLocalProfileChannelWorkspaceLength);
 +	s._localProfileGiftEnabled = j.value("localProfileGiftEnabled", defaults._localProfileGiftEnabled.current());
 +	s._localProfileGift = Ayu::NormalizeLocalProfileGift(j.value("localProfileGift", defaults._localProfileGift.current()));
 +	s._localProfileGifts = Ayu::NormalizeLocalProfileGifts(j.value("localProfileGifts", defaults._localProfileGifts.current()));
@@ -904,7 +960,7 @@ index 2280020ce..768669d37 100644
  	s._showGroupReactions = j.value("showGroupReactions", defaults._showGroupReactions.current());
  	s._showPrivateChatReactions = j.value("showPrivateChatReactions", defaults._showPrivateChatReactions.current());
 diff --git a/Telegram/SourceFiles/ayu/ayu_settings.h b/Telegram/SourceFiles/ayu/ayu_settings.h
-index 97a043921..bcc1eb0cc 100644
+index 97a043921..d69182c66 100644
 --- a/Telegram/SourceFiles/ayu/ayu_settings.h
 +++ b/Telegram/SourceFiles/ayu/ayu_settings.h
 @@ -51,6 +51,14 @@ enum class SendWithoutSoundOption {
@@ -937,7 +993,7 @@ index 97a043921..bcc1eb0cc 100644
  class GhostModeAccountSettings {
  public:
  	GhostModeAccountSettings();
-@@ -288,9 +304,44 @@ public:
+@@ -288,9 +304,45 @@ public:
  	[[nodiscard]] bool increaseWebviewHeight() const { return _increaseWebviewHeight.current(); }
  	[[nodiscard]] bool increaseWebviewWidth() const { return _increaseWebviewWidth.current(); }
  	[[nodiscard]] bool materialSwitches() const { return _materialSwitches.current(); }
@@ -976,13 +1032,14 @@ index 97a043921..bcc1eb0cc 100644
 +	[[nodiscard]] const QString &localProfileCloneId() const { return _localProfileCloneId.current(); }
 +	[[nodiscard]] bool localProfileChannelEnabled() const { return _localProfileChannelEnabled.current(); }
 +	[[nodiscard]] const QString &localProfileChannel() const { return _localProfileChannel.current(); }
++	[[nodiscard]] const QString &localProfileChannelWorkspace() const { return _localProfileChannelWorkspace.current(); }
 +	[[nodiscard]] bool localProfileGiftEnabled() const { return _localProfileGiftEnabled.current(); }
 +	[[nodiscard]] const QString &localProfileGift() const { return _localProfileGift.current(); }
 +	[[nodiscard]] const QString &localProfileGifts() const { return _localProfileGifts.current(); }
  	[[nodiscard]] bool showChannelReactions() const { return _showChannelReactions.current(); }
  	[[nodiscard]] bool showGroupReactions() const { return _showGroupReactions.current(); }
  	[[nodiscard]] bool showPrivateChatReactions() const { return _showPrivateChatReactions.current(); }
-@@ -372,9 +423,44 @@ public:
+@@ -372,9 +424,45 @@ public:
  	void setIncreaseWebviewHeight(bool val);
  	void setIncreaseWebviewWidth(bool val);
  	void setMaterialSwitches(bool val);
@@ -1021,13 +1078,14 @@ index 97a043921..bcc1eb0cc 100644
 +	void setLocalProfileCloneId(const QString &val);
 +	void setLocalProfileChannelEnabled(bool val);
 +	void setLocalProfileChannel(const QString &val);
++	void setLocalProfileChannelWorkspace(const QString &val);
 +	void setLocalProfileGiftEnabled(bool val);
 +	void setLocalProfileGift(const QString &val);
 +	void setLocalProfileGifts(const QString &val);
  	void setShowChannelReactions(bool val);
  	void setShowGroupReactions(bool val);
  	void setShowPrivateChatReactions(bool val);
-@@ -479,12 +565,82 @@ public:
+@@ -479,12 +567,83 @@ public:
  	[[nodiscard]] rpl::producer<bool> increaseWebviewWidthChanges() const { return _increaseWebviewWidth.changes(); }
  	[[nodiscard]] rpl::producer<bool> materialSwitchesValue() const { return _materialSwitches.value(); }
  	[[nodiscard]] rpl::producer<bool> materialSwitchesChanges() const { return _materialSwitches.changes(); }
@@ -1101,6 +1159,7 @@ index 97a043921..bcc1eb0cc 100644
 +	[[nodiscard]] rpl::producer<bool> localProfileChannelEnabledChanges() const { return _localProfileChannelEnabled.changes(); }
 +	[[nodiscard]] rpl::producer<QString> localProfileChannelValue() const { return _localProfileChannel.value(); }
 +	[[nodiscard]] rpl::producer<QString> localProfileChannelChanges() const { return _localProfileChannel.changes(); }
++	[[nodiscard]] rpl::producer<QString> localProfileChannelWorkspaceValue() const { return _localProfileChannelWorkspace.value(); }
 +	[[nodiscard]] rpl::producer<bool> localProfileGiftEnabledValue() const { return _localProfileGiftEnabled.value(); }
 +	[[nodiscard]] rpl::producer<bool> localProfileGiftEnabledChanges() const { return _localProfileGiftEnabled.changes(); }
 +	[[nodiscard]] rpl::producer<QString> localProfileGiftValue() const { return _localProfileGift.value(); }
@@ -1110,7 +1169,7 @@ index 97a043921..bcc1eb0cc 100644
  	[[nodiscard]] rpl::producer<bool> showChannelReactionsValue() const { return _showChannelReactions.value(); }
  	[[nodiscard]] rpl::producer<bool> showChannelReactionsChanges() const { return _showChannelReactions.changes(); }
  	[[nodiscard]] rpl::producer<bool> showGroupReactionsValue() const { return _showGroupReactions.value(); }
-@@ -633,9 +789,44 @@ private:
+@@ -633,9 +792,45 @@ private:
  	rpl::variable<bool> _increaseWebviewHeight = false;
  	rpl::variable<bool> _increaseWebviewWidth = false;
  	rpl::variable<bool> _materialSwitches = true;
@@ -1149,6 +1208,7 @@ index 97a043921..bcc1eb0cc 100644
 +	rpl::variable<QString> _localProfileCloneId;
 +	rpl::variable<bool> _localProfileChannelEnabled = false;
 +	rpl::variable<QString> _localProfileChannel;
++	rpl::variable<QString> _localProfileChannelWorkspace;
 +	rpl::variable<bool> _localProfileGiftEnabled = false;
 +	rpl::variable<QString> _localProfileGift;
 +	rpl::variable<QString> _localProfileGifts;
@@ -3843,6 +3903,811 @@ index 02133dda3..175c706d8 100644
  void AddHideMessageAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
  void AddUserMessagesAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
  void AddMessageDetailsAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
+diff --git a/Telegram/SourceFiles/ayu/ui/local_channel_workspace.cpp b/Telegram/SourceFiles/ayu/ui/local_channel_workspace.cpp
+new file mode 100644
+index 000000000..324f18ae7
+--- /dev/null
++++ b/Telegram/SourceFiles/ayu/ui/local_channel_workspace.cpp
+@@ -0,0 +1,777 @@
++#include "ayu/ui/local_channel_workspace.h"
++
++#include "apiwrap.h"
++#include "ayu/ayu_settings.h"
++#include "ayu/ui/utils/ayu_profile_values.h"
++#include "core/application.h"
++#include "core/file_utilities.h"
++#include "data/data_channel.h"
++#include "data/data_session.h"
++#include "lang_auto.h"
++#include "main/main_session.h"
++#include "ui/boxes/confirm_box.h"
++#include "ui/controls/userpic_button.h"
++#include "ui/image/image.h"
++#include "ui/layers/generic_box.h"
++#include "ui/vertical_list.h"
++#include "ui/widgets/buttons.h"
++#include "ui/widgets/fields/input_field.h"
++#include "ui/wrap/vertical_layout.h"
++#include "window/window_session_controller.h"
++
++#include "styles/style_boxes.h"
++#include "styles/style_info.h"
++#include "styles/style_layers.h"
++#include "styles/style_settings.h"
++
++#include <QtCore/QDateTime>
++#include <QtCore/QFileInfo>
++#include <QtCore/QJsonArray>
++#include <QtCore/QJsonDocument>
++#include <QtCore/QJsonObject>
++#include <QtCore/QLocale>
++#include <QtCore/QPointer>
++#include <QtGui/QClipboard>
++#include <QtGui/QGuiApplication>
++
++#include <algorithm>
++#include <limits>
++#include <utility>
++#include <vector>
++
++namespace Ayu {
++namespace {
++
++constexpr auto kMaxLocalChannels = 8;
++constexpr auto kMaxLocalChannelPosts = 100;
++constexpr auto kMaxLocalChannelPostLength = 4096;
++constexpr auto kMaxLocalChannelTitleLength = 128;
++constexpr auto kMaxLocalChannelAboutLength = 512;
++constexpr auto kMaxLocalChannelPathLength = 2048;
++constexpr auto kMaxLocalChannelWorkspaceLength = 1'400'000;
++
++struct LocalChannelPost {
++	qint64 id = 0;
++	qint64 createdAt = 0;
++	qint64 editedAt = 0;
++	QString text;
++	QString attachment;
++	bool pinned = false;
++};
++
++struct LocalChannelState {
++	QString title;
++	QString about;
++	QString photo;
++	qint64 updatedAt = 0;
++	std::vector<LocalChannelPost> posts;
++};
++
++struct LocalChannelComposerState {
++	QString attachment;
++	rpl::variable<QString> attachmentLabel;
++};
++
++struct LocalChannelSettingsState {
++	QString photo;
++	rpl::variable<QString> photoLabel;
++};
++
++[[nodiscard]] QString CurrentChannelUsername() {
++	return NormalizeLocalProfileUsername(
++		AyuSettings::getInstance().localProfileChannel());
++}
++
++[[nodiscard]] QJsonObject ReadWorkspaceRoot() {
++	const auto encoded = AyuSettings::getInstance(
++		).localProfileChannelWorkspace().toUtf8();
++	if (encoded.isEmpty()) {
++		return {};
++	}
++	QJsonParseError error;
++	const auto document = QJsonDocument::fromJson(encoded, &error);
++	return (error.error == QJsonParseError::NoError && document.isObject())
++		? document.object()
++		: QJsonObject();
++}
++
++[[nodiscard]] LocalChannelPost ReadPost(const QJsonObject &object) {
++	return {
++		.id = object.value(u"id"_q).toString().toLongLong(),
++		.createdAt = object.value(u"createdAt"_q).toString().toLongLong(),
++		.editedAt = object.value(u"editedAt"_q).toString().toLongLong(),
++		.text = object.value(u"text"_q).toString().left(
++			kMaxLocalChannelPostLength),
++		.attachment = object.value(u"attachment"_q).toString().left(
++			kMaxLocalChannelPathLength),
++		.pinned = object.value(u"pinned"_q).toBool(),
++	};
++}
++
++[[nodiscard]] QJsonObject WritePost(const LocalChannelPost &post) {
++	return {
++		{ u"id"_q, QString::number(post.id) },
++		{ u"createdAt"_q, QString::number(post.createdAt) },
++		{ u"editedAt"_q, QString::number(post.editedAt) },
++		{ u"text"_q, post.text.left(kMaxLocalChannelPostLength) },
++		{ u"attachment"_q, post.attachment.left(
++			kMaxLocalChannelPathLength) },
++		{ u"pinned"_q, post.pinned },
++	};
++}
++
++[[nodiscard]] LocalChannelState ReadChannelState() {
++	const auto username = CurrentChannelUsername();
++	if (username.isEmpty()) {
++		return {};
++	}
++	const auto root = ReadWorkspaceRoot();
++	const auto object = root.value(u"channels"_q).toObject(
++		).value(username).toObject();
++	auto result = LocalChannelState{
++		.title = object.value(u"title"_q).toString().left(
++			kMaxLocalChannelTitleLength),
++		.about = object.value(u"about"_q).toString().left(
++			kMaxLocalChannelAboutLength),
++		.photo = object.value(u"photo"_q).toString().left(
++			kMaxLocalChannelPathLength),
++		.updatedAt = object.value(u"updatedAt"_q).toString().toLongLong(),
++	};
++	const auto posts = object.value(u"posts"_q).toArray();
++	result.posts.reserve(std::min(
++		int(posts.size()),
++		kMaxLocalChannelPosts));
++	for (const auto &value : posts) {
++		if (result.posts.size() >= kMaxLocalChannelPosts) {
++			break;
++		}
++		const auto post = ReadPost(value.toObject());
++		if (post.id && (!post.text.isEmpty() || !post.attachment.isEmpty())) {
++			result.posts.push_back(post);
++		}
++	}
++	return result;
++}
++
++[[nodiscard]] QJsonObject WriteChannelState(
++		const LocalChannelState &state) {
++	auto posts = QJsonArray();
++	const auto from = (state.posts.size() > kMaxLocalChannelPosts)
++		? (state.posts.size() - kMaxLocalChannelPosts)
++		: 0;
++	for (auto i = from; i != state.posts.size(); ++i) {
++		posts.push_back(WritePost(state.posts[i]));
++	}
++	return {
++		{ u"title"_q, state.title.left(kMaxLocalChannelTitleLength) },
++		{ u"about"_q, state.about.left(kMaxLocalChannelAboutLength) },
++		{ u"photo"_q, state.photo.left(kMaxLocalChannelPathLength) },
++		{ u"updatedAt"_q, QString::number(state.updatedAt) },
++		{ u"posts"_q, posts },
++	};
++}
++
++void SaveChannelState(LocalChannelState state) {
++	const auto username = CurrentChannelUsername();
++	if (username.isEmpty()) {
++		return;
++	}
++	state.updatedAt = QDateTime::currentSecsSinceEpoch();
++	auto root = ReadWorkspaceRoot();
++	auto channels = root.value(u"channels"_q).toObject();
++	channels.insert(username, WriteChannelState(state));
++	while (channels.size() > kMaxLocalChannels) {
++		auto oldest = QString();
++		auto oldestTime = std::numeric_limits<qint64>::max();
++		for (auto i = channels.begin(); i != channels.end(); ++i) {
++			if (i.key() == username) {
++				continue;
++			}
++			const auto updated = i.value().toObject(
++				).value(u"updatedAt"_q).toString().toLongLong();
++			if (updated < oldestTime) {
++				oldest = i.key();
++				oldestTime = updated;
++			}
++		}
++		if (oldest.isEmpty()) {
++			break;
++		}
++		channels.remove(oldest);
++	}
++	root.insert(u"version"_q, 1);
++	root.insert(u"channels"_q, channels);
++	auto encoded = QString::fromUtf8(
++		QJsonDocument(root).toJson(QJsonDocument::Compact));
++	while (encoded.size() > kMaxLocalChannelWorkspaceLength
++		&& channels.size() > 1) {
++		for (auto i = channels.begin(); i != channels.end(); ++i) {
++			if (i.key() != username) {
++				channels.erase(i);
++				break;
++			}
++		}
++		root.insert(u"channels"_q, channels);
++		encoded = QString::fromUtf8(
++			QJsonDocument(root).toJson(QJsonDocument::Compact));
++	}
++	while (encoded.size() > kMaxLocalChannelWorkspaceLength
++		&& !state.posts.empty()) {
++		state.posts.erase(state.posts.begin());
++		channels.insert(username, WriteChannelState(state));
++		root.insert(u"channels"_q, channels);
++		encoded = QString::fromUtf8(
++			QJsonDocument(root).toJson(QJsonDocument::Compact));
++	}
++	AyuSettings::getInstance().setLocalProfileChannelWorkspace(encoded);
++}
++
++[[nodiscard]] QString ChannelTitle(
++		ChannelData *channel,
++		const LocalChannelState &state) {
++	if (!state.title.trimmed().isEmpty()) {
++		return state.title.trimmed();
++	}
++	return channel ? channel->name() : CurrentChannelUsername();
++}
++
++[[nodiscard]] QString AttachmentLabel(const QString &path) {
++	return path.isEmpty()
++		? tr::ayu_LocalChannelWorkspaceAttachmentNone(tr::now)
++		: QFileInfo(path).fileName();
++}
++
++[[nodiscard]] QString PostTitle(const LocalChannelPost &post) {
++	auto result = post.text.simplified();
++	if (result.isEmpty()) {
++		result = AttachmentLabel(post.attachment);
++	}
++	if (result.size() > 96) {
++		result = result.left(93) + u"..."_q;
++	}
++	return post.pinned
++		? (tr::ayu_LocalChannelWorkspacePinned(tr::now)
++			+ u": "_q
++			+ result)
++		: result;
++}
++
++[[nodiscard]] QString PostDetails(const LocalChannelPost &post) {
++	auto parts = QStringList();
++	const auto date = QDateTime::fromSecsSinceEpoch(
++		post.createdAt
++	).toString(QLocale::system().dateTimeFormat(QLocale::ShortFormat));
++	if (!date.isEmpty()) {
++		parts.push_back(date);
++	}
++	if (post.editedAt) {
++		parts.push_back(
++			tr::ayu_LocalChannelWorkspaceEdited(tr::now));
++	}
++	if (!post.attachment.isEmpty()) {
++		parts.push_back(AttachmentLabel(post.attachment));
++	}
++	return parts.join(u" - "_q);
++}
++
++[[nodiscard]] LocalChannelPost *FindPost(
++		LocalChannelState &state,
++		qint64 id) {
++	for (auto &post : state.posts) {
++		if (post.id == id) {
++			return &post;
++		}
++	}
++	return nullptr;
++}
++
++void ShowChannelBox(
++	not_null<Window::SessionController*> controller,
++	not_null<ChannelData*> channel);
++void ShowChannelSettings(
++	not_null<Window::SessionController*> controller,
++	not_null<ChannelData*> channel);
++void ShowPostActions(
++	not_null<Window::SessionController*> controller,
++	not_null<ChannelData*> channel,
++	qint64 postId);
++void ShowPostComposer(
++	not_null<Window::SessionController*> controller,
++	not_null<ChannelData*> channel,
++	qint64 postId);
++
++void ResolveChannel(
++		not_null<Window::SessionController*> controller,
++		Fn<void(not_null<ChannelData*>)> done) {
++	const auto username = CurrentChannelUsername();
++	if (username.isEmpty()) {
++		controller->showToast(
++			tr::ayu_LocalChannelWorkspaceMissing(tr::now));
++		return;
++	}
++	if (const auto peer = controller->session().data().peerByUsername(
++			username)) {
++		if (const auto channel = peer->asChannel()) {
++			done(channel);
++			return;
++		}
++	}
++	const auto weak = QPointer<Window::SessionController>(controller.get());
++	controller->session().api().request(
++		MTPcontacts_ResolveUsername(
++			MTP_flags(0),
++			MTP_string(username),
++			MTP_string())
++	).done([=](const MTPcontacts_ResolvedPeer &result) {
++		if (!weak) {
++			return;
++		}
++		const auto &data = result.data();
++		auto &owner = weak->session().data();
++		owner.processUsers(data.vusers());
++		owner.processChats(data.vchats());
++		const auto peer = owner.peerLoaded(peerFromMTP(data.vpeer()));
++		if (const auto channel = peer ? peer->asChannel() : nullptr) {
++			done(channel);
++		} else {
++			weak->showToast(
++				tr::ayu_LocalProfileChannelNotFound(tr::now));
++		}
++	}).fail([=](const MTP::Error &) {
++		if (weak) {
++			weak->showToast(
++				tr::ayu_LocalProfileChannelNotFound(tr::now));
++		}
++	}).send();
++}
++
++void ShowPostComposer(
++		not_null<Window::SessionController*> controller,
++		not_null<ChannelData*> channel,
++		qint64 postId) {
++	auto saved = ReadChannelState();
++	const auto existing = postId ? FindPost(saved, postId) : nullptr;
++	const auto initialText = existing ? existing->text : QString();
++	const auto initialAttachment = existing
++		? existing->attachment
++		: QString();
++	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
++		box->setTitle(postId
++			? tr::ayu_LocalChannelWorkspaceEditPost()
++			: tr::ayu_LocalChannelWorkspaceNewPost());
++		const auto field = box->addRow(
++			object_ptr<Ui::InputField>(
++				box,
++				st::defaultInputField,
++				Ui::InputField::Mode::MultiLine,
++				tr::ayu_LocalChannelWorkspacePostPlaceholder(),
++				initialText),
++			st::boxRowPadding);
++		field->setMaxLength(kMaxLocalChannelPostLength);
++		const auto composer = box->lifetime(
++			).make_state<LocalChannelComposerState>();
++		composer->attachment = initialAttachment;
++		composer->attachmentLabel = AttachmentLabel(initialAttachment);
++		Ui::AddDividerText(
++			box->verticalLayout(),
++			composer->attachmentLabel.value());
++		box->setFocusCallback([=] {
++			field->setFocusFast();
++		});
++		const auto weak = QPointer<Ui::GenericBox>(box);
++		box->addButton(
++			tr::ayu_LocalChannelWorkspaceAttachment(),
++			[=] {
++				FileDialog::GetOpenPath(
++					Core::App().getFileDialogParent(),
++					tr::ayu_LocalChannelWorkspaceAttachment(tr::now),
++					FileDialog::AllFilesFilter(),
++					[=](const FileDialog::OpenResult &result) {
++						if (!weak || result.paths.isEmpty()) {
++							return;
++						}
++						composer->attachment = result.paths.front().left(
++							kMaxLocalChannelPathLength);
++						composer->attachmentLabel = AttachmentLabel(
++							composer->attachment);
++					});
++			});
++		const auto save = [=] {
++			auto state = ReadChannelState();
++			const auto text = field->getLastText().trimmed().left(
++				kMaxLocalChannelPostLength);
++			const auto attachment = composer->attachment.left(
++				kMaxLocalChannelPathLength);
++			if (text.isEmpty() && attachment.isEmpty()) {
++				field->showError();
++				return;
++			}
++			const auto now = QDateTime::currentSecsSinceEpoch();
++			if (postId) {
++				if (const auto post = FindPost(state, postId)) {
++					post->text = text;
++					post->attachment = attachment;
++					post->editedAt = now;
++				}
++			} else {
++				state.posts.push_back({
++					.id = QDateTime::currentMSecsSinceEpoch(),
++					.createdAt = now,
++					.editedAt = 0,
++					.text = text,
++					.attachment = attachment,
++					.pinned = false,
++				});
++				while (state.posts.size() > kMaxLocalChannelPosts) {
++					state.posts.erase(state.posts.begin());
++				}
++			}
++			SaveChannelState(std::move(state));
++			box->closeBox();
++			controller->showToast(
++				tr::ayu_LocalChannelWorkspacePostSaved(tr::now));
++			ShowChannelBox(controller, channel);
++		};
++		box->addButton(
++			tr::ayu_LocalChannelWorkspacePostSave(),
++			save);
++		box->addButton(tr::lng_cancel(), [=] {
++			box->closeBox();
++			ShowChannelBox(controller, channel);
++		});
++	}));
++}
++
++void ShowPostActions(
++		not_null<Window::SessionController*> controller,
++		not_null<ChannelData*> channel,
++		qint64 postId) {
++	auto state = ReadChannelState();
++	const auto found = FindPost(state, postId);
++	if (!found) {
++		ShowChannelBox(controller, channel);
++		return;
++	}
++	const auto post = *found;
++	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
++		box->setTitle(tr::ayu_LocalChannelWorkspacePostTitle());
++		Ui::AddDividerText(
++			box->verticalLayout(),
++			rpl::single(post.text.isEmpty()
++				? AttachmentLabel(post.attachment)
++				: post.text));
++		Ui::AddDividerText(
++			box->verticalLayout(),
++			rpl::single(PostDetails(post)));
++		box->addButton(
++			tr::ayu_LocalChannelWorkspaceEditPost(),
++			[=] {
++				box->closeBox();
++				ShowPostComposer(controller, channel, postId);
++			});
++		box->addButton(
++			post.pinned
++				? tr::ayu_LocalChannelWorkspaceUnpin()
++				: tr::ayu_LocalChannelWorkspacePin(),
++			[=] {
++				auto changed = ReadChannelState();
++				if (const auto current = FindPost(changed, postId)) {
++					current->pinned = !current->pinned;
++					SaveChannelState(std::move(changed));
++				}
++				box->closeBox();
++				ShowChannelBox(controller, channel);
++			});
++		if (!post.text.isEmpty()) {
++			box->addButton(
++				tr::ayu_LocalChannelWorkspaceCopy(),
++				[=] {
++					QGuiApplication::clipboard()->setText(post.text);
++					controller->showToast(
++						tr::lng_text_copied(tr::now));
++				});
++		}
++		if (!post.attachment.isEmpty()
++			&& QFileInfo::exists(post.attachment)) {
++			box->addButton(
++				tr::ayu_LocalChannelWorkspaceAttachmentOpen(),
++				[=] {
++					File::Launch(post.attachment);
++				});
++		}
++		box->addButton(
++			tr::ayu_LocalChannelWorkspaceDeletePost(),
++			[=] {
++				box->closeBox();
++				controller->show(Ui::MakeConfirmBox({
++					.text = tr::ayu_LocalChannelWorkspaceDeleteConfirm(),
++					.confirmed = [=](Fn<void()> close) {
++						auto changed = ReadChannelState();
++						changed.posts.erase(
++							std::remove_if(
++								changed.posts.begin(),
++								changed.posts.end(),
++								[=](const LocalChannelPost &entry) {
++									return entry.id == postId;
++								}),
++							changed.posts.end());
++						SaveChannelState(std::move(changed));
++						close();
++						ShowChannelBox(controller, channel);
++					},
++					.confirmText = tr::lng_box_delete(),
++					.cancelText = tr::lng_cancel(),
++					.confirmStyle = &st::attentionBoxButton,
++				}));
++			});
++		box->addButton(
++			tr::ayu_LocalChannelWorkspaceBack(),
++			[=] {
++				box->closeBox();
++				ShowChannelBox(controller, channel);
++			});
++	}));
++}
++
++void ShowChannelSettings(
++		not_null<Window::SessionController*> controller,
++		not_null<ChannelData*> channel) {
++	const auto saved = ReadChannelState();
++	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
++		box->setTitle(tr::ayu_LocalChannelWorkspaceSettingsTitle());
++		const auto title = box->addRow(
++			object_ptr<Ui::InputField>(
++				box,
++				st::defaultInputField,
++				tr::ayu_LocalChannelWorkspaceTitleField(),
++				saved.title),
++			st::boxRowPadding);
++		title->setMaxLength(kMaxLocalChannelTitleLength);
++		const auto about = box->addRow(
++			object_ptr<Ui::InputField>(
++				box,
++				st::defaultInputField,
++				Ui::InputField::Mode::MultiLine,
++				tr::ayu_LocalChannelWorkspaceAboutField(),
++				saved.about),
++			st::boxRowPadding);
++		about->setMaxLength(kMaxLocalChannelAboutLength);
++		const auto settings = box->lifetime(
++			).make_state<LocalChannelSettingsState>();
++		settings->photo = saved.photo;
++		settings->photoLabel = AttachmentLabel(saved.photo);
++		Ui::AddDividerText(
++			box->verticalLayout(),
++			settings->photoLabel.value());
++		Ui::AddDividerText(
++			box->verticalLayout(),
++			tr::ayu_LocalChannelWorkspaceLocalOnly());
++		const auto weak = QPointer<Ui::GenericBox>(box);
++		box->addButton(
++			tr::ayu_LocalChannelWorkspacePhotoChoose(),
++			[=] {
++				const auto filter =
++					u"Image files (*.png *.jpg *.jpeg *.webp *.heic);;"_q
++					+ FileDialog::AllFilesFilter();
++				FileDialog::GetOpenPath(
++					Core::App().getFileDialogParent(),
++					tr::ayu_LocalChannelWorkspacePhotoChoose(tr::now),
++					filter,
++					[=](const FileDialog::OpenResult &result) {
++						if (!weak || result.paths.isEmpty()) {
++							return;
++						}
++						const auto path = result.paths.front();
++						if (Images::Read({ .path = path }).image.isNull()) {
++							controller->showToast(
++								tr::ayu_LocalChannelWorkspacePhotoInvalid(
++									tr::now));
++							return;
++						}
++						settings->photo = path.left(
++							kMaxLocalChannelPathLength);
++						settings->photoLabel = AttachmentLabel(
++							settings->photo);
++					});
++			});
++		box->addButton(
++			tr::ayu_LocalChannelWorkspacePhotoClear(),
++			[=] {
++				settings->photo = QString();
++				settings->photoLabel = AttachmentLabel(QString());
++			});
++		box->addButton(
++			tr::ayu_LocalChannelWorkspaceSettingsSave(),
++			[=] {
++				auto state = ReadChannelState();
++				state.title = title->getLastText().trimmed().left(
++					kMaxLocalChannelTitleLength);
++				state.about = about->getLastText().trimmed().left(
++					kMaxLocalChannelAboutLength);
++				state.photo = settings->photo.left(
++					kMaxLocalChannelPathLength);
++				SaveChannelState(std::move(state));
++				box->closeBox();
++				controller->showToast(
++					tr::ayu_LocalChannelWorkspaceSettingsSaved(tr::now));
++				ShowChannelBox(controller, channel);
++			});
++		box->addButton(
++			tr::ayu_LocalChannelWorkspaceSettingsReset(),
++			[=] {
++				auto state = ReadChannelState();
++				state.title = QString();
++				state.about = QString();
++				state.photo = QString();
++				SaveChannelState(std::move(state));
++				box->closeBox();
++				ShowChannelBox(controller, channel);
++			});
++		if (!saved.posts.empty()) {
++			box->addButton(
++				tr::ayu_LocalChannelWorkspacePostsClear(),
++				[=] {
++					box->closeBox();
++					controller->show(Ui::MakeConfirmBox({
++						.text = tr::ayu_LocalChannelWorkspacePostsClearConfirm(),
++						.confirmed = [=](Fn<void()> close) {
++							auto state = ReadChannelState();
++							state.posts.clear();
++							SaveChannelState(std::move(state));
++							close();
++							ShowChannelBox(controller, channel);
++						},
++						.confirmText = tr::lng_box_delete(),
++						.cancelText = tr::lng_cancel(),
++						.confirmStyle = &st::attentionBoxButton,
++					}));
++				});
++		}
++		box->addButton(
++			tr::ayu_LocalChannelWorkspaceBack(),
++			[=] {
++				box->closeBox();
++				ShowChannelBox(controller, channel);
++			});
++	}));
++}
++
++void ShowChannelBox(
++		not_null<Window::SessionController*> controller,
++		not_null<ChannelData*> channel) {
++	const auto state = ReadChannelState();
++	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
++		box->setWidth(st::boxWideWidth);
++		box->setNoContentMargin(true);
++		box->setTitle(rpl::single(ChannelTitle(channel, state)));
++		const auto content = box->verticalLayout();
++		Ui::AddSubsectionTitle(
++			content,
++			tr::ayu_LocalChannelWorkspaceTitle());
++		Ui::AddDividerText(
++			content,
++			tr::ayu_LocalChannelWorkspaceLocalOnly());
++		const auto userpic = content->add(
++			object_ptr<Ui::UserpicButton>(
++				content,
++				channel,
++				st::infoPersonalChannelUserpic),
++			style::al_top);
++		if (!state.photo.isEmpty()) {
++			auto image = Images::Read({ .path = state.photo }).image;
++			if (!image.isNull()) {
++				userpic->showCustom(std::move(image));
++			}
++		}
++		userpic->setAttribute(Qt::WA_TransparentForMouseEvents);
++		const auto settings = content->add(
++			object_ptr<Ui::SettingsButton>(
++				content,
++				tr::ayu_LocalChannelWorkspaceSettings(),
++				st::settingsButtonNoIcon));
++		settings->setClickedCallback([=] {
++			box->closeBox();
++			ShowChannelSettings(controller, channel);
++		});
++		if (!state.about.isEmpty()) {
++			Ui::AddDividerText(content, rpl::single(state.about));
++		}
++		const auto pinned = std::find_if(
++			state.posts.rbegin(),
++			state.posts.rend(),
++			[](const LocalChannelPost &post) {
++				return post.pinned;
++			});
++		if (pinned != state.posts.rend()) {
++			Ui::AddSubsectionTitle(
++				content,
++				tr::ayu_LocalChannelWorkspacePinned());
++			const auto button = content->add(
++				object_ptr<Ui::SettingsButton>(
++					content,
++					rpl::single(PostTitle(*pinned)),
++					st::settingsButtonNoIcon));
++			const auto postId = pinned->id;
++			button->setClickedCallback([=] {
++				box->closeBox();
++				ShowPostActions(controller, channel, postId);
++			});
++			Ui::AddDividerText(
++				content,
++				rpl::single(PostDetails(*pinned)));
++		}
++		Ui::AddSubsectionTitle(
++			content,
++			tr::ayu_LocalChannelWorkspacePosts());
++		if (state.posts.empty()) {
++			Ui::AddDividerText(
++				content,
++				tr::ayu_LocalChannelWorkspaceEmpty());
++		}
++		for (auto i = state.posts.rbegin(); i != state.posts.rend(); ++i) {
++			const auto post = *i;
++			const auto button = content->add(
++				object_ptr<Ui::SettingsButton>(
++					content,
++					rpl::single(PostTitle(post)),
++					st::settingsButtonNoIcon));
++			button->setClickedCallback([=] {
++				box->closeBox();
++				ShowPostActions(controller, channel, post.id);
++			});
++			Ui::AddDividerText(
++				content,
++				rpl::single(PostDetails(post)));
++		}
++		box->addButton(
++			tr::ayu_LocalChannelWorkspaceNewPost(),
++			[=] {
++				box->closeBox();
++				ShowPostComposer(controller, channel, 0);
++			});
++		box->addButton(
++			tr::ayu_LocalChannelWorkspaceSettings(),
++			[=] {
++				box->closeBox();
++				ShowChannelSettings(controller, channel);
++			});
++		box->addButton(tr::lng_box_done(), [=] {
++			box->closeBox();
++		});
++	}));
++}
++
++} // namespace
++
++QString LocalChannelDisplayTitle(ChannelData *channel) {
++	return ChannelTitle(channel, ReadChannelState());
++}
++
++void ShowLocalChannelWorkspace(
++		not_null<Window::SessionController*> controller) {
++	ResolveChannel(controller, [=](not_null<ChannelData*> channel) {
++		ShowChannelBox(controller, channel);
++	});
++}
++
++} // namespace Ayu
+diff --git a/Telegram/SourceFiles/ayu/ui/local_channel_workspace.h b/Telegram/SourceFiles/ayu/ui/local_channel_workspace.h
+new file mode 100644
+index 000000000..80ad66290
+--- /dev/null
++++ b/Telegram/SourceFiles/ayu/ui/local_channel_workspace.h
+@@ -0,0 +1,16 @@
++#pragma once
++
++class ChannelData;
++class QString;
++
++namespace Window {
++class SessionController;
++} // namespace Window
++
++namespace Ayu {
++
++[[nodiscard]] QString LocalChannelDisplayTitle(ChannelData *channel);
++void ShowLocalChannelWorkspace(
++	not_null<Window::SessionController*> controller);
++
++} // namespace Ayu
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.cpp
 index c41224c5c..7021b36b6 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_appearance.cpp
@@ -4309,10 +5174,10 @@ index a4b1e7ad4..8b0f3d579 100644
  	builder.addSkip();
  }
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-index 929cf4609..9d609d81c 100644
+index 929cf4609..7fcfc784d 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-@@ -6,33 +6,46 @@
+@@ -6,33 +6,47 @@
  // Copyright @Radolyn, 2026
  #include "ayu/ui/settings/settings_other.h"
  
@@ -4320,6 +5185,7 @@ index 929cf4609..9d609d81c 100644
 +#include "api/api_premium.h"
  #include "ayu/ayu_settings.h"
 -#include "ayu/ui/boxes/donate_qr_box.h"
++#include "ayu/ui/local_channel_workspace.h"
  #include "ayu/ui/settings/ayu_builder.h"
  #include "ayu/ui/settings/settings_ayu_utils.h"
  #include "ayu/ui/settings/settings_main.h"
@@ -4371,7 +5237,7 @@ index 929cf4609..9d609d81c 100644
  
  namespace Settings {
  
-@@ -41,162 +54,1089 @@ using namespace AyuBuilder;
+@@ -41,162 +55,1097 @@ using namespace AyuBuilder;
  
  namespace {
  
@@ -4403,8 +5269,13 @@ index 929cf4609..9d609d81c 100644
 +struct LocalGiftCollection {
 +	QString title;
 +	QString slug;
-+};
-+
+ };
+ 
+-Asset getAsset(const QString &name) {
+-	const auto isNightMode = Window::Theme::IsNightMode();
+-	const auto normalized = name.toLower();
+-	QString icon = QString(":/gui/icons/ayu/donates/%1.svg").arg(normalized);
+-	QColor background = isNightMode ? QColor(0xEEEEEE) : QColor(0x242B2C);
 +struct LocalGiftBrowserState {
 +	rpl::variable<Ui::GiftsDescriptor> gifts;
 +	std::vector<Info::PeerGifts::GiftDescriptor> items;
@@ -4414,13 +5285,8 @@ index 929cf4609..9d609d81c 100644
 +	int nextNumber = 1;
 +	bool loading = false;
 +	bool exhausted = false;
- };
- 
--Asset getAsset(const QString &name) {
--	const auto isNightMode = Window::Theme::IsNightMode();
--	const auto normalized = name.toLower();
--	QString icon = QString(":/gui/icons/ayu/donates/%1.svg").arg(normalized);
--	QColor background = isNightMode ? QColor(0xEEEEEE) : QColor(0x242B2C);
++};
++
 +constexpr auto kLocalGiftBrowserPageSize = 12;
 +
 +[[nodiscard]] std::vector<LocalGiftCollection> LocalGiftCollections() {
@@ -4478,20 +5344,53 @@ index 929cf4609..9d609d81c 100644
 +		if (!reference.isEmpty()) {
 +			result.push_back(reference);
 +		}
-+	}
+ 	}
 +	return result;
 +}
-+
+ 
+-	return image;
 +[[nodiscard]] QString SerializeLocalGiftReferences(
 +		const std::vector<QString> &references) {
 +	auto result = QStringList();
 +	result.reserve(references.size());
 +	for (const auto &reference : references) {
 +		result.push_back(reference);
- 	}
++	}
 +	return result.join(u", "_q);
-+}
-+
+ }
+ 
+-[[nodiscard]] not_null<Ui::SettingsButton*> AddDonate(
+-		not_null<Ui::SettingsButton*> button,
+-		const QString &name) {
+-	const auto btnContainer = Ui::CreateChild<Ui::RpWidget>(button);
+-	const auto &buttonSt = button->st();
+-	const auto fullHeight = buttonSt.height
+-		+ rect::m::sum::v(buttonSt.padding);
+-
+-	const auto iconWidget = Ui::CreateChild<Ui::RpWidget>(button.get());
+-
+-	auto icon = getImage(name);
+-	iconWidget->resize(icon.size() / style::DevicePixelRatio());
+-	iconWidget->paintRequest(
+-	) | rpl::on_next([=] {
+-		auto p = QPainter(iconWidget);
+-		p.drawImage(0, 0, icon);
+-	}, iconWidget->lifetime());
+-
+-	button->sizeValue(
+-	) | rpl::on_next([=](const QSize &s) {
+-		iconWidget->moveToLeft(
+-			button->st().iconLeft
+-				+ (st::menuIconShop.width() - iconWidget->width()) / 2,
+-			(s.height() - iconWidget->height()) / 2);
+-		btnContainer->moveToLeft(
+-			iconWidget->x() - (fullHeight - iconWidget->height()) / 2,
+-			0);
+-	}, iconWidget->lifetime());
+-
+-	btnContainer->resize(fullHeight, fullHeight);
+-
+-	return button;
 +[[nodiscard]] QString LocalGiftReferenceLabel(QString reference) {
 +	reference = Ayu::NormalizeLocalProfileGift(std::move(reference));
 +	static const auto Slug = QRegularExpression(u"^(.+)-([0-9]+)$"_q);
@@ -4506,13 +5405,29 @@ index 929cf4609..9d609d81c 100644
 +	return (reference.size() > 38)
 +		? (reference.left(24) + u"..."_q + reference.right(8))
 +		: reference;
-+}
-+
+ }
+ 
+-void AddCryptoDonate(
+-		const QString &name,
+-		const QString &address,
+-		not_null<Ui::VerticalLayout*> container) {
+-	const auto button = AddDonate(
+-		AddButtonWithIcon(
+-			container,
+-			rpl::single(name),
+-			st::settingsButton),
+-		name);
+-	button->setClickedCallback([=] {
+-		auto box = Box(
+-			Ui::FillDonateQrBox,
+-			address,
+-			getAsset(name).icon);
+-		Ui::show(std::move(box));
+-	});
 +void ShowLocalGiftCollectionPicker(
 +	not_null<Window::SessionController*> controller,
 +	LocalGiftTarget target);
- 
--	return image;
++
 +[[nodiscard]] bool StoreLocalGift(
 +		not_null<Window::SessionController*> controller,
 +		LocalGiftTarget target,
@@ -4550,40 +5465,8 @@ index 929cf4609..9d609d81c 100644
 +		lt_gift,
 +		Data::UniqueGiftName(*gift.unique)));
 +	return true;
- }
- 
--[[nodiscard]] not_null<Ui::SettingsButton*> AddDonate(
--		not_null<Ui::SettingsButton*> button,
--		const QString &name) {
--	const auto btnContainer = Ui::CreateChild<Ui::RpWidget>(button);
--	const auto &buttonSt = button->st();
--	const auto fullHeight = buttonSt.height
--		+ rect::m::sum::v(buttonSt.padding);
--
--	const auto iconWidget = Ui::CreateChild<Ui::RpWidget>(button.get());
--
--	auto icon = getImage(name);
--	iconWidget->resize(icon.size() / style::DevicePixelRatio());
--	iconWidget->paintRequest(
--	) | rpl::on_next([=] {
--		auto p = QPainter(iconWidget);
--		p.drawImage(0, 0, icon);
--	}, iconWidget->lifetime());
--
--	button->sizeValue(
--	) | rpl::on_next([=](const QSize &s) {
--		iconWidget->moveToLeft(
--			button->st().iconLeft
--				+ (st::menuIconShop.width() - iconWidget->width()) / 2,
--			(s.height() - iconWidget->height()) / 2);
--		btnContainer->moveToLeft(
--			iconWidget->x() - (fullHeight - iconWidget->height()) / 2,
--			0);
--	}, iconWidget->lifetime());
--
--	btnContainer->resize(fullHeight, fullHeight);
--
--	return button;
++}
++
 +[[nodiscard]] QString ResolveLocalGiftReference(
 +		QString reference,
 +		const LocalGiftCollection &collection) {
@@ -4602,25 +5485,8 @@ index 929cf4609..9d609d81c 100644
 +		reference = collection.slug + '-' + reference;
 +	}
 +	return Ayu::NormalizeLocalProfileGift(std::move(reference));
- }
- 
--void AddCryptoDonate(
--		const QString &name,
--		const QString &address,
--		not_null<Ui::VerticalLayout*> container) {
--	const auto button = AddDonate(
--		AddButtonWithIcon(
--			container,
--			rpl::single(name),
--			st::settingsButton),
--		name);
--	button->setClickedCallback([=] {
--		auto box = Box(
--			Ui::FillDonateQrBox,
--			address,
--			getAsset(name).icon);
--		Ui::show(std::move(box));
--	});
++}
++
 +void LoadLocalGiftBrowserPage(
 +		not_null<Window::SessionController*> controller,
 +		LocalGiftCollection collection,
@@ -4655,22 +5521,8 @@ index 929cf4609..9d609d81c 100644
 +			state->exhausted = (resolved == 0);
 +			state->gifts = Ui::GiftsDescriptor{ .list = state->items };
 +		});
- }
- 
--void BuildDonations(SectionBuilder &builder) {
--	builder.add([](const BuildContext &ctx) {
--		v::match(ctx, [&](const WidgetContext &wctx) {
--			const auto container = wctx.container;
--
--			AddSubsectionTitle(container, tr::ayu_SupportHeader());
--			AddDonate(
--				AddButtonWithIcon(
--					container,
--					rpl::single(QString("Boosty")),
--					st::settingsButton),
--				"boosty"
--			)->setClickedCallback([=] {
--				QDesktopServices::openUrl(QString("https://boosty.to/alexeyzavar"));
++}
++
 +void LoadLocalGiftCollectionFallback(
 +		not_null<Window::SessionController*> controller,
 +		QPointer<Ui::GenericBox> box,
@@ -4700,8 +5552,22 @@ index 929cf4609..9d609d81c 100644
 +			}
 +			state->gifts = Ui::GiftsDescriptor{ .list = state->items };
 +		});
-+}
-+
+ }
+ 
+-void BuildDonations(SectionBuilder &builder) {
+-	builder.add([](const BuildContext &ctx) {
+-		v::match(ctx, [&](const WidgetContext &wctx) {
+-			const auto container = wctx.container;
+-
+-			AddSubsectionTitle(container, tr::ayu_SupportHeader());
+-			AddDonate(
+-				AddButtonWithIcon(
+-					container,
+-					rpl::single(QString("Boosty")),
+-					st::settingsButton),
+-				"boosty"
+-			)->setClickedCallback([=] {
+-				QDesktopServices::openUrl(QString("https://boosty.to/alexeyzavar"));
 +[[nodiscard]] bool ApplyLocalGiftCatalog(
 +		QPointer<Ui::GenericBox> box,
 +		not_null<LocalGiftBrowserState*> state) {
@@ -5522,6 +6388,14 @@ index 929cf4609..9d609d81c 100644
 +		},
 +	});
 +	builder.addButton({
++		.id = u"ayu/localProfileChannelOpen"_q,
++		.title = tr::ayu_LocalChannelWorkspaceOpen(),
++		.icon = { &st::menuIconChannel },
++		.onClick = [=] {
++			Ayu::ShowLocalChannelWorkspace(controller);
++		},
++	});
++	builder.addButton({
 +		.id = u"ayu/localProfileChannelClear"_q,
 +		.title = tr::ayu_LocalProfileChannelClear(),
 +		.icon = { &st::menuIconDelete },
@@ -5587,7 +6461,7 @@ index 929cf4609..9d609d81c 100644
  	builder.addButton({
  		.id = u"ayu/registerUrlScheme"_q,
  		.title = tr::ayu_RegisterURLScheme(),
-@@ -228,13 +1168,23 @@ void BuildOtherThings(SectionBuilder &builder) {
+@@ -228,13 +1177,23 @@ void BuildOtherThings(SectionBuilder &builder) {
  const auto kMeta = BuildHelper({
  	.id = AyuOther::Id(),
  	.parentId = AyuMain::Id(),
@@ -5614,7 +6488,7 @@ index 929cf4609..9d609d81c 100644
  	BuildCrashReporting(builder, ayu);
  	BuildOtherThings(builder);
  });
-@@ -242,7 +1192,7 @@ const auto kMeta = BuildHelper({
+@@ -242,7 +1201,7 @@ const auto kMeta = BuildHelper({
  } // namespace
  
  rpl::producer<QString> AyuOther::title() {
@@ -5623,7 +6497,7 @@ index 929cf4609..9d609d81c 100644
  }
  
  AyuOther::AyuOther(
-@@ -258,6 +1208,23 @@ void AyuOther::setupContent() {
+@@ -258,6 +1217,23 @@ void AyuOther::setupContent() {
  	Ui::ResizeFitChild(this, content);
  }
  
@@ -10467,19 +11341,20 @@ index 63b23a43a..9c7dee66b 100644
  			_title.setText(
  				st::msgNameStyle,
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_actions.cpp b/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
-index 594061dbb..a6b7df09b 100644
+index 594061dbb..83634e77f 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
-@@ -7,6 +7,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -7,6 +7,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  */
  #include "info/profile/info_profile_actions.h"
  
 +#include "ayu/ayu_settings.h"
++#include "ayu/ui/local_channel_workspace.h"
 +#include "ayu/ui/utils/ayu_profile_values.h"
  #include "api/api_blocked_peers.h"
  #include "api/api_chat_participants.h"
  #include "api/api_credits.h"
-@@ -1766,7 +1768,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
+@@ -1766,7 +1769,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
  			st::infoProfileLabeledButtonQr);
  		qrButton->setAccessibleName(tr::lng_group_invite_context_qr(tr::now));
  		UsernamesValue(_peer) | rpl::on_next([=](const auto &u) {
@@ -10489,7 +11364,7 @@ index 594061dbb..a6b7df09b 100644
  		}, qrButton->lifetime());
  		const auto rightSkip = st::infoProfileLabeledButtonQrRightSkip;
  		fitLabelToButton(qrButton, usernameLine.text, rightSkip);
-@@ -2009,20 +2012,36 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2009,20 +2013,36 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  	const auto window = _controller->parentController();
  	const auto duration = st::slideWrapDuration;
  
@@ -10530,7 +11405,7 @@ index 594061dbb..a6b7df09b 100644
  			const auto count = channel ? channel->membersCount() : 0;
  			if (count > 1) {
  				text.append(' ')
-@@ -2045,16 +2064,31 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2045,16 +2065,31 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  		base::install_event_filter(container, [=](
  				not_null<QEvent*> e) {
  			if (e->type() == QEvent::ContextMenu) {
@@ -10568,7 +11443,7 @@ index 594061dbb..a6b7df09b 100644
  				state->menu->popup(ce->globalPos());
  				return base::EventFilterResult::Cancel;
  			}
-@@ -2068,8 +2102,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2068,16 +2103,21 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  				container,
  				object_ptr<Ui::VerticalLayout>(container)));
  		onlyChannelWrap->toggleOn(rpl::duplicate(channel) | rpl::map([=] {
@@ -10579,18 +11454,40 @@ index 594061dbb..a6b7df09b 100644
  		}));
  		onlyChannelWrap->finishAnimating();
  
-@@ -2092,8 +2126,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+-		auto text = rpl::duplicate(
+-			channel
+-		) | rpl::map([=](ChannelData *channel) {
+-			return channel ? NameValue(channel) : rpl::single(QString());
+-		}) | rpl::flatten_latest() | rpl::map([](const QString &name) {
++		auto text = rpl::combine(
++			rpl::duplicate(channel),
++			AyuSettings::getInstance().localProfileChannelWorkspaceValue()
++		) | rpl::map([=](
++				ChannelData *channel,
++				const QString &) {
++			return channel
++				? Ayu::LocalChannelDisplayTitle(channel)
++				: QString();
++		}) | rpl::map([](const QString &name) {
+ 			return name.isEmpty() ? TextWithEntities() : tr::link(name);
+ 		});
+ 		auto line = CreateTextWithLabel(
+@@ -2092,8 +2132,12 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  		line.text->setClickHandlerFilter([=](
  				const ClickHandlerPtr &handler,
  				Qt::MouseButton button) {
 -			if (const auto channelId = user->personalChannelId()) {
 -				window->showPeerInfo(peerFromChannel(channelId));
 +			if (const auto channel = Ayu::LocalProfilePersonalChannel(user)) {
-+				window->showPeerInfo(channel->id);
++				if (Ayu::LocalProfileChannelShowcaseActive(user)) {
++					Ayu::ShowLocalChannelWorkspace(window);
++				} else {
++					window->showPeerInfo(channel->id);
++				}
  			}
  			return false;
  		});
-@@ -2113,8 +2147,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2113,8 +2157,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  				object_ptr<Ui::VerticalLayout>(container)));
  		messageChannelWrap->setDuration(duration);
  		messageChannelWrap->toggleOn(rpl::duplicate(channel) | rpl::map([=] {
@@ -10601,7 +11498,7 @@ index 594061dbb..a6b7df09b 100644
  		}));
  		messageChannelWrap->finishAnimating();
  		messageChannelWrap->toggledValue(
-@@ -2291,16 +2325,25 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2291,16 +2335,25 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  			if (!channel) {
  				return;
  			}

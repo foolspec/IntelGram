@@ -16,6 +16,18 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - An optional public-channel showcase rendered on your own profile with an explicit **Local showcase** label.
 - Public channels are resolved read-only from an `@channel` or `t.me` link; the showcase does not grant ownership, administration, permissions, or membership.
 
+## Local Channel Workspace
+
+- Opens from the showcased channel on your profile or **Open local channel** in Local Profile settings.
+- Keeps a separate private workspace for up to eight selected public channels.
+- Creates local text posts and optional local-file attachments without sending a Telegram message.
+- Supports editing, deleting, pinning, unpinning, copying, and reopening locally attached files.
+- Provides local channel settings for a custom title, description, and photo, with reset controls.
+- Keeps up to 100 recent posts per workspace and removes the oldest entries when the local cap is reached.
+- Stores workspace JSON and attachment paths only in IntelGram's local settings.
+- Labels the feed **Local-only channel** and does not synthesize creator, owner, administrator, member, invite, or permission state.
+- Never publishes, edits, pins, deletes, or forwards a Telegram channel message and never changes the public channel.
+
 ## Local Profile Clone
 
 - Accepts the UID of a user whose profile has already been opened and loaded in IntelGram.
@@ -183,7 +195,7 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 
 ## Network And Protected-Content Boundary
 
-IntelGram's custom profile values stay local. Clone selection may issue Telegram's standard read-only full-profile refresh for the already-known source user. The local channel showcase may resolve a public username and request its public full peer read-only. The collectible browser may issue read-only Telegram gift catalog/detail requests and a read-only TonAPI metadata lookup when resolving a raw TON NFT address. The supporter badge reads an already-known channel membership state and does not join a channel. Vault rules run only after IntelGram receives a message.
+IntelGram's custom profile values stay local. Clone selection may issue Telegram's standard read-only full-profile refresh for the already-known source user. The local channel showcase may resolve a public username and request its public full peer read-only; its posts, file paths, pins, title, description, and photo remain local settings and issue no channel write request. The collectible browser may issue read-only Telegram gift catalog/detail requests and a read-only TonAPI metadata lookup when resolving a raw TON NFT address. The supporter badge reads an already-known channel membership state and does not join a channel. Vault rules run only after IntelGram receives a message.
 
 IntelGram adds no Telegram account/profile update, contact import, collectible transaction, ownership mutation, channel ownership or permission mutation, automatic channel join, or protected-content bypass. Restrict Saving Content and self-destruct flags are enforced in the vault, edit/deletion history, saved moments, rules, exports, cached-media packaging, media overlay, and legacy Ayu message storage.
 

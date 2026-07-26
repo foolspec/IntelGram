@@ -13,8 +13,8 @@ permissions:
   contents: read
 
 env:
-  SOURCE_PATCH_SHA256: c412cc0b47d3fdf0d3272ca6910623e9e3709879ff59bf2ba1ae8329c32c0170
-  RELEASE_PATCH_SHA256: c412cc0b47d3fdf0d3272ca6910623e9e3709879ff59bf2ba1ae8329c32c0170
+  SOURCE_PATCH_SHA256: f48f7bc10e10a84dce5e9eb63222b557cfdbced5f597fe6b6c1b4d5577146c67
+  RELEASE_PATCH_SHA256: f48f7bc10e10a84dce5e9eb63222b557cfdbced5f597fe6b6c1b4d5577146c67
 
 jobs:
   verify-release:
@@ -40,7 +40,7 @@ jobs:
           tag="$(jq -r '.tag_name' <<<"$release")"
           test "$(jq -r '.draft' <<<"$release")" = "false"
           test "$(jq -r '.prerelease' <<<"$release")" = "false"
-          test "$(jq -r '.name' <<<"$release")" = "IntelGram v6.7.8 - Liquid Glass"
+          test "$(jq -r '.name' <<<"$release")" = "IntelGram v6.7.8 - Local Channel Workspace"
 
           required_assets=(
             IntelGram-macOS-Apple-Silicon.dmg
