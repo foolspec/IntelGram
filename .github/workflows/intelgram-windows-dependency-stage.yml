@@ -214,12 +214,12 @@ jobs:
           $path = "tdesktop\Telegram\build\prepare\prepare.py"
           $content = [System.IO.File]::ReadAllText($path)
           $needle = "win:`n    cd qtbase"
-          $replacement = @"
-          win:
-              if not exist qtimageformats\mkspecs\modules-inst mkdir qtimageformats\mkspecs\modules-inst
-              if not exist qtsvg\mkspecs\modules-inst mkdir qtsvg\mkspecs\modules-inst
-              cd qtbase
-          "@.Trim()
+          $replacement = @(
+            "win:"
+            "    if not exist qtimageformats\mkspecs\modules-inst mkdir qtimageformats\mkspecs\modules-inst"
+            "    if not exist qtsvg\mkspecs\modules-inst mkdir qtsvg\mkspecs\modules-inst"
+            "    cd qtbase"
+          ) -join "`n"
           $matches = ([regex]::Matches($content, [regex]::Escape($needle))).Count
           if ($matches -ne 2) {
             throw "Expected two Qt Windows preparation blocks, found $matches"
