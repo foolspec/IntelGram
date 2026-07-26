@@ -42,6 +42,8 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - `validate_intelgram_patch.py` requires the adaptive material controls, new optical render helpers, Liquid Bounce motion hook, local channel showcase UI and read-only lookup, and exact `lib_ui` commit.
 - Mutation scans continue to reject profile updates, username availability checks, contact import, channel joins, personal-channel updates, gift transfers, and protected-content bypasses.
 - Clean-source patch application, byte-identical alias, SHA-256, whitespace checks, localization-key uniqueness, exact submodule revision, platform compilation, launch smoke tests, and release-asset digest validation remain required before publication.
+- Release inputs are successful macOS Apple Silicon run `30184725091`, Windows x64 run `30184751384`, and Linux x64 run `30184751392`. Every validation report records patch `c412cc0b47d3fdf0d3272ca6910623e9e3709879ff59bf2ba1ae8329c32c0170` and `Launch smoke test: PASS`.
+- The downloaded macOS application was additionally checked as an `arm64` Mach-O bundle with identifier `io.github.foolspec.IntelGram`, passed deep code-signature validation, launched from the isolated Codex output directory, and exposed the complete Liquid Glass, motion-pack, and local channel showcase controls through its native settings UI. The packaged DMG mounted read-only and its contained application passed the same identity and signature checks.
 
 ## IntelGram v6.7.8 Glass And Motion - 2026-07-25
 
