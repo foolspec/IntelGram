@@ -245,7 +245,7 @@ replace("Telegram/SourceFiles/window/notifications_manager_default.cpp", [
 	 'TextWithEntities{ u"IntelGram Desktop"_q }'),
 ])
 
-replace("Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp", [
+replace_or_verify("Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp", [
 	('.text = u"AyuGram"_q,', '.text = u"IntelGram"_q,'),
 ])
 
