@@ -7,10 +7,10 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 ### Source Baseline And Patch
 
 - Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
-- Source commit: `23b84e92ea62a6756fb959e0918b272ead882884` on the recovered local implementation branch.
+- Source commit: `9d0e4ac005c19eeceade7b13ef15eadeb489e73d` on the recovered local implementation branch.
 - Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
 - Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
-- Patch SHA-256: `f48f7bc10e10a84dce5e9eb63222b557cfdbced5f597fe6b6c1b4d5577146c67`.
+- Patch SHA-256: `3481f2177ad41a055654b7a4c962d16073e70fbf0e12fe99013ebe56f88a3dc6`.
 - Patch footprint: 77 files, 9,985 insertions, and 501 deletions relative to the pinned source.
 - `Telegram/lib_ui` points to public fork [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui), pinned at `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
 
@@ -41,6 +41,7 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 
 - `Ayu::ShowLocalChannelWorkspace` resolves only the already-selected public username, then opens a dedicated **Local-only channel** box instead of mutating or injecting Telegram history.
 - `localProfileChannelWorkspace` stores compact versioned JSON in IntelGram settings. It separates data by normalized channel username, keeps at most eight channel workspaces and 100 posts per workspace, and bounds text and local path lengths.
+- The asynchronous public-channel resolver uses `base::make_weak` for `Window::SessionController` lifetime safety, matching Telegram Desktop's non-`QObject` controller pattern.
 - Local posts contain an IntelGram-generated ID, local creation/edit timestamps, text, an optional local attachment path, and local pin state. Post actions edit, delete, pin, unpin, copy, or open that local attachment.
 - Local channel settings override the workspace title, description, and photo path. They do not write into `ChannelData`, Telegram history, the media cache, or any MTProto channel method.
 - The profile showcase row opens the local workspace and reacts to local title changes. The normal personal-channel path continues to open Telegram peer information.

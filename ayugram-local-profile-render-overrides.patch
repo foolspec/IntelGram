@@ -3905,7 +3905,7 @@ index 02133dda3..175c706d8 100644
  void AddMessageDetailsAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
 diff --git a/Telegram/SourceFiles/ayu/ui/local_channel_workspace.cpp b/Telegram/SourceFiles/ayu/ui/local_channel_workspace.cpp
 new file mode 100644
-index 000000000..324f18ae7
+index 000000000..f707cf887
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/local_channel_workspace.cpp
 @@ -0,0 +1,777 @@
@@ -4227,7 +4227,7 @@ index 000000000..324f18ae7
 +			return;
 +		}
 +	}
-+	const auto weak = QPointer<Window::SessionController>(controller.get());
++	const auto weak = base::make_weak(controller);
 +	controller->session().api().request(
 +		MTPcontacts_ResolveUsername(
 +			MTP_flags(0),
