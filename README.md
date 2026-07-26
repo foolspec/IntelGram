@@ -118,6 +118,7 @@ Glass mode uses a native behind-window material on macOS, the Windows DWM backdr
 - Every release includes SHA-256 checksums, platform validation notes, and launch logs.
 - [`FEATURES.md`](FEATURES.md) documents the complete custom feature surface and render coverage.
 - [`FEATURE_GUIDE.md`](FEATURE_GUIDE.md) is a conversational walkthrough of the common workflows.
+- [`CHANGED_FILES.md`](CHANGED_FILES.md) lists every source path changed by the complete patch.
 - [`CHANGELOG.md`](CHANGELOG.md), [`TECHNICAL_CHANGELOG.md`](TECHNICAL_CHANGELOG.md), and [`UPDATE_LOG.md`](UPDATE_LOG.md) track product, implementation, and build changes.
 
 IntelGram preserves AyuGram's internal settings keys and source namespaces for compatibility. Product-facing names and package identities are IntelGram.
