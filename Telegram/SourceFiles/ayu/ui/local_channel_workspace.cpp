@@ -316,7 +316,7 @@ void ResolveChannel(
 			return;
 		}
 	}
-	const auto weak = QPointer<Window::SessionController>(controller.get());
+	const auto weak = base::make_weak(controller);
 	controller->session().api().request(
 		MTPcontacts_ResolveUsername(
 			MTP_flags(0),
