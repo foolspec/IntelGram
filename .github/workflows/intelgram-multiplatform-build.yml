@@ -260,9 +260,9 @@ jobs:
           grep -n 'ShowIntelGramUpdateLog' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
           grep -n 'userByPhone(phoneQuery)' tdesktop/Telegram/SourceFiles/dialogs/dialogs_widget.cpp
           grep -n 'set(output_name "IntelGram")' tdesktop/Telegram/CMakeLists.txt
-          grep -n 'u"IntelGram"_q' tdesktop/Telegram/SourceFiles/window/main_window.cpp
+          grep -n 'Ayu::VisibleClientShortName()' tdesktop/Telegram/SourceFiles/window/main_window.cpp
           grep -n 'QString("IntelGram Desktop v")' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
-          grep -n 'QString("IntelGram Desktop v%1")' tdesktop/Telegram/SourceFiles/intro/intro_widget.cpp
+          grep -n 'Ayu::VisibleClientName()' tdesktop/Telegram/SourceFiles/intro/intro_widget.cpp
           grep -n '"scale": 1.0' tdesktop/Telegram/Telegram/AppIcon-Default.icon/icon.json
           test -s tdesktop/Telegram/Telegram/AppIcon-Default.icon/Assets/app.png
 
@@ -577,9 +577,9 @@ jobs:
           Select-String -Path tdesktop/Telegram/Resources/langs/lang.strings -Pattern ayu_IntelGramLinksTechnicalChangelog
           Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp -Pattern ShowIntelGramUpdateLog
           Select-String -Path tdesktop/Telegram/SourceFiles/core/version.h -Pattern 'AppFile = "IntelGram"'
-          Select-String -Path tdesktop/Telegram/SourceFiles/window/main_window.cpp -Pattern 'u"IntelGram"_q'
+          Select-String -Path tdesktop/Telegram/SourceFiles/window/main_window.cpp -SimpleMatch 'Ayu::VisibleClientShortName()'
           Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp -Pattern 'IntelGram Desktop v'
-          Select-String -Path tdesktop/Telegram/SourceFiles/intro/intro_widget.cpp -Pattern 'IntelGram Desktop v%1'
+          Select-String -Path tdesktop/Telegram/SourceFiles/intro/intro_widget.cpp -SimpleMatch 'Ayu::VisibleClientName()'
 
       - name: Configure and build
         shell: cmd
@@ -691,9 +691,9 @@ jobs:
           grep -n 'ayu_IntelGramLinksTechnicalChangelog' tdesktop/Telegram/Resources/langs/lang.strings
           grep -n 'ShowIntelGramUpdateLog' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
           grep -n 'AppFile = "IntelGram"' tdesktop/Telegram/SourceFiles/core/version.h
-          grep -n 'u"IntelGram"_q' tdesktop/Telegram/SourceFiles/window/main_window.cpp
+          grep -n 'Ayu::VisibleClientShortName()' tdesktop/Telegram/SourceFiles/window/main_window.cpp
           grep -n 'QString("IntelGram Desktop v")' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
-          grep -n 'QString("IntelGram Desktop v%1")' tdesktop/Telegram/SourceFiles/intro/intro_widget.cpp
+          grep -n 'Ayu::VisibleClientName()' tdesktop/Telegram/SourceFiles/intro/intro_widget.cpp
 
       - name: Build with the documented Linux container
         run: |
