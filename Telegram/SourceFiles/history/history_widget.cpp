@@ -483,7 +483,7 @@ HistoryWidget::HistoryWidget(
 
 	_attachToggle->setClickedCallback([=] {
 		if (Ayu::InterceptLocalChannelUnsupportedSend(
-				controller(),
+				controller,
 				_peer)) {
 			return;
 		}
