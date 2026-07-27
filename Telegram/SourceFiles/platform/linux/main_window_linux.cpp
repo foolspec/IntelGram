@@ -20,6 +20,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "core/sandbox.h"
 #include "boxes/peer_list_controllers.h"
 #include "boxes/about_box.h"
+#include "ayu/ui/discreet_mode.h"
 #include "lang/lang_keys.h"
 #include "storage/localstorage.h"
 #include "window/window_controller.h"
@@ -228,7 +229,10 @@ void MainWindow::createGlobalMenu() {
 		});
 
 	auto quit = file->addAction(
-		tr::lng_mac_menu_quit_telegram(tr::now, lt_telegram, u"AyuGram"_q),
+		tr::lng_mac_menu_quit_telegram(
+			tr::now,
+			lt_telegram,
+			Ayu::VisibleClientShortName()),
 		this,
 		[=] { quitFromTray(); },
 		QKeySequence::Quit);
@@ -427,7 +431,7 @@ void MainWindow::createGlobalMenu() {
 		tr::lng_mac_menu_about_telegram(
 			tr::now,
 			lt_telegram,
-			u"AyuGram"_q),
+			Ayu::VisibleClientShortName()),
 		[=] {
 			ensureWindowShown();
 			controller().show(Box(AboutBox, sessionController()));

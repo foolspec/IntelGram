@@ -942,6 +942,12 @@ void AyuSettings::setShowPrivateChatReactions(bool val) {
 	save();
 }
 
+void AyuSettings::setDiscreetMode(bool val) {
+	if (_discreetMode.current() == val) return;
+	_discreetMode = val;
+	save();
+}
+
 void AyuSettings::setAppIcon(const QString &val) {
 	if (_appIcon.current() == val) return;
 	_appIcon = val;
@@ -1365,6 +1371,7 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
 		{"showChannelReactions", s._showChannelReactions.current()},
 		{"showGroupReactions", s._showGroupReactions.current()},
 		{"showPrivateChatReactions", s._showPrivateChatReactions.current()},
+		{"discreetMode", s._discreetMode.current()},
 		{"appIcon", s._appIcon.current()},
 		{"simpleQuotesAndReplies", s._simpleQuotesAndReplies.current()},
 		{"hideFastShare", s._hideFastShare.current()},
@@ -1542,6 +1549,7 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
 	s._showChannelReactions = j.value("showChannelReactions", defaults._showChannelReactions.current());
 	s._showGroupReactions = j.value("showGroupReactions", defaults._showGroupReactions.current());
 	s._showPrivateChatReactions = j.value("showPrivateChatReactions", defaults._showPrivateChatReactions.current());
+	s._discreetMode = j.value("discreetMode", defaults._discreetMode.current());
 	s._appIcon = j.value("appIcon", defaults._appIcon.current());
 	s._simpleQuotesAndReplies = j.value("simpleQuotesAndReplies", defaults._simpleQuotesAndReplies.current());
 	s._hideFastShare = j.value("hideFastShare", defaults._hideFastShare.current());

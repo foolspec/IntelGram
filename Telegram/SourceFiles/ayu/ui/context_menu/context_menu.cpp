@@ -11,6 +11,7 @@
 #include "mainwidget.h"
 #include "api/api_sending.h"
 #include "ayu/ayu_settings.h"
+#include "ayu/ui/discreet_mode.h"
 #include "ayu/ayu_state.h"
 #include "ayu/data/messages_storage.h"
 #include "ayu/data/intelgram_vault.h"
@@ -34,6 +35,7 @@
 #include "data/data_session.h"
 #include "data/data_user.h"
 #include "history/history.h"
+#include "history/history_item_text.h"
 #include "history/history_item_components.h"
 #include "history/view/history_view_context_menu.h"
 #include "history/view/history_view_element.h"
@@ -46,6 +48,9 @@
 #include "ui/widgets/menu/menu_add_action_callback_factory.h"
 #include "window/window_peer_menu.h"
 #include "window/window_session_controller.h"
+
+#include <QtGui/QClipboard>
+#include <QtGui/QGuiApplication>
 
 namespace AyuUi {
 
@@ -233,6 +238,8 @@ void AddAyuGramActions(PeerData *peerData,
 							   not_null<Window::SessionController*> sessionController,
 							   const Window::PeerMenuCallback &addCallback) {
 	if (!peerData) {
+		return;
+	} else if (Ayu::DiscreetModeEnabled()) {
 		return;
 	}
 
@@ -523,6 +530,72 @@ void AddHistoryAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item) {
 			}
 		},
 		&st::ayuEditsHistoryIcon);
+}
+
+void AddLocalChannelBroadcastActions(
+		not_null<Ui::PopupMenu*> menu,
+		not_null<Window::SessionController*> controller,
+		not_null<HistoryItem*> item,
+		Fn<void()> reply,
+		Fn<void()> select,
+		Fn<void()> clearSelection,
+		bool selected) {
+	const auto owner = &item->history()->owner();
+	const auto itemId = item->fullId();
+	menu->addAction(
+		tr::lng_context_reply_msg(
+			tr::now,
+			Ui::Text::FixAmpersandInAction),
+		std::move(reply),
+		&st::menuIconReply);
+	menu->addAction(tr::lng_context_edit_msg(tr::now), [=] {
+		if (const auto current = owner->message(itemId)) {
+			Ayu::ShowEditLocalChannelBroadcast(controller, current);
+		}
+	}, &st::menuIconEdit);
+
+	const auto pinned = Ayu::LocalChannelBroadcastPinned(item);
+	menu->addAction(
+		pinned
+			? tr::lng_context_unpin_msg(tr::now)
+			: tr::lng_context_pin_msg(tr::now),
+		[=] {
+			if (const auto current = owner->message(itemId)) {
+				Ayu::ToggleLocalChannelBroadcastPinned(current);
+			}
+		},
+		pinned ? &st::menuIconUnpin : &st::menuIconPin);
+	menu->addAction(tr::lng_context_copy_text(tr::now), [=] {
+		if (const auto current = owner->message(itemId)) {
+			TextUtilities::SetClipboardText(HistoryItemText(current));
+		}
+	}, &st::menuIconCopy);
+	menu->addAction(tr::lng_context_copy_post_link(tr::now), [=] {
+		if (const auto current = owner->message(itemId)) {
+			const auto link = Ayu::LocalChannelBroadcastLink(current);
+			if (!link.isEmpty()) {
+				QGuiApplication::clipboard()->setText(link);
+				controller->showToast(tr::lng_text_copied(tr::now));
+			}
+		}
+	}, &st::menuIconLink);
+	menu->addAction(tr::lng_context_forward_msg(tr::now), [=] {
+		if (const auto current = owner->message(itemId)) {
+			TextUtilities::SetClipboardText(HistoryItemText(current));
+			controller->showToast(tr::lng_text_copied(tr::now));
+		}
+	}, &st::menuIconForward);
+	menu->addAction(tr::lng_context_delete_msg(tr::now), [=] {
+		if (const auto current = owner->message(itemId)) {
+			Ayu::ConfirmDeleteLocalChannelBroadcast(controller, current);
+		}
+	}, &st::menuIconDeleteAttention);
+	menu->addAction(
+		selected
+			? tr::lng_context_clear_selection(tr::now)
+			: tr::lng_context_select_msg(tr::now),
+		selected ? std::move(clearSelection) : std::move(select),
+		&st::menuIconSelect);
 }
 
 void AddVaultMomentAction(

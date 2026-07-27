@@ -93,6 +93,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 // AyuGram includes
 #include "ayu/features/filters/filters_cache_controller.h"
+#include "ayu/ui/local_channel_ownership.h"
 #include "ayu/utils/telegram_helpers.h"
 
 
@@ -2899,6 +2900,14 @@ void ListWidget::mouseDoubleClickEvent(QMouseEvent *e) {
 void ListWidget::toggleFavoriteReaction(not_null<Element*> view) const {
 	const auto item = view->data();
 	const auto favorite = session().data().reactions().favoriteId();
+	if (Ayu::IsLocalChannelBroadcast(item)) {
+		if (Ayu::IncrementLocalChannelBroadcastReaction(item, favorite)) {
+			if (const auto top = itemTop(view); top >= 0) {
+				view->animateReaction({ .id = favorite });
+			}
+		}
+		return;
+	}
 	if (!ranges::contains(
 			Data::LookupPossibleReactions(item).recent,
 			favorite,
@@ -3114,6 +3123,23 @@ void ListWidget::showContextMenu(QContextMenuEvent *e, bool showFromTouch) {
 void ListWidget::reactionChosen(ChosenReaction reaction) {
 	const auto item = session().data().message(reaction.context);
 	if (!item) {
+		return;
+	} else if (Ayu::IsLocalChannelBroadcast(item)) {
+		if (!Ayu::IncrementLocalChannelBroadcastReaction(item, reaction.id)) {
+			return;
+		}
+		if (const auto view = viewForItem(item)) {
+			const auto geometry = reaction.localGeometry.isEmpty()
+				? mapFromGlobal(reaction.globalGeometry)
+				: reaction.localGeometry;
+			if (const auto top = itemTop(view); top >= 0) {
+				view->animateReaction({
+					.id = reaction.id,
+					.flyIcon = reaction.icon,
+					.flyFrom = geometry.translated(0, -top),
+				});
+			}
+		}
 		return;
 	} else if (reaction.id.paid()) {
 		Payments::ShowPaidReactionDetails(

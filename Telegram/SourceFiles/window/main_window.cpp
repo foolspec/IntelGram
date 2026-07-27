@@ -59,6 +59,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 // AyuGram includes
 #include "ayu/ayu_settings.h"
 #include "ayu/ui/ayu_logo.h"
+#include "ayu/ui/discreet_mode.h"
 #include "ayu/ui/visual_effects.h"
 
 namespace Window {
@@ -425,6 +426,11 @@ MainWindow::MainWindow(not_null<Controller*> controller)
 	) | rpl::on_next([=] {
 		refreshTitleWidget();
 		recountGeometryConstraints();
+	}, lifetime());
+	Ayu::DiscreetModeValue(
+	) | rpl::on_next([=] {
+		updateTitle();
+		refreshTitleWidget();
 	}, lifetime());
 
 	Core::App().unreadBadgeChanges(
@@ -939,7 +945,9 @@ void MainWindow::updateTitle() {
 		: Dialogs::Key();
 	const auto thread = key ? key.thread() : nullptr;
 	if (!thread) {
-		setTitle((user.isEmpty() ? u"AyuGram"_q : user) + added);
+		setTitle((user.isEmpty()
+			? Ayu::VisibleClientShortName()
+			: user) + added);
 		return;
 	}
 	const auto history = thread->owningHistory();

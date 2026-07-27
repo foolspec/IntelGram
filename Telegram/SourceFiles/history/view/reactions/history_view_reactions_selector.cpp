@@ -42,6 +42,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 // AyuGram includes
 #include "ayu/ui/context_menu/context_menu.h"
+#include "ayu/ui/local_channel_ownership.h"
 #include "ayu/ayu_settings.h"
 
 
@@ -1389,14 +1390,18 @@ AttachSelectorResult AttachSelectorToMenu(
 		TextWithEntities about,
 		IconFactory iconFactory) {
 	const auto &settings = AyuSettings::getInstance();
-	if (!AyuUi::needToShowItem(settings.showReactionsPanelInContextMenu())) {
+	const auto localBroadcast = Ayu::IsLocalChannelBroadcast(item);
+	if (!localBroadcast
+		&& !AyuUi::needToShowItem(
+			settings.showReactionsPanelInContextMenu())) {
 		return AttachSelectorResult::Skipped;
 	}
 
 	const auto peer = item->history()->peer;
-	if ((peer->isChannel() && !peer->isMegagroup() && !settings.showChannelReactions())
+	if (!localBroadcast
+		&& ((peer->isChannel() && !peer->isMegagroup() && !settings.showChannelReactions())
 		|| (peer->isMegagroup() && !settings.showGroupReactions())
-		|| (peer->isUser() && !settings.showPrivateChatReactions())) {
+		|| (peer->isUser() && !settings.showPrivateChatReactions()))) {
 		return AttachSelectorResult::Skipped;
 	}
 

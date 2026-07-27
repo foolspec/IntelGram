@@ -47,6 +47,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 // AyuGram includes
 #include "ayu/data/intelgram_vault.h"
 #include "ayu/features/streamer_mode/streamer_mode.h"
+#include "ayu/ui/discreet_mode.h"
 #include "ayu/utils/telegram_helpers.h"
 
 
@@ -1026,7 +1027,7 @@ void Notification::updateNotifyDisplay() {
 				: TextWithEntities{ name };
 		};
 		auto title = options.hideNameAndPhoto
-			? TextWithEntities{ u"AyuGram Desktop"_q }
+			? TextWithEntities{ Ayu::VisibleClientName() }
 			: reminder
 			? tr::lng_notification_reminder(tr::now, tr::marked)
 			: topicWithChat();

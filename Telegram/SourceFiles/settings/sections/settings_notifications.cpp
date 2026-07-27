@@ -63,6 +63,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 // AyuGram includes
 #include "ayu/ui/ayu_userpic.h"
+#include "ayu/ui/discreet_mode.h"
 
 
 namespace Settings {
@@ -514,7 +515,9 @@ void NotificationsCount::prepareNotificationSampleLarge() {
 		p.setPen(st::dialogsNameFg);
 		p.setFont(st::msgNameFont);
 
-		auto notifyTitle = st::msgNameFont->elided(u"AyuGram Desktop"_q, rectForName.width());
+		auto notifyTitle = st::msgNameFont->elided(
+			Ayu::VisibleClientName(),
+			rectForName.width());
 		p.drawText(rectForName.left(), rectForName.top() + st::msgNameFont->ascent, notifyTitle);
 
 		st::notifyClose.icon.paint(p, w - st::notifyClosePos.x() - st::notifyClose.width + st::notifyClose.iconPosition.x(), st::notifyClosePos.y() + st::notifyClose.iconPosition.y(), w);

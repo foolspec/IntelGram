@@ -17,7 +17,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 // AyuGram includes
 #include "ayu/ayu_settings.h"
-
+#include "ayu/ui/local_channel_ownership.h"
 
 namespace Api {
 namespace {
@@ -37,6 +37,10 @@ ViewsManager::ViewsManager(not_null<ApiWrap*> api)
 }
 
 void ViewsManager::scheduleIncrement(not_null<HistoryItem*> item) {
+	if (Ayu::IsLocalChannelBroadcast(item)) {
+		Ayu::RefreshLocalChannelBroadcastMetrics(item);
+		return;
+	}
 	auto peer = item->history()->peer;
 	auto i = _incremented.find(peer);
 	if (i != _incremented.cend()) {
@@ -62,7 +66,7 @@ void ViewsManager::removeIncremented(not_null<PeerData*> peer) {
 void ViewsManager::pollExtendedMedia(
 		not_null<HistoryItem*> item,
 		bool force) {
-	if (!item->isRegular()) {
+	if (Ayu::IsLocalChannelBroadcast(item) || !item->isRegular()) {
 		return;
 	}
 	const auto id = item->id;

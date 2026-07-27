@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "boxes/about_box.h"
 
+#include "ayu/ui/discreet_mode.h"
 #include "base/platform/base_platform_info.h"
 #include "core/application.h"
 #include "core/file_utilities.h"
@@ -31,28 +32,30 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include <QtGui/QGuiApplication>
 #include <QtGui/QClipboard>
 
-#include "window/window_session_controller.h"
-#include "window/window_session_controller_link_info.h"
-
 namespace {
 
 rpl::producer<TextWithEntities> Text() {
+	const auto repository = Ayu::DiscreetModeEnabled()
+		? u"https://github.com/telegramdesktop/tdesktop"_q
+		: u"https://github.com/foolspec/IntelGram"_q;
 	return tr::lng_about_text2(
 		lt_gpl_link,
 		rpl::single(Ui::Text::Link(
 			"GNU GPL",
-			"https://github.com/AyuGram/AyuGramDesktop/blob/dev/LICENSE")),
+			repository + u"/blob/master/LICENSE"_q)),
 		lt_github_link,
 		rpl::single(Ui::Text::Link(
 			"GitHub",
-			"https://github.com/AyuGram/AyuGramDesktop")),
+			repository)),
 		tr::marked);
 }
 
 } // namespace
 
-void AboutBox(not_null<Ui::GenericBox*> box, Window::SessionController* controller) {
-	box->setTitle(rpl::single(u"AyuGram Desktop"_q));
+void AboutBox(
+		not_null<Ui::GenericBox*> box,
+		Window::SessionController*) {
+	box->setTitle(rpl::single(Ayu::VisibleClientName()));
 
 	auto layout = box->verticalLayout();
 
@@ -87,13 +90,15 @@ void AboutBox(not_null<Ui::GenericBox*> box, Window::SessionController* controll
 
 	box->addButton(tr::lng_close(), [=] { box->closeBox(); });
 	box->addLeftButton(
-		rpl::single(QString("@AyuGramReleases")),
-		[box, controller]
+		rpl::single(Ayu::DiscreetModeEnabled()
+			? u"Telegram Desktop"_q
+			: u"IntelGram on GitHub"_q),
+		[box]
 		{
 			box->closeBox();
-			controller->showPeerByLink(Window::PeerByLinkInfo{
-				.usernameOrId = QString("ayugramreleases"),
-			});
+			File::OpenUrl(Ayu::DiscreetModeEnabled()
+				? u"https://desktop.telegram.org"_q
+				: u"https://github.com/foolspec/IntelGram"_q);
 		});
 
 	box->setWidth(st::aboutWidth);
@@ -261,4 +266,3 @@ void ArchiveHintBox(
 		box->addButton(std::move(button));
 	}
 }
-

@@ -79,6 +79,8 @@ private:
 	void toggleAccounts();
 	void chooseEmojiStatus();
 	void setupSwipe();
+	void handleBrandingClick();
+	void updateBranding();
 
 	[[nodiscard]] base::EventFilterResult redirectToInnerChecked(
 		not_null<QEvent*> e);
@@ -107,6 +109,8 @@ private:
 	QPointer<Ui::SettingsButton> _nightThemeToggle;
 	rpl::event_stream<bool> _nightThemeSwitches;
 	base::Timer _nightThemeSwitch;
+	base::Timer _brandingClickTimer;
+	int _brandingClicks = 0;
 	base::unique_qptr<Ui::PopupMenu> _contextMenu;
 
 	Ui::Controls::SwipeBackResult _swipeBackData;

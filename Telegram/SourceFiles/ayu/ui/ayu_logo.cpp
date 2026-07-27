@@ -7,6 +7,7 @@
 #include "ayu/ui/ayu_logo.h"
 
 #include "ayu/ayu_settings.h"
+#include "ayu/ui/discreet_mode.h"
 #include "styles/style_ayu_styles.h"
 #include "ui/rect.h"
 
@@ -17,17 +18,24 @@ static QImage LAST_LOADED;
 static QImage LAST_LOADED_PAD;
 
 namespace AyuAssets {
+namespace {
+
+[[nodiscard]] QString EffectiveIconName() {
+	return Ayu::DiscreetModeEnabled()
+		? TELEGRAM_ICON
+		: AyuSettings::getInstance().appIcon();
+}
+
+} // namespace
 
 QString appIcoPath() {
-	const auto &settings = AyuSettings::getInstance();
 	return cWorkingDir()
 		+ u"tdata/AyuGram-"_q
-		+ settings.appIcon()
+		+ EffectiveIconName()
 		+ u".ico"_q;
 }
 
 void loadAppIco() {
-	const auto &settings = AyuSettings::getInstance();
 	const auto iconPath = appIcoPath();
 
 	auto f = QFile(iconPath);
@@ -36,7 +44,9 @@ void loadAppIco() {
 		f.remove();
 	}
 	f.close();
-	QFile::copy(qsl(":/gui/art/ayu/%1/app_icon.ico").arg(settings.appIcon()), iconPath);
+	QFile::copy(
+		qsl(":/gui/art/ayu/%1/app_icon.ico").arg(EffectiveIconName()),
+		iconPath);
 }
 
 QImage CreateImage(const QString &name, const QSize resultImageSize, const int padding = 0) {
@@ -92,11 +102,11 @@ QImage CreateImage(const QString &name, const QSize resultImageSize, const int p
 }
 
 void loadIcons() {
-	const auto &settings = AyuSettings::getInstance();
-	if (LAST_LOADED_NAME != settings.appIcon()) {
-		LAST_LOADED_NAME = settings.appIcon();
-		LAST_LOADED = CreateImage(settings.appIcon(), Size(256));
-		LAST_LOADED_PAD = CreateImage(settings.appIcon(), Size(256), 12);
+	const auto name = EffectiveIconName();
+	if (LAST_LOADED_NAME != name) {
+		LAST_LOADED_NAME = name;
+		LAST_LOADED = CreateImage(name, Size(256));
+		LAST_LOADED_PAD = CreateImage(name, Size(256), 12);
 	}
 }
 
@@ -105,6 +115,7 @@ QImage loadPreview(const QString &name) {
 }
 
 QString currentAppLogoName() {
+	loadIcons();
 	return LAST_LOADED_NAME;
 }
 

@@ -19,6 +19,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 // AyuGram includes
 #include "ayu/ayu_settings.h"
 #include "ayu/features/streamer_mode/streamer_mode.h"
+#include "ayu/ui/discreet_mode.h"
 #include "window/window_controller.h"
 #include "lang_auto.h"
 
@@ -58,6 +59,10 @@ void Tray::create() {
 	) | rpl::on_next([=] {
 		rebuildMenu();
 	}, _tray.lifetime());
+	Ayu::DiscreetModeValue(
+	) | rpl::skip(1) | rpl::on_next([=] {
+		rebuildMenu();
+	}, _tray.lifetime());
 
 	TrayAccountsMenu::SetupChangesSubscription(
 		[=] { rebuildMenu(); },
@@ -86,7 +91,9 @@ void Tray::rebuildMenu() {
 			_activeForTrayIconAction = Core::App().isActiveForTrayMenu();
 			return _activeForTrayIconAction
 				? tr::lng_minimize_to_tray(tr::now)
-				: tr::lng_open_from_tray(tr::now).replace("Telegram", "AyuGram");
+				: tr::lng_open_from_tray(tr::now).replace(
+					"Telegram",
+					Ayu::VisibleClientShortName());
 		});
 
 		_tray.addAction(
@@ -109,7 +116,8 @@ void Tray::rebuildMenu() {
 
 	const auto &settings = AyuSettings::getInstance();
 
-	if (settings.showGhostToggleInTray()) {
+	if (!Ayu::DiscreetModeEnabled()
+		&& settings.showGhostToggleInTray()) {
 		auto ghostActiveChanges = AyuSettings::getInstance().useGlobalGhostModeValue()
 			| rpl::map([](bool) {
 				return AyuSettings::ghost().ghostModeActiveValue();
@@ -133,7 +141,8 @@ void Tray::rebuildMenu() {
 			});
 	}
 
-	if (settings.showStreamerToggleInTray()) {
+	if (!Ayu::DiscreetModeEnabled()
+		&& settings.showStreamerToggleInTray()) {
 		auto turnStreamerModeText = _textUpdates.events(
 		) | rpl::map(
 			[=]
@@ -159,7 +168,9 @@ void Tray::rebuildMenu() {
 	auto quitText = _textUpdates.events(
 	) | rpl::map([=]
 	{
-		return tr::lng_quit_from_tray(tr::now).replace("Telegram", "AyuGram");
+		return tr::lng_quit_from_tray(tr::now).replace(
+			"Telegram",
+			Ayu::VisibleClientShortName());
 	});
 	_tray.addAction(std::move(quitText), [] { Core::Quit(); });
 

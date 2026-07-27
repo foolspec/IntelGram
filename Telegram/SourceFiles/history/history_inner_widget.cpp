@@ -571,6 +571,23 @@ void HistoryInner::reactionChosen(const ChosenReaction &reaction) {
 	const auto item = session().data().message(reaction.context);
 	if (!item) {
 		return;
+	} else if (Ayu::IsLocalChannelBroadcast(item)) {
+		if (!Ayu::IncrementLocalChannelBroadcastReaction(item, reaction.id)) {
+			return;
+		}
+		if (const auto view = viewByItem(item)) {
+			const auto geometry = reaction.localGeometry.isEmpty()
+				? mapFromGlobal(reaction.globalGeometry)
+				: reaction.localGeometry;
+			if (const auto top = itemTop(view); top >= 0) {
+				view->animateReaction({
+					.id = reaction.id,
+					.flyIcon = reaction.icon,
+					.flyFrom = geometry.translated(0, -top),
+				});
+			}
+		}
+		return;
 	} else if (reaction.id.paid()) {
 		Payments::ShowPaidReactionDetails(
 			_controller,
@@ -2480,6 +2497,14 @@ void HistoryInner::mouseDoubleClickEvent(QMouseEvent *e) {
 void HistoryInner::toggleFavoriteReaction(not_null<Element*> view) const {
 	const auto item = view->data();
 	const auto favorite = session().data().reactions().favoriteId();
+	if (Ayu::IsLocalChannelBroadcast(item)) {
+		if (Ayu::IncrementLocalChannelBroadcastReaction(item, favorite)) {
+			if (const auto top = itemTop(view); top >= 0) {
+				view->animateReaction({ .id = favorite });
+			}
+		}
+		return;
+	}
 	if (!ranges::contains(
 			Data::LookupPossibleReactions(item).recent,
 			favorite,
@@ -2612,7 +2637,9 @@ void HistoryInner::showContextMenu(QContextMenuEvent *e, bool showFromTouch) {
 		: QByteArray();
 	const auto session = &this->session();
 	_whoReactedMenuLifetime.destroy();
-	if (!clickedReaction.empty() && leaderOrSelf) {
+	if (!clickedReaction.empty()
+		&& leaderOrSelf
+		&& !Ayu::IsLocalChannelBroadcast(leaderOrSelf)) {
 		if (clickedReaction.paid()) {
 			Payments::ShowPaidReactionDetails(
 				_controller,
@@ -2684,6 +2711,50 @@ void HistoryInner::showContextMenu(QContextMenuEvent *e, bool showFromTouch) {
 		return;
 	}
 	const auto controller = _controller;
+	if (leaderOrSelf && Ayu::IsLocalChannelBroadcast(leaderOrSelf)) {
+		const auto item = leaderOrSelf;
+		const auto itemId = item->fullId();
+		const auto selected = (_selected.find(item) != _selected.end());
+		AyuUi::AddLocalChannelBroadcastActions(
+			_menu,
+			controller,
+			item,
+			[=] {
+				_widget->replyToMessage({ .messageId = itemId });
+			},
+			[=] {
+				if (const auto current = session->data().message(itemId)) {
+					changeSelection(
+						&_selected,
+						current,
+						SelectAction::Select);
+					repaintItem(current);
+					_widget->updateTopBarSelection();
+				}
+			},
+			[=] { _widget->clearSelected(); },
+			selected);
+		using namespace HistoryView::Reactions;
+		const auto desiredPosition = e->globalPos();
+		const auto attached = AttachSelectorToMenu(
+			_menu.get(),
+			controller,
+			desiredPosition,
+			item,
+			[=](ChosenReaction reaction) { reactionChosen(reaction); },
+			ItemReactionsAbout(item));
+		if (attached == AttachSelectorResult::Failed) {
+			_menu = nullptr;
+			return;
+		}
+		if (attached == AttachSelectorResult::Attached) {
+			_menu->popupPrepared();
+		} else {
+			_menu->popup(desiredPosition);
+		}
+		e->accept();
+		return;
+	}
 	const auto addItemActions = [&](
 			HistoryItem *item,
 			HistoryItem *albumPartItem) {

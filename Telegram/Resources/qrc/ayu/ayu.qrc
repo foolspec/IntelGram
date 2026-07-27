@@ -20,6 +20,8 @@
         <file alias="art/ayu/nothing/app_icon.ico">../../art/ayu/nothing/app_icon.ico</file>
         <file alias="art/ayu/spotify/app.svg">../../art/ayu/spotify/app.svg</file>
         <file alias="art/ayu/spotify/app_icon.ico">../../art/ayu/spotify/app_icon.ico</file>
+        <file alias="art/ayu/telegram/app.png">../../art/ayu/telegram/app.png</file>
+        <file alias="art/ayu/telegram/app_icon.ico">../../art/ayu/telegram/app_icon.ico</file>
         <file alias="art/ayu/win95/app.png">../../art/ayu/win95/app.png</file>
         <file alias="art/ayu/win95/app_icon.ico">../../art/ayu/win95/app_icon.ico</file>
         <file alias="art/ayu/yaplus/app.svg">../../art/ayu/yaplus/app.svg</file>

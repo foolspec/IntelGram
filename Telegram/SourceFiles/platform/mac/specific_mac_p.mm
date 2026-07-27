@@ -39,7 +39,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include <IOKit/hidsystem/ev_keymap.h>
 
 // AyuGram includes
-#include "ayu/ayu_settings.h"
+#include "ayu/ui/ayu_logo.h"
 
 using Platform::Q2NSString;
 using Platform::NS2QString;
@@ -191,12 +191,14 @@ ApplicationDelegate *_sharedDelegate = nil;
 namespace Platform {
 
 void SetApplicationIcon(const QIcon &icon) {
-	const auto &settings = AyuSettings::getInstance();
-    if (settings.appIcon().isEmpty()) {
+	const auto iconName = AyuAssets::currentAppLogoName();
+    if (iconName.isEmpty()) {
         return;
     }
 
-	const auto name = QString("AppIcon-") + settings.appIcon()[0].toUpper() + settings.appIcon().mid(1);
+	const auto name = QString("AppIcon-")
+		+ iconName[0].toUpper()
+		+ iconName.mid(1);
     @autoreleasepool {
         if (name == QString("AppIcon-Default")) {
             NSApplication.sharedApplication.applicationIconImage = nil;

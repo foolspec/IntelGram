@@ -44,8 +44,10 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 // AyuGram includes
 #include "ayu/ayu_settings.h"
+#include "ayu/ui/local_channel_ownership.h"
 #include "ayu/utils/telegram_helpers.h"
 
+#include <algorithm>
 
 namespace Data {
 namespace {
@@ -185,6 +187,20 @@ constexpr auto kPaidAccumulatePeriod = 5 * crl::time(1000) + 500;
 PossibleItemReactionsRef LookupPossibleReactions(
 		not_null<HistoryItem*> item,
 		bool paidInFront) {
+	if (Ayu::IsLocalChannelBroadcast(item)) {
+		auto result = LookupPossibleReactions(&item->history()->session());
+		const auto paid = item->history()->session().data().reactions().lookupPaid();
+		if (paidInFront
+			&& !std::any_of(
+				result.recent.begin(),
+				result.recent.end(),
+				[=](const auto value) {
+					return value.get() == paid.get();
+				})) {
+			result.recent.insert(result.recent.begin(), paid);
+		}
+		return result;
+	}
 	if (!item->canReact()) {
 		return {};
 	}
@@ -1495,6 +1511,10 @@ std::optional<Reaction> Reactions::parse(const MTPAvailableEffect &entry) {
 }
 
 void Reactions::send(not_null<HistoryItem*> item, bool addToRecent) {
+	if (Ayu::IsLocalChannelBroadcast(item)) {
+		Ayu::RefreshLocalChannelBroadcastMetrics(item);
+		return;
+	}
 	const auto id = item->fullId();
 	auto &api = _owner->session().api();
 	auto i = _sentRequests.find(id);
@@ -1531,6 +1551,10 @@ void Reactions::send(not_null<HistoryItem*> item, bool addToRecent) {
 }
 
 void Reactions::poll(not_null<HistoryItem*> item, crl::time now) {
+	if (Ayu::IsLocalChannelBroadcast(item)) {
+		Ayu::RefreshLocalChannelBroadcastMetrics(item);
+		return;
+	}
 	// Group them by one second.
 	const auto last = item->lastReactionsRefreshTime();
 	const auto grouped = ((last + 999) / 1000) * 1000;
@@ -1822,6 +1846,11 @@ void Reactions::sendPaid() {
 }
 
 bool Reactions::sendPaid(not_null<HistoryItem*> item) {
+	if (Ayu::IsLocalChannelBroadcast(item)) {
+		item->cancelScheduledPaidReaction();
+		Ayu::RefreshLocalChannelBroadcastMetrics(item);
+		return false;
+	}
 	const auto send = item->startPaidReactionSending();
 	if (!send.valid) {
 		return false;

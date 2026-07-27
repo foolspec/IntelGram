@@ -10,6 +10,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "settings/settings_common_session.h"
 
 #include "ayu/ui/utils/ayu_profile_values.h"
+#include "ayu/ui/discreet_mode.h"
 #include "api/api_cloud_password.h"
 #include "api/api_credits.h"
 #include "api/api_global_privacy.h"
@@ -377,15 +378,17 @@ void BuildSectionButtons(SectionBuilder &builder) {
 	const auto controller = builder.controller();
 	const auto showOther = builder.showOther();
 
-	builder.addSectionButton({
-		.title = tr::ayu_AyuPreferences(),
-		.targetSection = AyuMain::Id(),
-		.icon = { &st::menuIconPremium },
-		.keywords = { u"ayu"_q },
-	});
-	builder.addSkip();
-	builder.addDivider();
-	builder.addSkip();
+	if (!Ayu::DiscreetModeEnabled()) {
+		builder.addSectionButton({
+			.title = tr::ayu_AyuPreferences(),
+			.targetSection = AyuMain::Id(),
+			.icon = { &st::menuIconPremium },
+			.keywords = { u"ayu"_q },
+		});
+		builder.addSkip();
+		builder.addDivider();
+		builder.addSkip();
+	}
 
 	if (!session->supportMode()) {
 		builder.addSectionButton({

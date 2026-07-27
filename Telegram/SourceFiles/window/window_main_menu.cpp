@@ -18,6 +18,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "calls/calls_instance.h"
 #include "core/application.h"
 #include "core/click_handler_types.h"
+#include "core/file_utilities.h"
 #include "data/data_changes.h"
 #include "data/data_document_media.h"
 #include "data/data_folder.h"
@@ -82,6 +83,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 // AyuGram includes
 #include "ayu/ayu_settings.h"
+#include "ayu/ui/discreet_mode.h"
 #include "ayu/utils/telegram_helpers.h"
 #include "ayu/ui/utils/ayu_profile_values.h"
 #include "boxes/abstract_box.h"
@@ -89,6 +91,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "styles/style_ayu_icons.h"
 #include "lang_auto.h"
 #include "ayu/ui/settings/settings_main.h"
+
+#include <utility>
 
 namespace Window {
 namespace {
@@ -110,9 +114,11 @@ constexpr auto kPlayStatusLimit = 12;
 }
 
 [[nodiscard]] rpl::producer<TextWithEntities> SetStatusLabel(
-		not_null<Main::Session*> session) {
-	return tr::ayu_AyuPreferences() | rpl::map([](const QString& text) {
-		return tr::link(text);
+		not_null<Main::Session*>) {
+	return Ayu::DiscreetModeValue() | rpl::map([](bool discreet) {
+		return tr::link(discreet
+			? tr::lng_menu_set_status(tr::now)
+			: tr::ayu_AyuPreferences(tr::now));
 	});
 }
 
@@ -388,6 +394,12 @@ MainMenu::MainMenu(
 			Window::Theme::KeepApplied();
 		}
 	});
+	_brandingClickTimer.setCallback([this] {
+		const auto clicks = std::exchange(_brandingClicks, 0);
+		if (clicks == 1) {
+			File::OpenUrl(Ayu::VisibleClientUrl());
+		}
+	});
 
 	_footer->heightValue(
 	) | rpl::on_next([=] {
@@ -404,10 +416,10 @@ MainMenu::MainMenu(
 
 	parentResized();
 
-	_telegram->setMarkedText(tr::link(
-		u"AyuGram Desktop"_q,
-		u"https://ayugram.one"_q));
-	_telegram->setLinksTrusted();
+	updateBranding();
+	_telegram->overrideLinkClickHandler([=] {
+		handleBrandingClick();
+	});
 	_version->setMarkedText(
 		tr::link(
 			tr::lng_settings_current_version(
@@ -420,13 +432,14 @@ MainMenu::MainMenu(
 		.append(QChar(' '))
 		.append(tr::link(tr::lng_menu_about(tr::now), 2))); // Link 2.
 	_version->setLink(
-		1,
-		std::make_shared<UrlClickHandler>(Core::App().changelogLink()));
-	_version->setLink(
 		2,
 		std::make_shared<LambdaClickHandler>([=] {
 			controller->show(Box(AboutBox, controller));
 		}));
+	Ayu::DiscreetModeValue(
+	) | rpl::on_next([=] {
+		updateBranding();
+	}, lifetime());
 
 	rpl::combine(
 		_toggleAccounts->rightSkipValue(),
@@ -673,8 +686,37 @@ void MainMenu::setupAccountsToggle() {
 
 void MainMenu::setupSetEmojiStatus() {
 	_setEmojiStatus->overrideLinkClickHandler([=] {
-		_controller->showSettings(Settings::AyuMain::Id());
+		if (Ayu::DiscreetModeEnabled()) {
+			chooseEmojiStatus();
+		} else {
+			_controller->showSettings(Settings::AyuMain::Id());
+		}
 	});
+}
+
+void MainMenu::handleBrandingClick() {
+	++_brandingClicks;
+	if (_brandingClicks < 3) {
+		_brandingClickTimer.callOnce(650);
+		return;
+	}
+	_brandingClickTimer.cancel();
+	_brandingClicks = 0;
+	Ayu::SetDiscreetMode(!Ayu::DiscreetModeEnabled());
+	closeLayer();
+}
+
+void MainMenu::updateBranding() {
+	_telegram->setMarkedText(tr::link(
+		Ayu::VisibleClientName(),
+		Ayu::VisibleClientUrl()));
+	_telegram->setLinksTrusted();
+	_version->setLink(
+		1,
+		std::make_shared<UrlClickHandler>(
+			Ayu::DiscreetModeEnabled()
+				? u"https://github.com/telegramdesktop/tdesktop/releases"_q
+				: Core::App().changelogLink()));
 }
 
 void MainMenu::parentResized() {
@@ -771,7 +813,8 @@ void MainMenu::setupMenu() {
 			controller->showPeerHistory(controller->session().user());
 		});
 
-		if (settings.showLReadToggleInDrawer()) {
+		if (!Ayu::DiscreetModeEnabled()
+			&& settings.showLReadToggleInDrawer()) {
 			addAction(
 				tr::ayu_LReadMessages(),
 				{&st::ayuLReadMenuIcon}
@@ -788,7 +831,8 @@ void MainMenu::setupMenu() {
 			});
 		}
 
-		if (settings.showSReadToggleInDrawer()) {
+		if (!Ayu::DiscreetModeEnabled()
+			&& settings.showSReadToggleInDrawer()) {
 			auto callback = [=](Fn<void()> &&close) mutable {
 				auto &ghost = AyuSettings::ghost(&controller->session());
 				const auto prev = ghost.sendReadMessages();
@@ -891,7 +935,8 @@ void MainMenu::setupMenu() {
 
 	}
 
-	if (settings.showGhostToggleInDrawer()) {
+	if (!Ayu::DiscreetModeEnabled()
+		&& settings.showGhostToggleInDrawer()) {
 		auto ghostActiveChanges = AyuSettings::getInstance().useGlobalGhostModeValue()
 			| rpl::map([controller = _controller](bool) {
 				return AyuSettings::ghost(&controller->session()).ghostModeActiveValue();
@@ -913,7 +958,8 @@ void MainMenu::setupMenu() {
 			ghostModeToggle->lifetime());
 	}
 
-	if (settings.showStreamerToggleInDrawer()) {
+	if (!Ayu::DiscreetModeEnabled()
+		&& settings.showStreamerToggleInDrawer()) {
 		const auto streamerModeToggle = addAction(
 			tr::ayu_StreamerModeToggle(),
 			{&st::ayuStreamerModeMenuIcon}

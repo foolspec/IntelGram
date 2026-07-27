@@ -47,6 +47,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "styles/style_intro.h"
 #include "base/qt/qt_common_adapters.h"
 #include "boxes/about_box.h"
+#include "ayu/ui/discreet_mode.h"
 
 namespace Intro {
 namespace {
@@ -172,7 +173,10 @@ Widget::Widget(
 		}, lifetime());
 	}
 
-	_footer->setText(QString("AyuGram Desktop v%1").arg(currentVersionText()));
+	_footer->setText(
+		u"%1 v%2"_q.arg(
+			Ayu::VisibleClientName(),
+			currentVersionText()));
 }
 
 rpl::producer<> Widget::showSettingsRequested() const {

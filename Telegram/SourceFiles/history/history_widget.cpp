@@ -5236,9 +5236,11 @@ void HistoryWidget::sendTextWithTags(
 	const auto localResult = Ayu::HandleLocalChannelBroadcast(
 		_history,
 		textWithTags,
-		options.scheduled != 0);
+		options.scheduled != 0,
+		session().data().message(replyTo().messageId));
 	if (localResult != Ayu::LocalChannelBroadcastResult::NotHandled) {
 		if (localResult == Ayu::LocalChannelBroadcastResult::Saved) {
+			cancelReply();
 			clearFieldText();
 			if (_preview) {
 				_preview->apply({ .removed = true });

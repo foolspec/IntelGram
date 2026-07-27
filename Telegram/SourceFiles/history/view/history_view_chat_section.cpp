@@ -1467,9 +1467,12 @@ void ChatWidget::sendTextWithTags(
 	const auto localResult = Ayu::HandleLocalChannelBroadcast(
 		_history,
 		textWithTags,
-		options.scheduled != 0);
+		options.scheduled != 0,
+		session().data().message(
+			_composeControls->replyingToMessage().messageId));
 	if (localResult != Ayu::LocalChannelBroadcastResult::NotHandled) {
 		if (localResult == Ayu::LocalChannelBroadcastResult::Saved) {
+			_composeControls->cancelReplyMessage();
 			_composeControls->clear();
 			finishSending();
 			if (done) {

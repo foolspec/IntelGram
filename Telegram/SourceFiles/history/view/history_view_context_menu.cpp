@@ -112,10 +112,12 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 // AyuGram includes
 #include "ayu/ayu_settings.h"
+#include "ayu/ui/discreet_mode.h"
 #include "ayu/data/intelgram_export.h"
 #include "ayu/data/intelgram_vault.h"
 #include "ayu/features/forward/ayu_forward.h"
 #include "ayu/ui/context_menu/context_menu.h"
+#include "ayu/ui/local_channel_ownership.h"
 #include "ayu/utils/telegram_helpers.h"
 
 
@@ -379,6 +381,34 @@ void AddPostLinkAction(
 			: tr::lng_context_copy_post_link)(tr::now),
 		[=] { CopyPostLink(controller, itemId, context); },
 		&st::menuIconLink);
+}
+
+void AddLocalChannelBroadcastActions(
+		not_null<Ui::PopupMenu*> menu,
+		const ContextMenuRequest &request,
+		not_null<ListWidget*> list) {
+	const auto item = request.item;
+	if (!item || !Ayu::IsLocalChannelBroadcast(item)) {
+		return;
+	}
+	const auto owner = &item->history()->owner();
+	const auto itemId = item->fullId();
+	AyuUi::AddLocalChannelBroadcastActions(
+		menu,
+		list->controller(),
+		item,
+		[=] {
+			list->replyToMessageRequestNotify(
+				{ .messageId = itemId },
+				base::IsCtrlPressed());
+		},
+		[=] {
+			if (const auto current = owner->message(itemId)) {
+				list->selectItem(current);
+			}
+		},
+		[=] { list->cancelSelection(); },
+		request.overSelection && !request.selectedItems.empty());
 }
 
 MessageIdsList ExtractIdsList(const SelectedItems &items) {
@@ -1145,15 +1175,19 @@ void AddMessageActions(
 		not_null<Ui::PopupMenu*> menu,
 		const ContextMenuRequest &request,
 		not_null<ListWidget*> list) {
-	AddIntelGramExportAction(menu, request, list);
-	if (request.item) {
-		const auto context = request.view ? request.view->context() : Context::History;
-		AyuUi::AddVaultMomentAction(menu, request.item);
-		AyuUi::AddHistoryAction(menu, request.item);
-		AyuUi::AddHideMessageAction(menu, request.item);
-		AyuUi::AddUserMessagesAction(menu, request.item);
-		AyuUi::AddRepeatMessageAction(menu, request.item, context);
-		AyuUi::AddMessageDetailsAction(menu, request.item);
+	if (!Ayu::DiscreetModeEnabled()) {
+		AddIntelGramExportAction(menu, request, list);
+		if (request.item) {
+			const auto context = request.view
+				? request.view->context()
+				: Context::History;
+			AyuUi::AddVaultMomentAction(menu, request.item);
+			AyuUi::AddHistoryAction(menu, request.item);
+			AyuUi::AddHideMessageAction(menu, request.item);
+			AyuUi::AddUserMessagesAction(menu, request.item);
+			AyuUi::AddRepeatMessageAction(menu, request.item, context);
+			AyuUi::AddMessageDetailsAction(menu, request.item);
+		}
 	}
 
 	AddPostLinkAction(menu, request);
@@ -1165,7 +1199,7 @@ void AddMessageActions(
 	AddSelectionAction(menu, request, list);
 	AddRescheduleAction(menu, request, list);
 
-	if (request.item) {
+	if (request.item && !Ayu::DiscreetModeEnabled()) {
 		AyuUi::AddReadUntilAction(menu, request.item);
 		AyuUi::AddBurnAction(menu, request.item);
 	}
@@ -1458,6 +1492,13 @@ void FillContextMenuItems(
 		|| !request.selectedText.empty();
 	const auto hasWhoReactedItem = item
 		&& Api::WhoReactedExists(item, Api::WhoReactedList::All);
+
+	if (item
+		&& Ayu::IsLocalChannelBroadcast(item)
+		&& request.pointState != PointState::Outside) {
+		AddLocalChannelBroadcastActions(result, request, list);
+		return;
+	}
 
 	AddReplyToMessageAction(result, request, list);
 	if (item) {
