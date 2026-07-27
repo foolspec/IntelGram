@@ -40,7 +40,7 @@
 - Local channel showcase: choose a public `@channel` or `t.me` link to render it on your own profile with an explicit **Local showcase** label; lookup is read-only and does not claim ownership, join the channel, grant permissions, or modify Telegram.
 - Local channel workspace: open the showcase as a private local feed, create text posts with optional local-file attachments, edit/delete/pin/copy them, and configure a local title, description, and photo without publishing or modifying a Telegram channel.
 - In-app update log: **IntelGram Preferences -> Update log** opens a bundled native summary without requiring GitHub.
-- Current source patch SHA-256: `00fbfd692152e1431b41b4e240ce43d95db876b4a6f81a6f71c074c5bc9cd8ce`.
+- Current source patch SHA-256: `2a5b477398ed94120009acef684d4d6307f52928b57bf5b4a084a13bc29a933c`.
 - Privacy boundary: no Telegram profile mutation, contact import, automatic channel join, channel ownership or permission mutation, collectible transaction, or protected-content bypass.
 - Protected content: Restrict Saving Content and self-destructing items remain metadata-only jump-back references; bodies, links, filenames, revisions, and media are excluded from rules, exports, and backups.
 - Branding consistency: product-facing window, settings, version, and notification-preview titles use IntelGram while upstream attribution remains intact.

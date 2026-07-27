@@ -11680,7 +11680,7 @@ index 21c158039..50ab04eed 100644
  		| ((flags & MTP::f_invert_media) ? Flag::InvertMedia : Flag())
  		| ((flags & MTP::f_video_processing_pending)
 diff --git a/Telegram/SourceFiles/history/history_widget.cpp b/Telegram/SourceFiles/history/history_widget.cpp
-index 1c8463845..cf30a7001 100644
+index 1c8463845..39b675a33 100644
 --- a/Telegram/SourceFiles/history/history_widget.cpp
 +++ b/Telegram/SourceFiles/history/history_widget.cpp
 @@ -205,6 +205,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -11696,7 +11696,7 @@ index 1c8463845..cf30a7001 100644
  
  	_attachToggle->setClickedCallback([=] {
 +		if (Ayu::InterceptLocalChannelUnsupportedSend(
-+				controller(),
++				controller,
 +				_peer)) {
 +			return;
 +		}
