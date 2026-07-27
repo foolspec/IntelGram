@@ -2,6 +2,28 @@
 
 All notable IntelGram custom-feature changes are recorded here.
 
+## IntelGram v6.7.8 Local Owner Post Controls - 2026-07-27
+
+### Added
+
+- Telegram's native reaction strip on synthetic local channel broadcasts.
+- Owner-style Reply, Edit, Pin/Unpin, Copy Text, Copy Post Link, Forward, Delete, and Select rows in the local post context menu.
+- Persistent local replies, edited text, pin state, arbitrary emoji reaction counts, custom-emoji reaction counts, and paid-Star display counts.
+- A **Broadcast engagement** editor with configurable starting views, maximum views, increment size, interval, six baseline reactions, and paid Stars.
+- On-device view growth that stops at the selected maximum.
+
+### Changed
+
+- Restored pinned local posts now repopulate Telegram's local pinned-message index and pinned bar.
+- Native reaction clicks and the favorite-reaction shortcut increment only the selected local counter.
+- The local Forward row performs a safe text handoff; synthetic local message IDs never enter Telegram's forwarding API.
+- The in-app update log and public feature guide now document the complete owner-style post menu.
+
+### Local-Only Boundary
+
+- No local post, view, reaction, Stars payment, reply, pin, edit, delete, or synthetic-message forward is submitted to Telegram.
+- Existing guards continue to block unsupported post types before upload or send paths.
+
 ## IntelGram v6.7.8 Native Local Channel Ownership - 2026-07-26
 
 ### Added

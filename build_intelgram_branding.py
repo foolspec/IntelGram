@@ -130,15 +130,6 @@ replace("Telegram/SourceFiles/core/version.h", [
 	 'constexpr auto AppFile = "IntelGram"_cs;'),
 ])
 
-replace("Telegram/SourceFiles/window/main_window.cpp", [
-	('setTitle((user.isEmpty() ? u"AyuGram"_q : user) + added);',
-	 'setTitle((user.isEmpty() ? u"IntelGram"_q : user) + added);'),
-])
-
-replace("Telegram/SourceFiles/intro/intro_widget.cpp", [
-	('QString("AyuGram Desktop v%1")', 'QString("IntelGram Desktop v%1")'),
-])
-
 replace("Telegram/SourceFiles/core/launcher.cpp", [
 	('QApplication::setApplicationName(u"AyuGramDesktop"_q);',
 	 'QApplication::setApplicationName(u"IntelGramDesktop"_q);'),
@@ -153,23 +144,6 @@ replace("Telegram/SourceFiles/core/application.cpp", [
 replace("Telegram/SourceFiles/core/update_checker.cpp", [
 	('return "https://t.me/AyuGramReleases";',
 	 'return "https://github.com/foolspec/IntelGram/releases";'),
-])
-
-replace_all(
-	"Telegram/SourceFiles/platform/linux/main_window_linux.cpp",
-	'u"AyuGram"_q',
-	'u"IntelGram"_q',
-	2,
-)
-
-replace("Telegram/SourceFiles/platform/mac/window_title_mac.mm", [
-	('p.drawText(titleRect, u"AyuGram"_q, style::al_center);',
-	 'p.drawText(titleRect, u"IntelGram"_q, style::al_center);'),
-])
-
-replace("Telegram/SourceFiles/platform/mac/global_menu_mac.mm", [
-	('u"About AyuGram"_q,', 'u"About IntelGram"_q,'),
-	('_menuBar->addMenu(u"AyuGram"_q)', '_menuBar->addMenu(u"IntelGram"_q)'),
 ])
 
 replace("Telegram/SourceFiles/core/crash_report_window.cpp", [
@@ -195,36 +169,6 @@ replace("Telegram/SourceFiles/core/crash_reports.cpp", [
 	 '"IntelGram Desktop launch was not finished properly :( "'),
 ])
 
-replace("Telegram/SourceFiles/boxes/about_box.cpp", [
-	('"https://github.com/AyuGram/AyuGramDesktop")),',
-	 '"https://github.com/foolspec/IntelGram")),'),
-	('box->setTitle(rpl::single(u"AyuGram Desktop"_q));',
-	 'box->setTitle(rpl::single(u"IntelGram Desktop"_q));'),
-	('''box->addLeftButton(
-		rpl::single(QString("@AyuGramReleases")),
-		[box, controller]
-		{
-			box->closeBox();
-			controller->showPeerByLink(Window::PeerByLinkInfo{
-				.usernameOrId = QString("ayugramreleases"),
-			});
-		});''',
-	 '''box->addLeftButton(
-		rpl::single(QString("IntelGram on GitHub")),
-		[box]
-		{
-			box->closeBox();
-			File::OpenUrl("https://github.com/foolspec/IntelGram");
-		});'''),
-])
-
-replace_all(
-	"Telegram/SourceFiles/tray.cpp",
-	'"Telegram", "AyuGram"',
-	'"Telegram", "IntelGram"',
-	2,
-)
-
 replace("Telegram/SourceFiles/export/output/export_output_html.cpp", [
 	('"of AyuGram Desktop. Please update the application."',
 	 '"of IntelGram Desktop. Please update the application."'),
@@ -234,15 +178,6 @@ replace("Telegram/SourceFiles/history/history_item_helpers.cpp", [
 	('const auto siteLink = u"https://t.me/AyuGramReleases"_q;',
 	 'const auto siteLink = u"https://github.com/foolspec/IntelGram/releases"_q;'),
 	('.replace("Telegram", "AyuGram")', '.replace("Telegram", "IntelGram")'),
-])
-
-replace("Telegram/SourceFiles/window/window_main_menu.cpp", [
-	('u"AyuGram Desktop"_q,', 'u"IntelGram Desktop"_q,'),
-])
-
-replace("Telegram/SourceFiles/window/notifications_manager_default.cpp", [
-	('TextWithEntities{ u"AyuGram Desktop"_q }',
-	 'TextWithEntities{ u"IntelGram Desktop"_q }'),
 ])
 
 replace_or_verify("Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp", [
@@ -336,11 +271,6 @@ replace_or_verify("Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp", [
 	('QString("AyuGram Desktop v")', 'QString("IntelGram Desktop v")'),
 ])
 
-replace("Telegram/SourceFiles/settings/sections/settings_notifications.cpp", [
-	('u"AyuGram Desktop"_q, rectForName.width()',
-	 'u"IntelGram Desktop"_q, rectForName.width()'),
-])
-
 replace("lib/xdg/com.ayugram.desktop.desktop", [
 	('Name=AyuGram Desktop', 'Name=IntelGram Desktop'),
 	('Comment=Desktop version of AyuGram - ToS breaking Telegram client',
@@ -392,10 +322,12 @@ for old, new in (
 	(ROOT / "lib/xdg" / new).write_bytes(source.read_bytes())
 
 replace("Telegram/SourceFiles/ayu/ui/ayu_logo.h", [
-	('ICON(EXTERA2, "extera2");', '''ICON(EXTERA2, "extera2");
+	('''ICON(EXTERA2, "extera2");
+ICON(TELEGRAM, "telegram");''', '''ICON(EXTERA2, "extera2");
 ICON(LILAC, "lilac");
 ICON(WHITEBLUE, "whiteBlue");
-ICON(GRAPHITE, "graphite");'''),
+ICON(GRAPHITE, "graphite");
+ICON(TELEGRAM, "telegram");'''),
 ])
 
 replace("Telegram/SourceFiles/ayu/ui/components/icon_picker.cpp", [
@@ -440,14 +372,16 @@ replace("Telegram/SourceFiles/ayu/ayu_settings.cpp", [
 replace("Telegram/CMakeLists.txt", [
 	('''            Chibi2
             Extera2
+            Telegram
         )''', '''            Chibi2
             Extera2
             Lilac
             WhiteBlue
             Graphite
+            Telegram
         )'''),
-	('XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES AppIcon-Alt AppIcon-Discord AppIcon-Spotify AppIcon-Extera AppIcon-Nothing AppIcon-Bard AppIcon-Yaplus AppIcon-Win95 AppIcon-Chibi AppIcon-Chibi2 AppIcon-Extera2',
-	 'XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES "AppIcon-Alt AppIcon-Discord AppIcon-Spotify AppIcon-Extera AppIcon-Nothing AppIcon-Bard AppIcon-Yaplus AppIcon-Win95 AppIcon-Chibi AppIcon-Chibi2 AppIcon-Extera2 AppIcon-Lilac AppIcon-WhiteBlue AppIcon-Graphite"'),
+	('XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES AppIcon-Alt AppIcon-Discord AppIcon-Spotify AppIcon-Extera AppIcon-Nothing AppIcon-Bard AppIcon-Yaplus AppIcon-Win95 AppIcon-Chibi AppIcon-Chibi2 AppIcon-Extera2 AppIcon-Telegram',
+	 'XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES "AppIcon-Alt AppIcon-Discord AppIcon-Spotify AppIcon-Extera AppIcon-Nothing AppIcon-Bard AppIcon-Yaplus AppIcon-Win95 AppIcon-Chibi AppIcon-Chibi2 AppIcon-Extera2 AppIcon-Lilac AppIcon-WhiteBlue AppIcon-Graphite AppIcon-Telegram"'),
 ])
 
 qrc = "Telegram/Resources/qrc/ayu/ayu.qrc"
@@ -501,6 +435,18 @@ for name, image, ico in (
 write_mac_icon("Default", front_macos)
 write_mac_icon("Chibi", profile_macos)
 write_mac_icon("Chibi2", front_macos)
+
+telegram = BRANDING / "telegram/app.png"
+telegram_ico = BRANDING / "telegram/app_icon.ico"
+copy_asset(
+	telegram,
+	"Telegram/Resources/art/ayu/telegram/app.png",
+)
+copy_asset(
+	telegram_ico,
+	"Telegram/Resources/art/ayu/telegram/app_icon.ico",
+)
+write_mac_icon("Telegram", telegram)
 
 for name, mac_name, filename in COLOR_ICONS:
 	image = BRANDING / "color/masters" / f"{filename}.png"

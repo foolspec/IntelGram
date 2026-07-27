@@ -2,6 +2,41 @@
 
 This file records implementation-level changes to IntelGram's custom layer. Product-facing changes are summarized in [`CHANGELOG.md`](CHANGELOG.md).
 
+## IntelGram v6.7.8 Local Owner Post Controls - 2026-07-27
+
+### Source Baseline And Patch
+
+- Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
+- Source commit: `acbbdf2665baf723f31abd883cb7ecf3f45fa3cf` on the recovered local implementation branch.
+- Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
+- Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
+- Patch SHA-256: `87915c2c45e2328ac7738158d36a5fac14199f768e136f732702404c82722891`.
+- Patch footprint: 107 files, 12,640 insertions, and 630 deletions relative to the pinned source.
+- `Telegram/lib_ui` remains pinned to public fork commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
+
+### Local Post Model
+
+- The versioned `LocalBroadcast` record now persists a reply UID, pin state, bounded extra-reaction map, per-post view state, and the engagement snapshot used when the post was created.
+- `Ayu::EnsureLocalChannelBroadcasts` rebuilds local reply references and pinned flags in chronological order, then registers restored pins through `HistoryItem::setIsPinned` so Telegram's local pinned tracker can display them.
+- `Ayu::ShowEditLocalChannelBroadcast`, `ToggleLocalChannelBroadcastPinned`, `ConfirmDeleteLocalChannelBroadcast`, and `LocalChannelBroadcastLink` provide dedicated local mutations without calling Telegram channel methods.
+- Local post links use the isolated `intelgram://local-channel/<account>/<channel>/<uid>` namespace and are copied only as client-local references.
+
+### Native Context And Reactions
+
+- `AyuUi::AddLocalChannelBroadcastActions` is shared by both `HistoryInner` and `HistoryView::FillContextMenuItems`, so the legacy and current history implementations route synthetic broadcasts into the same owner-style menu before ordinary permission and network actions are considered.
+- The dedicated menu uses Telegram's existing localized Reply, Edit, Pin/Unpin, Copy Text, Copy Post Link, Forward, Delete, and Select rows and icons.
+- `HistoryView::AttachSelectorToMenu` and `Data::LookupPossibleReactions` expose the normal reaction strip for local broadcasts even though those client-only messages are not server-reactable.
+- `HistoryView::ListWidget::reactionChosen` and the favorite-reaction shortcut update the local vault record and animation directly. Paid reactions are intercepted before payment handling.
+- Fixed reactions are stored in the engagement snapshot; other emoji and custom-emoji IDs are stored in a bounded map and rendered through native `MTPReactionCount` objects without sending them.
+
+### Views, Replies, And Guards
+
+- The engagement timer advances views at a configurable interval and step until the configured maximum, updates native message view rendering, and persists the result locally.
+- Both current composer implementations pass the active local reply target into the intercepted broadcast path and clear the reply state after a successful local save.
+- `Api::ViewsManager`, `Data::Reactions::send`, reaction polling, and paid-reaction sending return before all Telegram requests for synthetic local broadcasts.
+- The menu's Forward row copies a text handoff rather than calling `ShowForwardMessagesBox`, so no local message ID can reach Telegram's forwarding API.
+- No full local build is run; platform compilation, packaging, and launch testing remain delegated to the release workflows as required by the upstream repository instructions.
+
 ## IntelGram v6.7.8 Native Local Channel Ownership - 2026-07-26
 
 ### Source Baseline And Patch

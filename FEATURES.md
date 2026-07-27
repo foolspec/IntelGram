@@ -22,12 +22,17 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - Enables Telegram's native **Broadcast a message...** composer in the selected channel instead of opening a separate mock feed.
 - Adds owner-style **Manage channel** actions in the channel menu and profile header; those actions open IntelGram's local ownership settings, never Telegram's channel mutation form.
 - Stores up to 100 text broadcasts per account and channel in IntelGram's versioned local vault data.
-- Injects those broadcasts as local client messages in the channel's real history, with native channel-post layout and local deletion.
+- Injects those broadcasts as local client messages in the channel's real history, with native channel-post layout.
+- Gives each local post Telegram's native reaction strip and an owner-style context menu with Reply, Edit, Pin/Unpin, Copy Text, Copy Post Link, Forward, Delete, and Select.
+- Persists local reply relationships, edited text, pin state, reaction counters, paid-Star display count, and a client-local post link.
+- Provides a **Broadcast engagement** editor for starting views, maximum views, increment size, interval, six baseline reactions, and paid Stars.
+- Advances each local post's view count on-device until its configured maximum and increments clicked reaction counters without a Telegram reaction or payment request.
+- Keeps synthetic-message forwarding out of Telegram's forward API; the owner-style Forward row creates a local text handoff instead.
 - Restores saved local broadcasts when the channel is reopened and removes them from the live history when the mode is disabled.
 - Suppresses contradictory Join, Leave, and Report controls while local ownership is active.
 - Provides a local-only silent-broadcast control that never updates Telegram notification settings.
-- Blocks attachments, media, files, voice messages, stickers, inline results, forwards, and scheduled posts before Telegram upload or send paths.
-- Does not set creator or administrator flags, grant rights, change membership, edit channel information, or submit a Telegram message.
+- Blocks attachments, media, files, voice messages, stickers, inline results, synthetic-message forwards, and scheduled posts before Telegram upload or send paths.
+- Does not set creator or administrator flags, grant rights, change membership, edit channel information, or submit a Telegram message, view, reaction, Stars payment, pin, edit, or delete request.
 
 ## Local Channel Workspace
 

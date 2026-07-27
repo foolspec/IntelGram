@@ -37,6 +37,7 @@ def main() -> None:
             "ayu/data/intelgram_export.cpp",
             "ayu/ui/settings/settings_vault.cpp",
             "ayu/ui/settings/settings_visual_effects.cpp",
+            "ayu/ui/discreet_mode.cpp",
             "ayu/ui/local_channel_ownership.cpp",
             "ayu/ui/local_channel_workspace.cpp",
             "ayu/ui/visual_effects.cpp",
@@ -145,17 +146,76 @@ def main() -> None:
             "IntelGram::Vault::Option(key)",
             "IntelGram::Vault::SetOption(key",
             "history->addNewLocalMessage({",
-            "MessageFlag::Post | MessageFlag::HasViews",
+            "MessageFlag::HasViews",
+            "MessageFlag::Pinned",
+            "MessageFlag::HasReplyInfo",
+            "Broadcast engagement",
+            "Maximum views",
+            "Views added each interval",
+            "Paid Stars count",
+            "AdvanceViews(",
+            "MTP_reactionPaid()",
+            "RefreshLocalChannelBroadcastMetrics(",
+            "ToggleLocalChannelBroadcastPinned(",
+            "ShowEditLocalChannelBroadcast(",
+            "IncrementLocalChannelBroadcastReaction(",
             "HandleLocalChannelBroadcast(",
             "InterceptLocalChannelUnsupportedSend(",
             "ShowLocalChannelOwnership(",
             "DeleteLocalChannelBroadcast(",
+        ),
+        "Telegram/SourceFiles/api/api_views.cpp": (
+            "Ayu::IsLocalChannelBroadcast(item)",
+            "Ayu::RefreshLocalChannelBroadcastMetrics(item)",
+        ),
+        "Telegram/SourceFiles/data/data_message_reactions.cpp": (
+            "Ayu::IsLocalChannelBroadcast(item)",
+            "Ayu::RefreshLocalChannelBroadcastMetrics(item)",
+            "LookupPossibleReactions(&item->history()->session())",
+            "item->cancelScheduledPaidReaction();",
+        ),
+        "Telegram/SourceFiles/history/view/history_view_list_widget.cpp": (
+            "Ayu::IncrementLocalChannelBroadcastReaction(",
+        ),
+        "Telegram/SourceFiles/history/history_inner_widget.cpp": (
+            "AyuUi::AddLocalChannelBroadcastActions(",
+            "Ayu::IncrementLocalChannelBroadcastReaction(",
+            "AttachSelectorToMenu(",
+        ),
+        "Telegram/SourceFiles/history/view/reactions/history_view_reactions_selector.cpp": (
+            "Ayu::IsLocalChannelBroadcast(item)",
+        ),
+        "Telegram/SourceFiles/ayu/ui/discreet_mode.cpp": (
+            "Telegram Desktop",
+            "IntelGram Desktop",
+            "setApplicationDisplayName",
+            "refreshApplicationIcon",
+            "DestroyGlobalMenu",
+            "CreateGlobalMenu",
+        ),
+        "Telegram/SourceFiles/window/window_main_menu.cpp": (
+            "handleBrandingClick()",
+            "_brandingClickTimer.callOnce(650)",
+            "Ayu::SetDiscreetMode(!Ayu::DiscreetModeEnabled())",
+        ),
+        "Telegram/SourceFiles/settings/sections/settings_main.cpp": (
+            "Ayu::DiscreetModeEnabled()",
+            "AyuMain::Id()",
+        ),
+        "Telegram/SourceFiles/ayu/ui/ayu_logo.cpp": (
+            "Ayu::DiscreetModeEnabled()",
+            "TELEGRAM_ICON",
         ),
         "Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp": (
             'u"IntelGram"_q',
             "tr::ayu_LocalChannelOwnershipMenu(tr::now)",
             "Ayu::ShowLocalChannelOwnership(",
             "Ayu::IsLocalChannelBroadcast(item)",
+            "void AddLocalChannelBroadcastActions(",
+            "Ayu::ShowEditLocalChannelBroadcast(",
+            "Ayu::ToggleLocalChannelBroadcastPinned(",
+            "Ayu::ConfirmDeleteLocalChannelBroadcast(",
+            "Ayu::LocalChannelBroadcastLink(",
         ),
         "Telegram/SourceFiles/history/history_widget.cpp": (
             "Ayu::HandleLocalChannelBroadcast(",
@@ -236,6 +296,7 @@ def main() -> None:
         "Telegram/SourceFiles/history/view/history_view_context_menu.cpp": (
             "tr::ayu_VaultExportSelectedMessages(tr::now)",
             "item->allowsForward()",
+            "AyuUi::AddLocalChannelBroadcastActions(",
         ),
         "Telegram/SourceFiles/data/data_auto_download.cpp": (
             "QNetworkInterface::allInterfaces()",
@@ -271,26 +332,19 @@ def main() -> None:
             fail(f"removed novelty theme is still present: {path}")
 
     diff = subprocess.run(
-        ["git", "-C", str(root), "diff", "--unified=0", "--no-ext-diff"],
+        [
+            "git",
+            "-C",
+            str(root),
+            "diff",
+            "--unified=0",
+            "--no-ext-diff",
+            BASELINE,
+        ],
         check=True,
         capture_output=True,
         text=True,
     ).stdout
-    if not diff:
-        diff = subprocess.run(
-            [
-                "git",
-                "-C",
-                str(root),
-                "diff",
-                "--unified=0",
-                "--no-ext-diff",
-                f"{BASELINE}..HEAD",
-            ],
-            check=True,
-            capture_output=True,
-            text=True,
-        ).stdout
     added = "\n".join(
         line[1:]
         for line in diff.splitlines()
@@ -311,6 +365,8 @@ def main() -> None:
         "MTPchannels_InviteToChannel",
         "MTPcontacts_ImportContacts",
         "MTPmessages_EditMessage",
+        "MTPmessages_SendPaidReaction",
+        "MTPmessages_SendReaction",
         "MTPmessages_SendMessage",
         "MTPmessages_UpdatePinnedMessage",
         "MTPpayments_TransferStarGift",
@@ -319,6 +375,18 @@ def main() -> None:
     for needle in forbidden:
         if needle in added:
             fail(f"unexpected Telegram mutation reference {needle}")
+    local_ownership = (
+        root
+        / "Telegram/SourceFiles/ayu/ui/local_channel_ownership.cpp"
+    ).read_text(encoding="utf-8", errors="strict")
+    for needle in (
+        ".api().request(",
+        "MTPchannels_",
+        "MTPmessages_Send",
+        "MTPmessages_GetMessagesViews",
+    ):
+        if needle in local_ownership:
+            fail(f"local ownership contains network mutation path {needle}")
     profile_values = (
         root
         / "Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp"

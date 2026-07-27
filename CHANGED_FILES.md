@@ -5,14 +5,18 @@ patch relative to official AyuGram Desktop `v6.7.8` commit
 `b25513a06ff88be0b3f4c928252b56c3da39cec7`.
 
 Patch SHA-256:
-`2a5b477398ed94120009acef684d4d6307f52928b57bf5b4a084a13bc29a933c`
+`87915c2c45e2328ac7738158d36a5fac14199f768e136f732702404c82722891`
 
 ## Added
 
+- `Telegram/Resources/art/ayu/telegram/app.png`
+- `Telegram/Resources/art/ayu/telegram/app_icon.ico`
 - `Telegram/SourceFiles/ayu/data/intelgram_export.cpp`
 - `Telegram/SourceFiles/ayu/data/intelgram_export.h`
 - `Telegram/SourceFiles/ayu/data/intelgram_vault.cpp`
 - `Telegram/SourceFiles/ayu/data/intelgram_vault.h`
+- `Telegram/SourceFiles/ayu/ui/discreet_mode.cpp`
+- `Telegram/SourceFiles/ayu/ui/discreet_mode.h`
 - `Telegram/SourceFiles/ayu/ui/local_channel_ownership.cpp`
 - `Telegram/SourceFiles/ayu/ui/local_channel_ownership.h`
 - `Telegram/SourceFiles/ayu/ui/local_channel_workspace.cpp`
@@ -23,18 +27,24 @@ Patch SHA-256:
 - `Telegram/SourceFiles/ayu/ui/settings/settings_visual_effects.h`
 - `Telegram/SourceFiles/ayu/ui/visual_effects.cpp`
 - `Telegram/SourceFiles/ayu/ui/visual_effects.h`
+- `Telegram/Telegram/AppIcon-Telegram.icon/Assets/app.png`
+- `Telegram/Telegram/AppIcon-Telegram.icon/icon.json`
 
 ## Modified
 
 - `.gitmodules`
 - `Telegram/CMakeLists.txt`
 - `Telegram/Resources/langs/lang.strings`
+- `Telegram/Resources/qrc/ayu/ayu.qrc`
+- `Telegram/SourceFiles/api/api_views.cpp`
 - `Telegram/SourceFiles/apiwrap.cpp`
 - `Telegram/SourceFiles/ayu/ayu_infra.cpp`
 - `Telegram/SourceFiles/ayu/ayu_settings.cpp`
 - `Telegram/SourceFiles/ayu/ayu_settings.h`
 - `Telegram/SourceFiles/ayu/data/messages_storage.cpp`
 - `Telegram/SourceFiles/ayu/features/forward/ayu_forward.cpp`
+- `Telegram/SourceFiles/ayu/ui/ayu_logo.cpp`
+- `Telegram/SourceFiles/ayu/ui/ayu_logo.h`
 - `Telegram/SourceFiles/ayu/ui/ayu_styles.style`
 - `Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp`
 - `Telegram/SourceFiles/ayu/ui/context_menu/context_menu.h`
@@ -47,12 +57,14 @@ Patch SHA-256:
 - `Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h`
 - `Telegram/SourceFiles/ayu/utils/telegram_helpers.cpp`
 - `Telegram/SourceFiles/ayu/utils/telegram_helpers.h`
+- `Telegram/SourceFiles/boxes/about_box.cpp`
 - `Telegram/SourceFiles/boxes/gift_premium_box.cpp`
 - `Telegram/SourceFiles/boxes/peers/edit_peer_color_box.cpp`
 - `Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp`
 - `Telegram/SourceFiles/core/local_url_handlers.cpp`
 - `Telegram/SourceFiles/core/local_url_handlers.h`
 - `Telegram/SourceFiles/data/data_auto_download.cpp`
+- `Telegram/SourceFiles/data/data_message_reactions.cpp`
 - `Telegram/SourceFiles/data/data_peer.cpp`
 - `Telegram/SourceFiles/data/data_session.cpp`
 - `Telegram/SourceFiles/dialogs/dialogs_inner_widget.cpp`
@@ -68,23 +80,32 @@ Patch SHA-256:
 - `Telegram/SourceFiles/history/view/history_view_about_view.cpp`
 - `Telegram/SourceFiles/history/view/history_view_chat_section.cpp`
 - `Telegram/SourceFiles/history/view/history_view_context_menu.cpp`
+- `Telegram/SourceFiles/history/view/history_view_list_widget.cpp`
 - `Telegram/SourceFiles/history/view/history_view_message.cpp`
 - `Telegram/SourceFiles/history/view/history_view_reply.cpp`
 - `Telegram/SourceFiles/history/view/history_view_top_bar_widget.cpp`
+- `Telegram/SourceFiles/history/view/reactions/history_view_reactions_selector.cpp`
 - `Telegram/SourceFiles/info/profile/info_profile_actions.cpp`
 - `Telegram/SourceFiles/info/profile/info_profile_badge.cpp`
 - `Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp`
 - `Telegram/SourceFiles/info/profile/info_profile_top_bar.h`
 - `Telegram/SourceFiles/info/profile/info_profile_values.cpp`
+- `Telegram/SourceFiles/intro/intro_widget.cpp`
 - `Telegram/SourceFiles/media/view/media_view_overlay_widget.cpp`
+- `Telegram/SourceFiles/platform/linux/main_window_linux.cpp`
 - `Telegram/SourceFiles/platform/linux/specific_linux.cpp`
+- `Telegram/SourceFiles/platform/mac/global_menu_mac.mm`
 - `Telegram/SourceFiles/platform/mac/specific_mac.mm`
+- `Telegram/SourceFiles/platform/mac/specific_mac_p.mm`
+- `Telegram/SourceFiles/platform/mac/window_title_mac.mm`
 - `Telegram/SourceFiles/platform/platform_specific.h`
 - `Telegram/SourceFiles/platform/win/specific_win.cpp`
 - `Telegram/SourceFiles/settings/sections/settings_information.cpp`
 - `Telegram/SourceFiles/settings/sections/settings_main.cpp`
+- `Telegram/SourceFiles/settings/sections/settings_notifications.cpp`
 - `Telegram/SourceFiles/settings/settings_credits_graphics.cpp`
 - `Telegram/SourceFiles/settings/settings_credits_graphics.h`
+- `Telegram/SourceFiles/tray.cpp`
 - `Telegram/SourceFiles/ui/controls/silent_toggle.cpp`
 - `Telegram/SourceFiles/ui/controls/silent_toggle.h`
 - `Telegram/SourceFiles/ui/controls/table_rows.cpp`
@@ -94,8 +115,7 @@ Patch SHA-256:
 - `Telegram/SourceFiles/window/notifications_manager.cpp`
 - `Telegram/SourceFiles/window/notifications_manager_default.cpp`
 - `Telegram/SourceFiles/window/window_main_menu.cpp`
+- `Telegram/SourceFiles/window/window_main_menu.h`
 - `Telegram/SourceFiles/window/window_peer_menu.cpp`
 - `Telegram/SourceFiles/window/window_session_controller.cpp`
-- `Telegram/lib_ui` (submodule pointer)
-
-Total: 85 paths, including 14 added files and 71 modified paths.
+- `Telegram/lib_ui`

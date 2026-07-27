@@ -34,7 +34,9 @@ These are private IntelGram records, not Telegram messages. They do not publish 
 
 Open any broadcast channel, click the three-dot menu, open **IntelGram**, and choose **Local ownership**. Turn on **Enable local ownership**. The same channel screen now shows Telegram's native **Broadcast a message...** composer, a local-only bell control, and **Manage channel** actions. Type a text post and send it normally; IntelGram intercepts it before Telegram's API and inserts it into that channel's timeline as a persistent local client message.
 
-Right-click a local broadcast to delete it, or use **Clear local broadcasts** in the ownership settings. Turn off local ownership to return to the ordinary subscriber view. Media, files, voice messages, stickers, inline results, forwards, and scheduled posts are intentionally blocked in this mode so they cannot upload or become Telegram channel activity.
+Right-click a local broadcast to use the native reaction strip and the owner-style Reply, Edit, Pin/Unpin, Copy Text, Copy Post Link, Forward, Delete, and Select rows. Replying through the native composer, editing, pinning, reactions, views, and deletion all update the saved local record. The Forward row makes a safe text handoff and never passes the synthetic message ID to Telegram.
+
+Open **Broadcast engagement** in the ownership settings to choose starting and maximum views, the increment and interval, six reaction totals, and a paid-Star display count. These counters are simulated only in this IntelGram installation. Use **Clear local broadcasts** to remove every local post, or turn off local ownership to return to the ordinary subscriber view. Media, files, voice messages, stickers, inline results, synthetic-message forwards, and scheduled posts are intentionally blocked so they cannot upload or become Telegram channel activity.
 
 ## How do I find somebody by UID or phone?
 

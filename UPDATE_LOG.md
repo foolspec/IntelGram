@@ -36,11 +36,15 @@
 - Native local ownership: open a broadcast channel's three-dot menu, choose **IntelGram -> Local ownership**, and enable an owner-style view in that channel itself.
 - Native channel composer: **Broadcast a message...** stores text in IntelGram's local vault and renders it in the channel's real timeline without calling Telegram's send API.
 - Owner controls: native **Manage channel** actions open the local ownership panel, while contradictory Join, Leave, and Report rows are hidden until the mode is disabled.
+- Owner post menu: right-click a local broadcast for Telegram's reaction strip plus Reply, Edit, Pin/Unpin, Copy Text, Copy Post Link, Forward, Delete, and Select.
+- Persistent post state: local replies, edits, pins, arbitrary emoji or custom-emoji reactions, paid-Star display counts, and client-local post links survive restarts.
+- Broadcast engagement: configure starting and maximum views, increment size, interval, six baseline reaction totals, and paid Stars; views advance on-device until the selected maximum.
+- Synthetic-message guard: local reactions and Stars never invoke payment or reaction APIs, and Forward creates a safe text handoff instead of passing a local message ID to Telegram.
 - Local post boundary: media, files, voice messages, stickers, inline results, forwards, and scheduled posts are blocked before Telegram upload or send paths.
 - Local channel showcase: choose a public `@channel` or `t.me` link to render it on your own profile with an explicit **Local showcase** label; lookup is read-only and does not claim ownership, join the channel, grant permissions, or modify Telegram.
 - Local channel workspace: open the showcase as a private local feed, create text posts with optional local-file attachments, edit/delete/pin/copy them, and configure a local title, description, and photo without publishing or modifying a Telegram channel.
 - In-app update log: **IntelGram Preferences -> Update log** opens a bundled native summary without requiring GitHub.
-- Current source patch SHA-256: `2a5b477398ed94120009acef684d4d6307f52928b57bf5b4a084a13bc29a933c`.
+- Current source patch SHA-256: `87915c2c45e2328ac7738158d36a5fac14199f768e136f732702404c82722891`.
 - Privacy boundary: no Telegram profile mutation, contact import, automatic channel join, channel ownership or permission mutation, collectible transaction, or protected-content bypass.
 - Protected content: Restrict Saving Content and self-destructing items remain metadata-only jump-back references; bodies, links, filenames, revisions, and media are excluded from rules, exports, and backups.
 - Branding consistency: product-facing window, settings, version, and notification-preview titles use IntelGram while upstream attribution remains intact.

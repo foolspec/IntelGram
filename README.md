@@ -18,7 +18,7 @@ IntelGram is a cross-platform AyuGram Desktop build focused on local profile cus
 - Make the interface more lively with Quick Snap, Smooth Flow, Diabolical, Springy, or the optional high-elasticity Liquid Bounce preset while preserving reduced-motion and power-saving behavior.
 - Render a local display name, UID, primary username, up to 20 other usernames, anonymous number, bio, and profile photo for your own account.
 - Show a public channel on your own profile as a clearly labeled local showcase, then open its private local-only workspace to create, edit, pin, copy, or delete local posts, attach local files, and customize a local title, description, and photo without changing Telegram.
-- Enable **Local ownership** from any broadcast channel's **IntelGram** submenu to reveal the native broadcast composer and Manage actions, then place persistent local text broadcasts directly in that channel's real timeline without sending them to Telegram.
+- Enable **Local ownership** from any broadcast channel's **IntelGram** submenu to reveal the native broadcast composer and Manage actions, then place persistent local text broadcasts directly in that channel's real timeline with native reply, edit, pin, reaction, copy, delete, and selection controls without sending them to Telegram.
 - Clone the visible profile presentation of a user already loaded in IntelGram by entering their UID, including premium or verification badges, organization badge symbols, emoji status, and personal channel.
 - Find an already-loaded user by UID or by a phone number that is visible to your account, directly from the normal chat-list search field.
 - Browse every collection reported by Telegram's live collectible catalog, inspect exact numbered gifts in a scrollable native grid, and paste Telegram, Getgems, or TON item links.
@@ -81,9 +81,11 @@ The local channel showcase accepts a public `@channel` or `t.me` link, resolves 
 
 The workspace is deliberately labeled **Local-only channel** and the profile row remains labeled **Local showcase**. It does not make you the owner or an administrator, publish a Telegram message, join the channel, change its public information, create invites, grant permissions, or alter what anybody else sees.
 
-For a native owner-style view of an existing broadcast channel, open that channel's three-dot menu, choose **IntelGram -> Local ownership**, and enable the switch. IntelGram exposes Telegram's **Broadcast a message...** composer, owner-style **Manage channel** actions, and persistent local text broadcasts in the channel's actual timeline. Join, Leave, and Report rows are suppressed while the mode is active. Local broadcasts have their own local delete action and can also be cleared together from the ownership settings.
+For a native owner-style view of an existing broadcast channel, open that channel's three-dot menu, choose **IntelGram -> Local ownership**, and enable the switch. IntelGram exposes Telegram's **Broadcast a message...** composer, owner-style **Manage channel** actions, and persistent local text broadcasts in the channel's actual timeline. Join, Leave, and Report rows are suppressed while the mode is active. Right-clicking a local broadcast opens the native reaction strip and owner-style Reply, Edit, Pin/Unpin, Copy Text, Copy Post Link, Forward, Delete, and Select actions. Replies, edits, pins, reaction counts, and local links persist across restarts.
 
-This native mode is separate from the profile showcase workspace. Text posts are intercepted before Telegram's send path and stored in IntelGram's local vault. Media, files, voice messages, stickers, inline results, forwards, and scheduled posts are blocked in this mode so they cannot upload or mutate the channel. Turning the switch off removes the injected local posts and restores the ordinary subscriber view; turning it back on restores the locally stored posts.
+The ownership panel's **Broadcast engagement** editor sets starting views, a maximum, the increment size, the interval, six baseline reaction counts, and a paid-Star display count. Views rise locally until the selected maximum, while clicks in the native reaction strip increment only the selected local counter. No view, reaction, payment, pin, edit, delete, or post request is sent to Telegram.
+
+This native mode is separate from the profile showcase workspace. Text posts are intercepted before Telegram's send path and stored in IntelGram's local vault. Media, files, voice messages, stickers, inline results, direct forwarding of synthetic message IDs, and scheduled posts are blocked so they cannot upload or mutate the channel. The local **Forward** row copies the post into a safe text handoff instead of submitting the synthetic record to Telegram. Turning the switch off removes the injected local posts and restores the ordinary subscriber view; turning it back on restores the locally stored posts.
 
 The IntelGram settings page links to [`@intelgrams`](https://t.me/intelgrams), this GitHub repository, and both changelogs. Joining the channel is an explicit Telegram action: open the channel and press Telegram's normal **Join** button. IntelGram then derives the supporter badge from the locally known membership state; it never joins a channel in the background.
 
@@ -106,7 +108,7 @@ These controls only change how your own profile is rendered inside this IntelGra
 
 The vault processes content this client has already received. It does not fetch hidden history or bypass Telegram restrictions. Restrict Saving Content and self-destructing media are never copied into search text, rule payloads, media archives, or backups; only a local reference remains so you can return to the original message.
 
-The implementation contains no Telegram account/profile mutation request, contact import, automatic channel join, server-side channel ownership or permission mutation, or collectible transaction. Local ownership changes only this client's controls and local history; it does not set creator/admin flags or submit its broadcasts. Clone metadata refresh, public-channel showcase lookup, and collectible catalog/detail requests are read-only. Normal Telegram account editing remains available whenever the corresponding IntelGram local override is disabled.
+The implementation contains no Telegram account/profile mutation request, contact import, automatic channel join, server-side channel ownership or permission mutation, or collectible transaction. Local ownership changes only this client's controls and local history; it does not set creator/admin flags or submit its broadcasts, views, reactions, Stars, pins, or edits. Clone metadata refresh, public-channel showcase lookup, and collectible catalog/detail requests are read-only. Normal Telegram account editing remains available whenever the corresponding IntelGram local override is disabled.
 
 ## Platform Builds
 
@@ -122,7 +124,7 @@ Liquid Glass uses a native behind-window material on macOS, the Windows DWM back
 ## Source And Verification
 
 - [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch) contains the complete IntelGram implementation.
-- Patch SHA-256: `2a5b477398ed94120009acef684d4d6307f52928b57bf5b4a084a13bc29a933c`
+- Patch SHA-256: `87915c2c45e2328ac7738158d36a5fac14199f768e136f732702404c82722891`
 - The patch pins [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui) commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`, which carries IntelGram's shared motion-preset hook and Liquid Bounce transition.
 - [`build_intelgram_branding.py`](build_intelgram_branding.py) applies the cross-platform IntelGram product identity.
 - [`validate_intelgram_patch.py`](validate_intelgram_patch.py) verifies the feature hooks, protected-content boundaries, and absence of custom Telegram mutation requests before each platform build.
