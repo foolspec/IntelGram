@@ -88,7 +88,7 @@ jobs:
           mapfile -d '' RELEASE_ASSETS < <(find release-assets -maxdepth 1 -type f ! -empty -print0)
           test "${#RELEASE_ASSETS[@]}" -gt 0
           cat > release-notes.md <<'EOF'
-          ## IntelGram v6.7.8 Native Local Ownership
+          ## IntelGram v6.7.8 Local Owner Post Controls
 
           This release contains launch-tested IntelGram packages for macOS Apple Silicon, Windows x64, and Linux x64.
 
@@ -112,8 +112,12 @@ jobs:
           - Local channel workspace actions never publish, edit, pin, delete, or forward a Telegram message and never synthesize owner, administrator, member, invite, or permission state.
           - Per-channel **Local ownership** under the native three-dot **IntelGram** submenu.
           - Telegram's native **Broadcast a message...** composer, owner-style Manage actions, and persistent local text broadcasts inside the selected channel's real timeline.
+          - The native reaction strip and owner-style Reply, Edit, Pin/Unpin, Copy Text, Copy Post Link, Forward, Delete, and Select controls on every synthetic local broadcast.
+          - Persistent local replies, edited text, pinned posts, arbitrary emoji and custom-emoji counts, paid-Star display counts, and client-local post links.
+          - Configurable starting and maximum views, incremental view growth, interval timing, six baseline reactions, and paid Stars in the local **Broadcast engagement** editor.
+          - Synthetic local forwarding uses a safe copied-text handoff so client-only message IDs never enter Telegram's forwarding API.
           - Local ownership text is intercepted before Telegram's send API; media, files, voice, stickers, inline results, forwards, and scheduled posts are blocked before upload or send paths.
-          - No creator/admin flag, channel right, membership state, channel information, or Telegram message is changed by local ownership.
+          - No creator/admin flag, channel right, membership state, channel information, Telegram message, view, reaction, Stars payment, pin, or edit is changed by local ownership.
           - A profile username editor matching Telegram's native title, `@username` field, validation row, help copy, spacing, and buttons, backed only by IntelGram's local render setting and no server-side username check or update.
           - A native in-app collectible browser with Telegram's read-only live catalog, exact numbered gifts, native previews and details, and Telegram, Getgems, and TON link input.
           - A visual collection gallery and scrollable exact-item gallery that selects collectibles without leaving IntelGram.
@@ -135,6 +139,6 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
             --latest \
-            --title "IntelGram v6.7.8 - Native Local Ownership" \
+            --title "IntelGram v6.7.8 - Local Owner Post Controls" \
             --notes-file release-notes.md \
             "${RELEASE_ASSETS[@]}"
