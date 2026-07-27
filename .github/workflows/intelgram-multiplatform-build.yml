@@ -60,7 +60,7 @@ permissions:
 
 env:
   SOURCE_TAG: v6.7.8
-  PATCH_SHA256: d9ecc14859dc68f055abdc69e1a27000a5b8df62be99535d131a389edd07561e
+  PATCH_SHA256: 00fbfd692152e1431b41b4e240ce43d95db876b4a6f81a6f71c074c5bc9cd8ce
   LIB_UI_COMMIT: b9a30917daf2bd8fdc17ccd9682acca178882b7b
   LIB_UI_REF: codex/intelgram-liquid-bounce-20260726
 

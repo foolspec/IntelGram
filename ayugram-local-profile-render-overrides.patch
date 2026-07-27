@@ -3992,10 +3992,10 @@ index 02133dda3..175c706d8 100644
  void AddMessageDetailsAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item);
 diff --git a/Telegram/SourceFiles/ayu/ui/local_channel_ownership.cpp b/Telegram/SourceFiles/ayu/ui/local_channel_ownership.cpp
 new file mode 100644
-index 000000000..05dfae5f3
+index 000000000..6c9268ef5
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/local_channel_ownership.cpp
-@@ -0,0 +1,489 @@
+@@ -0,0 +1,498 @@
 +#include "ayu/ui/local_channel_ownership.h"
 +
 +#include "ayu/data/intelgram_vault.h"
@@ -4016,6 +4016,7 @@ index 000000000..05dfae5f3
 +#include "window/window_session_controller.h"
 +
 +#include "styles/style_boxes.h"
++#include "styles/style_layers.h"
 +#include "styles/style_settings.h"
 +
 +#include <QtCore/QDateTime>
@@ -4212,8 +4213,10 @@ index 000000000..05dfae5f3
 +void AddRuntimeBroadcast(
 +		not_null<History*> history,
 +		const LocalBroadcast &post) {
-+	auto text = tr::marked(post.text.text);
-+	text.entities = TextUtilities::ConvertTextTagsToEntities(post.text.tags);
++	auto text = TextWithEntities{
++		post.text.text,
++		TextUtilities::ConvertTextTagsToEntities(post.text.tags),
++	};
 +	TextUtilities::Trim(text);
 +	const auto item = history->addNewLocalMessage({
 +		.id = history->owner().nextLocalMessageId(),
@@ -4240,9 +4243,9 @@ index 000000000..05dfae5f3
 +	}
 +}
 +
-+void ShowToast(not_null<History*> history, rpl::producer<QString> text) {
++void ShowToast(not_null<History*> history, const QString &text) {
 +	if (const auto window = history->session().tryResolveWindow()) {
-+		window->showToast(std::move(text));
++		window->showToast(text);
 +	}
 +}
 +
@@ -4347,14 +4350,20 @@ index 000000000..05dfae5f3
 +	if (!channel || !StateFor(channel).enabled) {
 +		return LocalChannelBroadcastResult::NotHandled;
 +	} else if (scheduled) {
-+		ShowToast(history, tr::ayu_LocalChannelOwnershipScheduleBlocked());
++		ShowToast(
++			history,
++			tr::ayu_LocalChannelOwnershipScheduleBlocked(tr::now));
 +		return LocalChannelBroadcastResult::Blocked;
 +	}
-+	auto prepared = tr::marked(text.text);
-+	prepared.entities = TextUtilities::ConvertTextTagsToEntities(text.tags);
++	auto prepared = TextWithEntities{
++		text.text,
++		TextUtilities::ConvertTextTagsToEntities(text.tags),
++	};
 +	TextUtilities::Trim(prepared);
 +	if (prepared.text.isEmpty()) {
-+		ShowToast(history, tr::ayu_LocalChannelOwnershipTextOnly());
++		ShowToast(
++			history,
++			tr::ayu_LocalChannelOwnershipTextOnly(tr::now));
 +		return LocalChannelBroadcastResult::Blocked;
 +	}
 +	const auto preserveTags = prepared.text.size() <= kMaxPostLength;
@@ -4481,7 +4490,7 @@ index 000000000..05dfae5f3
 +			}),
 +		runtime.end());
 +	item->destroy();
-+	ShowToast(history, tr::ayu_LocalChannelOwnershipDeleted());
++	ShowToast(history, tr::ayu_LocalChannelOwnershipDeleted(tr::now));
 +}
 +
 +} // namespace Ayu
