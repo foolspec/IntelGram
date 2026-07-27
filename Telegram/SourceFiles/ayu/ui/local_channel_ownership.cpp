@@ -18,6 +18,7 @@
 #include "window/window_session_controller.h"
 
 #include "styles/style_boxes.h"
+#include "styles/style_layers.h"
 #include "styles/style_settings.h"
 
 #include <QtCore/QDateTime>
@@ -214,8 +215,10 @@ void CleanRuntimeBroadcasts(not_null<History*> history) {
 void AddRuntimeBroadcast(
 		not_null<History*> history,
 		const LocalBroadcast &post) {
-	auto text = tr::marked(post.text.text);
-	text.entities = TextUtilities::ConvertTextTagsToEntities(post.text.tags);
+	auto text = TextWithEntities{
+		post.text.text,
+		TextUtilities::ConvertTextTagsToEntities(post.text.tags),
+	};
 	TextUtilities::Trim(text);
 	const auto item = history->addNewLocalMessage({
 		.id = history->owner().nextLocalMessageId(),
@@ -242,9 +245,9 @@ void RemoveRuntimeBroadcasts(not_null<History*> history) {
 	}
 }
 
-void ShowToast(not_null<History*> history, rpl::producer<QString> text) {
+void ShowToast(not_null<History*> history, const QString &text) {
 	if (const auto window = history->session().tryResolveWindow()) {
-		window->showToast(std::move(text));
+		window->showToast(text);
 	}
 }
 
@@ -349,14 +352,20 @@ LocalChannelBroadcastResult HandleLocalChannelBroadcast(
 	if (!channel || !StateFor(channel).enabled) {
 		return LocalChannelBroadcastResult::NotHandled;
 	} else if (scheduled) {
-		ShowToast(history, tr::ayu_LocalChannelOwnershipScheduleBlocked());
+		ShowToast(
+			history,
+			tr::ayu_LocalChannelOwnershipScheduleBlocked(tr::now));
 		return LocalChannelBroadcastResult::Blocked;
 	}
-	auto prepared = tr::marked(text.text);
-	prepared.entities = TextUtilities::ConvertTextTagsToEntities(text.tags);
+	auto prepared = TextWithEntities{
+		text.text,
+		TextUtilities::ConvertTextTagsToEntities(text.tags),
+	};
 	TextUtilities::Trim(prepared);
 	if (prepared.text.isEmpty()) {
-		ShowToast(history, tr::ayu_LocalChannelOwnershipTextOnly());
+		ShowToast(
+			history,
+			tr::ayu_LocalChannelOwnershipTextOnly(tr::now));
 		return LocalChannelBroadcastResult::Blocked;
 	}
 	const auto preserveTags = prepared.text.size() <= kMaxPostLength;
@@ -483,7 +492,7 @@ void DeleteLocalChannelBroadcast(not_null<HistoryItem*> item) {
 			}),
 		runtime.end());
 	item->destroy();
-	ShowToast(history, tr::ayu_LocalChannelOwnershipDeleted());
+	ShowToast(history, tr::ayu_LocalChannelOwnershipDeleted(tr::now));
 }
 
 } // namespace Ayu
