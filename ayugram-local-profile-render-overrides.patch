@@ -4958,7 +4958,7 @@ index 66059b446..29dea0703 100644
  imageViewPadding: margins(22px, 10px, 22px, 10px);
  imageViewInnerPadding: margins(16px, 16px, 16px, 16px);
 diff --git a/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp b/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp
-index 8fceff22c..366becd56 100644
+index 8fceff22c..ea1ec7a06 100644
 --- a/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp
 @@ -11,11 +11,14 @@
@@ -4984,7 +4984,13 @@ index 8fceff22c..366becd56 100644
  #include "history/history_item_components.h"
  #include "history/view/history_view_context_menu.h"
  #include "history/view/history_view_element.h"
-@@ -45,10 +49,22 @@
+@@ -40,15 +44,28 @@
+ #include "styles/style_layers.h"
+ #include "styles/style_menu_icons.h"
+ #include "ui/boxes/confirm_box.h"
++#include "ui/text/text_utilities.h"
+ #include "ui/widgets/popup_menu.h"
+ #include "ui/widgets/menu/menu_add_action_callback_factory.h"
  #include "window/window_peer_menu.h"
  #include "window/window_session_controller.h"
  
@@ -5007,7 +5013,7 @@ index 8fceff22c..366becd56 100644
  Fn<void()> ClearDeletedMessagesHandler(not_null<Window::SessionController*> controller, not_null<PeerData*> peer, ID topicId) {
  	return [=] {
  		controller->show(Ui::MakeConfirmBox({
-@@ -223,6 +239,8 @@ void AddAyuGramActions(PeerData *peerData,
+@@ -223,6 +240,8 @@ void AddAyuGramActions(PeerData *peerData,
  							   const Window::PeerMenuCallback &addCallback) {
  	if (!peerData) {
  		return;
@@ -5016,7 +5022,7 @@ index 8fceff22c..366becd56 100644
  	}
  
  	const auto &settings = AyuSettings::getInstance();
-@@ -230,7 +248,8 @@ void AddAyuGramActions(PeerData *peerData,
+@@ -230,7 +249,8 @@ void AddAyuGramActions(PeerData *peerData,
  	const auto showFilters = settings.filtersEnabled()
  		&& (!user || user->isBot());
  	const auto saveDeletedMessages = settings.saveDeletedMessages();
@@ -5026,7 +5032,7 @@ index 8fceff22c..366becd56 100644
  		return;
  	}
  
-@@ -238,11 +257,28 @@ void AddAyuGramActions(PeerData *peerData,
+@@ -238,11 +258,28 @@ void AddAyuGramActions(PeerData *peerData,
  	const auto topicId = topic ? topic->rootId().bare : 0;
  
  	addCallback(Window::PeerMenuCallback::Args{
@@ -5056,7 +5062,7 @@ index 8fceff22c..366becd56 100644
  			if (showFilters) {
  				addAction(
  					tr::ayu_ViewFiltersMenuText(tr::now),
-@@ -255,7 +291,6 @@ void AddAyuGramActions(PeerData *peerData,
+@@ -255,7 +292,6 @@ void AddAyuGramActions(PeerData *peerData,
  					},
  					&st::menuIconAddToFolder);
  			}
@@ -5064,7 +5070,7 @@ index 8fceff22c..366becd56 100644
  			if (filteredToggleShown) {
  				addAction(
  					*filteredToggleShown
-@@ -461,7 +496,17 @@ void AddDeleteOwnMessagesAction(PeerData *peerData,
+@@ -461,7 +497,17 @@ void AddDeleteOwnMessagesAction(PeerData *peerData,
  }
  
  void AddHistoryAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item) {
@@ -5083,7 +5089,7 @@ index 8fceff22c..366becd56 100644
  		return;
  	}
  
-@@ -487,13 +532,103 @@ void AddHistoryAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item) {
+@@ -487,13 +533,103 @@ void AddHistoryAction(not_null<Ui::PopupMenu*> menu, HistoryItem *item) {
  		&st::ayuEditsHistoryIcon);
  }
  
@@ -5188,7 +5194,7 @@ index 8fceff22c..366becd56 100644
  		return;
  	}
  
-@@ -929,7 +1064,7 @@ void AddCreateFilterAction(not_null<Ui::PopupMenu*> menu,
+@@ -929,7 +1065,7 @@ void AddCreateFilterAction(not_null<Ui::PopupMenu*> menu,
  		return;
  	}
  
@@ -5329,10 +5335,10 @@ index 000000000..d02375f9a
 +} // namespace Ayu
 diff --git a/Telegram/SourceFiles/ayu/ui/local_channel_ownership.cpp b/Telegram/SourceFiles/ayu/ui/local_channel_ownership.cpp
 new file mode 100644
-index 000000000..9637f8b2a
+index 000000000..629bafeb4
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/local_channel_ownership.cpp
-@@ -0,0 +1,1662 @@
+@@ -0,0 +1,1663 @@
 +#include "ayu/ui/local_channel_ownership.h"
 +
 +#include "ayu/data/intelgram_vault.h"
@@ -5358,6 +5364,7 @@ index 000000000..9637f8b2a
 +#include "window/window_session_controller.h"
 +
 +#include "styles/style_boxes.h"
++#include "styles/style_info.h"
 +#include "styles/style_layers.h"
 +#include "styles/style_menu_icons.h"
 +#include "styles/style_settings.h"
@@ -5899,11 +5906,11 @@ index 000000000..9637f8b2a
 +		item->updateReactions(nullptr);
 +		return;
 +	}
-+	const auto reactions = MTP_messageReactions(
++	const auto reactions = MTPMessageReactions(MTP_messageReactions(
 +		MTP_flags(MTPDmessageReactions::Flag(0)),
 +		MTP_vector<MTPReactionCount>(results),
 +		MTP_vector<MTPMessagePeerReaction>(),
-+		MTP_vector<MTPMessageReactor>());
++		MTP_vector<MTPMessageReactor>()));
 +	item->updateReactions(&reactions);
 +}
 +

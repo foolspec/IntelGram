@@ -7,11 +7,11 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 ### Source Baseline And Patch
 
 - Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
-- Source commit: `acbbdf2665baf723f31abd883cb7ecf3f45fa3cf` on the recovered local implementation branch.
+- Source commit: `e0e16561831d629464e1b881e7c9db76576fe265` on the recovered local implementation branch.
 - Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
 - Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
-- Patch SHA-256: `87915c2c45e2328ac7738158d36a5fac14199f768e136f732702404c82722891`.
-- Patch footprint: 107 files, 12,640 insertions, and 630 deletions relative to the pinned source.
+- Patch SHA-256: `c170f31656b1a5ce4dff7f106ff64966e26f0faebefe4cc758a80562c45b126d`.
+- Patch footprint: 107 files, 12,642 insertions, and 630 deletions relative to the pinned source.
 - `Telegram/lib_ui` remains pinned to public fork commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
 
 ### Local Post Model
@@ -28,6 +28,7 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - `HistoryView::AttachSelectorToMenu` and `Data::LookupPossibleReactions` expose the normal reaction strip for local broadcasts even though those client-only messages are not server-reactable.
 - `HistoryView::ListWidget::reactionChosen` and the favorite-reaction shortcut update the local vault record and animation directly. Paid reactions are intercepted before payment handling.
 - Fixed reactions are stored in the engagement snapshot; other emoji and custom-emoji IDs are stored in a bounded map and rendered through native `MTPReactionCount` objects without sending them.
+- The reaction aggregate is boxed as `MTPMessageReactions`, owner rows use the native `style_info` definitions, and the context menu imports Telegram's text utility directly for cross-platform compiler compatibility.
 
 ### Views, Replies, And Guards
 
