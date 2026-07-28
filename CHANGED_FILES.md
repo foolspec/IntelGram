@@ -5,7 +5,7 @@ patch relative to official AyuGram Desktop `v6.7.8` commit
 `b25513a06ff88be0b3f4c928252b56c3da39cec7`.
 
 Patch SHA-256:
-`c170f31656b1a5ce4dff7f106ff64966e26f0faebefe4cc758a80562c45b126d`
+`a91aa6db95d219be7443fc4db3e07c68b0b7ba39648f438af2a2c2e51d3618f5`
 
 ## Added
 
@@ -87,6 +87,7 @@ Patch SHA-256:
 - `Telegram/SourceFiles/history/view/reactions/history_view_reactions_selector.cpp`
 - `Telegram/SourceFiles/info/profile/info_profile_actions.cpp`
 - `Telegram/SourceFiles/info/profile/info_profile_badge.cpp`
+- `Telegram/SourceFiles/info/profile/info_profile_inner_widget.cpp`
 - `Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp`
 - `Telegram/SourceFiles/info/profile/info_profile_top_bar.h`
 - `Telegram/SourceFiles/info/profile/info_profile_values.cpp`

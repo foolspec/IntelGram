@@ -18,7 +18,11 @@ Choose **Local profile photo**, select an image on this Mac or PC, and enable th
 
 ## How do I clone a profile locally?
 
-First open the other user's profile so IntelGram has loaded it. Copy their UID, choose **Clone profile locally by UID**, paste the UID, and confirm. IntelGram refreshes that already-known profile read-only, then mirrors only data visible to you, including premium or verification badges, the organization badge symbol, emoji status, and personal channel. If the source has none of those elements, the cloned local view shows none even when your real profile has one. Choose **Stop cloning profile** to return to your own local fields.
+First open the other user's profile so IntelGram has loaded it. Copy their UID, choose **Clone profile locally by UID**, paste the UID, and confirm. IntelGram refreshes that already-known profile read-only, then mirrors only data visible to you, including Premium, verified, SCAM, FAKE, DIRECT, organization-verification, emoji-status, and personal-channel presentation. If the source has none of those elements, the cloned local view shows none even when your real profile has one. Choose **Stop cloning profile** to return to your own local fields.
+
+## How do I set profile badges myself?
+
+Open **IntelGram Preferences -> Local Profile & Collectibles -> Profile badges**. **Automatic** follows your clone or real Telegram presentation. You can instead hide the primary badge or select Premium, verified, SCAM, FAKE, or DIRECT. Optional document-ID fields use Telegram's native custom-emoji renderer for an emoji status and organization-verification symbol. Everything remains local to IntelGram.
 
 ## How do I show a channel on my local profile?
 

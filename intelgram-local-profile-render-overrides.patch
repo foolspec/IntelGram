@@ -992,7 +992,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/Telegram/Resources/langs/lang.strings b/Telegram/Resources/langs/lang.strings
-index 7380587e7..276d95991 100644
+index 7380587e7..81b8600d5 100644
 --- a/Telegram/Resources/langs/lang.strings
 +++ b/Telegram/Resources/langs/lang.strings
 @@ -7971,14 +7971,60 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -1092,7 +1092,7 @@ index 7380587e7..276d95991 100644
 +"ayu_IntelGramUpdateLogCurrentTitle" = "Latest update";
 +"ayu_IntelGramUpdateLogCurrent" = "**Native local channel ownership**\n- Open a broadcast channel's three-dot menu, choose IntelGram, then Local ownership.\n- The existing channel view gains Telegram's native Broadcast a message composer, owner-style Manage actions, and persistent local text broadcasts inside the real timeline.\n- Right-click a local broadcast for Telegram's reaction strip plus Reply, Edit, Pin or Unpin, Copy Text, Copy Post Link, Forward, Delete, and Select.\n- Local replies, edits, pins, reactions, Stars, and links persist. Broadcast engagement controls starting and maximum views, increment size, interval, six baseline reactions, and paid Stars.\n- Views and reaction clicks update only this client. Forward creates a text handoff; no synthetic message ID, reaction, payment, pin, edit, delete, or post is sent to Telegram.\n- Local ownership hides contradictory Join, Leave, and Report rows while active and can be disabled independently for every channel.\n- Media, voice, stickers, inline results, scheduled posts, and files remain blocked so nothing can upload to Telegram.\n\n**Liquid Glass & Motion**\n- Liquid Glass layers adaptive tint and contrast, wallpaper-aware diffusion, cursor-reactive specular light, refractive edges, internal reflections, and subtle film grain over native desktop blur.\n- Material animation follows the active display refresh rate up to 120 Hz and pauses while IntelGram is hidden, inactive, or respecting reduced-motion and power-saving settings.\n- Control sidebar, chat, menu, dialog, and panel transparency separately; choose a private local backdrop and tune image opacity, blur, tint, surface opacity, and optical intensity without fading text, icons, avatars, or media.\n- Quick Snap is compact and immediate. Smooth Flow is calm and critically damped. Diabolical is brisk with stronger depth. Springy settles gently. The optional Liquid Bounce pack adds the most elastic lift and a controlled overshoot.\n- The profile username editor matches Telegram's native title, @username field, validation row, help text, and button layout while saving only IntelGram's local render value.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
 +"ayu_IntelGramUpdateLogFeaturesTitle" = "Main IntelGram features";
-+"ayu_IntelGramUpdateLogFeatures" = "**Local profile, channels, and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, badges, emoji status, personal channel rendering, and public-channel showcase rendering.\n- Per-channel local ownership with native owner-style controls and persistent text broadcasts rendered inside the selected channel's real timeline.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity and customization**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native themes, cloud theme browsing, chat wallpapers, adaptive Liquid Glass, native blur, five motion packs, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
++"ayu_IntelGramUpdateLogFeatures" = "**Local profile, channels, and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, personal channel rendering, and public-channel showcase rendering.\n- Automatic clone mirroring and manual local controls cover Premium, verified, SCAM, FAKE, DIRECT, emoji status, and organization verification badges.\n- Per-channel local ownership with native owner-style controls and persistent text broadcasts rendered inside the selected channel's real timeline.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity and customization**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native themes, cloud theme browsing, chat wallpapers, adaptive Liquid Glass, native blur, five motion packs, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
 +"ayu_IntelGramUpdateLogPrivacyTitle" = "Local-only boundary";
 +"ayu_IntelGramUpdateLogPrivacy" = "Local profile and ownership tools never update your Telegram profile, obtain Telegram channel ownership, change channel permissions, change collectible ownership, or join a channel automatically. Owner-style channel controls and text broadcasts are private IntelGram render data only; they never become Telegram channel activity. Unsupported channel post types are blocked before Telegram upload paths. Vault tools only process data already received by this client. Restrict Saving Content and self-destructing media are preserved: IntelGram stores a jump-back reference and basic metadata, never the protected body or media.";
 +"ayu_IntelGramUpdateLogCredit" = "IntelGram local profile tools by fool.";
@@ -1100,7 +1100,7 @@ index 7380587e7..276d95991 100644
  "ayu_CategoriesHeader" = "Categories";
  "ayu_SupportHeader" = "Support";
  "ayu_SupportDescription1" = "Support Development";
-@@ -8070,8 +8134,132 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8070,8 +8134,145 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SupportBoxReceiveBadgeInfo" = "After payment verification, you will receive a unique badge that will be displayed on your profile and visible to other users.";
  "ayu_CrashReporting" = "Crash Reporting";
  "ayu_CrashReportingDescription" = "When this option is enabled, you'll be prompted to send a report after the app crashes. You can decide whether to send it or not.";
@@ -1129,10 +1129,23 @@ index 7380587e7..276d95991 100644
 +"ayu_LocalProfileCloneTitle" = "Clone profile locally";
 +"ayu_LocalProfileCloneId" = "Telegram UID";
 +"ayu_LocalProfileCloneUse" = "Clone locally";
-+"ayu_LocalProfileCloneDescription" = "Enter the UID of a user whose profile you have already opened in IntelGram. Their name, UID, usernames, visible phone, bio, photo, profile colors, premium or verification badges, emoji status, personal channel, and featured collectible will be mirrored only on your screen. Missing fields are cleared locally.";
++"ayu_LocalProfileCloneDescription" = "Enter the UID of a user whose profile you have already opened in IntelGram. Their name, UID, usernames, visible phone, bio, photo, profile colors, Premium, verified, SCAM, FAKE, DIRECT, emoji status, organization verification, personal channel, and featured collectible details will be mirrored only on your screen. Missing fields are cleared locally.";
 +"ayu_LocalProfileCloneNotFound" = "Open that user's profile in IntelGram first, then try the UID again.";
 +"ayu_LocalProfileCloneSaved" = "{user} is now mirrored on your local profile.";
 +"ayu_LocalProfileCloneLocalOnly" = "Profile cloning changes only your own local rendering. Stop cloning to return to the individual local fields below.";
++"ayu_LocalProfileBadges" = "Profile badges";
++"ayu_LocalProfileBadgesTitle" = "Profile badges";
++"ayu_LocalProfileBadgesAutomatic" = "Automatic (Telegram or cloned profile)";
++"ayu_LocalProfileBadgesNone" = "No badge";
++"ayu_LocalProfileBadgesPremium" = "Premium";
++"ayu_LocalProfileBadgesVerified" = "Verified";
++"ayu_LocalProfileBadgesScam" = "SCAM";
++"ayu_LocalProfileBadgesFake" = "FAKE";
++"ayu_LocalProfileBadgesDirect" = "DIRECT";
++"ayu_LocalProfileEmojiStatusId" = "Emoji status document ID (optional)";
++"ayu_LocalProfileBotVerificationId" = "Organization badge document ID (optional)";
++"ayu_LocalProfileBadgesDescription" = "Automatic mirrors every supported Telegram badge from your cloned or real profile. Manual choices, emoji status, and organization verification are rendered only in IntelGram.";
++"ayu_LocalProfileBadgesSaved" = "Local profile badges updated.";
 +"ayu_LocalProfileChannelHeader" = "Local channel showcase";
 +"ayu_LocalProfileChannelEnabled" = "Show a public channel on my local profile";
 +"ayu_LocalProfileChannelChoose" = "Choose showcase channel";
@@ -1234,7 +1247,7 @@ index 7380587e7..276d95991 100644
  "ayu_DisableColorfulCover" = "Disable adaptive color";
  "ayu_EnableColorfulCover" = "Enable adaptive color";
  "ayu_CustomizationHeader" = "Customization";
-@@ -8130,14 +8318,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8130,14 +8331,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SettingsBiggerWindow" = "Bigger Window";
  "ayu_SettingsIncreaseWebviewHeight" = "Increase Content Height";
  "ayu_SettingsIncreaseWebviewWidth" = "Increase Content Width";
@@ -1251,7 +1264,7 @@ index 7380587e7..276d95991 100644
  "ayu_ImportDataDescription" = "It will replace the current database.";
  "ayu_ImportDataConfirm" = "Yes, replace existing";
  "ayu_ImportDataCancel" = "No, close window";
-@@ -8204,7 +8392,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8204,7 +8405,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_FiltersClearPopupAltActionText" = "Clear unknown";
  "ayu_AppIconHeader" = "App Icon";
  "ayu_IconDefault" = "Default";
@@ -1260,7 +1273,7 @@ index 7380587e7..276d95991 100644
  "ayu_IconDiscord" = "Discord";
  "ayu_IconSpotify" = "Spotify";
  "ayu_IconExtera" = "extera";
-@@ -8214,8 +8402,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8214,8 +8415,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_IconAyuTyan" = "AyuTyan";
  "ayu_WALMode" = "Enable WAL mode";
  "ayu_PushNotificationCount" = "FCM notifications received";
@@ -1271,7 +1284,7 @@ index 7380587e7..276d95991 100644
  "ayu_TelegramCacheDatabase" = "Telegram Messages Database";
  "ayu_ConfirmationsTitle" = "Confirmations";
  "ayu_StickerConfirmation" = "For Stickers";
-@@ -8288,9 +8476,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8288,9 +8489,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SuggestGhostModeStoryText" = "Do you want to enable **Ghost Mode** before viewing the story?";
  "ayu_SuggestGhostModeStoryActionTextYes" = "Yes";
  "ayu_SuggestGhostModeStoryActionTextNo" = "No";
@@ -1283,7 +1296,7 @@ index 7380587e7..276d95991 100644
  "ayu_HideNextViewsDescriptionAyu" = "Hide my views forever, until Ghost Mode is disabled.";
  "ayu_EnableGhostModeStories" = "Enable Ghost Mode";
  "ayu_GhostModeIsActive" = "Ghost Mode is Active";
-@@ -8355,28 +8543,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8355,28 +8556,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_ContextCopyID" = "Copy ID";
  "ayu_IDCopiedToast" = "ID copied to clipboard.";
  "ayu_ContextHideMessage" = "Hide";
@@ -1558,7 +1571,7 @@ index 2fa8a2a3f..2c0ecb5a4 100644
  	initWorker();
  	initRCManager();
 diff --git a/Telegram/SourceFiles/ayu/ayu_settings.cpp b/Telegram/SourceFiles/ayu/ayu_settings.cpp
-index 2280020ce..0ce7e1bfe 100644
+index 2280020ce..314a5401a 100644
 --- a/Telegram/SourceFiles/ayu/ayu_settings.cpp
 +++ b/Telegram/SourceFiles/ayu/ayu_settings.cpp
 @@ -11,6 +11,7 @@
@@ -1706,7 +1719,7 @@ index 2280020ce..0ce7e1bfe 100644
  void AyuSettings::setRemoveMessageTail(bool val) {
  	if (_removeMessageTail.current() == val) return;
  	_removeMessageTail = val;
-@@ -681,6 +798,132 @@ void AyuSettings::setLocalPremium(bool val) {
+@@ -681,6 +798,152 @@ void AyuSettings::setLocalPremium(bool val) {
  	save();
  }
  
@@ -1796,6 +1809,26 @@ index 2280020ce..0ce7e1bfe 100644
 +	save();
 +}
 +
++void AyuSettings::setLocalProfileBadgeStyle(LocalProfileBadgeStyle val) {
++	if (_localProfileBadgeStyle.current() == val) return;
++	_localProfileBadgeStyle = val;
++	save();
++}
++
++void AyuSettings::setLocalProfileEmojiStatusId(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfileId(val);
++	if (_localProfileEmojiStatusId.current() == normalized) return;
++	_localProfileEmojiStatusId = normalized;
++	save();
++}
++
++void AyuSettings::setLocalProfileBotVerificationId(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfileId(val);
++	if (_localProfileBotVerificationId.current() == normalized) return;
++	_localProfileBotVerificationId = normalized;
++	save();
++}
++
 +void AyuSettings::setLocalProfileChannelEnabled(bool val) {
 +	if (_localProfileChannelEnabled.current() == val) return;
 +	_localProfileChannelEnabled = val;
@@ -1839,7 +1872,7 @@ index 2280020ce..0ce7e1bfe 100644
  void AyuSettings::setShowChannelReactions(bool val) {
  	if (_showChannelReactions.current() == val) return;
  	_showChannelReactions = val;
-@@ -699,6 +942,12 @@ void AyuSettings::setShowPrivateChatReactions(bool val) {
+@@ -699,6 +962,12 @@ void AyuSettings::setShowPrivateChatReactions(bool val) {
  	save();
  }
  
@@ -1852,7 +1885,7 @@ index 2280020ce..0ce7e1bfe 100644
  void AyuSettings::setAppIcon(const QString &val) {
  	if (_appIcon.current() == val) return;
  	_appIcon = val;
-@@ -1080,12 +1329,49 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
+@@ -1080,12 +1349,52 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
  		{"increaseWebviewHeight", s._increaseWebviewHeight.current()},
  		{"increaseWebviewWidth", s._increaseWebviewWidth.current()},
  		{"materialSwitches", s._materialSwitches.current()},
@@ -1889,6 +1922,9 @@ index 2280020ce..0ce7e1bfe 100644
 +		{"localProfileAbout", s._localProfileAbout.current()},
 +		{"localProfilePhoto", s._localProfilePhoto.current()},
 +		{"localProfileCloneId", s._localProfileCloneId.current()},
++		{"localProfileBadgeStyle", s._localProfileBadgeStyle.current()},
++		{"localProfileEmojiStatusId", s._localProfileEmojiStatusId.current()},
++		{"localProfileBotVerificationId", s._localProfileBotVerificationId.current()},
 +		{"localProfileChannelEnabled", s._localProfileChannelEnabled.current()},
 +		{"localProfileChannel", s._localProfileChannel.current()},
 +		{"localProfileChannelWorkspace", s._localProfileChannelWorkspace.current()},
@@ -1902,7 +1938,7 @@ index 2280020ce..0ce7e1bfe 100644
  		{"appIcon", s._appIcon.current()},
  		{"simpleQuotesAndReplies", s._simpleQuotesAndReplies.current()},
  		{"hideFastShare", s._hideFastShare.current()},
-@@ -1180,12 +1466,90 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
+@@ -1180,12 +1489,99 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
  	s._increaseWebviewHeight = j.value("increaseWebviewHeight", defaults._increaseWebviewHeight.current());
  	s._increaseWebviewWidth = j.value("increaseWebviewWidth", defaults._increaseWebviewWidth.current());
  	s._materialSwitches = j.value("materialSwitches", defaults._materialSwitches.current());
@@ -1973,6 +2009,15 @@ index 2280020ce..0ce7e1bfe 100644
 +	s._localProfileAbout = Ayu::NormalizeLocalProfileAbout(j.value("localProfileAbout", defaults._localProfileAbout.current()));
 +	s._localProfilePhoto = Ayu::NormalizeLocalProfilePhoto(j.value("localProfilePhoto", defaults._localProfilePhoto.current()));
 +	s._localProfileCloneId = Ayu::NormalizeLocalProfileCloneId(j.value("localProfileCloneId", defaults._localProfileCloneId.current()));
++	s._localProfileBadgeStyle = j.value(
++		"localProfileBadgeStyle",
++		defaults._localProfileBadgeStyle.current());
++	s._localProfileEmojiStatusId = Ayu::NormalizeLocalProfileId(j.value(
++		"localProfileEmojiStatusId",
++		defaults._localProfileEmojiStatusId.current()));
++	s._localProfileBotVerificationId = Ayu::NormalizeLocalProfileId(j.value(
++		"localProfileBotVerificationId",
++		defaults._localProfileBotVerificationId.current()));
 +	s._localProfileChannelEnabled = j.value(
 +		"localProfileChannelEnabled",
 +		defaults._localProfileChannelEnabled.current());
@@ -1994,10 +2039,10 @@ index 2280020ce..0ce7e1bfe 100644
  	s._simpleQuotesAndReplies = j.value("simpleQuotesAndReplies", defaults._simpleQuotesAndReplies.current());
  	s._hideFastShare = j.value("hideFastShare", defaults._hideFastShare.current());
 diff --git a/Telegram/SourceFiles/ayu/ayu_settings.h b/Telegram/SourceFiles/ayu/ayu_settings.h
-index 97a043921..464245f4e 100644
+index 97a043921..466f8c81a 100644
 --- a/Telegram/SourceFiles/ayu/ayu_settings.h
 +++ b/Telegram/SourceFiles/ayu/ayu_settings.h
-@@ -51,6 +51,14 @@ enum class SendWithoutSoundOption {
+@@ -51,6 +51,24 @@ enum class SendWithoutSoundOption {
  	Always = 2,
  };
  
@@ -2009,10 +2054,20 @@ index 97a043921..464245f4e 100644
 +	LiquidBounce = 4,
 +};
 +
++enum class LocalProfileBadgeStyle {
++	Automatic = 0,
++	None = 1,
++	Premium = 2,
++	Verified = 3,
++	Scam = 4,
++	Fake = 5,
++	Direct = 6,
++};
++
  NLOHMANN_JSON_SERIALIZE_ENUM(PeerIdDisplay, {
  	{PeerIdDisplay::Hidden, 0},
  	{PeerIdDisplay::TelegramApi, 1},
-@@ -82,6 +90,14 @@ NLOHMANN_JSON_SERIALIZE_ENUM(SendWithoutSoundOption, {
+@@ -82,6 +100,24 @@ NLOHMANN_JSON_SERIALIZE_ENUM(SendWithoutSoundOption, {
  	{SendWithoutSoundOption::Always, 2},
  })
  
@@ -2024,10 +2079,20 @@ index 97a043921..464245f4e 100644
 +	{IntelGramMotionStyle::LiquidBounce, "liquid_bounce"},
 +})
 +
++NLOHMANN_JSON_SERIALIZE_ENUM(LocalProfileBadgeStyle, {
++	{LocalProfileBadgeStyle::Automatic, "automatic"},
++	{LocalProfileBadgeStyle::None, "none"},
++	{LocalProfileBadgeStyle::Premium, "premium"},
++	{LocalProfileBadgeStyle::Verified, "verified"},
++	{LocalProfileBadgeStyle::Scam, "scam"},
++	{LocalProfileBadgeStyle::Fake, "fake"},
++	{LocalProfileBadgeStyle::Direct, "direct"},
++})
++
  class GhostModeAccountSettings {
  public:
  	GhostModeAccountSettings();
-@@ -288,12 +304,49 @@ public:
+@@ -288,12 +324,52 @@ public:
  	[[nodiscard]] bool increaseWebviewHeight() const { return _increaseWebviewHeight.current(); }
  	[[nodiscard]] bool increaseWebviewWidth() const { return _increaseWebviewWidth.current(); }
  	[[nodiscard]] bool materialSwitches() const { return _materialSwitches.current(); }
@@ -2064,6 +2129,9 @@ index 97a043921..464245f4e 100644
 +	[[nodiscard]] const QString &localProfileAbout() const { return _localProfileAbout.current(); }
 +	[[nodiscard]] const QString &localProfilePhoto() const { return _localProfilePhoto.current(); }
 +	[[nodiscard]] const QString &localProfileCloneId() const { return _localProfileCloneId.current(); }
++	[[nodiscard]] LocalProfileBadgeStyle localProfileBadgeStyle() const { return _localProfileBadgeStyle.current(); }
++	[[nodiscard]] const QString &localProfileEmojiStatusId() const { return _localProfileEmojiStatusId.current(); }
++	[[nodiscard]] const QString &localProfileBotVerificationId() const { return _localProfileBotVerificationId.current(); }
 +	[[nodiscard]] bool localProfileChannelEnabled() const { return _localProfileChannelEnabled.current(); }
 +	[[nodiscard]] const QString &localProfileChannel() const { return _localProfileChannel.current(); }
 +	[[nodiscard]] const QString &localProfileChannelWorkspace() const { return _localProfileChannelWorkspace.current(); }
@@ -2077,7 +2145,7 @@ index 97a043921..464245f4e 100644
  	[[nodiscard]] const QString &appIcon() const { return _appIcon.current(); }
  	[[nodiscard]] bool simpleQuotesAndReplies() const { return _simpleQuotesAndReplies.current(); }
  	[[nodiscard]] bool hideFastShare() const { return _hideFastShare.current(); }
-@@ -372,12 +425,49 @@ public:
+@@ -372,12 +448,52 @@ public:
  	void setIncreaseWebviewHeight(bool val);
  	void setIncreaseWebviewWidth(bool val);
  	void setMaterialSwitches(bool val);
@@ -2114,6 +2182,9 @@ index 97a043921..464245f4e 100644
 +	void setLocalProfileAbout(const QString &val);
 +	void setLocalProfilePhoto(const QString &val);
 +	void setLocalProfileCloneId(const QString &val);
++	void setLocalProfileBadgeStyle(LocalProfileBadgeStyle val);
++	void setLocalProfileEmojiStatusId(const QString &val);
++	void setLocalProfileBotVerificationId(const QString &val);
 +	void setLocalProfileChannelEnabled(bool val);
 +	void setLocalProfileChannel(const QString &val);
 +	void setLocalProfileChannelWorkspace(const QString &val);
@@ -2127,7 +2198,7 @@ index 97a043921..464245f4e 100644
  	void setAppIcon(const QString &val);
  	void setSimpleQuotesAndReplies(bool val);
  	void setHideFastShare(bool val);
-@@ -479,18 +569,91 @@ public:
+@@ -479,18 +595,97 @@ public:
  	[[nodiscard]] rpl::producer<bool> increaseWebviewWidthChanges() const { return _increaseWebviewWidth.changes(); }
  	[[nodiscard]] rpl::producer<bool> materialSwitchesValue() const { return _materialSwitches.value(); }
  	[[nodiscard]] rpl::producer<bool> materialSwitchesChanges() const { return _materialSwitches.changes(); }
@@ -2197,6 +2268,12 @@ index 97a043921..464245f4e 100644
 +	[[nodiscard]] rpl::producer<QString> localProfilePhotoChanges() const { return _localProfilePhoto.changes(); }
 +	[[nodiscard]] rpl::producer<QString> localProfileCloneIdValue() const { return _localProfileCloneId.value(); }
 +	[[nodiscard]] rpl::producer<QString> localProfileCloneIdChanges() const { return _localProfileCloneId.changes(); }
++	[[nodiscard]] rpl::producer<LocalProfileBadgeStyle> localProfileBadgeStyleValue() const { return _localProfileBadgeStyle.value(); }
++	[[nodiscard]] rpl::producer<LocalProfileBadgeStyle> localProfileBadgeStyleChanges() const { return _localProfileBadgeStyle.changes(); }
++	[[nodiscard]] rpl::producer<QString> localProfileEmojiStatusIdValue() const { return _localProfileEmojiStatusId.value(); }
++	[[nodiscard]] rpl::producer<QString> localProfileEmojiStatusIdChanges() const { return _localProfileEmojiStatusId.changes(); }
++	[[nodiscard]] rpl::producer<QString> localProfileBotVerificationIdValue() const { return _localProfileBotVerificationId.value(); }
++	[[nodiscard]] rpl::producer<QString> localProfileBotVerificationIdChanges() const { return _localProfileBotVerificationId.changes(); }
 +	[[nodiscard]] rpl::producer<bool> localProfileChannelEnabledValue() const { return _localProfileChannelEnabled.value(); }
 +	[[nodiscard]] rpl::producer<bool> localProfileChannelEnabledChanges() const { return _localProfileChannelEnabled.changes(); }
 +	[[nodiscard]] rpl::producer<QString> localProfileChannelValue() const { return _localProfileChannel.value(); }
@@ -2219,7 +2296,7 @@ index 97a043921..464245f4e 100644
  	[[nodiscard]] rpl::producer<QString> appIconValue() const { return _appIcon.value(); }
  	[[nodiscard]] rpl::producer<QString> appIconChanges() const { return _appIcon.changes(); }
  	[[nodiscard]] rpl::producer<bool> simpleQuotesAndRepliesValue() const { return _simpleQuotesAndReplies.value(); }
-@@ -633,12 +796,49 @@ private:
+@@ -633,12 +828,52 @@ private:
  	rpl::variable<bool> _increaseWebviewHeight = false;
  	rpl::variable<bool> _increaseWebviewWidth = false;
  	rpl::variable<bool> _materialSwitches = true;
@@ -2256,6 +2333,9 @@ index 97a043921..464245f4e 100644
 +	rpl::variable<QString> _localProfileAbout;
 +	rpl::variable<QString> _localProfilePhoto;
 +	rpl::variable<QString> _localProfileCloneId;
++	rpl::variable<LocalProfileBadgeStyle> _localProfileBadgeStyle = LocalProfileBadgeStyle::Automatic;
++	rpl::variable<QString> _localProfileEmojiStatusId;
++	rpl::variable<QString> _localProfileBotVerificationId;
 +	rpl::variable<bool> _localProfileChannelEnabled = false;
 +	rpl::variable<QString> _localProfileChannel;
 +	rpl::variable<QString> _localProfileChannelWorkspace;
@@ -8334,10 +8414,10 @@ index a4b1e7ad4..8b0f3d579 100644
  	builder.addSkip();
  }
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-index 929cf4609..7fcfc784d 100644
+index 929cf4609..9fa53e7ca 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-@@ -6,33 +6,47 @@
+@@ -6,33 +6,48 @@
  // Copyright @Radolyn, 2026
  #include "ayu/ui/settings/settings_other.h"
  
@@ -8378,6 +8458,7 @@ index 929cf4609..7fcfc784d 100644
  #include "ui/text/text_utilities.h"
 +#include "ui/widgets/fields/input_field.h"
  #include "ui/widgets/buttons.h"
++#include "ui/widgets/checkbox.h"
  #include "ui/wrap/vertical_layout.h"
 -#include "window/window_session_controller.h"
 +#include "ui/vertical_list.h"
@@ -8397,7 +8478,7 @@ index 929cf4609..7fcfc784d 100644
  
  namespace Settings {
  
-@@ -41,162 +55,1097 @@ using namespace AyuBuilder;
+@@ -41,162 +56,1177 @@ using namespace AyuBuilder;
  
  namespace {
  
@@ -8424,11 +8505,6 @@ index 929cf4609..7fcfc784d 100644
 +enum class LocalGiftTarget {
 +	Featured,
 +	Pinned,
-+};
-+
-+struct LocalGiftCollection {
-+	QString title;
-+	QString slug;
  };
  
 -Asset getAsset(const QString &name) {
@@ -8436,6 +8512,11 @@ index 929cf4609..7fcfc784d 100644
 -	const auto normalized = name.toLower();
 -	QString icon = QString(":/gui/icons/ayu/donates/%1.svg").arg(normalized);
 -	QColor background = isNightMode ? QColor(0xEEEEEE) : QColor(0x242B2C);
++struct LocalGiftCollection {
++	QString title;
++	QString slug;
++};
++
 +struct LocalGiftBrowserState {
 +	rpl::variable<Ui::GiftsDescriptor> gifts;
 +	std::vector<Info::PeerGifts::GiftDescriptor> items;
@@ -8645,8 +8726,22 @@ index 929cf4609..7fcfc784d 100644
 +		reference = collection.slug + '-' + reference;
 +	}
 +	return Ayu::NormalizeLocalProfileGift(std::move(reference));
-+}
-+
+ }
+ 
+-void BuildDonations(SectionBuilder &builder) {
+-	builder.add([](const BuildContext &ctx) {
+-		v::match(ctx, [&](const WidgetContext &wctx) {
+-			const auto container = wctx.container;
+-
+-			AddSubsectionTitle(container, tr::ayu_SupportHeader());
+-			AddDonate(
+-				AddButtonWithIcon(
+-					container,
+-					rpl::single(QString("Boosty")),
+-					st::settingsButton),
+-				"boosty"
+-			)->setClickedCallback([=] {
+-				QDesktopServices::openUrl(QString("https://boosty.to/alexeyzavar"));
 +void LoadLocalGiftBrowserPage(
 +		not_null<Window::SessionController*> controller,
 +		LocalGiftCollection collection,
@@ -8712,22 +8807,8 @@ index 929cf4609..7fcfc784d 100644
 +			}
 +			state->gifts = Ui::GiftsDescriptor{ .list = state->items };
 +		});
- }
- 
--void BuildDonations(SectionBuilder &builder) {
--	builder.add([](const BuildContext &ctx) {
--		v::match(ctx, [&](const WidgetContext &wctx) {
--			const auto container = wctx.container;
--
--			AddSubsectionTitle(container, tr::ayu_SupportHeader());
--			AddDonate(
--				AddButtonWithIcon(
--					container,
--					rpl::single(QString("Boosty")),
--					st::settingsButton),
--				"boosty"
--			)->setClickedCallback([=] {
--				QDesktopServices::openUrl(QString("https://boosty.to/alexeyzavar"));
++}
++
 +[[nodiscard]] bool ApplyLocalGiftCatalog(
 +		QPointer<Ui::GenericBox> box,
 +		not_null<LocalGiftBrowserState*> state) {
@@ -9171,6 +9252,78 @@ index 929cf4609..7fcfc784d 100644
 +	}));
 +}
 +
++void ShowLocalProfileBadgesBox(
++		not_null<Window::SessionController*> controller) {
++	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
++		using Style = LocalProfileBadgeStyle;
++
++		box->setTitle(tr::ayu_LocalProfileBadgesTitle());
++		auto &settings = AyuSettings::getInstance();
++		const auto group = std::make_shared<Ui::RadioenumGroup<Style>>(
++			settings.localProfileBadgeStyle());
++		const auto addOption = [&](Style style, const QString &label) {
++			box->addRow(
++				object_ptr<Ui::Radioenum<Style>>(
++					box,
++					group,
++					style,
++					label),
++				st::boxRowPadding);
++		};
++		addOption(
++			Style::Automatic,
++			tr::ayu_LocalProfileBadgesAutomatic(tr::now));
++		addOption(Style::None, tr::ayu_LocalProfileBadgesNone(tr::now));
++		addOption(
++			Style::Premium,
++			tr::ayu_LocalProfileBadgesPremium(tr::now));
++		addOption(
++			Style::Verified,
++			tr::ayu_LocalProfileBadgesVerified(tr::now));
++		addOption(Style::Scam, tr::ayu_LocalProfileBadgesScam(tr::now));
++		addOption(Style::Fake, tr::ayu_LocalProfileBadgesFake(tr::now));
++		addOption(
++			Style::Direct,
++			tr::ayu_LocalProfileBadgesDirect(tr::now));
++
++		const auto emojiStatus = box->addRow(
++			object_ptr<Ui::InputField>(
++				box,
++				st::defaultInputField,
++				tr::ayu_LocalProfileEmojiStatusId(),
++				settings.localProfileEmojiStatusId()),
++			st::boxRowPadding);
++		emojiStatus->setMaxLength(Ayu::kMaxLocalProfileIdLength);
++		const auto organizationBadge = box->addRow(
++			object_ptr<Ui::InputField>(
++				box,
++				st::defaultInputField,
++				tr::ayu_LocalProfileBotVerificationId(),
++				settings.localProfileBotVerificationId()),
++			st::boxRowPadding);
++		organizationBadge->setMaxLength(Ayu::kMaxLocalProfileIdLength);
++		AddDividerText(
++			box->verticalLayout(),
++			tr::ayu_LocalProfileBadgesDescription());
++
++		const auto save = [=] {
++			settings.setLocalProfileBadgeStyle(group->current());
++			settings.setLocalProfileEmojiStatusId(
++				emojiStatus->getLastText());
++			settings.setLocalProfileBotVerificationId(
++				organizationBadge->getLastText());
++			Ayu::RefreshLocalProfilePresentation(&controller->session());
++			controller->showToast(
++				tr::ayu_LocalProfileBadgesSaved(tr::now));
++			box->closeBox();
++		};
++		box->addButton(tr::lng_settings_save(), save);
++		box->addButton(tr::lng_cancel(), [=] {
++			box->closeBox();
++		});
++	}));
++}
++
 +void ShowLocalProfileChannelBox(
 +		not_null<Window::SessionController*> controller) {
 +	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
@@ -9283,6 +9436,14 @@ index 929cf4609..7fcfc784d 100644
 +	builder.addDividerText(tr::ayu_LocalProfileCloneLocalOnly());
 +	builder.addSkip();
 +	builder.addSubsectionTitle(tr::ayu_LocalProfileIdentityHeader());
++	builder.addButton({
++		.id = u"ayu/localProfileBadges"_q,
++		.title = tr::ayu_LocalProfileBadges(),
++		.icon = { &st::menuIconPremium },
++		.onClick = [=] {
++			ShowLocalProfileBadgesBox(controller);
++		},
++	});
  
  	ayu.addSettingToggle({
 -		.id = u"ayu/crashReporting"_q,
@@ -9621,7 +9782,7 @@ index 929cf4609..7fcfc784d 100644
  	builder.addButton({
  		.id = u"ayu/registerUrlScheme"_q,
  		.title = tr::ayu_RegisterURLScheme(),
-@@ -228,13 +1177,23 @@ void BuildOtherThings(SectionBuilder &builder) {
+@@ -228,13 +1258,23 @@ void BuildOtherThings(SectionBuilder &builder) {
  const auto kMeta = BuildHelper({
  	.id = AyuOther::Id(),
  	.parentId = AyuMain::Id(),
@@ -9648,7 +9809,7 @@ index 929cf4609..7fcfc784d 100644
  	BuildCrashReporting(builder, ayu);
  	BuildOtherThings(builder);
  });
-@@ -242,7 +1201,7 @@ const auto kMeta = BuildHelper({
+@@ -242,7 +1282,7 @@ const auto kMeta = BuildHelper({
  } // namespace
  
  rpl::producer<QString> AyuOther::title() {
@@ -9657,7 +9818,7 @@ index 929cf4609..7fcfc784d 100644
  }
  
  AyuOther::AyuOther(
-@@ -258,6 +1217,23 @@ void AyuOther::setupContent() {
+@@ -258,6 +1298,23 @@ void AyuOther::setupContent() {
  	Ui::ResizeFitChild(this, content);
  }
  
@@ -11146,10 +11307,10 @@ index 000000000..57e78a5ff
 +
 +} // namespace Settings
 diff --git a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
-index c9d247a20..26d5f6d38 100644
+index c9d247a20..d84ef5364 100644
 --- a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
-@@ -6,15 +6,1168 @@
+@@ -6,15 +6,1197 @@
  // Copyright @Radolyn, 2026
  #include "ayu/ui/utils/ayu_profile_values.h"
  
@@ -11174,6 +11335,7 @@ index c9d247a20..26d5f6d38 100644
 +#include "rpl/combine.h"
 +#include "ui/image/image.h"
 +#include "ui/layers/generic_box.h"
++#include "ui/unread_badge.h"
 +#include "ui/widgets/fields/special_fields.h"
 +#include "ui/widgets/labels.h"
 +#include "ui/vertical_list.h"
@@ -11934,11 +12096,39 @@ index c9d247a20..26d5f6d38 100644
 +		settings.localProfileAbout());
 +}
 +
++LocalProfileBadgeStyle LocalProfileBadgeStyleFor(
++		not_null<PeerData*> peer) {
++	return peer->isSelf()
++		? AyuSettings::getInstance().localProfileBadgeStyle()
++		: LocalProfileBadgeStyle::Automatic;
++}
++
 +EmojiStatusId LocalProfileEmojiStatusId(not_null<PeerData*> peer) {
++	const auto style = LocalProfileBadgeStyleFor(peer);
++	if (style != LocalProfileBadgeStyle::Automatic) {
++		const auto id = AyuSettings::getInstance(
++			).localProfileEmojiStatusId().toULongLong();
++		return EmojiStatusId{ DocumentId(id) };
++	}
 +	if (const auto clone = ResolveLocalProfileCloneUser(peer)) {
 +		return clone->emojiStatusId();
 +	}
 +	return peer->emojiStatusId();
++}
++
++Ui::BotVerifyDetails LocalProfileBotVerifyDetails(
++		not_null<PeerData*> peer) {
++	auto source = peer.get();
++	const auto style = LocalProfileBadgeStyleFor(peer);
++	if (style != LocalProfileBadgeStyle::Automatic) {
++		const auto id = AyuSettings::getInstance(
++			).localProfileBotVerificationId().toULongLong();
++		return { .iconId = DocumentId(id) };
++	} else if (const auto clone = ResolveLocalProfileCloneUser(peer)) {
++		source = clone;
++	}
++	const auto details = source->botVerifyDetails();
++	return details ? *details : Ui::BotVerifyDetails();
 +}
 +
 +std::vector<QString> LocalProfileGiftReferences(not_null<PeerData*> peer) {
@@ -12319,7 +12509,7 @@ index c9d247a20..26d5f6d38 100644
  
  	const auto &settings = AyuSettings::getInstance();
  	if (settings.showPeerId() == PeerIdDisplay::BotApi) {
-@@ -33,8 +1186,12 @@ QString IDString(MsgId topicRootId) {
+@@ -33,8 +1215,12 @@ QString IDString(MsgId topicRootId) {
  }
  
  rpl::producer<TextWithEntities> IDValue(not_null<PeerData*> peer) {
@@ -12335,10 +12525,10 @@ index c9d247a20..26d5f6d38 100644
  			? TextWithEntities()
  			: tr::marked(IDString(peer));
 diff --git a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h
-index 950f22d7e..5fb0e268e 100644
+index 950f22d7e..054c87bbc 100644
 --- a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h
 +++ b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h
-@@ -6,8 +6,112 @@
+@@ -6,8 +6,121 @@
  // Copyright @Radolyn, 2026
  #pragma once
  
@@ -12349,10 +12539,15 @@ index 950f22d7e..5fb0e268e 100644
 +class UserData;
 +class ChannelData;
 +class QImage;
++enum class LocalProfileBadgeStyle;
 +
 +namespace Data {
 +struct StarGift;
 +} // namespace Data
++
++namespace Ui {
++struct BotVerifyDetails;
++} // namespace Ui
 +
 +namespace Main {
 +class Session;
@@ -12409,7 +12604,11 @@ index 950f22d7e..5fb0e268e 100644
 +[[nodiscard]] QString LocalProfileAbout(not_null<PeerData*> peer);
 +[[nodiscard]] std::shared_ptr<QImage> LocalProfilePhotoImage(
 +	not_null<PeerData*> peer);
++[[nodiscard]] LocalProfileBadgeStyle LocalProfileBadgeStyleFor(
++	not_null<PeerData*> peer);
 +[[nodiscard]] EmojiStatusId LocalProfileEmojiStatusId(
++	not_null<PeerData*> peer);
++[[nodiscard]] Ui::BotVerifyDetails LocalProfileBotVerifyDetails(
 +	not_null<PeerData*> peer);
 +[[nodiscard]] std::vector<QString> LocalProfileGiftReferences(
 +	not_null<PeerData*> peer);
@@ -13994,7 +14193,7 @@ index 2498bfc6d..c02427014 100644
  		CheckForSwitchInlineButton(result);
  	}
 diff --git a/Telegram/SourceFiles/dialogs/dialogs_inner_widget.cpp b/Telegram/SourceFiles/dialogs/dialogs_inner_widget.cpp
-index 9e940482f..09fa81eea 100644
+index 9e940482f..6a3a4a17d 100644
 --- a/Telegram/SourceFiles/dialogs/dialogs_inner_widget.cpp
 +++ b/Telegram/SourceFiles/dialogs/dialogs_inner_widget.cpp
 @@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -14005,7 +14204,7 @@ index 9e940482f..09fa81eea 100644
  #include "dialogs/dialogs_three_state_icon.h"
  #include "dialogs/ui/chat_search_empty.h"
  #include "dialogs/ui/chat_search_in.h"
-@@ -1604,10 +1605,10 @@ void InnerWidget::paintPeerSearchResult(
+@@ -1604,17 +1605,18 @@ void InnerWidget::paintPeerSearchResult(
  	}
  	QRect rectForName(nameleft, context.st->nameTop, namewidth, st::semiboldFont->height);
  
@@ -14018,7 +14217,18 @@ index 9e940482f..09fa81eea 100644
  			Ui::NameTextOptions());
  	}
  
-@@ -4627,7 +4628,9 @@ void InnerWidget::updateSearchIn() {
+-	if (const auto info = peer->botVerifyDetails()) {
+-		if (!result->badge.ready(info)) {
++	const auto verifyInfo = Ayu::LocalProfileBotVerifyDetails(peer);
++	if (verifyInfo) {
++		if (!result->badge.ready(&verifyInfo)) {
+ 			result->badge.set(
+-				info,
++				&verifyInfo,
+ 				peer->owner().customEmojiManager().factory(),
+ 				[=] { updateSearchResult(peer); });
+ 		}
+@@ -4627,7 +4629,9 @@ void InnerWidget::updateSearchIn() {
  		? Ui::MakeUserpicThumbnail(_searchFromShown)
  		: nullptr;
  	const auto fromName = _searchFromShown
@@ -15454,7 +15664,7 @@ index 841d23920..2edac8bc4 100644
  	return (quote
  		? tr::lng_preview_reply_to_quote
 diff --git a/Telegram/SourceFiles/history/view/history_view_top_bar_widget.cpp b/Telegram/SourceFiles/history/view/history_view_top_bar_widget.cpp
-index 63b23a43a..9c7dee66b 100644
+index 63b23a43a..c4a743e32 100644
 --- a/Telegram/SourceFiles/history/view/history_view_top_bar_widget.cpp
 +++ b/Telegram/SourceFiles/history/view/history_view_top_bar_widget.cpp
 @@ -74,6 +74,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -15476,7 +15686,7 @@ index 63b23a43a..9c7dee66b 100644
  }
  
  } // namespace
-@@ -671,7 +674,8 @@ void TopBarWidget::paintTopBar(Painter &p) {
+@@ -671,17 +674,19 @@ void TopBarWidget::paintTopBar(Painter &p) {
  			paintStatus(p, statusleft, statustop, statuswidth, width());
  		}
  	} else if (namePeer) {
@@ -15486,6 +15696,20 @@ index 63b23a43a..9c7dee66b 100644
  			_titleNameVersion = namePeer->nameVersion();
  			_title.setText(
  				st::msgNameStyle,
+ 				TopBarNameText(namePeer, _activeChat),
+ 				Ui::NameTextOptions());
+ 		}
+-		if (const auto info = namePeer->botVerifyDetails()) {
+-			if (!_titleBadge.ready(info)) {
++		const auto verifyInfo = Ayu::LocalProfileBotVerifyDetails(namePeer);
++		if (verifyInfo) {
++			if (!_titleBadge.ready(&verifyInfo)) {
+ 				_titleBadge.set(
+-					info,
++					&verifyInfo,
+ 					namePeer->owner().customEmojiManager().factory(),
+ 					[=] { update(); });
+ 			}
 diff --git a/Telegram/SourceFiles/history/view/reactions/history_view_reactions_selector.cpp b/Telegram/SourceFiles/history/view/reactions/history_view_reactions_selector.cpp
 index 5984bcefa..a17fc4722 100644
 --- a/Telegram/SourceFiles/history/view/reactions/history_view_reactions_selector.cpp
@@ -15756,18 +15980,19 @@ index 594061dbb..b126bad66 100644
  	}
  }
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_badge.cpp b/Telegram/SourceFiles/info/profile/info_profile_badge.cpp
-index 4855a6aab..133953851 100644
+index 4855a6aab..71d41e7e3 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_badge.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_badge.cpp
-@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -7,6 +7,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  */
  #include "info/profile/info_profile_badge.h"
  
++#include "ayu/ayu_settings.h"
 +#include "ayu/ui/utils/ayu_profile_values.h"
  #include "data/data_changes.h"
  #include "data/data_emoji_statuses.h"
  #include "data/data_peer.h"
-@@ -334,16 +335,26 @@ rpl::producer<Badge::Content> VerifiedContentForPeer(
+@@ -334,16 +336,43 @@ rpl::producer<Badge::Content> VerifiedContentForPeer(
  
  rpl::producer<Badge::Content> BotVerifyBadgeForPeer(
  		not_null<PeerData*> peer) {
@@ -15797,13 +16022,62 @@ index 4855a6aab..133953851 100644
 +	if (!peer->isSelf()) {
 +		return sourceValue(peer);
 +	}
-+	return Ayu::LocalProfileCloneIdValue(peer) | rpl::map([=](const QString &) {
++	auto &settings = AyuSettings::getInstance();
++	return rpl::combine(
++		settings.localProfileBadgeStyleValue(),
++		settings.localProfileBotVerificationIdValue(),
++		Ayu::LocalProfileCloneIdValue(peer)
++	) | rpl::map([=](
++			LocalProfileBadgeStyle style,
++			const QString &,
++			const QString &) -> rpl::producer<Badge::Content> {
++		if (style != LocalProfileBadgeStyle::Automatic) {
++			const auto details = Ayu::LocalProfileBotVerifyDetails(peer);
++			return rpl::single(Badge::Content{
++				.badge = details
++					? BadgeType::BotVerified
++					: BadgeType::None,
++				.emojiStatusId = { details.iconId },
++			});
++		}
 +		const auto clone = Ayu::LocalProfileCloneUser(peer);
 +		return sourceValue(clone ? clone : peer.get());
 +	}) | rpl::flatten_latest();
  }
  
  } // namespace Info::Profile
+diff --git a/Telegram/SourceFiles/info/profile/info_profile_inner_widget.cpp b/Telegram/SourceFiles/info/profile/info_profile_inner_widget.cpp
+index 500e97ddc..98b210f15 100644
+--- a/Telegram/SourceFiles/info/profile/info_profile_inner_widget.cpp
++++ b/Telegram/SourceFiles/info/profile/info_profile_inner_widget.cpp
+@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ */
+ #include "info/profile/info_profile_inner_widget.h"
+ 
++#include "ayu/ui/utils/ayu_profile_values.h"
+ #include "info/info_controller.h"
+ #include "info/info_memento.h"
+ #include "info/profile/info_profile_widget.h"
+@@ -65,7 +66,7 @@ void AddAboutVerification(
+ 		peer,
+ 		Data::PeerUpdate::Flag::VerifyInfo
+ 	) | rpl::on_next([=] {
+-		const auto info = peer->botVerifyDetails();
++		const auto info = Ayu::LocalProfileBotVerifyDetails(peer);
+ 		while (inner->count()) {
+ 			delete inner->widgetAt(0);
+ 		}
+@@ -78,8 +79,8 @@ void AddAboutVerification(
+ 					hasMainApp = user->botInfo->hasMainApp;
+ 				}
+ 			}
+-			if (!hasMainApp && !info->description.empty()) {
+-				Ui::AddDividerText(inner, rpl::single(info->description));
++			if (!hasMainApp && !info.description.empty()) {
++				Ui::AddDividerText(inner, rpl::single(info.description));
+ 			}
+ 		}
+ 		inner->resizeToWidth(inner->width());
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp b/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp
 index a410a35ca..0f762bd46 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp
@@ -16094,18 +16368,19 @@ index deaedd9f0..a404cd001 100644
  	std::unique_ptr<Ui::Animations::Simple> _giftsHiding;
  	rpl::lifetime _giftsLoadingLifetime;
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_values.cpp b/Telegram/SourceFiles/info/profile/info_profile_values.cpp
-index 19c194b8b..e166cc3c9 100644
+index 19c194b8b..99ffb163c 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_values.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_values.cpp
-@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -7,6 +7,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  */
  #include "info/profile/info_profile_values.h"
  
++#include "ayu/ayu_settings.h"
 +#include "ayu/ui/utils/ayu_profile_values.h"
  #include "api/api_chat_participants.h"
  #include "apiwrap.h"
  #include "info/profile/info_profile_phone_menu.h"
-@@ -43,21 +44,11 @@ namespace {
+@@ -43,21 +45,11 @@ namespace {
  using UpdateFlag = Data::PeerUpdate::Flag;
  
  auto PlainAboutValue(not_null<PeerData*> peer) {
@@ -16129,7 +16404,7 @@ index 19c194b8b..e166cc3c9 100644
  }
  
  auto PlainPrimaryUsernameValue(not_null<PeerData*> peer) {
-@@ -96,10 +87,7 @@ rpl::producer<QString> NameValue(not_null<PeerData*> peer) {
+@@ -96,10 +88,7 @@ rpl::producer<QString> NameValue(not_null<PeerData*> peer) {
  	if (const auto broadcast = peer->monoforumBroadcast()) {
  		return NameValue(broadcast);
  	}
@@ -16141,7 +16416,7 @@ index 19c194b8b..e166cc3c9 100644
  }
  
  rpl::producer<QString> TitleValue(not_null<Data::ForumTopic*> topic) {
-@@ -126,11 +114,9 @@ rpl::producer<int32> ColorIdValue(not_null<Data::ForumTopic*> topic) {
+@@ -126,11 +115,9 @@ rpl::producer<int32> ColorIdValue(not_null<Data::ForumTopic*> topic) {
  rpl::producer<TextWithEntities> PhoneValue(not_null<UserData*> user) {
  	return rpl::merge(
  		Countries::Instance().updated(),
@@ -16155,7 +16430,7 @@ index 19c194b8b..e166cc3c9 100644
  	});
  }
  
-@@ -147,9 +133,12 @@ rpl::producer<TextWithEntities> PhoneOrHiddenValue(not_null<UserData*> user) {
+@@ -147,9 +134,12 @@ rpl::producer<TextWithEntities> PhoneOrHiddenValue(not_null<UserData*> user) {
  			const QString &hidden) {
  		if (phone.text.isEmpty() && username.isEmpty() && about.isEmpty()) {
  			return tr::marked(hidden);
@@ -16170,7 +16445,7 @@ index 19c194b8b..e166cc3c9 100644
  		} else {
  			return phone;
  		}
-@@ -173,7 +162,8 @@ QString UsernameUrl(
+@@ -173,7 +163,8 @@ QString UsernameUrl(
  		not_null<PeerData*> peer,
  		const QString &username,
  		bool link) {
@@ -16180,7 +16455,7 @@ index 19c194b8b..e166cc3c9 100644
  		? u"collectible_username"_q
  		: link
  		? u"username_link"_q
-@@ -195,21 +185,11 @@ rpl::producer<std::vector<TextWithEntities>> UsernamesValue(
+@@ -195,21 +186,11 @@ rpl::producer<std::vector<TextWithEntities>> UsernamesValue(
  			return tr::link(u, UsernameUrl(peer, u));
  		}) | ranges::to_vector;
  	};
@@ -16207,7 +16482,7 @@ index 19c194b8b..e166cc3c9 100644
  }
  
  TextWithEntities AboutWithEntities(
-@@ -705,7 +685,7 @@ rpl::producer<BadgeType> BadgeValueFromFlags(Peer peer) {
+@@ -705,7 +686,7 @@ rpl::producer<BadgeType> BadgeValueFromFlags(Peer peer) {
  	});
  }
  
@@ -16216,15 +16491,44 @@ index 19c194b8b..e166cc3c9 100644
  	if (const auto user = peer->asUser()) {
  		return BadgeValueFromFlags<UserDataFlag>(user);
  	} else if (const auto channel = peer->asChannel()) {
-@@ -714,14 +694,26 @@ rpl::producer<BadgeType> BadgeValue(not_null<PeerData*> peer) {
+@@ -714,14 +695,65 @@ rpl::producer<BadgeType> BadgeValue(not_null<PeerData*> peer) {
  	return rpl::single(BadgeType::None);
  }
  
++[[nodiscard]] BadgeType BadgeValueFromLocalStyle(
++		LocalProfileBadgeStyle style) {
++	switch (style) {
++	case LocalProfileBadgeStyle::Premium:
++		return BadgeType::Premium;
++	case LocalProfileBadgeStyle::Verified:
++		return BadgeType::Verified;
++	case LocalProfileBadgeStyle::Scam:
++		return BadgeType::Scam;
++	case LocalProfileBadgeStyle::Fake:
++		return BadgeType::Fake;
++	case LocalProfileBadgeStyle::Direct:
++		return BadgeType::Direct;
++	case LocalProfileBadgeStyle::Automatic:
++	case LocalProfileBadgeStyle::None:
++		return BadgeType::None;
++	}
++	Unexpected("Local profile badge style.");
++}
++
 +rpl::producer<BadgeType> BadgeValue(not_null<PeerData*> peer) {
 +	if (!peer->isSelf()) {
 +		return BadgeValueForPeer(peer);
 +	}
-+	return Ayu::LocalProfileCloneIdValue(peer) | rpl::map([=](const QString &) {
++	auto &settings = AyuSettings::getInstance();
++	return rpl::combine(
++		settings.localProfileBadgeStyleValue(),
++		Ayu::LocalProfileCloneIdValue(peer)
++	) | rpl::map([=](
++			LocalProfileBadgeStyle style,
++			const QString &) -> rpl::producer<BadgeType> {
++		if (style != LocalProfileBadgeStyle::Automatic) {
++			return rpl::single(BadgeValueFromLocalStyle(style));
++		}
 +		const auto clone = Ayu::LocalProfileCloneUser(peer);
 +		return BadgeValueForPeer(clone ? clone : peer.get());
 +	}) | rpl::flatten_latest();
@@ -16238,12 +16542,22 @@ index 19c194b8b..e166cc3c9 100644
 -		peer,
 -		Data::PeerUpdate::Flag::EmojiStatus
 -	) | rpl::map([=] { return peer->emojiStatusId(); });
-+	return rpl::merge(
++	auto updates = rpl::merge(
 +		peer->session().changes().peerFlagsValue(
 +			peer,
 +			Data::PeerUpdate::Flag::EmojiStatus) | rpl::to_empty,
 +		Ayu::LocalProfileCloneIdValue(peer) | rpl::to_empty
-+	) | rpl::map([=] { return Ayu::LocalProfileEmojiStatusId(peer); });
++	);
++	if (peer->isSelf()) {
++		auto &settings = AyuSettings::getInstance();
++		updates = rpl::merge(
++			std::move(updates),
++			settings.localProfileBadgeStyleValue() | rpl::to_empty,
++			settings.localProfileEmojiStatusIdValue() | rpl::to_empty);
++	}
++	return std::move(updates) | rpl::map([=] {
++		return Ayu::LocalProfileEmojiStatusId(peer);
++	}) | rpl::distinct_until_changed();
  }
  
  rpl::producer<QString> BirthdayLabelText(
@@ -16925,10 +17239,69 @@ index 40692d96e..744bcccbb 100644
  
  	raw->widthValue() | rpl::on_next([=](int width) {
 diff --git a/Telegram/SourceFiles/ui/unread_badge.cpp b/Telegram/SourceFiles/ui/unread_badge.cpp
-index 297c37bdd..69a22b6a5 100644
+index 297c37bdd..a6b40ba38 100644
 --- a/Telegram/SourceFiles/ui/unread_badge.cpp
 +++ b/Telegram/SourceFiles/ui/unread_badge.cpp
-@@ -189,7 +189,7 @@ int PeerBadge::drawGetWidth(Painter &p, Descriptor &&descriptor) {
+@@ -22,6 +22,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ 
+ // AyuGram includes
+ #include "ayu/ayu_settings.h"
++#include "ayu/ui/utils/ayu_profile_values.h"
+ #include "ayu/utils/telegram_helpers.h"
+ #include "styles/style_info.h"
+ 
+@@ -158,20 +159,43 @@ int PeerBadge::drawGetWidth(Painter &p, Descriptor &&descriptor) {
+ 	const auto &settings = AyuSettings::getInstance();
+ 	const auto hidePremiumStatuses = settings.hidePremiumStatuses();
+ 
+-	const auto peer = descriptor.peer;
+-	if ((descriptor.scam && (peer->isScam() || peer->isFake()))
+-		|| (descriptor.direct && peer->isMonoforum())) {
++	const auto original = descriptor.peer;
++	const auto localStyle = Ayu::LocalProfileBadgeStyleFor(original);
++	const auto manual = original->isSelf()
++		&& (localStyle != LocalProfileBadgeStyle::Automatic);
++	const auto clone = !manual
++		? Ayu::LocalProfileCloneUser(original)
++		: nullptr;
++	const auto peer = clone ? clone : original.get();
++	const auto scam = manual
++		? (localStyle == LocalProfileBadgeStyle::Scam)
++		: peer->isScam();
++	const auto fake = manual
++		? (localStyle == LocalProfileBadgeStyle::Fake)
++		: peer->isFake();
++	const auto direct = manual
++		? (localStyle == LocalProfileBadgeStyle::Direct)
++		: peer->isMonoforum();
++	if ((descriptor.scam && (scam || fake))
++		|| (descriptor.direct && direct)) {
+ 		return drawTextBadge(p, descriptor);
+ 	}
+-	const auto verifyCheck = descriptor.verified && peer->isVerified();
++	const auto verified = manual
++		? (localStyle == LocalProfileBadgeStyle::Verified)
++		: peer->isVerified();
++	const auto emojiStatusId = Ayu::LocalProfileEmojiStatusId(original);
++	const auto premium = manual
++		? (localStyle == LocalProfileBadgeStyle::Premium)
++		: peer->isPremium();
++	const auto verifyCheck = descriptor.verified && verified;
+ 	const auto premiumMark = descriptor.premium
+ 		&& peer->session().premiumBadgesShown();
+ 	const auto emojiStatus = premiumMark
+-		&& peer->emojiStatusId()
+-		&& (peer->isPremium() || peer->isChannel());
++		&& emojiStatusId
++		&& (premium || peer->isChannel());
+ 	const auto premiumStar = premiumMark
+ 		&& !emojiStatus
+-		&& peer->isPremium();
++		&& premium;
+ 
+ 	const auto paintVerify = verifyCheck
+ 		&& (descriptor.prioritizeVerification
+@@ -189,7 +213,7 @@ int PeerBadge::drawGetWidth(Painter &p, Descriptor &&descriptor) {
  		&& !paintExteraCustom
  		&& !hidePremiumStatuses;
  	const auto paintExteraSupporter = !paintExteraDev
@@ -16937,6 +17310,39 @@ index 297c37bdd..69a22b6a5 100644
  		&& !paintExteraCustom
  		&& !hidePremiumStatuses;
  	const auto paintExtera = paintExteraDev || paintExteraSupporter;
+@@ -279,9 +303,21 @@ int PeerBadge::drawGetWidth(Painter &p, Descriptor &&descriptor) {
+ 
+ int PeerBadge::drawTextBadge(Painter &p, const Descriptor &descriptor) {
+ 	const auto type = [&] {
+-		if (descriptor.peer->isScam()) {
++		const auto original = descriptor.peer;
++		const auto localStyle = Ayu::LocalProfileBadgeStyleFor(original);
++		if (original->isSelf()
++			&& localStyle != LocalProfileBadgeStyle::Automatic) {
++			return (localStyle == LocalProfileBadgeStyle::Scam)
++				? TextBadgeType::Scam
++				: (localStyle == LocalProfileBadgeStyle::Fake)
++				? TextBadgeType::Fake
++				: TextBadgeType::Direct;
++		}
++		const auto clone = Ayu::LocalProfileCloneUser(original);
++		const auto peer = clone ? clone : original.get();
++		if (peer->isScam()) {
+ 			return TextBadgeType::Scam;
+-		} else if (descriptor.peer->isFake()) {
++		} else if (peer->isFake()) {
+ 			return TextBadgeType::Fake;
+ 		}
+ 		return TextBadgeType::Direct;
+@@ -331,7 +367,7 @@ int PeerBadge::drawPremiumEmojiStatus(
+ 		Painter &p,
+ 		const Descriptor &descriptor) {
+ 	const auto peer = descriptor.peer;
+-	const auto id = peer->emojiStatusId();
++	const auto id = Ayu::LocalProfileEmojiStatusId(peer);
+ 	const auto rectForName = descriptor.rectForName;
+ 	const auto iconw = descriptor.premium->width() + st::infoVerifiedCheckPosition.x();
+ 	const auto iconx = rectForName.x()
 diff --git a/Telegram/SourceFiles/window/main_window.cpp b/Telegram/SourceFiles/window/main_window.cpp
 index 1330fcabd..93a4b3846 100644
 --- a/Telegram/SourceFiles/window/main_window.cpp

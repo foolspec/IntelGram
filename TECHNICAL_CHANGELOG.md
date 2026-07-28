@@ -2,16 +2,16 @@
 
 This file records implementation-level changes to IntelGram's custom layer. Product-facing changes are summarized in [`CHANGELOG.md`](CHANGELOG.md).
 
-## IntelGram v6.7.8 Local Owner Post Controls - 2026-07-27
+## IntelGram v6.7.8 Local Owner Controls And Profile Badges - 2026-07-27
 
 ### Source Baseline And Patch
 
 - Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
-- Source commit: `e0e16561831d629464e1b881e7c9db76576fe265` on the recovered local implementation branch.
+- Source commit: `fb6f3f7aec5be0375f9033471aec8996b969e920` on the recovered local implementation branch.
 - Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
 - Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
-- Patch SHA-256: `c170f31656b1a5ce4dff7f106ff64966e26f0faebefe4cc758a80562c45b126d`.
-- Patch footprint: 107 files, 12,642 insertions, and 630 deletions relative to the pinned source.
+- Patch SHA-256: `a91aa6db95d219be7443fc4db3e07c68b0b7ba39648f438af2a2c2e51d3618f5`.
+- Patch footprint: 108 files, 12,957 insertions, and 649 deletions relative to the pinned source.
 - `Telegram/lib_ui` remains pinned to public fork commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
 
 ### Local Post Model
@@ -37,6 +37,14 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - `Api::ViewsManager`, `Data::Reactions::send`, reaction polling, and paid-reaction sending return before all Telegram requests for synthetic local broadcasts.
 - The menu's Forward row copies a text handoff rather than calling `ShowForwardMessagesBox`, so no local message ID can reach Telegram's forwarding API.
 - No full local build is run; platform compilation, packaging, and launch testing remain delegated to the release workflows as required by the upstream repository instructions.
+
+### Local Profile Badge Layer
+
+- `AyuSettings` persists one local primary-badge mode plus optional emoji-status and organization-verification document IDs.
+- Automatic mode resolves the selected clone user and mirrors Telegram's Premium, verified, SCAM, FAKE, DIRECT, emoji-status, and organization-verification state; missing clone state remains absent.
+- `Info::Profile::BadgeValue`, `EmojiStatusIdValue`, `Ui::PeerBadge`, profile verification content, dialog search rows, and chat top bars share the local badge helpers.
+- The settings page exposes one focused native radio-selector box and leaves Automatic selected by default.
+- The validator requires the badge settings, native render hooks, clone-aware helper, and local-only copy while continuing to reject all Telegram profile and emoji-status mutation methods.
 
 ## IntelGram v6.7.8 Native Local Channel Ownership - 2026-07-26
 

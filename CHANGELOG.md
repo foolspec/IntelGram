@@ -2,7 +2,7 @@
 
 All notable IntelGram custom-feature changes are recorded here.
 
-## IntelGram v6.7.8 Local Owner Post Controls - 2026-07-27
+## IntelGram v6.7.8 Local Owner Controls And Profile Badges - 2026-07-27
 
 ### Added
 
@@ -11,6 +11,8 @@ All notable IntelGram custom-feature changes are recorded here.
 - Persistent local replies, edited text, pin state, arbitrary emoji reaction counts, custom-emoji reaction counts, and paid-Star display counts.
 - A **Broadcast engagement** editor with configurable starting views, maximum views, increment size, interval, six baseline reactions, and paid Stars.
 - On-device view growth that stops at the selected maximum.
+- A compact **Profile badges** editor with Automatic, no-primary-badge, Premium, verified, SCAM, FAKE, and DIRECT choices.
+- Optional local emoji-status and organization-verification document IDs rendered through Telegram's native custom-emoji badge system.
 
 ### Changed
 
@@ -18,11 +20,13 @@ All notable IntelGram custom-feature changes are recorded here.
 - Native reaction clicks and the favorite-reaction shortcut increment only the selected local counter.
 - The local Forward row performs a safe text handoff; synthetic local message IDs never enter Telegram's forwarding API.
 - The in-app update log and public feature guide now document the complete owner-style post menu.
+- Automatic badge mode now mirrors every supported primary badge, emoji status, and organization-verification symbol from the selected clone profile and clears missing elements.
 
 ### Local-Only Boundary
 
 - No local post, view, reaction, Stars payment, reply, pin, edit, delete, or synthetic-message forward is submitted to Telegram.
 - Existing guards continue to block unsupported post types before upload or send paths.
+- Badge choices are IntelGram render settings; no Telegram account, username, emoji-status, or verification request is added.
 
 ## IntelGram v6.7.8 Native Local Channel Ownership - 2026-07-26
 

@@ -27,6 +27,7 @@
 - Compact profile consistency: the collectible's Telegram row now opens a card using your local display name, large profile photo, phone, usernames, bio, and personal channel instead of the collectible owner's server profile.
 - Collectible owner consistency: collectible username and anonymous-number boxes now show your active local or cloned display name beside the locally rendered avatar instead of the underlying Telegram peer label.
 - Clone fidelity: premium and verification badges, organization badge symbols, emoji status, and personal channel follow a read-only refresh of the already-known source profile; absent elements are cleared from the cloned local view.
+- Profile badges: Automatic mirrors Premium, verified, SCAM, FAKE, DIRECT, emoji-status, and organization-verification presentation from the cloned or real profile; a focused editor also supports manual local choices.
 - Username editor: the added original-username strip and visible local-only disclaimer are gone; the dialog now matches Telegram's native title, `@username` field, validation row, help copy, spacing, and buttons without a network availability or account-update request.
 - Settings organization: the home page is grouped into Customize, Power tools, and Client settings; Local Profile, Appearance, Navigation, Vault, Automation, Export, and Advanced controls each have focused pages.
 - Dynamic preview: the name-color sample follows the currently rendered local display name.
@@ -44,7 +45,7 @@
 - Local channel showcase: choose a public `@channel` or `t.me` link to render it on your own profile with an explicit **Local showcase** label; lookup is read-only and does not claim ownership, join the channel, grant permissions, or modify Telegram.
 - Local channel workspace: open the showcase as a private local feed, create text posts with optional local-file attachments, edit/delete/pin/copy them, and configure a local title, description, and photo without publishing or modifying a Telegram channel.
 - In-app update log: **IntelGram Preferences -> Update log** opens a bundled native summary without requiring GitHub.
-- Current source patch SHA-256: `c170f31656b1a5ce4dff7f106ff64966e26f0faebefe4cc758a80562c45b126d`.
+- Current source patch SHA-256: `a91aa6db95d219be7443fc4db3e07c68b0b7ba39648f438af2a2c2e51d3618f5`.
 - Privacy boundary: no Telegram profile mutation, contact import, automatic channel join, channel ownership or permission mutation, collectible transaction, or protected-content bypass.
 - Protected content: Restrict Saving Content and self-destructing items remain metadata-only jump-back references; bodies, links, filenames, revisions, and media are excluded from rules, exports, and backups.
 - Branding consistency: product-facing window, settings, version, and notification-preview titles use IntelGram while upstream attribution remains intact.

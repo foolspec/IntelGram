@@ -16,10 +16,10 @@ IntelGram is a cross-platform AyuGram Desktop build focused on local profile cus
 - Browse visual theme cards and cloud themes inside IntelGram, import or remove custom themes, choose any local image as the chat background, preview wallpaper changes, and select IntelGram app icons.
 - Turn on Liquid Glass with cached native or local-image blur, adaptive tint and contrast, wallpaper-colored diffusion, moving specular highlights, edge refraction, subtle grain, and an optional removable local background image.
 - Make the interface more lively with Quick Snap, Smooth Flow, Diabolical, Springy, or the optional high-elasticity Liquid Bounce preset while preserving reduced-motion and power-saving behavior.
-- Render a local display name, UID, primary username, up to 20 other usernames, anonymous number, bio, and profile photo for your own account.
+- Render a local display name, UID, primary username, up to 20 other usernames, anonymous number, bio, profile photo, and native Telegram badge presentation for your own account.
 - Show a public channel on your own profile as a clearly labeled local showcase, then open its private local-only workspace to create, edit, pin, copy, or delete local posts, attach local files, and customize a local title, description, and photo without changing Telegram.
 - Enable **Local ownership** from any broadcast channel's **IntelGram** submenu to reveal the native broadcast composer and Manage actions, then place persistent local text broadcasts directly in that channel's real timeline with native reply, edit, pin, reaction, copy, delete, and selection controls without sending them to Telegram.
-- Clone the visible profile presentation of a user already loaded in IntelGram by entering their UID, including premium or verification badges, organization badge symbols, emoji status, and personal channel.
+- Clone the visible profile presentation of a user already loaded in IntelGram by entering their UID, including Premium, verified, SCAM, FAKE, DIRECT, emoji-status, organization-verification, and personal-channel presentation.
 - Find an already-loaded user by UID or by a phone number that is visible to your account, directly from the normal chat-list search field.
 - Browse every collection reported by Telegram's live collectible catalog, inspect exact numbered gifts in a scrollable native grid, and paste Telegram, Getgems, or TON item links.
 - Feature one collectible as the local profile backdrop and pin up to six around the local avatar.
@@ -59,6 +59,7 @@ Open **IntelGram Preferences -> Local Profile & Collectibles** to configure:
 - Up to 20 local usernames
 - Local anonymous number
 - Local bio and profile photo
+- Automatic or manually selected local profile badges, emoji status, and organization verification icon
 - Local profile cloning by the UID of a user already opened in IntelGram
 - An optional public-channel showcase rendered only on your local profile, with a private local posting workspace
 - A featured collectible gift and up to six pinned collectible gifts
@@ -75,7 +76,9 @@ Open **IntelGram Preferences -> Glass & Motion** for the optical-material contro
 
 Enhanced Animations applies one selected pack across existing IntelGram transitions, dialogs, drawers, controls, and navigation. **Quick Snap** is compact and immediate, **Smooth Flow** is calm and critically damped, **Diabolical** is brisk with stronger depth, **Springy** settles gently without overshoot, and **Liquid Bounce** adds the most elastic lift with a controlled overshoot. The optional window-opening fade follows the same accessibility gate. Turning either master switch off restores normal IntelGram appearance or motion immediately.
 
-Choose a local image to replace your own profile photo throughout this IntelGram installation. Profile cloning accepts the UID of a user whose profile has already been opened and locally mirrors their visible name, UID, usernames, phone, bio, photo, profile colors, premium or verification badges, organization badge symbol, emoji status, personal channel, and featured collectible. After selection, IntelGram performs Telegram's standard read-only full-profile refresh for that already-known user so visible badge and personal-channel metadata can render immediately. If the source profile lacks a badge, status, or personal channel, IntelGram clears that element from the cloned local view. Stop cloning at any time to return to the individual local fields.
+Choose a local image to replace your own profile photo throughout this IntelGram installation. Open **Profile badges** to leave badge rendering on **Automatic**, hide the primary badge, or locally select Premium, verified, SCAM, FAKE, or DIRECT. Optional Telegram document IDs render a custom emoji status and organization-verification symbol using Telegram's native badge artwork.
+
+Profile cloning accepts the UID of a user whose profile has already been opened and locally mirrors their visible name, UID, usernames, phone, bio, photo, profile colors, every supported primary badge, organization-verification symbol, emoji status, personal channel, and featured collectible. After selection, IntelGram performs Telegram's standard read-only full-profile refresh for that already-known user so visible badge and personal-channel metadata can render immediately. If the source profile lacks a badge, status, or personal channel, IntelGram clears that element from the cloned local view. Stop cloning at any time to return to the individual local fields.
 
 The local channel showcase accepts a public `@channel` or `t.me` link, resolves that public channel through Telegram's normal read-only lookup, and renders it only on your own profile in this IntelGram installation. Click the showcased channel or choose **Open local channel** to enter its local workspace. You can create text posts, attach local files, edit or delete posts, pin highlights, copy text, open local attachments, and configure a local title, description, and photo. Workspaces are stored separately for up to eight selected channels and remain available after restarting IntelGram.
 
@@ -124,7 +127,7 @@ Liquid Glass uses a native behind-window material on macOS, the Windows DWM back
 ## Source And Verification
 
 - [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch) contains the complete IntelGram implementation.
-- Patch SHA-256: `c170f31656b1a5ce4dff7f106ff64966e26f0faebefe4cc758a80562c45b126d`
+- Patch SHA-256: `a91aa6db95d219be7443fc4db3e07c68b0b7ba39648f438af2a2c2e51d3618f5`
 - The patch pins [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui) commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`, which carries IntelGram's shared motion-preset hook and Liquid Bounce transition.
 - [`build_intelgram_branding.py`](build_intelgram_branding.py) applies the cross-platform IntelGram product identity.
 - [`validate_intelgram_patch.py`](validate_intelgram_patch.py) verifies the feature hooks, protected-content boundaries, and absence of custom Telegram mutation requests before each platform build.

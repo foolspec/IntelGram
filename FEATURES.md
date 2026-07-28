@@ -50,11 +50,21 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 
 - Accepts the UID of a user whose profile has already been opened and loaded in IntelGram.
 - Uses Telegram's standard read-only full-profile refresh for that already-known user so visible clone metadata is current.
-- Mirrors the loaded user's visible name, UID, primary and other usernames, visible phone, bio, profile photo, profile colors, premium or verification state, organization badge symbol, emoji status, personal channel, and featured collectible.
+- Mirrors the loaded user's visible name, UID, primary and other usernames, visible phone, bio, profile photo, profile colors, Premium, verified, SCAM, FAKE, DIRECT, organization-verification symbol, emoji status, personal channel, and featured collectible.
 - Clears each cloned badge, status, and personal-channel element locally when the source profile does not have it, instead of falling back to the real self profile.
 - Applies the mirror only to your own local profile rendering.
 - Can be stopped at any time to return to the individual local fields.
 - Does not fetch a hidden profile, bypass privacy, alter either account, or impersonate the user to anyone else.
+
+## Local Profile Badges
+
+- Defaults to **Automatic**, which follows the selected clone profile or your real Telegram badge state when cloning is off.
+- Supports Telegram's native Premium star, verified check, SCAM, FAKE, and DIRECT label presentation.
+- Accepts an optional Telegram custom-emoji document ID for the local emoji status.
+- Accepts an optional Telegram custom-emoji document ID for the organization-verification symbol shown before the name.
+- Updates profile headers, profile details, chat headers, dialog/search rows, and shared native peer-badge renderers.
+- Uses Telegram's existing badge artwork and custom-emoji loader rather than drawing replacement symbols.
+- Persists only in IntelGram settings and never sends an account, username, emoji-status, or verification mutation.
 
 ## UID And Phone Search
 
@@ -193,7 +203,7 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - Main menu identity and account switcher rows.
 - Dialog list rows, avatars, video-userpic fallbacks, and search results.
 - Chat headers, profile headers, top bars, about sections, service text, messages, forwarded/reply previews, and table rows.
-- Own-profile username, UID, phone, bio, photo, colors, premium and verification badges, organization badge symbol, emoji status, personal channel, featured gift, backdrop, and pinned-gift visuals.
+- Own-profile username, UID, phone, bio, photo, colors, Premium, verified, SCAM, FAKE, DIRECT, organization-verification, emoji-status, personal-channel, featured-gift, backdrop, and pinned-gift visuals.
 - Native collectible tooltip and detail interaction, including self-recipient rendering for local and cloned gifts.
 - Collectible username and anonymous-number owner chips use the active local or cloned display name alongside the locally rendered avatar.
 
