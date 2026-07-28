@@ -764,10 +764,11 @@ void ShowLocalProfileBadgesBox(
 			tr::ayu_LocalProfileBadgesDescription());
 
 		const auto save = [=] {
-			settings.setLocalProfileBadgeStyle(group->current());
-			settings.setLocalProfileEmojiStatusId(
+			auto &mutableSettings = AyuSettings::getInstance();
+			mutableSettings.setLocalProfileBadgeStyle(group->current());
+			mutableSettings.setLocalProfileEmojiStatusId(
 				emojiStatus->getLastText());
-			settings.setLocalProfileBotVerificationId(
+			mutableSettings.setLocalProfileBotVerificationId(
 				organizationBadge->getLastText());
 			Ayu::RefreshLocalProfilePresentation(&controller->session());
 			controller->showToast(
