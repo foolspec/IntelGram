@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "info/profile/info_profile_badge.h"
 
+#include "ayu/ayu_settings.h"
 #include "ayu/ui/utils/ayu_profile_values.h"
 #include "data/data_changes.h"
 #include "data/data_emoji_statuses.h"
@@ -351,7 +352,24 @@ rpl::producer<Badge::Content> BotVerifyBadgeForPeer(
 	if (!peer->isSelf()) {
 		return sourceValue(peer);
 	}
-	return Ayu::LocalProfileCloneIdValue(peer) | rpl::map([=](const QString &) {
+	auto &settings = AyuSettings::getInstance();
+	return rpl::combine(
+		settings.localProfileBadgeStyleValue(),
+		settings.localProfileBotVerificationIdValue(),
+		Ayu::LocalProfileCloneIdValue(peer)
+	) | rpl::map([=](
+			LocalProfileBadgeStyle style,
+			const QString &,
+			const QString &) -> rpl::producer<Badge::Content> {
+		if (style != LocalProfileBadgeStyle::Automatic) {
+			const auto details = Ayu::LocalProfileBotVerifyDetails(peer);
+			return rpl::single(Badge::Content{
+				.badge = details
+					? BadgeType::BotVerified
+					: BadgeType::None,
+				.emojiStatusId = { details.iconId },
+			});
+		}
 		const auto clone = Ayu::LocalProfileCloneUser(peer);
 		return sourceValue(clone ? clone : peer.get());
 	}) | rpl::flatten_latest();

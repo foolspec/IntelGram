@@ -682,10 +682,11 @@ void TopBarWidget::paintTopBar(Painter &p) {
 				TopBarNameText(namePeer, _activeChat),
 				Ui::NameTextOptions());
 		}
-		if (const auto info = namePeer->botVerifyDetails()) {
-			if (!_titleBadge.ready(info)) {
+		const auto verifyInfo = Ayu::LocalProfileBotVerifyDetails(namePeer);
+		if (verifyInfo) {
+			if (!_titleBadge.ready(&verifyInfo)) {
 				_titleBadge.set(
-					info,
+					&verifyInfo,
 					namePeer->owner().customEmojiManager().factory(),
 					[=] { update(); });
 			}

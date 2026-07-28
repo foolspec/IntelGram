@@ -13,10 +13,15 @@ class PeerData;
 class UserData;
 class ChannelData;
 class QImage;
+enum class LocalProfileBadgeStyle;
 
 namespace Data {
 struct StarGift;
 } // namespace Data
+
+namespace Ui {
+struct BotVerifyDetails;
+} // namespace Ui
 
 namespace Main {
 class Session;
@@ -73,7 +78,11 @@ constexpr auto kMaxLocalProfileGiftsLength = 4096;
 [[nodiscard]] QString LocalProfileAbout(not_null<PeerData*> peer);
 [[nodiscard]] std::shared_ptr<QImage> LocalProfilePhotoImage(
 	not_null<PeerData*> peer);
+[[nodiscard]] LocalProfileBadgeStyle LocalProfileBadgeStyleFor(
+	not_null<PeerData*> peer);
 [[nodiscard]] EmojiStatusId LocalProfileEmojiStatusId(
+	not_null<PeerData*> peer);
+[[nodiscard]] Ui::BotVerifyDetails LocalProfileBotVerifyDetails(
 	not_null<PeerData*> peer);
 [[nodiscard]] std::vector<QString> LocalProfileGiftReferences(
 	not_null<PeerData*> peer);

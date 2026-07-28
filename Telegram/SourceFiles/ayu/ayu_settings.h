@@ -59,6 +59,16 @@ enum class IntelGramMotionStyle {
 	LiquidBounce = 4,
 };
 
+enum class LocalProfileBadgeStyle {
+	Automatic = 0,
+	None = 1,
+	Premium = 2,
+	Verified = 3,
+	Scam = 4,
+	Fake = 5,
+	Direct = 6,
+};
+
 NLOHMANN_JSON_SERIALIZE_ENUM(PeerIdDisplay, {
 	{PeerIdDisplay::Hidden, 0},
 	{PeerIdDisplay::TelegramApi, 1},
@@ -96,6 +106,16 @@ NLOHMANN_JSON_SERIALIZE_ENUM(IntelGramMotionStyle, {
 	{IntelGramMotionStyle::Dynamic, "dynamic"},
 	{IntelGramMotionStyle::Springy, "springy"},
 	{IntelGramMotionStyle::LiquidBounce, "liquid_bounce"},
+})
+
+NLOHMANN_JSON_SERIALIZE_ENUM(LocalProfileBadgeStyle, {
+	{LocalProfileBadgeStyle::Automatic, "automatic"},
+	{LocalProfileBadgeStyle::None, "none"},
+	{LocalProfileBadgeStyle::Premium, "premium"},
+	{LocalProfileBadgeStyle::Verified, "verified"},
+	{LocalProfileBadgeStyle::Scam, "scam"},
+	{LocalProfileBadgeStyle::Fake, "fake"},
+	{LocalProfileBadgeStyle::Direct, "direct"},
 })
 
 class GhostModeAccountSettings {
@@ -337,6 +357,9 @@ public:
 	[[nodiscard]] const QString &localProfileAbout() const { return _localProfileAbout.current(); }
 	[[nodiscard]] const QString &localProfilePhoto() const { return _localProfilePhoto.current(); }
 	[[nodiscard]] const QString &localProfileCloneId() const { return _localProfileCloneId.current(); }
+	[[nodiscard]] LocalProfileBadgeStyle localProfileBadgeStyle() const { return _localProfileBadgeStyle.current(); }
+	[[nodiscard]] const QString &localProfileEmojiStatusId() const { return _localProfileEmojiStatusId.current(); }
+	[[nodiscard]] const QString &localProfileBotVerificationId() const { return _localProfileBotVerificationId.current(); }
 	[[nodiscard]] bool localProfileChannelEnabled() const { return _localProfileChannelEnabled.current(); }
 	[[nodiscard]] const QString &localProfileChannel() const { return _localProfileChannel.current(); }
 	[[nodiscard]] const QString &localProfileChannelWorkspace() const { return _localProfileChannelWorkspace.current(); }
@@ -458,6 +481,9 @@ public:
 	void setLocalProfileAbout(const QString &val);
 	void setLocalProfilePhoto(const QString &val);
 	void setLocalProfileCloneId(const QString &val);
+	void setLocalProfileBadgeStyle(LocalProfileBadgeStyle val);
+	void setLocalProfileEmojiStatusId(const QString &val);
+	void setLocalProfileBotVerificationId(const QString &val);
 	void setLocalProfileChannelEnabled(bool val);
 	void setLocalProfileChannel(const QString &val);
 	void setLocalProfileChannelWorkspace(const QString &val);
@@ -635,6 +661,12 @@ public:
 	[[nodiscard]] rpl::producer<QString> localProfilePhotoChanges() const { return _localProfilePhoto.changes(); }
 	[[nodiscard]] rpl::producer<QString> localProfileCloneIdValue() const { return _localProfileCloneId.value(); }
 	[[nodiscard]] rpl::producer<QString> localProfileCloneIdChanges() const { return _localProfileCloneId.changes(); }
+	[[nodiscard]] rpl::producer<LocalProfileBadgeStyle> localProfileBadgeStyleValue() const { return _localProfileBadgeStyle.value(); }
+	[[nodiscard]] rpl::producer<LocalProfileBadgeStyle> localProfileBadgeStyleChanges() const { return _localProfileBadgeStyle.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileEmojiStatusIdValue() const { return _localProfileEmojiStatusId.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfileEmojiStatusIdChanges() const { return _localProfileEmojiStatusId.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileBotVerificationIdValue() const { return _localProfileBotVerificationId.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfileBotVerificationIdChanges() const { return _localProfileBotVerificationId.changes(); }
 	[[nodiscard]] rpl::producer<bool> localProfileChannelEnabledValue() const { return _localProfileChannelEnabled.value(); }
 	[[nodiscard]] rpl::producer<bool> localProfileChannelEnabledChanges() const { return _localProfileChannelEnabled.changes(); }
 	[[nodiscard]] rpl::producer<QString> localProfileChannelValue() const { return _localProfileChannel.value(); }
@@ -829,6 +861,9 @@ private:
 	rpl::variable<QString> _localProfileAbout;
 	rpl::variable<QString> _localProfilePhoto;
 	rpl::variable<QString> _localProfileCloneId;
+	rpl::variable<LocalProfileBadgeStyle> _localProfileBadgeStyle = LocalProfileBadgeStyle::Automatic;
+	rpl::variable<QString> _localProfileEmojiStatusId;
+	rpl::variable<QString> _localProfileBotVerificationId;
 	rpl::variable<bool> _localProfileChannelEnabled = false;
 	rpl::variable<QString> _localProfileChannel;
 	rpl::variable<QString> _localProfileChannelWorkspace;

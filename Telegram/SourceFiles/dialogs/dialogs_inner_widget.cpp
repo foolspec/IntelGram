@@ -1612,10 +1612,11 @@ void InnerWidget::paintPeerSearchResult(
 			Ui::NameTextOptions());
 	}
 
-	if (const auto info = peer->botVerifyDetails()) {
-		if (!result->badge.ready(info)) {
+	const auto verifyInfo = Ayu::LocalProfileBotVerifyDetails(peer);
+	if (verifyInfo) {
+		if (!result->badge.ready(&verifyInfo)) {
 			result->badge.set(
-				info,
+				&verifyInfo,
 				peer->owner().customEmojiManager().factory(),
 				[=] { updateSearchResult(peer); });
 		}

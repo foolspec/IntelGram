@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "info/profile/info_profile_values.h"
 
+#include "ayu/ayu_settings.h"
 #include "ayu/ui/utils/ayu_profile_values.h"
 #include "api/api_chat_participants.h"
 #include "apiwrap.h"
@@ -694,11 +695,40 @@ rpl::producer<BadgeType> BadgeValueForPeer(not_null<PeerData*> peer) {
 	return rpl::single(BadgeType::None);
 }
 
+[[nodiscard]] BadgeType BadgeValueFromLocalStyle(
+		LocalProfileBadgeStyle style) {
+	switch (style) {
+	case LocalProfileBadgeStyle::Premium:
+		return BadgeType::Premium;
+	case LocalProfileBadgeStyle::Verified:
+		return BadgeType::Verified;
+	case LocalProfileBadgeStyle::Scam:
+		return BadgeType::Scam;
+	case LocalProfileBadgeStyle::Fake:
+		return BadgeType::Fake;
+	case LocalProfileBadgeStyle::Direct:
+		return BadgeType::Direct;
+	case LocalProfileBadgeStyle::Automatic:
+	case LocalProfileBadgeStyle::None:
+		return BadgeType::None;
+	}
+	Unexpected("Local profile badge style.");
+}
+
 rpl::producer<BadgeType> BadgeValue(not_null<PeerData*> peer) {
 	if (!peer->isSelf()) {
 		return BadgeValueForPeer(peer);
 	}
-	return Ayu::LocalProfileCloneIdValue(peer) | rpl::map([=](const QString &) {
+	auto &settings = AyuSettings::getInstance();
+	return rpl::combine(
+		settings.localProfileBadgeStyleValue(),
+		Ayu::LocalProfileCloneIdValue(peer)
+	) | rpl::map([=](
+			LocalProfileBadgeStyle style,
+			const QString &) -> rpl::producer<BadgeType> {
+		if (style != LocalProfileBadgeStyle::Automatic) {
+			return rpl::single(BadgeValueFromLocalStyle(style));
+		}
 		const auto clone = Ayu::LocalProfileCloneUser(peer);
 		return BadgeValueForPeer(clone ? clone : peer.get());
 	}) | rpl::flatten_latest();
@@ -708,12 +738,22 @@ rpl::producer<EmojiStatusId> EmojiStatusIdValue(not_null<PeerData*> peer) {
 	if (peer->isChat()) {
 		return rpl::single(EmojiStatusId());
 	}
-	return rpl::merge(
+	auto updates = rpl::merge(
 		peer->session().changes().peerFlagsValue(
 			peer,
 			Data::PeerUpdate::Flag::EmojiStatus) | rpl::to_empty,
 		Ayu::LocalProfileCloneIdValue(peer) | rpl::to_empty
-	) | rpl::map([=] { return Ayu::LocalProfileEmojiStatusId(peer); });
+	);
+	if (peer->isSelf()) {
+		auto &settings = AyuSettings::getInstance();
+		updates = rpl::merge(
+			std::move(updates),
+			settings.localProfileBadgeStyleValue() | rpl::to_empty,
+			settings.localProfileEmojiStatusIdValue() | rpl::to_empty);
+	}
+	return std::move(updates) | rpl::map([=] {
+		return Ayu::LocalProfileEmojiStatusId(peer);
+	}) | rpl::distinct_until_changed();
 }
 
 rpl::producer<QString> BirthdayLabelText(

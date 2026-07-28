@@ -22,6 +22,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 // AyuGram includes
 #include "ayu/ayu_settings.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "ayu/utils/telegram_helpers.h"
 #include "styles/style_info.h"
 
@@ -158,20 +159,43 @@ int PeerBadge::drawGetWidth(Painter &p, Descriptor &&descriptor) {
 	const auto &settings = AyuSettings::getInstance();
 	const auto hidePremiumStatuses = settings.hidePremiumStatuses();
 
-	const auto peer = descriptor.peer;
-	if ((descriptor.scam && (peer->isScam() || peer->isFake()))
-		|| (descriptor.direct && peer->isMonoforum())) {
+	const auto original = descriptor.peer;
+	const auto localStyle = Ayu::LocalProfileBadgeStyleFor(original);
+	const auto manual = original->isSelf()
+		&& (localStyle != LocalProfileBadgeStyle::Automatic);
+	const auto clone = !manual
+		? Ayu::LocalProfileCloneUser(original)
+		: nullptr;
+	const auto peer = clone ? clone : original.get();
+	const auto scam = manual
+		? (localStyle == LocalProfileBadgeStyle::Scam)
+		: peer->isScam();
+	const auto fake = manual
+		? (localStyle == LocalProfileBadgeStyle::Fake)
+		: peer->isFake();
+	const auto direct = manual
+		? (localStyle == LocalProfileBadgeStyle::Direct)
+		: peer->isMonoforum();
+	if ((descriptor.scam && (scam || fake))
+		|| (descriptor.direct && direct)) {
 		return drawTextBadge(p, descriptor);
 	}
-	const auto verifyCheck = descriptor.verified && peer->isVerified();
+	const auto verified = manual
+		? (localStyle == LocalProfileBadgeStyle::Verified)
+		: peer->isVerified();
+	const auto emojiStatusId = Ayu::LocalProfileEmojiStatusId(original);
+	const auto premium = manual
+		? (localStyle == LocalProfileBadgeStyle::Premium)
+		: peer->isPremium();
+	const auto verifyCheck = descriptor.verified && verified;
 	const auto premiumMark = descriptor.premium
 		&& peer->session().premiumBadgesShown();
 	const auto emojiStatus = premiumMark
-		&& peer->emojiStatusId()
-		&& (peer->isPremium() || peer->isChannel());
+		&& emojiStatusId
+		&& (premium || peer->isChannel());
 	const auto premiumStar = premiumMark
 		&& !emojiStatus
-		&& peer->isPremium();
+		&& premium;
 
 	const auto paintVerify = verifyCheck
 		&& (descriptor.prioritizeVerification
@@ -279,9 +303,21 @@ int PeerBadge::drawGetWidth(Painter &p, Descriptor &&descriptor) {
 
 int PeerBadge::drawTextBadge(Painter &p, const Descriptor &descriptor) {
 	const auto type = [&] {
-		if (descriptor.peer->isScam()) {
+		const auto original = descriptor.peer;
+		const auto localStyle = Ayu::LocalProfileBadgeStyleFor(original);
+		if (original->isSelf()
+			&& localStyle != LocalProfileBadgeStyle::Automatic) {
+			return (localStyle == LocalProfileBadgeStyle::Scam)
+				? TextBadgeType::Scam
+				: (localStyle == LocalProfileBadgeStyle::Fake)
+				? TextBadgeType::Fake
+				: TextBadgeType::Direct;
+		}
+		const auto clone = Ayu::LocalProfileCloneUser(original);
+		const auto peer = clone ? clone : original.get();
+		if (peer->isScam()) {
 			return TextBadgeType::Scam;
-		} else if (descriptor.peer->isFake()) {
+		} else if (peer->isFake()) {
 			return TextBadgeType::Fake;
 		}
 		return TextBadgeType::Direct;
@@ -331,7 +367,7 @@ int PeerBadge::drawPremiumEmojiStatus(
 		Painter &p,
 		const Descriptor &descriptor) {
 	const auto peer = descriptor.peer;
-	const auto id = peer->emojiStatusId();
+	const auto id = Ayu::LocalProfileEmojiStatusId(peer);
 	const auto rectForName = descriptor.rectForName;
 	const auto iconw = descriptor.premium->width() + st::infoVerifiedCheckPosition.x();
 	const auto iconx = rectForName.x()

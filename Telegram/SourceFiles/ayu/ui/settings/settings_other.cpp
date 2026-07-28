@@ -35,6 +35,7 @@
 #include "ui/text/text_utilities.h"
 #include "ui/widgets/fields/input_field.h"
 #include "ui/widgets/buttons.h"
+#include "ui/widgets/checkbox.h"
 #include "ui/wrap/vertical_layout.h"
 #include "ui/vertical_list.h"
 #include "window/themes/window_theme.h"
@@ -708,6 +709,78 @@ void ShowLocalProfileCloneBox(
 	}));
 }
 
+void ShowLocalProfileBadgesBox(
+		not_null<Window::SessionController*> controller) {
+	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
+		using Style = LocalProfileBadgeStyle;
+
+		box->setTitle(tr::ayu_LocalProfileBadgesTitle());
+		auto &settings = AyuSettings::getInstance();
+		const auto group = std::make_shared<Ui::RadioenumGroup<Style>>(
+			settings.localProfileBadgeStyle());
+		const auto addOption = [&](Style style, const QString &label) {
+			box->addRow(
+				object_ptr<Ui::Radioenum<Style>>(
+					box,
+					group,
+					style,
+					label),
+				st::boxRowPadding);
+		};
+		addOption(
+			Style::Automatic,
+			tr::ayu_LocalProfileBadgesAutomatic(tr::now));
+		addOption(Style::None, tr::ayu_LocalProfileBadgesNone(tr::now));
+		addOption(
+			Style::Premium,
+			tr::ayu_LocalProfileBadgesPremium(tr::now));
+		addOption(
+			Style::Verified,
+			tr::ayu_LocalProfileBadgesVerified(tr::now));
+		addOption(Style::Scam, tr::ayu_LocalProfileBadgesScam(tr::now));
+		addOption(Style::Fake, tr::ayu_LocalProfileBadgesFake(tr::now));
+		addOption(
+			Style::Direct,
+			tr::ayu_LocalProfileBadgesDirect(tr::now));
+
+		const auto emojiStatus = box->addRow(
+			object_ptr<Ui::InputField>(
+				box,
+				st::defaultInputField,
+				tr::ayu_LocalProfileEmojiStatusId(),
+				settings.localProfileEmojiStatusId()),
+			st::boxRowPadding);
+		emojiStatus->setMaxLength(Ayu::kMaxLocalProfileIdLength);
+		const auto organizationBadge = box->addRow(
+			object_ptr<Ui::InputField>(
+				box,
+				st::defaultInputField,
+				tr::ayu_LocalProfileBotVerificationId(),
+				settings.localProfileBotVerificationId()),
+			st::boxRowPadding);
+		organizationBadge->setMaxLength(Ayu::kMaxLocalProfileIdLength);
+		AddDividerText(
+			box->verticalLayout(),
+			tr::ayu_LocalProfileBadgesDescription());
+
+		const auto save = [=] {
+			settings.setLocalProfileBadgeStyle(group->current());
+			settings.setLocalProfileEmojiStatusId(
+				emojiStatus->getLastText());
+			settings.setLocalProfileBotVerificationId(
+				organizationBadge->getLastText());
+			Ayu::RefreshLocalProfilePresentation(&controller->session());
+			controller->showToast(
+				tr::ayu_LocalProfileBadgesSaved(tr::now));
+			box->closeBox();
+		};
+		box->addButton(tr::lng_settings_save(), save);
+		box->addButton(tr::lng_cancel(), [=] {
+			box->closeBox();
+		});
+	}));
+}
+
 void ShowLocalProfileChannelBox(
 		not_null<Window::SessionController*> controller) {
 	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
@@ -819,6 +892,14 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 	builder.addDividerText(tr::ayu_LocalProfileCloneLocalOnly());
 	builder.addSkip();
 	builder.addSubsectionTitle(tr::ayu_LocalProfileIdentityHeader());
+	builder.addButton({
+		.id = u"ayu/localProfileBadges"_q,
+		.title = tr::ayu_LocalProfileBadges(),
+		.icon = { &st::menuIconPremium },
+		.onClick = [=] {
+			ShowLocalProfileBadgesBox(controller);
+		},
+	});
 
 	ayu.addSettingToggle({
 		.id = u"ayu/localProfileNameEnabled"_q,

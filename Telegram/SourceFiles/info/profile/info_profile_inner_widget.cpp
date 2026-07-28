@@ -7,6 +7,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 */
 #include "info/profile/info_profile_inner_widget.h"
 
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "info/info_controller.h"
 #include "info/info_memento.h"
 #include "info/profile/info_profile_widget.h"
@@ -65,7 +66,7 @@ void AddAboutVerification(
 		peer,
 		Data::PeerUpdate::Flag::VerifyInfo
 	) | rpl::on_next([=] {
-		const auto info = peer->botVerifyDetails();
+		const auto info = Ayu::LocalProfileBotVerifyDetails(peer);
 		while (inner->count()) {
 			delete inner->widgetAt(0);
 		}
@@ -78,8 +79,8 @@ void AddAboutVerification(
 					hasMainApp = user->botInfo->hasMainApp;
 				}
 			}
-			if (!hasMainApp && !info->description.empty()) {
-				Ui::AddDividerText(inner, rpl::single(info->description));
+			if (!hasMainApp && !info.description.empty()) {
+				Ui::AddDividerText(inner, rpl::single(info.description));
 			}
 		}
 		inner->resizeToWidth(inner->width());

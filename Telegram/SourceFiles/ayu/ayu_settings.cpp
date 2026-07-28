@@ -884,6 +884,26 @@ void AyuSettings::setLocalProfileCloneId(const QString &val) {
 	save();
 }
 
+void AyuSettings::setLocalProfileBadgeStyle(LocalProfileBadgeStyle val) {
+	if (_localProfileBadgeStyle.current() == val) return;
+	_localProfileBadgeStyle = val;
+	save();
+}
+
+void AyuSettings::setLocalProfileEmojiStatusId(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalProfileId(val);
+	if (_localProfileEmojiStatusId.current() == normalized) return;
+	_localProfileEmojiStatusId = normalized;
+	save();
+}
+
+void AyuSettings::setLocalProfileBotVerificationId(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalProfileId(val);
+	if (_localProfileBotVerificationId.current() == normalized) return;
+	_localProfileBotVerificationId = normalized;
+	save();
+}
+
 void AyuSettings::setLocalProfileChannelEnabled(bool val) {
 	if (_localProfileChannelEnabled.current() == val) return;
 	_localProfileChannelEnabled = val;
@@ -1362,6 +1382,9 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
 		{"localProfileAbout", s._localProfileAbout.current()},
 		{"localProfilePhoto", s._localProfilePhoto.current()},
 		{"localProfileCloneId", s._localProfileCloneId.current()},
+		{"localProfileBadgeStyle", s._localProfileBadgeStyle.current()},
+		{"localProfileEmojiStatusId", s._localProfileEmojiStatusId.current()},
+		{"localProfileBotVerificationId", s._localProfileBotVerificationId.current()},
 		{"localProfileChannelEnabled", s._localProfileChannelEnabled.current()},
 		{"localProfileChannel", s._localProfileChannel.current()},
 		{"localProfileChannelWorkspace", s._localProfileChannelWorkspace.current()},
@@ -1533,6 +1556,15 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
 	s._localProfileAbout = Ayu::NormalizeLocalProfileAbout(j.value("localProfileAbout", defaults._localProfileAbout.current()));
 	s._localProfilePhoto = Ayu::NormalizeLocalProfilePhoto(j.value("localProfilePhoto", defaults._localProfilePhoto.current()));
 	s._localProfileCloneId = Ayu::NormalizeLocalProfileCloneId(j.value("localProfileCloneId", defaults._localProfileCloneId.current()));
+	s._localProfileBadgeStyle = j.value(
+		"localProfileBadgeStyle",
+		defaults._localProfileBadgeStyle.current());
+	s._localProfileEmojiStatusId = Ayu::NormalizeLocalProfileId(j.value(
+		"localProfileEmojiStatusId",
+		defaults._localProfileEmojiStatusId.current()));
+	s._localProfileBotVerificationId = Ayu::NormalizeLocalProfileId(j.value(
+		"localProfileBotVerificationId",
+		defaults._localProfileBotVerificationId.current()));
 	s._localProfileChannelEnabled = j.value(
 		"localProfileChannelEnabled",
 		defaults._localProfileChannelEnabled.current());

@@ -27,6 +27,7 @@
 #include "rpl/combine.h"
 #include "ui/image/image.h"
 #include "ui/layers/generic_box.h"
+#include "ui/unread_badge.h"
 #include "ui/widgets/fields/special_fields.h"
 #include "ui/widgets/labels.h"
 #include "ui/vertical_list.h"
@@ -787,11 +788,39 @@ QString LocalProfileAbout(not_null<PeerData*> peer) {
 		settings.localProfileAbout());
 }
 
+LocalProfileBadgeStyle LocalProfileBadgeStyleFor(
+		not_null<PeerData*> peer) {
+	return peer->isSelf()
+		? AyuSettings::getInstance().localProfileBadgeStyle()
+		: LocalProfileBadgeStyle::Automatic;
+}
+
 EmojiStatusId LocalProfileEmojiStatusId(not_null<PeerData*> peer) {
+	const auto style = LocalProfileBadgeStyleFor(peer);
+	if (style != LocalProfileBadgeStyle::Automatic) {
+		const auto id = AyuSettings::getInstance(
+			).localProfileEmojiStatusId().toULongLong();
+		return EmojiStatusId{ DocumentId(id) };
+	}
 	if (const auto clone = ResolveLocalProfileCloneUser(peer)) {
 		return clone->emojiStatusId();
 	}
 	return peer->emojiStatusId();
+}
+
+Ui::BotVerifyDetails LocalProfileBotVerifyDetails(
+		not_null<PeerData*> peer) {
+	auto source = peer.get();
+	const auto style = LocalProfileBadgeStyleFor(peer);
+	if (style != LocalProfileBadgeStyle::Automatic) {
+		const auto id = AyuSettings::getInstance(
+			).localProfileBotVerificationId().toULongLong();
+		return { .iconId = DocumentId(id) };
+	} else if (const auto clone = ResolveLocalProfileCloneUser(peer)) {
+		source = clone;
+	}
+	const auto details = source->botVerifyDetails();
+	return details ? *details : Ui::BotVerifyDetails();
 }
 
 std::vector<QString> LocalProfileGiftReferences(not_null<PeerData*> peer) {
