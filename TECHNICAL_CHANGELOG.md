@@ -7,11 +7,11 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 ### Source Baseline And Patch
 
 - Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
-- Source commit: `fb6f3f7aec5be0375f9033471aec8996b969e920` on the recovered local implementation branch.
+- Source commit: `d1bd29ab32df76be8763ce9fd715acccff306d35` on the recovered local implementation branch.
 - Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
 - Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
-- Patch SHA-256: `a91aa6db95d219be7443fc4db3e07c68b0b7ba39648f438af2a2c2e51d3618f5`.
-- Patch footprint: 108 files, 12,957 insertions, and 649 deletions relative to the pinned source.
+- Patch SHA-256: `c34b0dcf79071fb6b7303ffc40e662a8f640f934e428a55a6704d08c911ae1d6`.
+- Patch footprint: 108 files, 12,958 insertions, and 649 deletions relative to the pinned source.
 - `Telegram/lib_ui` remains pinned to public fork commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
 
 ### Local Post Model
@@ -44,6 +44,7 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - Automatic mode resolves the selected clone user and mirrors Telegram's Premium, verified, SCAM, FAKE, DIRECT, emoji-status, and organization-verification state; missing clone state remains absent.
 - `Info::Profile::BadgeValue`, `EmojiStatusIdValue`, `Ui::PeerBadge`, profile verification content, dialog search rows, and chat top bars share the local badge helpers.
 - The settings page exposes one focused native radio-selector box and leaves Automatic selected by default.
+- The save callback reacquires the `AyuSettings` singleton inside the closure, avoiding a copy of the noncopyable settings object on Clang and preserving the same local-only persistence path on every platform.
 - The validator requires the badge settings, native render hooks, clone-aware helper, and local-only copy while continuing to reject all Telegram profile and emoji-status mutation methods.
 
 ## IntelGram v6.7.8 Native Local Channel Ownership - 2026-07-26

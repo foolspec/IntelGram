@@ -127,7 +127,7 @@ Liquid Glass uses a native behind-window material on macOS, the Windows DWM back
 ## Source And Verification
 
 - [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch) contains the complete IntelGram implementation.
-- Patch SHA-256: `a91aa6db95d219be7443fc4db3e07c68b0b7ba39648f438af2a2c2e51d3618f5`
+- Patch SHA-256: `c34b0dcf79071fb6b7303ffc40e662a8f640f934e428a55a6704d08c911ae1d6`
 - The patch pins [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui) commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`, which carries IntelGram's shared motion-preset hook and Liquid Bounce transition.
 - [`build_intelgram_branding.py`](build_intelgram_branding.py) applies the cross-platform IntelGram product identity.
 - [`validate_intelgram_patch.py`](validate_intelgram_patch.py) verifies the feature hooks, protected-content boundaries, and absence of custom Telegram mutation requests before each platform build.

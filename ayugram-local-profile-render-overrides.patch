@@ -8414,7 +8414,7 @@ index a4b1e7ad4..8b0f3d579 100644
  	builder.addSkip();
  }
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-index 929cf4609..9fa53e7ca 100644
+index 929cf4609..447abb13f 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 @@ -6,33 +6,48 @@
@@ -8478,7 +8478,7 @@ index 929cf4609..9fa53e7ca 100644
  
  namespace Settings {
  
-@@ -41,162 +56,1177 @@ using namespace AyuBuilder;
+@@ -41,162 +56,1178 @@ using namespace AyuBuilder;
  
  namespace {
  
@@ -9307,10 +9307,11 @@ index 929cf4609..9fa53e7ca 100644
 +			tr::ayu_LocalProfileBadgesDescription());
 +
 +		const auto save = [=] {
-+			settings.setLocalProfileBadgeStyle(group->current());
-+			settings.setLocalProfileEmojiStatusId(
++			auto &mutableSettings = AyuSettings::getInstance();
++			mutableSettings.setLocalProfileBadgeStyle(group->current());
++			mutableSettings.setLocalProfileEmojiStatusId(
 +				emojiStatus->getLastText());
-+			settings.setLocalProfileBotVerificationId(
++			mutableSettings.setLocalProfileBotVerificationId(
 +				organizationBadge->getLastText());
 +			Ayu::RefreshLocalProfilePresentation(&controller->session());
 +			controller->showToast(
@@ -9782,7 +9783,7 @@ index 929cf4609..9fa53e7ca 100644
  	builder.addButton({
  		.id = u"ayu/registerUrlScheme"_q,
  		.title = tr::ayu_RegisterURLScheme(),
-@@ -228,13 +1258,23 @@ void BuildOtherThings(SectionBuilder &builder) {
+@@ -228,13 +1259,23 @@ void BuildOtherThings(SectionBuilder &builder) {
  const auto kMeta = BuildHelper({
  	.id = AyuOther::Id(),
  	.parentId = AyuMain::Id(),
@@ -9809,7 +9810,7 @@ index 929cf4609..9fa53e7ca 100644
  	BuildCrashReporting(builder, ayu);
  	BuildOtherThings(builder);
  });
-@@ -242,7 +1282,7 @@ const auto kMeta = BuildHelper({
+@@ -242,7 +1283,7 @@ const auto kMeta = BuildHelper({
  } // namespace
  
  rpl::producer<QString> AyuOther::title() {
@@ -9818,7 +9819,7 @@ index 929cf4609..9fa53e7ca 100644
  }
  
  AyuOther::AyuOther(
-@@ -258,6 +1298,23 @@ void AyuOther::setupContent() {
+@@ -258,6 +1299,23 @@ void AyuOther::setupContent() {
  	Ui::ResizeFitChild(this, content);
  }
  
