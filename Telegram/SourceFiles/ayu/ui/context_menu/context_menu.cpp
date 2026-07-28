@@ -44,6 +44,7 @@
 #include "styles/style_layers.h"
 #include "styles/style_menu_icons.h"
 #include "ui/boxes/confirm_box.h"
+#include "ui/text/text_utilities.h"
 #include "ui/widgets/popup_menu.h"
 #include "ui/widgets/menu/menu_add_action_callback_factory.h"
 #include "window/window_peer_menu.h"

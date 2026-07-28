@@ -23,6 +23,7 @@
 #include "window/window_session_controller.h"
 
 #include "styles/style_boxes.h"
+#include "styles/style_info.h"
 #include "styles/style_layers.h"
 #include "styles/style_menu_icons.h"
 #include "styles/style_settings.h"
@@ -564,11 +565,11 @@ void ApplyMetrics(
 		item->updateReactions(nullptr);
 		return;
 	}
-	const auto reactions = MTP_messageReactions(
+	const auto reactions = MTPMessageReactions(MTP_messageReactions(
 		MTP_flags(MTPDmessageReactions::Flag(0)),
 		MTP_vector<MTPReactionCount>(results),
 		MTP_vector<MTPMessagePeerReaction>(),
-		MTP_vector<MTPMessageReactor>());
+		MTP_vector<MTPMessageReactor>()));
 	item->updateReactions(&reactions);
 }
 
