@@ -738,7 +738,7 @@ rpl::producer<EmojiStatusId> EmojiStatusIdValue(not_null<PeerData*> peer) {
 	if (peer->isChat()) {
 		return rpl::single(EmojiStatusId());
 	}
-	auto updates = rpl::merge(
+	rpl::producer<> updates = rpl::merge(
 		peer->session().changes().peerFlagsValue(
 			peer,
 			Data::PeerUpdate::Flag::EmojiStatus) | rpl::to_empty,
