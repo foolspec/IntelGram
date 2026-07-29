@@ -40,7 +40,7 @@ jobs:
           tag="$(jq -r '.tag_name' <<<"$release")"
           test "$(jq -r '.draft' <<<"$release")" = "false"
           test "$(jq -r '.prerelease' <<<"$release")" = "false"
-          test "$(jq -r '.name' <<<"$release")" = "IntelGram v6.7.8 - Native Local Ownership"
+          test "$(jq -r '.name' <<<"$release")" = "IntelGram v6.7.8 - Local Owner Controls And Profile Badges"
 
           required_assets=(
             IntelGram-macOS-Apple-Silicon.dmg

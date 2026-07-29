@@ -803,11 +803,11 @@ jobs:
           find release-assets -maxdepth 1 -type f -print -exec ls -lh {} \;
           mapfile -d '' RELEASE_ASSETS < <(find release-assets -maxdepth 1 -type f ! -empty -print0)
           test "${#RELEASE_ASSETS[@]}" -gt 0
-          TAG="intelgram-v6.7.8-native-local-ownership-${GITHUB_RUN_ID}"
+          TAG="intelgram-v6.7.8-local-owner-controls-badges-${GITHUB_RUN_ID}"
           gh release create "$TAG" \
             --repo "$GITHUB_REPOSITORY" \
             --target "$TARGET_SHA" \
             --latest \
-            --title "IntelGram v6.7.8 - Native Local Ownership" \
-            --notes "IntelGram adds per-channel Local ownership under the native three-dot IntelGram submenu. Enabled broadcast channels expose Telegram's Broadcast a message composer, owner-style Manage actions, and persistent local text broadcasts directly in the real timeline. Text is intercepted before Telegram's send API; media, files, voice, stickers, inline results, forwards, and scheduled posts are blocked before upload. No creator/admin rights, membership, channel information, or Telegram messages are changed. This build also retains the local showcase workspace, layered Liquid Glass renderer, five motion packs, local profile and collectible rendering, vault, timelines, automation, export, Frozen Account Backup, native themes, and protected-content boundaries." \
+            --title "IntelGram v6.7.8 - Local Owner Controls And Profile Badges" \
+            --notes "IntelGram adds automatic and manually selectable native local profile badges across profile, dialog, search, and chat-header surfaces, plus per-channel Local ownership under the native three-dot IntelGram submenu. Enabled broadcast channels expose Telegram's Broadcast a message composer, owner-style Manage actions, and persistent local text broadcasts directly in the real timeline. All badge, profile, channel-ownership, broadcast, view, reaction, and Stars presentation remains client-only; no Telegram profile, creator/admin rights, membership, channel information, or Telegram messages are changed." \
             "${RELEASE_ASSETS[@]}"
