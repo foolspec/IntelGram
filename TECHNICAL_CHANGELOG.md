@@ -7,10 +7,10 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 ### Source Baseline And Patch
 
 - Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
-- Source commit: `d1bd29ab32df76be8763ce9fd715acccff306d35` on the recovered local implementation branch.
+- Source commit: `01006e88b37f009e3badd1ad2420dc5151bad3e0` on the recovered local implementation branch.
 - Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
 - Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
-- Patch SHA-256: `c34b0dcf79071fb6b7303ffc40e662a8f640f934e428a55a6704d08c911ae1d6`.
+- Patch SHA-256: `46e557340e747b05c359ae2a859734576e1744637834dc30fc1cf88ca3100455`.
 - Patch footprint: 108 files, 12,958 insertions, and 649 deletions relative to the pinned source.
 - `Telegram/lib_ui` remains pinned to public fork commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
 
@@ -45,6 +45,8 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - `Info::Profile::BadgeValue`, `EmojiStatusIdValue`, `Ui::PeerBadge`, profile verification content, dialog search rows, and chat top bars share the local badge helpers.
 - The settings page exposes one focused native radio-selector box and leaves Automatic selected by default.
 - The save callback reacquires the `AyuSettings` singleton inside the closure, avoiding a copy of the noncopyable settings object on Clang and preserving the same local-only persistence path on every platform.
+- The emoji-status update stream uses an explicit type-erased `rpl::producer<>`, allowing clone, primary-badge, and document-ID producers to merge on both Clang and GCC.
+- The Windows application build serializes compiler processes so generated Qt resource translation units do not exhaust MSVC heap while retaining the same optimized Release configuration.
 - The validator requires the badge settings, native render hooks, clone-aware helper, and local-only copy while continuing to reject all Telegram profile and emoji-status mutation methods.
 
 ## IntelGram v6.7.8 Native Local Channel Ownership - 2026-07-26

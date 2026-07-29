@@ -16369,7 +16369,7 @@ index deaedd9f0..a404cd001 100644
  	std::unique_ptr<Ui::Animations::Simple> _giftsHiding;
  	rpl::lifetime _giftsLoadingLifetime;
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_values.cpp b/Telegram/SourceFiles/info/profile/info_profile_values.cpp
-index 19c194b8b..99ffb163c 100644
+index 19c194b8b..c5a8d06c8 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_values.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_values.cpp
 @@ -7,6 +7,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -16543,7 +16543,7 @@ index 19c194b8b..99ffb163c 100644
 -		peer,
 -		Data::PeerUpdate::Flag::EmojiStatus
 -	) | rpl::map([=] { return peer->emojiStatusId(); });
-+	auto updates = rpl::merge(
++	rpl::producer<> updates = rpl::merge(
 +		peer->session().changes().peerFlagsValue(
 +			peer,
 +			Data::PeerUpdate::Flag::EmojiStatus) | rpl::to_empty,

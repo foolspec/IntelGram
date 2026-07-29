@@ -60,7 +60,7 @@ permissions:
 
 env:
   SOURCE_TAG: v6.7.8
-  PATCH_SHA256: c34b0dcf79071fb6b7303ffc40e662a8f640f934e428a55a6704d08c911ae1d6
+  PATCH_SHA256: 46e557340e747b05c359ae2a859734576e1744637834dc30fc1cf88ca3100455
   LIB_UI_COMMIT: b9a30917daf2bd8fdc17ccd9682acca178882b7b
   LIB_UI_REF: codex/intelgram-liquid-bounce-20260726
 
@@ -586,7 +586,7 @@ jobs:
         working-directory: tdesktop\Telegram
         run: |
           call configure.bat x64 -D TDESKTOP_API_ID=2040 -D TDESKTOP_API_HASH=b18441a1ff607e10a989891a5462e627 -D CMAKE_MSVC_DEBUG_INFORMATION_FORMAT:STRING=
-          cmake --build ..\out --config Release --target Telegram --parallel 3
+          cmake --build ..\out --config Release --target Telegram --parallel 1
 
       - name: Verify, launch, and package
         shell: pwsh

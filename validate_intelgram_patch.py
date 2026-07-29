@@ -309,6 +309,7 @@ def main() -> None:
         ),
         "Telegram/SourceFiles/info/profile/info_profile_values.cpp": (
             "BadgeValueFromLocalStyle(",
+            "rpl::producer<> updates = rpl::merge(",
             "settings.localProfileBadgeStyleValue()",
             "Ayu::LocalProfileCloneUser(peer)",
             "Ayu::LocalProfileEmojiStatusId(peer)",
