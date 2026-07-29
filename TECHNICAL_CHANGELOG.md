@@ -46,7 +46,7 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - The settings page exposes one focused native radio-selector box and leaves Automatic selected by default.
 - The save callback reacquires the `AyuSettings` singleton inside the closure, avoiding a copy of the noncopyable settings object on Clang and preserving the same local-only persistence path on every platform.
 - The emoji-status update stream uses an explicit type-erased `rpl::producer<>`, allowing clone, primary-badge, and document-ID producers to merge on both Clang and GCC.
-- The Windows application build serializes compiler processes so generated Qt resource translation units do not exhaust MSVC heap while retaining the same optimized Release configuration.
+- The Windows application build sets both CMake project parallelism and the pinned MSVC `/MP` compiler fanout to one, so generated Qt resource translation units do not exhaust compiler heap while retaining the same optimized Release configuration.
 - The validator requires the badge settings, native render hooks, clone-aware helper, and local-only copy while continuing to reject all Telegram profile and emoji-status mutation methods.
 
 ## IntelGram v6.7.8 Native Local Channel Ownership - 2026-07-26

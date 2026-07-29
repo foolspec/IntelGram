@@ -482,7 +482,7 @@ jobs:
     runs-on: windows-2022
     timeout-minutes: 350
     env:
-      CMAKE_BUILD_PARALLEL_LEVEL: "3"
+      CMAKE_BUILD_PARALLEL_LEVEL: "1"
       WINDOWS_DEPENDENCY_RUN_ID: ${{ inputs.windows_dependency_run_id || github.run_id }}
       WINDOWS_DEPENDENCY_RUN_ATTEMPT: ${{ inputs.windows_dependency_run_id != '' && inputs.windows_dependency_run_attempt || github.run_attempt }}
     steps:
@@ -532,6 +532,18 @@ jobs:
         shell: pwsh
         run: |
           if (-not (Test-Path windows-dependencies-final.complete)) { throw "Final Windows dependency marker was not restored" }
+
+      - name: Limit MSVC compiler fanout
+        shell: pwsh
+        run: |
+          $optionsPath = "tdesktop/cmake/options_win.cmake"
+          $options = [IO.File]::ReadAllText($optionsPath)
+          $updated = $options.Replace(
+            "/MP     # Enable multi process build.",
+            "/MP1    # Limit compiler fanout for generated Qt resources.")
+          if ($updated -eq $options) { throw "Expected the pinned /MP compiler option" }
+          [IO.File]::WriteAllText($optionsPath, $updated, [Text.UTF8Encoding]::new($false))
+          Select-String -Path $optionsPath -SimpleMatch "/MP1"
 
       - name: Apply IntelGram changes
         shell: pwsh
