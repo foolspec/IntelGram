@@ -15,6 +15,13 @@ on:
       release_tag:
         description: New permanent release tag
         required: true
+      release_name:
+        description: Short feature title shown after the IntelGram version
+        required: true
+      release_version:
+        description: Optional product version such as v16; leave empty to use the next sequential version
+        required: false
+        default: ""
 
 permissions:
   actions: read
@@ -29,6 +36,8 @@ jobs:
       WINDOWS_RUN_ID: ${{ inputs.windows_run_id }}
       LINUX_RUN_ID: ${{ inputs.linux_run_id }}
       RELEASE_TAG: ${{ inputs.release_tag }}
+      RELEASE_NAME: ${{ inputs.release_name }}
+      REQUESTED_RELEASE_VERSION: ${{ inputs.release_version }}
     steps:
       - uses: actions/checkout@v4
 
@@ -64,6 +73,26 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euxo pipefail
+          if [[ -n "$REQUESTED_RELEASE_VERSION" ]]; then
+            RELEASE_NUMBER="${REQUESTED_RELEASE_VERSION#v}"
+          else
+            RELEASE_NUMBER="$(
+              gh api --paginate "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
+                --jq '.[].name' \
+                | sed -nE 's/^IntelGram v([0-9]+) - .+$/\1/p' \
+                | sort -n \
+                | tail -1
+            )"
+            RELEASE_NUMBER="$(( ${RELEASE_NUMBER:-0} + 1 ))"
+          fi
+          [[ "$RELEASE_NUMBER" =~ ^[1-9][0-9]*$ ]]
+          PRODUCT_VERSION="v$RELEASE_NUMBER"
+          if gh api --paginate "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
+              --jq '.[].name' \
+              | grep -Eq "^IntelGram ${PRODUCT_VERSION} - "; then
+            echo "IntelGram $PRODUCT_VERSION already exists." >&2
+            exit 1
+          fi
           cp intelgram-local-profile-render-overrides.patch release-assets/
           cp intelgram-local-profile-render-overrides.patch release-assets/ayugram-local-profile-render-overrides.patch
           cp build_intelgram_branding.py release-assets/
@@ -87,8 +116,8 @@ jobs:
           done
           mapfile -d '' RELEASE_ASSETS < <(find release-assets -maxdepth 1 -type f ! -empty -print0)
           test "${#RELEASE_ASSETS[@]}" -gt 0
-          cat > release-notes.md <<'EOF'
-          ## IntelGram v6.7.8 Local Owner Controls And Profile Badges
+          printf '## IntelGram %s %s\n\n' "$PRODUCT_VERSION" "$RELEASE_NAME" > release-notes.md
+          cat >> release-notes.md <<'EOF'
 
           This release contains launch-tested IntelGram packages for macOS Apple Silicon, Windows x64, and Linux x64.
 
@@ -140,6 +169,6 @@ jobs:
             --repo "$GITHUB_REPOSITORY" \
             --target "$GITHUB_SHA" \
             --latest \
-            --title "IntelGram v6.7.8 - Local Owner Controls And Profile Badges" \
+            --title "IntelGram $PRODUCT_VERSION - $RELEASE_NAME" \
             --notes-file release-notes.md \
             "${RELEASE_ASSETS[@]}"

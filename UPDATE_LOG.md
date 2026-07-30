@@ -1,8 +1,9 @@
 # IntelGram Update Log
 
-## Current Update
+## Current Update: IntelGram v15
 
 - Base source: official AyuGram Desktop `v6.7.8` at `b25513a06ff88be0b3f4c928252b56c3da39cec7` with required submodules.
+- Product versioning: IntelGram releases advance sequentially from v1; the current product release is v15, while `v6.7.8` identifies only the upstream AyuGram source.
 - Product identity: IntelGram on macOS, Windows, and Linux with separate application identifiers.
 - Source delivery: one complete IntelGram patch plus deterministic branding and validation scripts.
 - Build delivery: GitHub Actions packages macOS Apple Silicon, Windows x64, and Linux x64.

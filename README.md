@@ -6,6 +6,8 @@ IntelGram is a cross-platform AyuGram Desktop build focused on local profile cus
 
 [All features](FEATURES.md) | [Feature guide](FEATURE_GUIDE.md) | [Changelog](CHANGELOG.md) | [Technical changelog](TECHNICAL_CHANGELOG.md) | [Update log](UPDATE_LOG.md)
 
+Current product release: **IntelGram v15 - Local Owner Controls And Profile Badges**. IntelGram versions count product updates sequentially from v1; AyuGram Desktop `v6.7.8` remains the upstream source version.
+
 ## Main Features
 
 - Search messages, media metadata, links, and filenames already received by IntelGram with an on-device full-text vault and a unified inbox across signed-in accounts.

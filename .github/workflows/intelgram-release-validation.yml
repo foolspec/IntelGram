@@ -38,9 +38,28 @@ jobs:
           set -euo pipefail
           release="$(gh api "repos/$GITHUB_REPOSITORY/releases/latest")"
           tag="$(jq -r '.tag_name' <<<"$release")"
+          name="$(jq -r '.name' <<<"$release")"
           test "$(jq -r '.draft' <<<"$release")" = "false"
           test "$(jq -r '.prerelease' <<<"$release")" = "false"
-          test "$(jq -r '.name' <<<"$release")" = "IntelGram v6.7.8 - Local Owner Controls And Profile Badges"
+          [[ "$name" =~ ^IntelGram\ v([1-9][0-9]*)\ -\ .+$ ]]
+          latest_number="${BASH_REMATCH[1]}"
+          grep -Eq "^## IntelGram v${latest_number}( |$)" <<<"$(jq -r '.body' <<<"$release")"
+
+          mapfile -t release_names < <(
+            gh api --paginate "repos/$GITHUB_REPOSITORY/releases?per_page=100" --jq '.[].name'
+          )
+          mapfile -t release_numbers < <(
+            printf '%s\n' "${release_names[@]}" \
+              | sed -nE 's/^IntelGram v([0-9]+) - .+$/\1/p' \
+              | sort -n
+          )
+          test "${#release_names[@]}" -eq "${#release_numbers[@]}"
+          expected=1
+          for number in "${release_numbers[@]}"; do
+            test "$number" -eq "$expected"
+            expected="$((expected + 1))"
+          done
+          test "$latest_number" -eq "$((expected - 1))"
 
           required_assets=(
             IntelGram-macOS-Apple-Silicon.dmg

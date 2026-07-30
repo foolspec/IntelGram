@@ -2,7 +2,29 @@
 
 All notable IntelGram custom-feature changes are recorded here.
 
-## IntelGram v6.7.8 Local Owner Controls And Profile Badges - 2026-07-27
+IntelGram uses sequential product versions beginning with v1. The retained `v6.7.8` references identify the pinned upstream AyuGram Desktop source or legacy build tags, not the IntelGram release number.
+
+## Release History
+
+| Version | Published | Update |
+| --- | --- | --- |
+| v15 | 2026-07-29 | Local Owner Controls And Profile Badges |
+| v14 | 2026-07-27 | Native Local Ownership |
+| v13 | 2026-07-26 | Local Channel Workspace |
+| v12 | 2026-07-26 | Liquid Glass |
+| v11 | 2026-07-26 | Glass & Motion |
+| v10 | 2026-07-25 | Appearance Refresh |
+| v9 | 2026-07-24 | Vault Suite |
+| v8 | 2026-07-21 | Owner Name Rendering |
+| v7 | 2026-07-20 | Profile Card Rendering |
+| v6 | 2026-07-19 | Collectible Gallery And Clone Fidelity |
+| v5 | 2026-07-19 | Update Log And Supporter Badge |
+| v4 | 2026-07-18 | Profile Cloning And Collectible Browser |
+| v3 | 2026-07-14 | Multiplatform Launch |
+| v2 | 2026-07-13 | Local Profile Build Refresh |
+| v1 | 2026-07-13 | Initial Local Profile |
+
+## IntelGram v15 Local Owner Controls And Profile Badges - 2026-07-29
 
 ### Added
 
@@ -28,7 +50,7 @@ All notable IntelGram custom-feature changes are recorded here.
 - Existing guards continue to block unsupported post types before upload or send paths.
 - Badge choices are IntelGram render settings; no Telegram account, username, emoji-status, or verification request is added.
 
-## IntelGram v6.7.8 Native Local Channel Ownership - 2026-07-26
+## IntelGram v14 Native Local Channel Ownership - 2026-07-27
 
 ### Added
 
@@ -51,7 +73,7 @@ All notable IntelGram custom-feature changes are recorded here.
 - Media, files, voice messages, stickers, inline results, forwards, and scheduled posts are blocked before upload or send paths.
 - No creator/admin flag, channel right, membership value, channel information, or Telegram message is changed.
 
-## IntelGram v6.7.8 Liquid Glass And Local Channels - 2026-07-26
+## IntelGram v13 Liquid Glass And Local Channels - 2026-07-26
 
 ### Added
 
@@ -80,7 +102,7 @@ All notable IntelGram custom-feature changes are recorded here.
 - **Springy:** a gentle settle without overshoot.
 - **Liquid Bounce:** the most elastic option, with a controlled overshoot.
 
-## IntelGram v6.7.8 Glass & Motion - 2026-07-25
+## IntelGram v11 Glass & Motion - 2026-07-26
 
 ### Added
 
@@ -106,7 +128,7 @@ All notable IntelGram custom-feature changes are recorded here.
 - Linux keeps the Qt ARGB surface transparent for the active desktop compositor.
 - Every platform can use a local image backdrop when native desktop blur is unavailable or undesired.
 
-## IntelGram v6.7.8 Appearance & Settings Refresh - 2026-07-24
+## IntelGram v10 Appearance & Settings Refresh - 2026-07-25
 
 ### Added
 
@@ -127,7 +149,7 @@ All notable IntelGram custom-feature changes are recorded here.
 - Removed the bundled Windows 93, Terminal, and AMOLED novelty packs in favor of Telegram's native visual and cloud theme catalogs.
 - Clarified that the background preference for imported themes controls only backgrounds bundled inside theme files.
 
-## IntelGram v6.7.8 Vault Suite - 2026-07-23
+## IntelGram v9 Vault Suite - 2026-07-24
 
 ### Added
 
@@ -158,7 +180,7 @@ All notable IntelGram custom-feature changes are recorded here.
 - Protected bodies, links, filenames, cached paths, revisions, rule payloads, and media never enter an export or backup.
 - IntelGram adds no restricted-content forwarding or saving bypass.
 
-## IntelGram v6.7.8 Local Profile Update - 2026-07-19
+## IntelGram v8 Local Profile Update - 2026-07-21
 
 ### Added
 
@@ -206,7 +228,7 @@ All notable IntelGram custom-feature changes are recorded here.
 - No contact import or address-book lookup was added.
 - Collectible catalog, item, and TON metadata resolution remains read-only.
 
-## Initial IntelGram Local Profile Release
+## IntelGram v1 Initial Local Profile Release - 2026-07-13
 
 ### Added
 

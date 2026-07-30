@@ -2,7 +2,9 @@
 
 This file records implementation-level changes to IntelGram's custom layer. Product-facing changes are summarized in [`CHANGELOG.md`](CHANGELOG.md).
 
-## IntelGram v6.7.8 Local Owner Controls And Profile Badges - 2026-07-27
+IntelGram product versions advance sequentially from v1. AyuGram Desktop `v6.7.8` is retained below only as upstream source provenance or inside legacy build tags.
+
+## IntelGram v15 Local Owner Controls And Profile Badges - 2026-07-29
 
 ### Source Baseline And Patch
 
@@ -49,7 +51,7 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - The Windows application build sets both CMake project parallelism and the pinned MSVC `/MP` compiler fanout to one, so generated Qt resource translation units do not exhaust compiler heap while retaining the same optimized Release configuration.
 - The validator requires the badge settings, native render hooks, clone-aware helper, and local-only copy while continuing to reject all Telegram profile and emoji-status mutation methods.
 
-## IntelGram v6.7.8 Native Local Channel Ownership - 2026-07-26
+## IntelGram v14 Native Local Channel Ownership - 2026-07-27
 
 ### Source Baseline And Patch
 
@@ -83,7 +85,7 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - The complete patch applies and reverses cleanly against the pinned source, passes whitespace checks, and keeps both patch aliases byte-identical.
 - `validate_intelgram_patch.py` requires the local ownership storage, menu, history, composer, profile, and silent-toggle guards in addition to the existing IntelGram feature checks.
 
-## IntelGram v6.7.8 Liquid Glass And Local Channels - 2026-07-26
+## IntelGram v13 Liquid Glass And Local Channels - 2026-07-26
 
 ### Source Baseline And Patch
 
@@ -134,7 +136,7 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - Clean-source patch application, byte-identical alias, SHA-256, whitespace checks, localization-key uniqueness, exact submodule revision, platform compilation, launch smoke tests, and release-asset digest validation remain required before publication.
 - Replacement platform compilation, launch, and packaging passed in macOS run `30192805382`, Windows run `30192805379`, and Linux run `30192805452`. Publisher run `30196372286` uploaded all 19 permanent assets, and public-download audit run `30196394410` passed every digest, checksum, report, asset-presence, latest-release, and patch-hash check.
 
-## IntelGram v6.7.8 Glass And Motion - 2026-07-25
+## IntelGram v11 Glass And Motion - 2026-07-26
 
 ### Source Baseline And Patch
 
@@ -185,7 +187,7 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - Full compilation, packaging, isolated launch smoke tests, and public release-asset verification remain delegated to GitHub Actions under the upstream no-local-full-build instruction.
 - Release `intelgram-v6.7.8-glass-motion-20260725` combines successful macOS run `30178929833`, Windows run `30178932569`, and Linux run `30178931089`; every package records patch `a749b1673bc93f057f0da292680f2884fac956d64229554272b0bb2666995599` and a passed launch smoke test. Publisher run `30181760408` uploaded all 19 permanent assets, and public-asset validation run `30181808944` passed every digest, checksum, report, asset-presence, latest-release, and patch-hash check.
 
-## IntelGram v6.7.8 Appearance And Settings Refresh - 2026-07-24
+## IntelGram v10 Appearance And Settings Refresh - 2026-07-25
 
 ### Source Baseline And Patch
 
@@ -224,7 +226,7 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - Platform compilation, packaging, isolated launch tests, and public release-asset verification remain delegated to GitHub Actions in accordance with the upstream no-local-full-build instruction.
 - Release `intelgram-v6.7.8-appearance-refresh-20260724` combines successful macOS run `30125712722`, Windows run `30125939832`, and Linux run `30125506279`; every package records patch `7e08df09395bd170067a0495019f9dcef66e172dc6492bbba27c4cf1d70cbef6` and a passed isolated launch smoke test. Publisher run `30139305324` uploaded all 19 permanent assets, and public-asset validation run `30139540010` passed every digest, checksum, report, asset-presence, latest-release, and patch-hash check.
 
-## IntelGram v6.7.8 Vault Suite - 2026-07-23
+## IntelGram v9 Vault Suite - 2026-07-24
 
 ### Source Baseline And Patch
 
@@ -295,7 +297,7 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 - Completed macOS and Windows dependency-run IDs can be reused explicitly while their exact caches remain available; missing caches fail closed instead of silently building against a partial dependency tree.
 - The upstream `AGENTS.md` instruction to avoid a local full build is preserved; macOS, Windows, and Linux compiles and isolated launch tests run in GitHub Actions.
 
-## IntelGram v6.7.8 Local Profile Update - 2026-07-19
+## IntelGram v8 Local Profile Update - 2026-07-21
 
 ### Source Baseline And Patch
 
