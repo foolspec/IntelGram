@@ -4,6 +4,39 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 
 IntelGram product versions advance sequentially from v1. AyuGram Desktop `v6.7.8` is retained below only as upstream source provenance or inside legacy build tags.
 
+## IntelGram v16 Telegram Disguise Mode - 2026-07-31
+
+### Source Baseline And Patch
+
+- Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
+- Source commit: `ce0e795485ef1c0cc10ef08d4dc0c7992d7ff197` on the recovered local implementation branch.
+- Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
+- Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
+- Patch SHA-256: `46dffff5a872be6934bd2bffe9f0df3657f677f7a9ee66c6d293c93f2bd340e5`.
+- Patch footprint: 108 files, 13,005 insertions, and 654 deletions relative to the pinned source.
+- `Telegram/lib_ui` remains pinned to public fork commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
+
+### Runtime Identity Trigger
+
+- `Settings::BuildVersionInfo` derives the heading from `Ayu::DiscreetModeValue`, so the open Preferences surface changes between IntelGram Desktop and Telegram Desktop without restarting.
+- A lifetime-owned click state and `base::Timer` require three heading clicks inside a 650 ms window before calling `Ayu::SetDiscreetMode`.
+- A successful heading toggle navigates through `Settings::MainId`, immediately replacing the IntelGram Preferences surface with Telegram's standard Settings surface.
+- `Settings::BuildLogo` observes the same value and repaints from `AyuAssets::currentAppLogoPad`, showing the Telegram application artwork as soon as disguise mode is enabled.
+- The existing drawer-footer trigger remains available in both identities and provides the restore path after IntelGram Preferences is hidden.
+
+### Existing Presentation Coverage
+
+- `Ayu::SetDiscreetMode` persists the local preference, updates `QGuiApplication` display identity, refreshes application and tray icons, and rebuilds the macOS global menu.
+- Existing guards continue to switch the main-window title, drawer footer, About surface, login branding, tray labels, platform menus, and application icon while hiding the IntelGram Preferences entry.
+- Local profile, clone, collectible, badge, channel showcase, and local ownership settings are untouched and remain client-render-only.
+- The bundled in-app Update Log now documents the enter and restore gestures.
+
+### Validation
+
+- The complete patch applies and reverses cleanly against the pinned source, passes whitespace checks, and keeps both patch aliases byte-identical.
+- The validator and every platform pre-build check require the reactive heading, three-click timer, Telegram logo repaint, settings navigation, and existing drawer restore trigger.
+- No full local build is run; macOS, Windows, and Linux compilation, packaging, and launch testing remain delegated to the release workflows as required by the upstream repository instructions.
+
 ## IntelGram v15 Local Owner Controls And Profile Badges - 2026-07-29
 
 ### Source Baseline And Patch

@@ -8,6 +8,7 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 
 | Version | Published | Update |
 | --- | --- | --- |
+| v16 | 2026-07-31 | Telegram Disguise Mode |
 | v15 | 2026-07-29 | Local Owner Controls And Profile Badges |
 | v14 | 2026-07-27 | Native Local Ownership |
 | v13 | 2026-07-26 | Local Channel Workspace |
@@ -23,6 +24,26 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 | v3 | 2026-07-14 | Multiplatform Launch |
 | v2 | 2026-07-13 | Local Profile Build Refresh |
 | v1 | 2026-07-13 | Initial Local Profile |
+
+## IntelGram v16 Telegram Disguise Mode - 2026-07-31
+
+### Added
+
+- A hidden three-click trigger on the large **IntelGram Desktop v...** heading in IntelGram Preferences.
+- A live Telegram Desktop heading and Telegram logo preview when the mode activates.
+- An in-app Update Log entry explaining how to enter and leave the mode.
+
+### Changed
+
+- Enabling disguise mode from Preferences now returns directly to Telegram's normal Settings screen so IntelGram-only labels are not left visible.
+- The existing three-click **Telegram Desktop** drawer-footer gesture remains the restore path.
+- The selected identity persists across restarts and refreshes the app name, window title, Dock or taskbar icon, tray icon, menus, About surface, and drawer branding.
+- Local profile, collectible, badge, and channel presentation remains active while the IntelGram product identity is hidden.
+
+### Local-Only Boundary
+
+- Disguise mode changes only this installation's product presentation and stored IntelGram preference.
+- It sends no Telegram account, profile, icon, session, or application-identity request.
 
 ## IntelGram v15 Local Owner Controls And Profile Badges - 2026-07-29
 

@@ -992,7 +992,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/Telegram/Resources/langs/lang.strings b/Telegram/Resources/langs/lang.strings
-index 7380587e7..81b8600d5 100644
+index 7380587e7..a61d70d0b 100644
 --- a/Telegram/Resources/langs/lang.strings
 +++ b/Telegram/Resources/langs/lang.strings
 @@ -7971,14 +7971,60 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -1076,7 +1076,7 @@ index 7380587e7..81b8600d5 100644
  "ayu_HidePremiumStatuses" = "Hide Premium Statuses";
  "ayu_SmoothScroll" = "Smooth Scroll";
  "ayu_DisableNotificationsDelay" = "Disable Notify Delay";
-@@ -8056,6 +8103,23 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8056,6 +8103,24 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_LinksChats" = "Chats";
  "ayu_LinksTranslate" = "Translate";
  "ayu_LinksDocumentation" = "Documentation";
@@ -1090,6 +1090,7 @@ index 7380587e7..81b8600d5 100644
 +"ayu_IntelGramUpdateLogLabel" = "Open in IntelGram";
 +"ayu_IntelGramUpdateLogTitle" = "IntelGram update log";
 +"ayu_IntelGramUpdateLogCurrentTitle" = "Latest update";
++"ayu_IntelGramUpdateLogDisguise" = "**Telegram disguise mode**\n- Triple-click the IntelGram Desktop version heading in IntelGram Preferences to switch the visible app name, logo, Dock or taskbar icon, tray icon, window title, menus, About surface, and drawer branding to Telegram Desktop.\n- The app immediately returns to Telegram's normal Settings screen so IntelGram-only labels are no longer visible.\n- Local profile, collectible, badge, and local channel presentation remains enabled because the switch changes only this client's visible product identity.\n- To restore IntelGram, open the main drawer and triple-click the Telegram Desktop footer.\n- The choice is saved locally and never changes your Telegram account or sends a request.";
 +"ayu_IntelGramUpdateLogCurrent" = "**Native local channel ownership**\n- Open a broadcast channel's three-dot menu, choose IntelGram, then Local ownership.\n- The existing channel view gains Telegram's native Broadcast a message composer, owner-style Manage actions, and persistent local text broadcasts inside the real timeline.\n- Right-click a local broadcast for Telegram's reaction strip plus Reply, Edit, Pin or Unpin, Copy Text, Copy Post Link, Forward, Delete, and Select.\n- Local replies, edits, pins, reactions, Stars, and links persist. Broadcast engagement controls starting and maximum views, increment size, interval, six baseline reactions, and paid Stars.\n- Views and reaction clicks update only this client. Forward creates a text handoff; no synthetic message ID, reaction, payment, pin, edit, delete, or post is sent to Telegram.\n- Local ownership hides contradictory Join, Leave, and Report rows while active and can be disabled independently for every channel.\n- Media, voice, stickers, inline results, scheduled posts, and files remain blocked so nothing can upload to Telegram.\n\n**Liquid Glass & Motion**\n- Liquid Glass layers adaptive tint and contrast, wallpaper-aware diffusion, cursor-reactive specular light, refractive edges, internal reflections, and subtle film grain over native desktop blur.\n- Material animation follows the active display refresh rate up to 120 Hz and pauses while IntelGram is hidden, inactive, or respecting reduced-motion and power-saving settings.\n- Control sidebar, chat, menu, dialog, and panel transparency separately; choose a private local backdrop and tune image opacity, blur, tint, surface opacity, and optical intensity without fading text, icons, avatars, or media.\n- Quick Snap is compact and immediate. Smooth Flow is calm and critically damped. Diabolical is brisk with stronger depth. Springy settles gently. The optional Liquid Bounce pack adds the most elastic lift and a controlled overshoot.\n- The profile username editor matches Telegram's native title, @username field, validation row, help text, and button layout while saving only IntelGram's local render value.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
 +"ayu_IntelGramUpdateLogFeaturesTitle" = "Main IntelGram features";
 +"ayu_IntelGramUpdateLogFeatures" = "**Local profile, channels, and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, personal channel rendering, and public-channel showcase rendering.\n- Automatic clone mirroring and manual local controls cover Premium, verified, SCAM, FAKE, DIRECT, emoji status, and organization verification badges.\n- Per-channel local ownership with native owner-style controls and persistent text broadcasts rendered inside the selected channel's real timeline.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity and customization**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native themes, cloud theme browsing, chat wallpapers, adaptive Liquid Glass, native blur, five motion packs, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
@@ -1100,7 +1101,7 @@ index 7380587e7..81b8600d5 100644
  "ayu_CategoriesHeader" = "Categories";
  "ayu_SupportHeader" = "Support";
  "ayu_SupportDescription1" = "Support Development";
-@@ -8070,8 +8134,145 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8070,8 +8135,145 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SupportBoxReceiveBadgeInfo" = "After payment verification, you will receive a unique badge that will be displayed on your profile and visible to other users.";
  "ayu_CrashReporting" = "Crash Reporting";
  "ayu_CrashReportingDescription" = "When this option is enabled, you'll be prompted to send a report after the app crashes. You can decide whether to send it or not.";
@@ -1247,7 +1248,7 @@ index 7380587e7..81b8600d5 100644
  "ayu_DisableColorfulCover" = "Disable adaptive color";
  "ayu_EnableColorfulCover" = "Enable adaptive color";
  "ayu_CustomizationHeader" = "Customization";
-@@ -8130,14 +8331,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8130,14 +8332,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SettingsBiggerWindow" = "Bigger Window";
  "ayu_SettingsIncreaseWebviewHeight" = "Increase Content Height";
  "ayu_SettingsIncreaseWebviewWidth" = "Increase Content Width";
@@ -1264,7 +1265,7 @@ index 7380587e7..81b8600d5 100644
  "ayu_ImportDataDescription" = "It will replace the current database.";
  "ayu_ImportDataConfirm" = "Yes, replace existing";
  "ayu_ImportDataCancel" = "No, close window";
-@@ -8204,7 +8405,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8204,7 +8406,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_FiltersClearPopupAltActionText" = "Clear unknown";
  "ayu_AppIconHeader" = "App Icon";
  "ayu_IconDefault" = "Default";
@@ -1273,7 +1274,7 @@ index 7380587e7..81b8600d5 100644
  "ayu_IconDiscord" = "Discord";
  "ayu_IconSpotify" = "Spotify";
  "ayu_IconExtera" = "extera";
-@@ -8214,8 +8415,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8214,8 +8416,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_IconAyuTyan" = "AyuTyan";
  "ayu_WALMode" = "Enable WAL mode";
  "ayu_PushNotificationCount" = "FCM notifications received";
@@ -1284,7 +1285,7 @@ index 7380587e7..81b8600d5 100644
  "ayu_TelegramCacheDatabase" = "Telegram Messages Database";
  "ayu_ConfirmationsTitle" = "Confirmations";
  "ayu_StickerConfirmation" = "For Stickers";
-@@ -8288,9 +8489,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8288,9 +8490,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SuggestGhostModeStoryText" = "Do you want to enable **Ghost Mode** before viewing the story?";
  "ayu_SuggestGhostModeStoryActionTextYes" = "Yes";
  "ayu_SuggestGhostModeStoryActionTextNo" = "No";
@@ -1296,7 +1297,7 @@ index 7380587e7..81b8600d5 100644
  "ayu_HideNextViewsDescriptionAyu" = "Hide my views forever, until Ghost Mode is disabled.";
  "ayu_EnableGhostModeStories" = "Enable Ghost Mode";
  "ayu_GhostModeIsActive" = "Ghost Mode is Active";
-@@ -8355,28 +8556,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8355,28 +8557,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_ContextCopyID" = "Copy ID";
  "ayu_IDCopiedToast" = "ID copied to clipboard.";
  "ayu_ContextHideMessage" = "Hide";
@@ -8131,10 +8132,10 @@ index 869861bba..7395a80ec 100644
  
  [[nodiscard]] Type AyuAppearanceId();
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
-index a4b1e7ad4..8b0f3d579 100644
+index a4b1e7ad4..49c439f1e 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
-@@ -6,31 +6,39 @@
+@@ -6,31 +6,41 @@
  // Copyright @Radolyn, 2026
  #include "ayu/ui/settings/settings_main.h"
  
@@ -8151,7 +8152,9 @@ index a4b1e7ad4..8b0f3d579 100644
 +#include "ayu/ui/settings/settings_vault.h"
 +#include "ayu/ui/settings/settings_visual_effects.h"
 +#include "ayu/ui/ayu_logo.h"
++#include "ayu/ui/discreet_mode.h"
 +#include "ayu/ayu_settings.h"
++#include "base/timer.h"
 +#include "boxes/abstract_box.h"
  #include "core/version.h"
 +#include "lang/lang_text_entity.h"
@@ -8183,16 +8186,76 @@ index a4b1e7ad4..8b0f3d579 100644
  
  namespace Settings {
  
-@@ -70,7 +78,7 @@ void BuildVersionInfo(SectionBuilder &builder) {
- 			.widget = object_ptr<Ui::FlatLabel>(
- 				ctx.container,
- 				rpl::single(
+@@ -38,6 +48,13 @@ using namespace Builder;
+ 
+ namespace {
+ 
++constexpr auto kDiscreetModeClickTimeout = crl::time(650);
++
++struct DiscreetModeClickState {
++	base::Timer timer;
++	int clicks = 0;
++};
++
+ void BuildLogo(SectionBuilder &builder) {
+ 	builder.add([](const WidgetContext &ctx) -> SectionBuilder::WidgetToAdd {
+ 		auto logo = object_ptr<Ui::RpWidget>(ctx.container);
+@@ -60,19 +77,48 @@ void BuildLogo(SectionBuilder &builder) {
+ 				p.drawImage(QRect(0, 0, size, size), scaled);
+ 			}
+ 		}, logoRaw->lifetime());
++		Ayu::DiscreetModeValue(
++		) | rpl::on_next([=] {
++			logoRaw->update();
++		}, logoRaw->lifetime());
+ 		return { .widget = std::move(logo), .align = style::al_top };
+ 	});
+ }
+ 
+ void BuildVersionInfo(SectionBuilder &builder) {
+ 	builder.add([](const WidgetContext &ctx) -> SectionBuilder::WidgetToAdd {
++		auto label = object_ptr<Ui::FlatLabel>(
++			ctx.container,
++			Ayu::DiscreetModeValue(
++			) | rpl::map([](bool discreet) {
++				return tr::link(
++					QString(discreet
++						? "Telegram Desktop v"
++						: "IntelGram Desktop v")
++						+ QString::fromLatin1(AppVersionStr),
++					1);
++			}),
++			st::boxTitle);
++		const auto labelRaw = label.data();
++		const auto showOther = ctx.showOther;
++		const auto state = labelRaw->lifetime(
++		).make_state<DiscreetModeClickState>();
++		state->timer.setCallback([=] {
++			state->clicks = 0;
++		});
++		labelRaw->overrideLinkClickHandler([=] {
++			++state->clicks;
++			if (state->clicks < 3) {
++				state->timer.callOnce(kDiscreetModeClickTimeout);
++				return;
++			}
++			state->timer.cancel();
++			state->clicks = 0;
++			Ayu::SetDiscreetMode(!Ayu::DiscreetModeEnabled());
++			showOther(MainId());
++		});
+ 		return {
+-			.widget = object_ptr<Ui::FlatLabel>(
+-				ctx.container,
+-				rpl::single(
 -					QString("AyuGram Desktop v")
-+					QString("IntelGram Desktop v")
- 					+ QString::fromLatin1(AppVersionStr)),
- 				st::boxTitle),
+-					+ QString::fromLatin1(AppVersionStr)),
+-				st::boxTitle),
++			.widget = std::move(label),
  			.align = style::al_top,
-@@ -98,27 +106,57 @@ void BuildCategories(SectionBuilder &builder) {
+ 		};
+ 	});
+@@ -98,27 +144,57 @@ void BuildCategories(SectionBuilder &builder) {
  	builder.addDivider();
  	builder.addSkip();
  
@@ -8263,7 +8326,7 @@ index a4b1e7ad4..8b0f3d579 100644
  	});
  	builder.addSectionButton({
  		.title = tr::ayu_CategoryChats(),
-@@ -126,10 +164,60 @@ void BuildCategories(SectionBuilder &builder) {
+@@ -126,63 +202,125 @@ void BuildCategories(SectionBuilder &builder) {
  		.icon = { &st::menuIconChatBubble },
  	});
  	builder.addSectionButton({
@@ -8278,14 +8341,14 @@ index a4b1e7ad4..8b0f3d579 100644
 +		.title = tr::ayu_CategoryGeneral(),
 +		.targetSection = AyuGeneral::Id(),
 +		.icon = { &st::menuIconShowAll },
- 	});
++	});
 +	builder.addSectionButton({
 +		.title = tr::ayu_CategoryAdvanced(),
 +		.targetSection = AyuAdvanced::Id(),
 +		.icon = { &st::menuIconSettings },
-+	});
-+}
-+
+ 	});
+ }
+ 
 +void ShowIntelGramUpdateLog(
 +		not_null<Window::SessionController*> controller) {
 +	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
@@ -8297,6 +8360,9 @@ index a4b1e7ad4..8b0f3d579 100644
 +		Ui::AddSubsectionTitle(
 +			content,
 +			tr::ayu_IntelGramUpdateLogCurrentTitle());
++		Ui::AddDividerText(
++			content,
++			tr::ayu_IntelGramUpdateLogDisguise(tr::rich));
 +		Ui::AddDividerText(
 +			content,
 +			tr::ayu_IntelGramUpdateLogCurrent(tr::rich));
@@ -8324,10 +8390,10 @@ index a4b1e7ad4..8b0f3d579 100644
 +			box->closeBox();
 +		});
 +	}));
- }
- 
++}
++
  void BuildLinks(SectionBuilder &builder) {
-@@ -137,52 +225,61 @@ void BuildLinks(SectionBuilder &builder) {
+ 	builder.addSkip();
  	builder.addDivider();
  	builder.addSkip();
  

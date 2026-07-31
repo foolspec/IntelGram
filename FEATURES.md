@@ -16,6 +16,16 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - An optional public-channel showcase rendered on your own profile with an explicit **Local showcase** label.
 - Public channels are resolved read-only from an `@channel` or `t.me` link; the showcase does not grant ownership, administration, permissions, or membership.
 
+## Telegram Disguise Mode
+
+- Activates by triple-clicking the large **IntelGram Desktop v...** heading in IntelGram Preferences.
+- Changes the visible app identity to Telegram Desktop, including the app logo, Dock or taskbar icon, tray icon, window title, menus, About surface, Preferences entry, and drawer footer.
+- Returns to Telegram's normal Settings screen immediately after activation so the IntelGram Preferences page is no longer visible.
+- Keeps enabled local profile fields, cloning, collectibles, badges, local channel showcase, and local ownership rendering active.
+- Persists locally across restarts.
+- Restores IntelGram by triple-clicking the **Telegram Desktop** footer in the main drawer.
+- Does not change the Telegram account, session, profile, or any server-side application identity.
+
 ## Native Local Channel Ownership
 
 - Opens from an existing broadcast channel's three-dot menu under **IntelGram -> Local ownership**.

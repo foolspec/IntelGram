@@ -6,7 +6,7 @@ IntelGram is a cross-platform AyuGram Desktop build focused on local profile cus
 
 [All features](FEATURES.md) | [Feature guide](FEATURE_GUIDE.md) | [Changelog](CHANGELOG.md) | [Technical changelog](TECHNICAL_CHANGELOG.md) | [Update log](UPDATE_LOG.md)
 
-Current product release: **IntelGram v15 - Local Owner Controls And Profile Badges**. IntelGram versions count product updates sequentially from v1; AyuGram Desktop `v6.7.8` remains the upstream source version.
+Current product release: **IntelGram v16 - Telegram Disguise Mode**. IntelGram versions count product updates sequentially from v1; AyuGram Desktop `v6.7.8` remains the upstream source version.
 
 ## Main Features
 
@@ -18,6 +18,7 @@ Current product release: **IntelGram v15 - Local Owner Controls And Profile Badg
 - Browse visual theme cards and cloud themes inside IntelGram, import or remove custom themes, choose any local image as the chat background, preview wallpaper changes, and select IntelGram app icons.
 - Turn on Liquid Glass with cached native or local-image blur, adaptive tint and contrast, wallpaper-colored diffusion, moving specular highlights, edge refraction, subtle grain, and an optional removable local background image.
 - Make the interface more lively with Quick Snap, Smooth Flow, Diabolical, Springy, or the optional high-elasticity Liquid Bounce preset while preserving reduced-motion and power-saving behavior.
+- Triple-click the IntelGram Desktop version heading to switch the app's visible identity to Telegram Desktop while keeping every enabled local profile, collectible, badge, and channel presentation active.
 - Render a local display name, UID, primary username, up to 20 other usernames, anonymous number, bio, profile photo, and native Telegram badge presentation for your own account.
 - Show a public channel on your own profile as a clearly labeled local showcase, then open its private local-only workspace to create, edit, pin, copy, or delete local posts, attach local files, and customize a local title, description, and photo without changing Telegram.
 - Enable **Local ownership** from any broadcast channel's **IntelGram** submenu to reveal the native broadcast composer and Manage actions, then place persistent local text broadcasts directly in that channel's real timeline with native reply, edit, pin, reaction, copy, delete, and selection controls without sending them to Telegram.
@@ -52,6 +53,10 @@ Current product release: **IntelGram v15 - Local Owner Controls And Profile Badg
 - Linux: extract `IntelGram-Linux-x64.tar.gz` and run `IntelGram`.
 
 ## Using IntelGram
+
+Open **IntelGram Preferences** and triple-click the large **IntelGram Desktop v...** heading to enable Telegram disguise mode. IntelGram immediately returns to Telegram's normal Settings screen and changes the visible app name, logo, Dock or taskbar icon, tray icon, window title, menus, About surface, and drawer footer to Telegram Desktop. Your enabled local profile, collectible, badge, and local channel presentation stays active.
+
+To restore IntelGram, open the main drawer and triple-click the **Telegram Desktop** footer at the bottom. The selection is saved locally across restarts and sends no Telegram account or profile request.
 
 Open **IntelGram Preferences -> Local Profile & Collectibles** to configure:
 
@@ -129,7 +134,7 @@ Liquid Glass uses a native behind-window material on macOS, the Windows DWM back
 ## Source And Verification
 
 - [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch) contains the complete IntelGram implementation.
-- Patch SHA-256: `46e557340e747b05c359ae2a859734576e1744637834dc30fc1cf88ca3100455`
+- Patch SHA-256: `46dffff5a872be6934bd2bffe9f0df3657f677f7a9ee66c6d293c93f2bd340e5`
 - The patch pins [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui) commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`, which carries IntelGram's shared motion-preset hook and Liquid Bounce transition.
 - [`build_intelgram_branding.py`](build_intelgram_branding.py) applies the cross-platform IntelGram product identity.
 - [`validate_intelgram_patch.py`](validate_intelgram_patch.py) verifies the feature hooks, protected-content boundaries, and absence of custom Telegram mutation requests before each platform build.

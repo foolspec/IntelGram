@@ -5,7 +5,7 @@ patch relative to official AyuGram Desktop `v6.7.8` commit
 `b25513a06ff88be0b3f4c928252b56c3da39cec7`.
 
 Patch SHA-256:
-`46e557340e747b05c359ae2a859734576e1744637834dc30fc1cf88ca3100455`
+`46dffff5a872be6934bd2bffe9f0df3657f677f7a9ee66c6d293c93f2bd340e5`
 
 ## Added
 

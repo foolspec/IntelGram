@@ -60,9 +60,9 @@ permissions:
 
 env:
   SOURCE_TAG: v6.7.8
-  RELEASE_NAME: Local Owner Controls And Profile Badges
-  RELEASE_SLUG: local-owner-controls-badges
-  PATCH_SHA256: 46e557340e747b05c359ae2a859734576e1744637834dc30fc1cf88ca3100455
+  RELEASE_NAME: Telegram Disguise Mode
+  RELEASE_SLUG: telegram-disguise-mode
+  PATCH_SHA256: 46dffff5a872be6934bd2bffe9f0df3657f677f7a9ee66c6d293c93f2bd340e5
   LIB_UI_COMMIT: b9a30917daf2bd8fdc17ccd9682acca178882b7b
   LIB_UI_REF: codex/intelgram-liquid-bounce-20260726
 
@@ -263,7 +263,9 @@ jobs:
           grep -n 'userByPhone(phoneQuery)' tdesktop/Telegram/SourceFiles/dialogs/dialogs_widget.cpp
           grep -n 'set(output_name "IntelGram")' tdesktop/Telegram/CMakeLists.txt
           grep -n 'Ayu::VisibleClientShortName()' tdesktop/Telegram/SourceFiles/window/main_window.cpp
-          grep -n 'QString("IntelGram Desktop v")' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
+          grep -n 'kDiscreetModeClickTimeout' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
+          grep -n 'showOther(MainId())' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
+          grep -n 'tr::ayu_IntelGramUpdateLogDisguise' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
           grep -n 'Ayu::VisibleClientName()' tdesktop/Telegram/SourceFiles/intro/intro_widget.cpp
           grep -n '"scale": 1.0' tdesktop/Telegram/Telegram/AppIcon-Default.icon/icon.json
           test -s tdesktop/Telegram/Telegram/AppIcon-Default.icon/Assets/app.png
@@ -592,7 +594,9 @@ jobs:
           Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp -Pattern ShowIntelGramUpdateLog
           Select-String -Path tdesktop/Telegram/SourceFiles/core/version.h -Pattern 'AppFile = "IntelGram"'
           Select-String -Path tdesktop/Telegram/SourceFiles/window/main_window.cpp -SimpleMatch 'Ayu::VisibleClientShortName()'
-          Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp -Pattern 'IntelGram Desktop v'
+          Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp -SimpleMatch kDiscreetModeClickTimeout
+          Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp -SimpleMatch 'showOther(MainId())'
+          Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp -SimpleMatch 'tr::ayu_IntelGramUpdateLogDisguise'
           Select-String -Path tdesktop/Telegram/SourceFiles/intro/intro_widget.cpp -SimpleMatch 'Ayu::VisibleClientName()'
 
       - name: Configure and build
@@ -706,7 +710,9 @@ jobs:
           grep -n 'ShowIntelGramUpdateLog' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
           grep -n 'AppFile = "IntelGram"' tdesktop/Telegram/SourceFiles/core/version.h
           grep -n 'Ayu::VisibleClientShortName()' tdesktop/Telegram/SourceFiles/window/main_window.cpp
-          grep -n 'QString("IntelGram Desktop v")' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
+          grep -n 'kDiscreetModeClickTimeout' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
+          grep -n 'showOther(MainId())' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
+          grep -n 'tr::ayu_IntelGramUpdateLogDisguise' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
           grep -n 'Ayu::VisibleClientName()' tdesktop/Telegram/SourceFiles/intro/intro_widget.cpp
 
       - name: Build with the documented Linux container
@@ -822,7 +828,7 @@ jobs:
             --title "IntelGram $PRODUCT_VERSION - $RELEASE_NAME" \
             --notes "## IntelGram $PRODUCT_VERSION $RELEASE_NAME
 
-          IntelGram adds automatic and manually selectable native local profile badges across profile, dialog, search, and chat-header surfaces, plus per-channel Local ownership under the native three-dot IntelGram submenu. Enabled broadcast channels expose Telegram's Broadcast a message composer, owner-style Manage actions, and persistent local text broadcasts directly in the real timeline. All badge, profile, channel-ownership, broadcast, view, reaction, and Stars presentation remains client-only; no Telegram profile, creator/admin rights, membership, channel information, or Telegram messages are changed.
+          IntelGram adds Telegram disguise mode: triple-click the IntelGram Desktop version heading in Preferences to switch the visible app identity, icons, window title, menus, About surface, and drawer branding to Telegram Desktop while all enabled local profile and channel presentation remains active. Triple-click the Telegram Desktop drawer footer to restore IntelGram. The choice is persistent and client-only; no Telegram account, profile, channel, or message data is changed.
 
           Built from the official AyuGram Desktop $SOURCE_TAG upstream source." \
             "${RELEASE_ASSETS[@]}"

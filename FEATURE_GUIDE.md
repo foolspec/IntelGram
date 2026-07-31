@@ -1,5 +1,11 @@
 # IntelGram Feature Guide
 
+## How do I turn on the hidden Telegram mode?
+
+Open **IntelGram Preferences** and triple-click the large **IntelGram Desktop v...** heading beside the app logo. The page returns to Telegram's normal Settings screen, and the visible app name, logo, Dock or taskbar icon, tray icon, window title, menus, About surface, and drawer footer switch to Telegram Desktop. Your local profile and channel presentation remains active.
+
+To switch back, open the main drawer and triple-click **Telegram Desktop** at the bottom. The choice is saved on this device and does not alter your Telegram account.
+
 ## Where do I change my local profile?
 
 Open **IntelGram Preferences -> Local Profile & Collectibles**. The controls are grouped into **Identity**, **Usernames, bio and contact**, **Profile photo**, and **Collectibles**. Each field has its own switch or action, so you can use only the pieces you want.

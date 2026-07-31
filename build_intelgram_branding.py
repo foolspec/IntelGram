@@ -58,6 +58,15 @@ def replace_all(path: str, old: str, new: str, expected: int) -> None:
 	file.write_text(content.replace(old, new), encoding="utf-8")
 
 
+def verify(path: str, needles: tuple[str, ...]) -> None:
+	file = ROOT / path
+	content = file.read_text(encoding="utf-8")
+	for needle in needles:
+		if needle not in content:
+			raise RuntimeError(
+				f"{path}: expected {needle!r}")
+
+
 def copy_asset(source: Path, target: str) -> None:
 	destination = ROOT / target
 	destination.parent.mkdir(parents=True, exist_ok=True)
@@ -267,9 +276,11 @@ replace("Telegram/SourceFiles/ayu/ui/settings/settings_ayu.cpp", [
 	 'return rpl::single(QString("IntelGram"));'),
 ])
 
-replace_or_verify("Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp", [
-	('QString("AyuGram Desktop v")', 'QString("IntelGram Desktop v")'),
-])
+verify("Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp", (
+	'"IntelGram Desktop v"',
+	'"Telegram Desktop v"',
+	"kDiscreetModeClickTimeout",
+))
 
 replace("lib/xdg/com.ayugram.desktop.desktop", [
 	('Name=AyuGram Desktop', 'Name=IntelGram Desktop'),
