@@ -15,7 +15,9 @@
 #include "ayu/ui/settings/settings_vault.h"
 #include "ayu/ui/settings/settings_visual_effects.h"
 #include "ayu/ui/ayu_logo.h"
+#include "ayu/ui/discreet_mode.h"
 #include "ayu/ayu_settings.h"
+#include "base/timer.h"
 #include "boxes/abstract_box.h"
 #include "core/version.h"
 #include "lang/lang_text_entity.h"
@@ -46,6 +48,13 @@ using namespace Builder;
 
 namespace {
 
+constexpr auto kDiscreetModeClickTimeout = crl::time(650);
+
+struct DiscreetModeClickState {
+	base::Timer timer;
+	int clicks = 0;
+};
+
 void BuildLogo(SectionBuilder &builder) {
 	builder.add([](const WidgetContext &ctx) -> SectionBuilder::WidgetToAdd {
 		auto logo = object_ptr<Ui::RpWidget>(ctx.container);
@@ -68,19 +77,48 @@ void BuildLogo(SectionBuilder &builder) {
 				p.drawImage(QRect(0, 0, size, size), scaled);
 			}
 		}, logoRaw->lifetime());
+		Ayu::DiscreetModeValue(
+		) | rpl::on_next([=] {
+			logoRaw->update();
+		}, logoRaw->lifetime());
 		return { .widget = std::move(logo), .align = style::al_top };
 	});
 }
 
 void BuildVersionInfo(SectionBuilder &builder) {
 	builder.add([](const WidgetContext &ctx) -> SectionBuilder::WidgetToAdd {
+		auto label = object_ptr<Ui::FlatLabel>(
+			ctx.container,
+			Ayu::DiscreetModeValue(
+			) | rpl::map([](bool discreet) {
+				return tr::link(
+					QString(discreet
+						? "Telegram Desktop v"
+						: "IntelGram Desktop v")
+						+ QString::fromLatin1(AppVersionStr),
+					1);
+			}),
+			st::boxTitle);
+		const auto labelRaw = label.data();
+		const auto showOther = ctx.showOther;
+		const auto state = labelRaw->lifetime(
+		).make_state<DiscreetModeClickState>();
+		state->timer.setCallback([=] {
+			state->clicks = 0;
+		});
+		labelRaw->overrideLinkClickHandler([=] {
+			++state->clicks;
+			if (state->clicks < 3) {
+				state->timer.callOnce(kDiscreetModeClickTimeout);
+				return;
+			}
+			state->timer.cancel();
+			state->clicks = 0;
+			Ayu::SetDiscreetMode(!Ayu::DiscreetModeEnabled());
+			showOther(MainId());
+		});
 		return {
-			.widget = object_ptr<Ui::FlatLabel>(
-				ctx.container,
-				rpl::single(
-					QString("IntelGram Desktop v")
-					+ QString::fromLatin1(AppVersionStr)),
-				st::boxTitle),
+			.widget = std::move(label),
 			.align = style::al_top,
 		};
 	});
@@ -191,6 +229,9 @@ void ShowIntelGramUpdateLog(
 		Ui::AddSubsectionTitle(
 			content,
 			tr::ayu_IntelGramUpdateLogCurrentTitle());
+		Ui::AddDividerText(
+			content,
+			tr::ayu_IntelGramUpdateLogDisguise(tr::rich));
 		Ui::AddDividerText(
 			content,
 			tr::ayu_IntelGramUpdateLogCurrent(tr::rich));
