@@ -77,6 +77,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 #include <QtGui/QWindow>
 #include <QtGui/QScreen>
+#include <QtGui/QMouseEvent>
 
 #include <QtGui/QGuiApplication>
 #include <QtGui/QClipboard>
@@ -98,6 +99,7 @@ namespace Window {
 namespace {
 
 constexpr auto kPlayStatusLimit = 12;
+constexpr auto kBrandingClickTimeout = 1200;
 
 [[nodiscard]] bool CanCheckSpecialEvent() {
 	static const auto result = [] {
@@ -417,9 +419,22 @@ MainMenu::MainMenu(
 	parentResized();
 
 	updateBranding();
-	_telegram->overrideLinkClickHandler([=] {
-		handleBrandingClick();
-	});
+	base::install_event_filter(_telegram, [=](not_null<QEvent*> event) {
+		const auto type = event->type();
+		if (type != QEvent::MouseButtonPress
+			&& type != QEvent::MouseButtonDblClick
+			&& type != QEvent::MouseButtonRelease) {
+			return base::EventFilterResult::Continue;
+		}
+		const auto mouse = static_cast<QMouseEvent*>(event.get());
+		if (mouse->button() != Qt::LeftButton) {
+			return base::EventFilterResult::Continue;
+		}
+		if (type != QEvent::MouseButtonRelease) {
+			handleBrandingClick();
+		}
+		return base::EventFilterResult::Cancel;
+	}, _telegram->lifetime());
 	_version->setMarkedText(
 		tr::link(
 			tr::lng_settings_current_version(
@@ -697,7 +712,7 @@ void MainMenu::setupSetEmojiStatus() {
 void MainMenu::handleBrandingClick() {
 	++_brandingClicks;
 	if (_brandingClicks < 3) {
-		_brandingClickTimer.callOnce(650);
+		_brandingClickTimer.callOnce(kBrandingClickTimeout);
 		return;
 	}
 	_brandingClickTimer.cancel();

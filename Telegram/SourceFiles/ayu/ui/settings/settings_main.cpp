@@ -17,6 +17,7 @@
 #include "ayu/ui/ayu_logo.h"
 #include "ayu/ui/discreet_mode.h"
 #include "ayu/ayu_settings.h"
+#include "base/event_filter.h"
 #include "base/timer.h"
 #include "boxes/abstract_box.h"
 #include "core/version.h"
@@ -40,6 +41,7 @@
 #include "styles/style_settings.h"
 
 #include <QDesktopServices>
+#include <QMouseEvent>
 #include <QUrl>
 
 namespace Settings {
@@ -48,7 +50,7 @@ using namespace Builder;
 
 namespace {
 
-constexpr auto kDiscreetModeClickTimeout = crl::time(650);
+constexpr auto kDiscreetModeClickTimeout = crl::time(1200);
 
 struct DiscreetModeClickState {
 	base::Timer timer;
@@ -106,7 +108,7 @@ void BuildVersionInfo(SectionBuilder &builder) {
 		state->timer.setCallback([=] {
 			state->clicks = 0;
 		});
-		labelRaw->overrideLinkClickHandler([=] {
+		const auto handleClick = [=] {
 			++state->clicks;
 			if (state->clicks < 3) {
 				state->timer.callOnce(kDiscreetModeClickTimeout);
@@ -116,7 +118,23 @@ void BuildVersionInfo(SectionBuilder &builder) {
 			state->clicks = 0;
 			Ayu::SetDiscreetMode(!Ayu::DiscreetModeEnabled());
 			showOther(MainId());
-		});
+		};
+		base::install_event_filter(labelRaw, [=](not_null<QEvent*> event) {
+			const auto type = event->type();
+			if (type != QEvent::MouseButtonPress
+				&& type != QEvent::MouseButtonDblClick
+				&& type != QEvent::MouseButtonRelease) {
+				return base::EventFilterResult::Continue;
+			}
+			const auto mouse = static_cast<QMouseEvent*>(event.get());
+			if (mouse->button() != Qt::LeftButton) {
+				return base::EventFilterResult::Continue;
+			}
+			if (type != QEvent::MouseButtonRelease) {
+				handleClick();
+			}
+			return base::EventFilterResult::Cancel;
+		}, labelRaw->lifetime());
 		return {
 			.widget = std::move(label),
 			.align = style::al_top,
