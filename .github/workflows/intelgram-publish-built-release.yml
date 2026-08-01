@@ -19,7 +19,7 @@ on:
         description: Short feature title shown after the IntelGram version
         required: true
       release_version:
-        description: Optional product version such as v16; leave empty to use the next sequential version
+        description: Optional product version such as v17; leave empty to use the next sequential version
         required: false
         default: ""
 
@@ -132,7 +132,7 @@ jobs:
           - Display-aware material animation up to 120 Hz while the window is active, with redraws paused while hidden or inactive.
           - Enhanced Animations with Quick Snap, Smooth Flow, Diabolical, Springy, and the optional high-elasticity Liquid Bounce preset across existing transitions, dialogs, drawers, controls, and navigation.
           - Reduced-motion and power-saving behavior remains authoritative over every added animation.
-          - Persistent Telegram disguise mode: triple-click the IntelGram Desktop version heading in Preferences to switch visible product branding and platform icons to Telegram Desktop while retaining every enabled local render feature; triple-click the Telegram Desktop drawer footer to restore IntelGram.
+          - Reliable Telegram disguise mode: click anywhere on the blue IntelGram Desktop version heading three times within 1.2 seconds to switch visible product branding and platform icons to Telegram Desktop while retaining every enabled local render feature; use the same physical-click gesture on the Telegram Desktop drawer footer to restore IntelGram.
           - Preferences organized into focused Local Profile, Appearance, Glass & Motion, Navigation, Vault, Automation, Export, Privacy, and Advanced pages.
           - Selected-message and chat/account exports to HTML, PDF, Markdown, JSON, and ZIP, plus AES-256-GCM Frozen Account Backup with permitted cached media.
           - Client-render-only display name, UID, primary and other usernames, anonymous number, bio, and profile photo for your own account.

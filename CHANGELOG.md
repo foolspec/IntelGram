@@ -8,6 +8,7 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 
 | Version | Published | Update |
 | --- | --- | --- |
+| v17 | 2026-07-31 | Reliable Telegram Disguise Trigger |
 | v16 | 2026-07-31 | Telegram Disguise Mode |
 | v15 | 2026-07-29 | Local Owner Controls And Profile Badges |
 | v14 | 2026-07-27 | Native Local Ownership |
@@ -24,6 +25,20 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 | v3 | 2026-07-14 | Multiplatform Launch |
 | v2 | 2026-07-13 | Local Profile Build Refresh |
 | v1 | 2026-07-13 | Initial Local Profile |
+
+## IntelGram v17 Reliable Telegram Disguise Trigger - 2026-07-31
+
+### Fixed
+
+- Replaced title-link activation counting with physical left-button event counting across the complete blue **IntelGram Desktop v...** heading.
+- Applied the same physical-click handling to the **Telegram Desktop** drawer footer used to restore IntelGram.
+- Expanded the three-click sequence window from 650 ms to 1.2 seconds so normal rapid clicks register reliably without making the hidden gesture easy to trigger accidentally.
+- Prevented Qt's double-click text-selection behavior from swallowing the second click in the sequence.
+
+### Local-Only Boundary
+
+- The corrected gesture still changes only this installation's product presentation and stored IntelGram preference.
+- It sends no Telegram account, profile, icon, session, or application-identity request.
 
 ## IntelGram v16 Telegram Disguise Mode - 2026-07-31
 

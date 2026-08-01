@@ -60,9 +60,9 @@ permissions:
 
 env:
   SOURCE_TAG: v6.7.8
-  RELEASE_NAME: Telegram Disguise Mode
-  RELEASE_SLUG: telegram-disguise-mode
-  PATCH_SHA256: 46dffff5a872be6934bd2bffe9f0df3657f677f7a9ee66c6d293c93f2bd340e5
+  RELEASE_NAME: Reliable Telegram Disguise Trigger
+  RELEASE_SLUG: reliable-telegram-disguise-trigger
+  PATCH_SHA256: 6078852ae646a274d379345cf3457b858341d4337049197d445cb6201b75105e
   LIB_UI_COMMIT: b9a30917daf2bd8fdc17ccd9682acca178882b7b
   LIB_UI_REF: codex/intelgram-liquid-bounce-20260726
 
@@ -828,7 +828,7 @@ jobs:
             --title "IntelGram $PRODUCT_VERSION - $RELEASE_NAME" \
             --notes "## IntelGram $PRODUCT_VERSION $RELEASE_NAME
 
-          IntelGram adds Telegram disguise mode: triple-click the IntelGram Desktop version heading in Preferences to switch the visible app identity, icons, window title, menus, About surface, and drawer branding to Telegram Desktop while all enabled local profile and channel presentation remains active. Triple-click the Telegram Desktop drawer footer to restore IntelGram. The choice is persistent and client-only; no Telegram account, profile, channel, or message data is changed.
+          IntelGram fixes Telegram disguise mode with physical mouse-event counting across the full blue IntelGram Desktop version heading and Telegram Desktop drawer footer. Click either target three times within 1.2 seconds to switch identities reliably while all enabled local profile and channel presentation remains active. The choice is persistent and client-only; no Telegram account, profile, channel, or message data is changed.
 
           Built from the official AyuGram Desktop $SOURCE_TAG upstream source." \
             "${RELEASE_ASSETS[@]}"

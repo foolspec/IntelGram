@@ -105,6 +105,9 @@ def main() -> None:
             "AyuAdvanced::Id()",
             "Ayu::DiscreetModeValue(",
             "kDiscreetModeClickTimeout",
+            "base::install_event_filter(labelRaw",
+            "QEvent::MouseButtonDblClick",
+            "QEvent::MouseButtonRelease",
             "Ayu::SetDiscreetMode(!Ayu::DiscreetModeEnabled())",
             "showOther(MainId());",
             "tr::ayu_IntelGramUpdateLogDisguise(tr::rich)",
@@ -217,7 +220,11 @@ def main() -> None:
         ),
         "Telegram/SourceFiles/window/window_main_menu.cpp": (
             "handleBrandingClick()",
-            "_brandingClickTimer.callOnce(650)",
+            "kBrandingClickTimeout = 1200",
+            "base::install_event_filter(_telegram",
+            "QEvent::MouseButtonDblClick",
+            "QEvent::MouseButtonRelease",
+            "_brandingClickTimer.callOnce(kBrandingClickTimeout)",
             "Ayu::SetDiscreetMode(!Ayu::DiscreetModeEnabled())",
         ),
         "Telegram/SourceFiles/settings/sections/settings_main.cpp": (

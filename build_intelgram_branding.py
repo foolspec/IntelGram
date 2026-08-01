@@ -280,6 +280,16 @@ verify("Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp", (
 	'"IntelGram Desktop v"',
 	'"Telegram Desktop v"',
 	"kDiscreetModeClickTimeout",
+	"base::install_event_filter(labelRaw",
+	"QEvent::MouseButtonDblClick",
+	"QEvent::MouseButtonRelease",
+))
+
+verify("Telegram/SourceFiles/window/window_main_menu.cpp", (
+	"kBrandingClickTimeout = 1200",
+	"base::install_event_filter(_telegram",
+	"QEvent::MouseButtonRelease",
+	"_brandingClickTimer.callOnce(kBrandingClickTimeout)",
 ))
 
 replace("lib/xdg/com.ayugram.desktop.desktop", [

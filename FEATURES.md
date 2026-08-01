@@ -18,12 +18,13 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 
 ## Telegram Disguise Mode
 
-- Activates by triple-clicking the large **IntelGram Desktop v...** heading in IntelGram Preferences.
+- Activates by clicking anywhere on the blue **IntelGram Desktop v...** heading three times within 1.2 seconds in IntelGram Preferences.
+- Counts physical left-button presses instead of link activations, so Qt text selection cannot swallow the gesture.
 - Changes the visible app identity to Telegram Desktop, including the app logo, Dock or taskbar icon, tray icon, window title, menus, About surface, Preferences entry, and drawer footer.
 - Returns to Telegram's normal Settings screen immediately after activation so the IntelGram Preferences page is no longer visible.
 - Keeps enabled local profile fields, cloning, collectibles, badges, local channel showcase, and local ownership rendering active.
 - Persists locally across restarts.
-- Restores IntelGram by triple-clicking the **Telegram Desktop** footer in the main drawer.
+- Restores IntelGram by clicking the **Telegram Desktop** footer three times within 1.2 seconds in the main drawer.
 - Does not change the Telegram account, session, profile, or any server-side application identity.
 
 ## Native Local Channel Ownership

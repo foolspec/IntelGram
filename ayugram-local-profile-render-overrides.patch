@@ -992,7 +992,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/Telegram/Resources/langs/lang.strings b/Telegram/Resources/langs/lang.strings
-index 7380587e7..a61d70d0b 100644
+index 7380587e7..cad69bfea 100644
 --- a/Telegram/Resources/langs/lang.strings
 +++ b/Telegram/Resources/langs/lang.strings
 @@ -7971,14 +7971,60 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -1090,7 +1090,7 @@ index 7380587e7..a61d70d0b 100644
 +"ayu_IntelGramUpdateLogLabel" = "Open in IntelGram";
 +"ayu_IntelGramUpdateLogTitle" = "IntelGram update log";
 +"ayu_IntelGramUpdateLogCurrentTitle" = "Latest update";
-+"ayu_IntelGramUpdateLogDisguise" = "**Telegram disguise mode**\n- Triple-click the IntelGram Desktop version heading in IntelGram Preferences to switch the visible app name, logo, Dock or taskbar icon, tray icon, window title, menus, About surface, and drawer branding to Telegram Desktop.\n- The app immediately returns to Telegram's normal Settings screen so IntelGram-only labels are no longer visible.\n- Local profile, collectible, badge, and local channel presentation remains enabled because the switch changes only this client's visible product identity.\n- To restore IntelGram, open the main drawer and triple-click the Telegram Desktop footer.\n- The choice is saved locally and never changes your Telegram account or sends a request.";
++"ayu_IntelGramUpdateLogDisguise" = "**Telegram disguise mode**\n- Triple-click anywhere on the blue IntelGram Desktop version heading in IntelGram Preferences to switch the visible app name, logo, Dock or taskbar icon, tray icon, window title, menus, About surface, and drawer branding to Telegram Desktop.\n- The trigger counts physical mouse clicks and allows 1.2 seconds for the three-click sequence.\n- The app immediately returns to Telegram's normal Settings screen so IntelGram-only labels are no longer visible.\n- Local profile, collectible, badge, and local channel presentation remains enabled because the switch changes only this client's visible product identity.\n- To restore IntelGram, open the main drawer and triple-click the Telegram Desktop footer.\n- The choice is saved locally and never changes your Telegram account or sends a request.";
 +"ayu_IntelGramUpdateLogCurrent" = "**Native local channel ownership**\n- Open a broadcast channel's three-dot menu, choose IntelGram, then Local ownership.\n- The existing channel view gains Telegram's native Broadcast a message composer, owner-style Manage actions, and persistent local text broadcasts inside the real timeline.\n- Right-click a local broadcast for Telegram's reaction strip plus Reply, Edit, Pin or Unpin, Copy Text, Copy Post Link, Forward, Delete, and Select.\n- Local replies, edits, pins, reactions, Stars, and links persist. Broadcast engagement controls starting and maximum views, increment size, interval, six baseline reactions, and paid Stars.\n- Views and reaction clicks update only this client. Forward creates a text handoff; no synthetic message ID, reaction, payment, pin, edit, delete, or post is sent to Telegram.\n- Local ownership hides contradictory Join, Leave, and Report rows while active and can be disabled independently for every channel.\n- Media, voice, stickers, inline results, scheduled posts, and files remain blocked so nothing can upload to Telegram.\n\n**Liquid Glass & Motion**\n- Liquid Glass layers adaptive tint and contrast, wallpaper-aware diffusion, cursor-reactive specular light, refractive edges, internal reflections, and subtle film grain over native desktop blur.\n- Material animation follows the active display refresh rate up to 120 Hz and pauses while IntelGram is hidden, inactive, or respecting reduced-motion and power-saving settings.\n- Control sidebar, chat, menu, dialog, and panel transparency separately; choose a private local backdrop and tune image opacity, blur, tint, surface opacity, and optical intensity without fading text, icons, avatars, or media.\n- Quick Snap is compact and immediate. Smooth Flow is calm and critically damped. Diabolical is brisk with stronger depth. Springy settles gently. The optional Liquid Bounce pack adds the most elastic lift and a controlled overshoot.\n- The profile username editor matches Telegram's native title, @username field, validation row, help text, and button layout while saving only IntelGram's local render value.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
 +"ayu_IntelGramUpdateLogFeaturesTitle" = "Main IntelGram features";
 +"ayu_IntelGramUpdateLogFeatures" = "**Local profile, channels, and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, personal channel rendering, and public-channel showcase rendering.\n- Automatic clone mirroring and manual local controls cover Premium, verified, SCAM, FAKE, DIRECT, emoji status, and organization verification badges.\n- Per-channel local ownership with native owner-style controls and persistent text broadcasts rendered inside the selected channel's real timeline.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity and customization**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native themes, cloud theme browsing, chat wallpapers, adaptive Liquid Glass, native blur, five motion packs, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
@@ -8132,10 +8132,10 @@ index 869861bba..7395a80ec 100644
  
  [[nodiscard]] Type AyuAppearanceId();
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
-index a4b1e7ad4..49c439f1e 100644
+index a4b1e7ad4..9e4d787a7 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
-@@ -6,31 +6,41 @@
+@@ -6,31 +6,43 @@
  // Copyright @Radolyn, 2026
  #include "ayu/ui/settings/settings_main.h"
  
@@ -8154,6 +8154,7 @@ index a4b1e7ad4..49c439f1e 100644
 +#include "ayu/ui/ayu_logo.h"
 +#include "ayu/ui/discreet_mode.h"
 +#include "ayu/ayu_settings.h"
++#include "base/event_filter.h"
 +#include "base/timer.h"
 +#include "boxes/abstract_box.h"
  #include "core/version.h"
@@ -8182,15 +8183,16 @@ index a4b1e7ad4..49c439f1e 100644
 +#include "styles/style_settings.h"
  
  #include <QDesktopServices>
++#include <QMouseEvent>
 +#include <QUrl>
  
  namespace Settings {
  
-@@ -38,6 +48,13 @@ using namespace Builder;
+@@ -38,6 +50,13 @@ using namespace Builder;
  
  namespace {
  
-+constexpr auto kDiscreetModeClickTimeout = crl::time(650);
++constexpr auto kDiscreetModeClickTimeout = crl::time(1200);
 +
 +struct DiscreetModeClickState {
 +	base::Timer timer;
@@ -8200,7 +8202,7 @@ index a4b1e7ad4..49c439f1e 100644
  void BuildLogo(SectionBuilder &builder) {
  	builder.add([](const WidgetContext &ctx) -> SectionBuilder::WidgetToAdd {
  		auto logo = object_ptr<Ui::RpWidget>(ctx.container);
-@@ -60,19 +77,48 @@ void BuildLogo(SectionBuilder &builder) {
+@@ -60,19 +79,64 @@ void BuildLogo(SectionBuilder &builder) {
  				p.drawImage(QRect(0, 0, size, size), scaled);
  			}
  		}, logoRaw->lifetime());
@@ -8233,7 +8235,7 @@ index a4b1e7ad4..49c439f1e 100644
 +		state->timer.setCallback([=] {
 +			state->clicks = 0;
 +		});
-+		labelRaw->overrideLinkClickHandler([=] {
++		const auto handleClick = [=] {
 +			++state->clicks;
 +			if (state->clicks < 3) {
 +				state->timer.callOnce(kDiscreetModeClickTimeout);
@@ -8243,7 +8245,23 @@ index a4b1e7ad4..49c439f1e 100644
 +			state->clicks = 0;
 +			Ayu::SetDiscreetMode(!Ayu::DiscreetModeEnabled());
 +			showOther(MainId());
-+		});
++		};
++		base::install_event_filter(labelRaw, [=](not_null<QEvent*> event) {
++			const auto type = event->type();
++			if (type != QEvent::MouseButtonPress
++				&& type != QEvent::MouseButtonDblClick
++				&& type != QEvent::MouseButtonRelease) {
++				return base::EventFilterResult::Continue;
++			}
++			const auto mouse = static_cast<QMouseEvent*>(event.get());
++			if (mouse->button() != Qt::LeftButton) {
++				return base::EventFilterResult::Continue;
++			}
++			if (type != QEvent::MouseButtonRelease) {
++				handleClick();
++			}
++			return base::EventFilterResult::Cancel;
++		}, labelRaw->lifetime());
  		return {
 -			.widget = object_ptr<Ui::FlatLabel>(
 -				ctx.container,
@@ -8255,7 +8273,7 @@ index a4b1e7ad4..49c439f1e 100644
  			.align = style::al_top,
  		};
  	});
-@@ -98,27 +144,57 @@ void BuildCategories(SectionBuilder &builder) {
+@@ -98,27 +162,57 @@ void BuildCategories(SectionBuilder &builder) {
  	builder.addDivider();
  	builder.addSkip();
  
@@ -8326,7 +8344,7 @@ index a4b1e7ad4..49c439f1e 100644
  	});
  	builder.addSectionButton({
  		.title = tr::ayu_CategoryChats(),
-@@ -126,63 +202,125 @@ void BuildCategories(SectionBuilder &builder) {
+@@ -126,63 +220,125 @@ void BuildCategories(SectionBuilder &builder) {
  		.icon = { &st::menuIconChatBubble },
  	});
  	builder.addSectionButton({
@@ -17731,7 +17749,7 @@ index d82764873..9b8910fc7 100644
  			? tr::lng_notification_reminder(tr::now, tr::marked)
  			: topicWithChat();
 diff --git a/Telegram/SourceFiles/window/window_main_menu.cpp b/Telegram/SourceFiles/window/window_main_menu.cpp
-index 61524ae69..a709fc0d1 100644
+index 61524ae69..b54afa742 100644
 --- a/Telegram/SourceFiles/window/window_main_menu.cpp
 +++ b/Telegram/SourceFiles/window/window_main_menu.cpp
 @@ -18,6 +18,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -17742,7 +17760,14 @@ index 61524ae69..a709fc0d1 100644
  #include "data/data_changes.h"
  #include "data/data_document_media.h"
  #include "data/data_folder.h"
-@@ -82,13 +83,17 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -76,23 +77,29 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ 
+ #include <QtGui/QWindow>
+ #include <QtGui/QScreen>
++#include <QtGui/QMouseEvent>
+ 
+ #include <QtGui/QGuiApplication>
+ #include <QtGui/QClipboard>
  
  // AyuGram includes
  #include "ayu/ayu_settings.h"
@@ -17760,7 +17785,12 @@ index 61524ae69..a709fc0d1 100644
  namespace Window {
  namespace {
  
-@@ -109,9 +114,11 @@ constexpr auto kPlayStatusLimit = 12;
+ constexpr auto kPlayStatusLimit = 12;
++constexpr auto kBrandingClickTimeout = 1200;
+ 
+ [[nodiscard]] bool CanCheckSpecialEvent() {
+ 	static const auto result = [] {
+@@ -109,9 +116,11 @@ constexpr auto kPlayStatusLimit = 12;
  }
  
  [[nodiscard]] rpl::producer<TextWithEntities> SetStatusLabel(
@@ -17775,7 +17805,7 @@ index 61524ae69..a709fc0d1 100644
  	});
  }
  
-@@ -358,6 +365,19 @@ MainMenu::MainMenu(
+@@ -358,6 +367,19 @@ MainMenu::MainMenu(
  	setupArchive();
  	setupMenu();
  
@@ -17795,7 +17825,7 @@ index 61524ae69..a709fc0d1 100644
  	const auto shadow = Ui::CreateChild<Ui::PlainShadow>(this);
  	widthValue(
  	) | rpl::on_next([=](int width) {
-@@ -374,6 +394,12 @@ MainMenu::MainMenu(
+@@ -374,6 +396,12 @@ MainMenu::MainMenu(
  			Window::Theme::KeepApplied();
  		}
  	});
@@ -17808,7 +17838,7 @@ index 61524ae69..a709fc0d1 100644
  
  	_footer->heightValue(
  	) | rpl::on_next([=] {
-@@ -390,10 +416,10 @@ MainMenu::MainMenu(
+@@ -390,10 +418,23 @@ MainMenu::MainMenu(
  
  	parentResized();
  
@@ -17817,13 +17847,26 @@ index 61524ae69..a709fc0d1 100644
 -		u"https://ayugram.one"_q));
 -	_telegram->setLinksTrusted();
 +	updateBranding();
-+	_telegram->overrideLinkClickHandler([=] {
-+		handleBrandingClick();
-+	});
++	base::install_event_filter(_telegram, [=](not_null<QEvent*> event) {
++		const auto type = event->type();
++		if (type != QEvent::MouseButtonPress
++			&& type != QEvent::MouseButtonDblClick
++			&& type != QEvent::MouseButtonRelease) {
++			return base::EventFilterResult::Continue;
++		}
++		const auto mouse = static_cast<QMouseEvent*>(event.get());
++		if (mouse->button() != Qt::LeftButton) {
++			return base::EventFilterResult::Continue;
++		}
++		if (type != QEvent::MouseButtonRelease) {
++			handleBrandingClick();
++		}
++		return base::EventFilterResult::Cancel;
++	}, _telegram->lifetime());
  	_version->setMarkedText(
  		tr::link(
  			tr::lng_settings_current_version(
-@@ -405,14 +431,15 @@ MainMenu::MainMenu(
+@@ -405,14 +446,15 @@ MainMenu::MainMenu(
  		.append(QChar(8211))
  		.append(QChar(' '))
  		.append(tr::link(tr::lng_menu_about(tr::now), 2))); // Link 2.
@@ -17842,7 +17885,7 @@ index 61524ae69..a709fc0d1 100644
  
  	rpl::combine(
  		_toggleAccounts->rightSkipValue(),
-@@ -424,15 +451,8 @@ MainMenu::MainMenu(
+@@ -424,15 +466,8 @@ MainMenu::MainMenu(
  	_badge->setPremiumClickCallback([=] {
  		chooseEmojiStatus();
  	});
@@ -17860,7 +17903,7 @@ index 61524ae69..a709fc0d1 100644
  
  	_controller->session().downloaderTaskFinished(
  	) | rpl::on_next([=] {
-@@ -666,10 +686,39 @@ void MainMenu::setupAccountsToggle() {
+@@ -666,10 +701,39 @@ void MainMenu::setupAccountsToggle() {
  
  void MainMenu::setupSetEmojiStatus() {
  	_setEmojiStatus->overrideLinkClickHandler([=] {
@@ -17876,7 +17919,7 @@ index 61524ae69..a709fc0d1 100644
 +void MainMenu::handleBrandingClick() {
 +	++_brandingClicks;
 +	if (_brandingClicks < 3) {
-+		_brandingClickTimer.callOnce(650);
++		_brandingClickTimer.callOnce(kBrandingClickTimeout);
 +		return;
 +	}
 +	_brandingClickTimer.cancel();
@@ -17901,7 +17944,7 @@ index 61524ae69..a709fc0d1 100644
  void MainMenu::parentResized() {
  	resize(st::mainMenuWidth, parentWidget()->height());
  }
-@@ -764,7 +813,8 @@ void MainMenu::setupMenu() {
+@@ -764,7 +828,8 @@ void MainMenu::setupMenu() {
  			controller->showPeerHistory(controller->session().user());
  		});
  
@@ -17911,7 +17954,7 @@ index 61524ae69..a709fc0d1 100644
  			addAction(
  				tr::ayu_LReadMessages(),
  				{&st::ayuLReadMenuIcon}
-@@ -781,7 +831,8 @@ void MainMenu::setupMenu() {
+@@ -781,7 +846,8 @@ void MainMenu::setupMenu() {
  			});
  		}
  
@@ -17921,7 +17964,7 @@ index 61524ae69..a709fc0d1 100644
  			auto callback = [=](Fn<void()> &&close) mutable {
  				auto &ghost = AyuSettings::ghost(&controller->session());
  				const auto prev = ghost.sendReadMessages();
-@@ -884,7 +935,8 @@ void MainMenu::setupMenu() {
+@@ -884,7 +950,8 @@ void MainMenu::setupMenu() {
  
  	}
  
@@ -17931,7 +17974,7 @@ index 61524ae69..a709fc0d1 100644
  		auto ghostActiveChanges = AyuSettings::getInstance().useGlobalGhostModeValue()
  			| rpl::map([controller = _controller](bool) {
  				return AyuSettings::ghost(&controller->session()).ghostModeActiveValue();
-@@ -906,7 +958,8 @@ void MainMenu::setupMenu() {
+@@ -906,7 +973,8 @@ void MainMenu::setupMenu() {
  			ghostModeToggle->lifetime());
  	}
  
@@ -17941,7 +17984,7 @@ index 61524ae69..a709fc0d1 100644
  		const auto streamerModeToggle = addAction(
  			tr::ayu_StreamerModeToggle(),
  			{&st::ayuStreamerModeMenuIcon}
-@@ -1009,7 +1062,7 @@ void MainMenu::drawName(Painter &p) {
+@@ -1009,7 +1077,7 @@ void MainMenu::drawName(Painter &p) {
  		_nameVersion = user->nameVersion();
  		_name.setText(
  			st::semiboldTextStyle,

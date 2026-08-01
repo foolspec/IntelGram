@@ -4,6 +4,31 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 
 IntelGram product versions advance sequentially from v1. AyuGram Desktop `v6.7.8` is retained below only as upstream source provenance or inside legacy build tags.
 
+## IntelGram v17 Reliable Telegram Disguise Trigger - 2026-07-31
+
+### Source Baseline And Patch
+
+- Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
+- Source commit: `ba811a3f09d45047b8e6e767a2e0c8d12d76d714` on the recovered local implementation branch.
+- Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
+- Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
+- Patch SHA-256: `6078852ae646a274d379345cf3457b858341d4337049197d445cb6201b75105e`.
+- Patch footprint: 108 files, 13,038 insertions, and 654 deletions relative to the pinned source.
+- `Telegram/lib_ui` remains pinned to public fork commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
+
+### Physical Click Trigger
+
+- `Settings::BuildVersionInfo` installs a lifetime-bound event filter on the complete version label and counts left-button press and double-click events directly.
+- `Window::MainMenu` uses the same event-filter approach for the drawer branding footer, preserving the hidden restore path without relying on `FlatLabel` link activation.
+- Both counters allow 1.2 seconds for a three-click sequence, replacing the 650 ms link-based trigger that Qt could collapse into text-selection behavior.
+- Successful entry still navigates through `Settings::MainId`; successful restore still closes the drawer after refreshing the persistent local identity.
+
+### Validation
+
+- The complete patch applies and reverses cleanly against the pinned source, passes whitespace checks, and keeps both patch aliases byte-identical.
+- The validator requires both physical mouse-event filters, the shared 1.2-second timeout behavior, the reactive title and logo, and the existing local-only identity setter.
+- No full local build is run; macOS, Windows, and Linux compilation, packaging, and launch testing remain delegated to the release workflows as required by the upstream repository instructions.
+
 ## IntelGram v16 Telegram Disguise Mode - 2026-07-31
 
 ### Source Baseline And Patch
