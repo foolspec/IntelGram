@@ -61,8 +61,12 @@ using IntelGram::Vault::ID;
 using namespace AyuBuilder;
 using namespace Builder;
 
+[[nodiscard]] ID CurrentAccount(not_null<Main::Session *> session) {
+	return session->userId().bare & PeerId::kChatTypeMask;
+}
+
 [[nodiscard]] ID CurrentAccount(not_null<Window::SessionController *> controller) {
-	return controller->session().userId().bare & PeerId::kChatTypeMask;
+	return CurrentAccount(&controller->session());
 }
 
 [[nodiscard]] QString AccountLabel(ID accountId) {
@@ -843,7 +847,7 @@ void BuildSmartFolders(SectionBuilder &builder) {
 
 void BuildIdentityAndRules(SectionBuilder &builder) {
 	const auto controller = builder.controller();
-	const auto notes = IntelGram::Vault::ProfileNotes(CurrentAccount(controller));
+	const auto notes = IntelGram::Vault::ProfileNotes(CurrentAccount(builder.session()));
 	const auto now = int(base::unixtime::now());
 	const auto due = std::count_if(notes.begin(), notes.end(), [=](const auto &record) {
 		return record.reminderAt && record.reminderAt <= now;
