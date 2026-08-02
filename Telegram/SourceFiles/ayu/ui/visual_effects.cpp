@@ -25,6 +25,9 @@
 namespace Ayu::VisualEffects {
 namespace {
 
+constexpr auto kMinimumGlassRefreshRate = 24.;
+constexpr auto kMaximumGlassRefreshRate = 30.;
+
 struct PaletteEntry {
 	const char *name;
 	style::color color;
@@ -569,8 +572,11 @@ int WindowAnimationRefreshInterval(QWidget *window) {
 	const auto refreshRate = screen
 		? screen->refreshRate()
 		: 60.;
-	const auto capped = std::clamp(refreshRate, 30., 120.);
-	return std::max(int(std::round(1000. / capped)), 8);
+	const auto capped = std::clamp(
+		refreshRate,
+		kMinimumGlassRefreshRate,
+		kMaximumGlassRefreshRate);
+	return int(std::round(1000. / capped));
 }
 
 } // namespace Ayu::VisualEffects
