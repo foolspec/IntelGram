@@ -328,26 +328,28 @@ void Manager::recomputeState() {
 		disabled(Field::kTagPre) || disabled(Field::kTagCode));
 	ForceDisabled(_clearFormat, markdownState.disabled());
 
-	const auto ghost = resolveGhostSettings();
-	const auto ghostInactive = (ghost == nullptr);
-	ForceDisabled(_ghostMode, ghostInactive);
-	ForceDisabled(_readOnInteract, ghostInactive);
-	ForceDisabled(_scheduleMessages, ghostInactive);
-	const auto setChecked = [](QAction *action, bool checked) {
-		const auto wasBlocked = action->blockSignals(true);
-		action->setChecked(checked);
-		action->blockSignals(wasBlocked);
-	};
-	if (ghost) {
-		_ghostMode->setText(ghost->isGhostModeActive()
-			? tr::ayu_DisableGhostMode(tr::now)
-			: tr::ayu_EnableGhostMode(tr::now));
-		setChecked(_readOnInteract, ghost->markReadAfterAction());
-		setChecked(_scheduleMessages, ghost->useScheduledMessages());
-	} else {
-		_ghostMode->setText(tr::ayu_EnableGhostMode(tr::now));
-		setChecked(_readOnInteract, false);
-		setChecked(_scheduleMessages, false);
+	if (_ghostMode) {
+		const auto ghost = resolveGhostSettings();
+		const auto ghostInactive = (ghost == nullptr);
+		ForceDisabled(_ghostMode, ghostInactive);
+		ForceDisabled(_readOnInteract, ghostInactive);
+		ForceDisabled(_scheduleMessages, ghostInactive);
+		const auto setChecked = [](QAction *action, bool checked) {
+			const auto wasBlocked = action->blockSignals(true);
+			action->setChecked(checked);
+			action->blockSignals(wasBlocked);
+		};
+		if (ghost) {
+			_ghostMode->setText(ghost->isGhostModeActive()
+				? tr::ayu_DisableGhostMode(tr::now)
+				: tr::ayu_EnableGhostMode(tr::now));
+			setChecked(_readOnInteract, ghost->markReadAfterAction());
+			setChecked(_scheduleMessages, ghost->useScheduledMessages());
+		} else {
+			_ghostMode->setText(tr::ayu_EnableGhostMode(tr::now));
+			setChecked(_readOnInteract, false);
+			setChecked(_scheduleMessages, false);
+		}
 	}
 }
 

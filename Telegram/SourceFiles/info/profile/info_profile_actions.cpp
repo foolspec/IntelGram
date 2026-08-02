@@ -1769,9 +1769,10 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
 			usernameLine.text->parentWidget(),
 			st::infoProfileLabeledButtonQr);
 		qrButton->setAccessibleName(tr::lng_group_invite_context_qr(tr::now));
-		UsernamesValue(_peer) | rpl::on_next([=](const auto &u) {
+		const auto profilePeer = _peer;
+		UsernamesValue(profilePeer) | rpl::on_next([=](const auto &u) {
 			qrButton->setVisible(
-				!u.empty() && !Ayu::LocalProfileUsernameActive(_peer));
+				!u.empty() && !Ayu::LocalProfileUsernameActive(profilePeer));
 		}, qrButton->lifetime());
 		const auto rightSkip = st::infoProfileLabeledButtonQrRightSkip;
 		fitLabelToButton(qrButton, usernameLine.text, rightSkip);
