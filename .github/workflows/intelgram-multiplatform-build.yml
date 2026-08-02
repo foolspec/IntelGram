@@ -62,7 +62,7 @@ env:
   SOURCE_TAG: v6.7.8
   RELEASE_NAME: macOS Stability And Telegram Icon
   RELEASE_SLUG: macos-stability-telegram-icon
-  PATCH_SHA256: 2813dfcd9b5e64cba4e69c0e4b27cec87763e5d0da62ce770b0a6114aa2ade4c
+  PATCH_SHA256: 5ca3cafa6dc0ffe3e3fd7201e22b07755f45a6fd26f228e66a070aa5c20326ff
   LIB_UI_COMMIT: b9a30917daf2bd8fdc17ccd9682acca178882b7b
   LIB_UI_REF: codex/intelgram-liquid-bounce-20260726
 
@@ -828,7 +828,7 @@ jobs:
             --title "IntelGram $PRODUCT_VERSION - $RELEASE_NAME" \
             --notes "## IntelGram $PRODUCT_VERSION $RELEASE_NAME
 
-          IntelGram fixes the macOS crashes reached by window activation, @username navigation, and later local-username refreshes while Telegram disguise mode is active. It replaces the inset circular Dock artwork with Telegram's full rounded-square icon and paces the slow Liquid Glass highlight layer to remove unnecessary full-window repaint load. The fixes are local UI lifetime, rendering, and artwork changes only; no Telegram account, profile, channel, or message data is changed.
+          IntelGram fixes the macOS crashes reached by window activation, @username navigation, later local-username refreshes, and Settings search indexing. It replaces the inset circular Dock artwork with Telegram's full rounded-square icon and paces the slow Liquid Glass highlight layer to remove unnecessary full-window repaint load. The fixes are local UI lifetime, rendering, and artwork changes only; no Telegram account, profile, channel, or message data is changed.
 
           Built from the official AyuGram Desktop $SOURCE_TAG upstream source." \
             "${RELEASE_ASSETS[@]}"

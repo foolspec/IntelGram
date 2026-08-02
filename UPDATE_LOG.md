@@ -10,6 +10,7 @@
 - Build reliability: macOS and Windows dependency preparation uses bounded cache stages, platform cache creation is serialized, installed Qt source trees are pruned, macOS can resume directly from a completed Qt stage, and Windows-only runs carry every dependency stage through to the packaged application.
 - macOS disguise stability: global-menu refreshes skip the Ghost Mode actions that are intentionally not created in Telegram disguise mode, preventing the window-activation crash reached by opening `@username` links.
 - Username refresh stability: the own-profile QR visibility subscription now retains its peer directly instead of reading a destroyed temporary layout helper.
+- Settings search stability: Vault reminder indexing uses the active session and no longer requires a settings window controller, preventing the previous search shortcut quit.
 - Telegram Dock artwork: the disguised macOS icon uses Telegram's full rounded-square source image and no longer appears as a tiny circular logo inside a white tile.
 - Reliable Telegram disguise trigger: click anywhere on the blue **IntelGram Desktop v...** heading three times within 1.2 seconds to switch the visible app identity, icons, window title, menus, About surface, and drawer branding to Telegram Desktop while retaining enabled local render features.
 - Physical click handling: both the Preferences heading and the drawer restore footer count mouse events directly, so Qt text selection no longer swallows rapid clicks.
@@ -52,7 +53,7 @@
 - Local channel showcase: choose a public `@channel` or `t.me` link to render it on your own profile with an explicit **Local showcase** label; lookup is read-only and does not claim ownership, join the channel, grant permissions, or modify Telegram.
 - Local channel workspace: open the showcase as a private local feed, create text posts with optional local-file attachments, edit/delete/pin/copy them, and configure a local title, description, and photo without publishing or modifying a Telegram channel.
 - In-app update log: **IntelGram Preferences -> Update log** opens a bundled native summary without requiring GitHub.
-- Current source patch SHA-256: `2813dfcd9b5e64cba4e69c0e4b27cec87763e5d0da62ce770b0a6114aa2ade4c`.
+- Current source patch SHA-256: `5ca3cafa6dc0ffe3e3fd7201e22b07755f45a6fd26f228e66a070aa5c20326ff`.
 - Privacy boundary: no Telegram profile mutation, contact import, automatic channel join, channel ownership or permission mutation, collectible transaction, or protected-content bypass.
 - Protected content: Restrict Saving Content and self-destructing items remain metadata-only jump-back references; bodies, links, filenames, revisions, and media are excluded from rules, exports, and backups.
 - Branding consistency: product-facing window, settings, version, and notification-preview titles use IntelGram while upstream attribution remains intact.

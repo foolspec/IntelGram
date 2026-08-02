@@ -98,6 +98,7 @@ def main() -> None:
             "ShowTimeline(",
             "ShowRules(",
             "ShowExport(",
+            "CurrentAccount(builder.session())",
             "AyuAutomation::Id()",
             "AyuExport::Id()",
         ),
@@ -512,6 +513,12 @@ def main() -> None:
     ).read_text(encoding="utf-8", errors="strict")
     if "Ayu::LocalProfileUsernameActive(_peer)" in profile_actions:
         fail("profile username callback still captures DetailsFiller state")
+    vault_settings = (
+        root
+        / "Telegram/SourceFiles/ayu/ui/settings/settings_vault.cpp"
+    ).read_text(encoding="utf-8", errors="strict")
+    if "const auto notes = IntelGram::Vault::ProfileNotes(CurrentAccount(controller));" in vault_settings:
+        fail("settings search still reads Vault reminders through a null controller")
     language = (
         root
         / "Telegram/Resources/langs/lang.strings"

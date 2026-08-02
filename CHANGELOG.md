@@ -33,12 +33,13 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 
 - Prevented macOS global-menu refreshes from dereferencing Ghost Mode actions that are intentionally absent while Telegram disguise mode is active. This fixes the focus-change crash reached when opening `@username` links.
 - Made the own-profile username QR visibility subscription retain its peer directly instead of reading a destroyed temporary profile-layout helper during later username updates.
+- Made Settings search calculate Vault reminder counts from its always-present session instead of dereferencing a window controller that does not exist during search indexing.
 - Replaced the disguised macOS circular source artwork with Telegram's full rounded-square icon so the Dock no longer shows a tiny logo inside a second white tile.
 - Reduced Liquid Glass background work by pacing its slow decorative highlight layer at 30 Hz instead of repainting the whole window at up to 120 Hz; scrolling and normal UI animations remain independent.
 
 ### Validation
 
-- Added release checks for the guarded macOS menu state, lifetime-safe username subscription, and exact rounded-square Telegram icon asset.
+- Added release checks for the guarded macOS menu state, lifetime-safe username subscription, session-safe Settings search, and exact rounded-square Telegram icon asset.
 - The fixes change only local UI lifetime handling and application artwork; no Telegram account, profile, username, channel, or message mutation was added.
 
 ## IntelGram v17 Reliable Telegram Disguise Trigger - 2026-07-31

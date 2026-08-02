@@ -9,25 +9,26 @@ IntelGram product versions advance sequentially from v1. AyuGram Desktop `v6.7.8
 ### Source Baseline And Patch
 
 - Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
-- Source commit: `d1131bf5a506f53bba8fc3146e12b3d5941e59d4` on the recovered local implementation branch.
+- Source commit: `d5b84f106608b4cb7b54a294d7cc94d9e9116c2a` on the recovered local implementation branch.
 - Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
 - Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
-- Patch SHA-256: `2813dfcd9b5e64cba4e69c0e4b27cec87763e5d0da62ce770b0a6114aa2ade4c`.
-- Patch footprint: 108 files, 13,068 insertions, and 675 deletions relative to the pinned source.
+- Patch SHA-256: `5ca3cafa6dc0ffe3e3fd7201e22b07755f45a6fd26f228e66a070aa5c20326ff`.
+- Patch footprint: 108 files, 13,072 insertions, and 675 deletions relative to the pinned source.
 - `Telegram/lib_ui` remains pinned to public fork commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
 
 ### Crash Repairs
 
 - `Platform::Manager::recomputeState()` now enters the Ghost Mode action-state block only when `_ghostMode` exists. Disguise mode deliberately omits that menu, so focus-driven menu refreshes no longer call `QAction::isEnabled()` or setters through null actions.
 - The own-user branch of `Info::Profile::DetailsFiller::setupInfo()` copies `_peer` into `profilePeer` before creating the reactive username subscription. The callback therefore retains the peer value and does not implicitly retain the short-lived `DetailsFiller` helper.
-- The fixes correspond to the two observed macOS failure signatures: a null `QAction` during application activation and a `not_null` assertion during a later username-value emission.
+- `BuildIdentityAndRules()` now reads the current account from `SectionBuilder::session()`, which exists in both widget and search-index contexts, instead of passing the null search-context controller through `not_null` while calculating reminder counts.
+- The fixes correspond to three repeated IntelGram-specific macOS failure signatures: a null `QAction` during application activation, a `not_null` assertion during a later username-value emission, and a Settings search assertion while indexing Vault reminders.
 
 ### Icon Repair And Validation
 
 - `AppIcon-Telegram.icon` now receives a 256 x 256 rounded-square Telegram source image rather than a circular source image that macOS framed inside another white tile.
 - The deterministic branding source uses the same image, keeping clean CI builds identical to the recovered source checkout.
 - `Ayu::VisualEffects::WindowAnimationRefreshInterval()` now bounds the slow whole-window optical highlight timer to 24 through 30 Hz instead of 30 through 120 Hz. Telegram's scrolling and interaction animation engine is unchanged.
-- `validate_intelgram_patch.py` requires the guarded menu block, lifetime-safe `profilePeer` callback, absence of the old `_peer` callback expression, paced glass refresh constants, and exact SHA-256 of both Telegram icon inputs.
+- `validate_intelgram_patch.py` requires the guarded menu block, lifetime-safe `profilePeer` callback, session-safe Vault reminder indexing, absence of the old unsafe callback expressions, paced glass refresh constants, and exact SHA-256 of both Telegram icon inputs.
 - The complete patch remains subject to alias equality, whitespace, clean-application, mutation-boundary, platform build, packaging, and launch checks. No full local build is run because the upstream instructions delegate compilation to GitHub Actions.
 
 ## IntelGram v17 Reliable Telegram Disguise Trigger - 2026-07-31
