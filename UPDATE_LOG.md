@@ -1,13 +1,16 @@
 # IntelGram Update Log
 
-## Current Update: IntelGram v17
+## Current Update: IntelGram v18
 
 - Base source: official AyuGram Desktop `v6.7.8` at `b25513a06ff88be0b3f4c928252b56c3da39cec7` with required submodules.
-- Product versioning: IntelGram releases advance sequentially from v1; the current product release is v17, while `v6.7.8` identifies only the upstream AyuGram source.
+- Product versioning: IntelGram releases advance sequentially from v1; the current product release is v18, while `v6.7.8` identifies only the upstream AyuGram source.
 - Product identity: IntelGram on macOS, Windows, and Linux with separate application identifiers.
 - Source delivery: one complete IntelGram patch plus deterministic branding and validation scripts.
 - Build delivery: GitHub Actions packages macOS Apple Silicon, Windows x64, and Linux x64.
 - Build reliability: macOS and Windows dependency preparation uses bounded cache stages, platform cache creation is serialized, installed Qt source trees are pruned, macOS can resume directly from a completed Qt stage, and Windows-only runs carry every dependency stage through to the packaged application.
+- macOS disguise stability: global-menu refreshes skip the Ghost Mode actions that are intentionally not created in Telegram disguise mode, preventing the window-activation crash reached by opening `@username` links.
+- Username refresh stability: the own-profile QR visibility subscription now retains its peer directly instead of reading a destroyed temporary layout helper.
+- Telegram Dock artwork: the disguised macOS icon uses Telegram's full rounded-square source image and no longer appears as a tiny circular logo inside a white tile.
 - Reliable Telegram disguise trigger: click anywhere on the blue **IntelGram Desktop v...** heading three times within 1.2 seconds to switch the visible app identity, icons, window title, menus, About surface, and drawer branding to Telegram Desktop while retaining enabled local render features.
 - Physical click handling: both the Preferences heading and the drawer restore footer count mouse events directly, so Qt text selection no longer swallows rapid clicks.
 - Disguise restore path: open the main drawer and click its **Telegram Desktop** footer three times within 1.2 seconds; the choice is persistent and local.
@@ -49,7 +52,7 @@
 - Local channel showcase: choose a public `@channel` or `t.me` link to render it on your own profile with an explicit **Local showcase** label; lookup is read-only and does not claim ownership, join the channel, grant permissions, or modify Telegram.
 - Local channel workspace: open the showcase as a private local feed, create text posts with optional local-file attachments, edit/delete/pin/copy them, and configure a local title, description, and photo without publishing or modifying a Telegram channel.
 - In-app update log: **IntelGram Preferences -> Update log** opens a bundled native summary without requiring GitHub.
-- Current source patch SHA-256: `6078852ae646a274d379345cf3457b858341d4337049197d445cb6201b75105e`.
+- Current source patch SHA-256: `45d751b46b62993b21bc9724458cfb3ba141031045d8df1e09ef7835f9a83cb0`.
 - Privacy boundary: no Telegram profile mutation, contact import, automatic channel join, channel ownership or permission mutation, collectible transaction, or protected-content bypass.
 - Protected content: Restrict Saving Content and self-destructing items remain metadata-only jump-back references; bodies, links, filenames, revisions, and media are excluded from rules, exports, and backups.
 - Branding consistency: product-facing window, settings, version, and notification-preview titles use IntelGram while upstream attribution remains intact.

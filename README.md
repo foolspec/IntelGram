@@ -6,7 +6,7 @@ IntelGram is a cross-platform AyuGram Desktop build focused on local profile cus
 
 [All features](FEATURES.md) | [Feature guide](FEATURE_GUIDE.md) | [Changelog](CHANGELOG.md) | [Technical changelog](TECHNICAL_CHANGELOG.md) | [Update log](UPDATE_LOG.md)
 
-Current product release: **IntelGram v17 - Reliable Telegram Disguise Trigger**. IntelGram versions count product updates sequentially from v1; AyuGram Desktop `v6.7.8` remains the upstream source version.
+Current product release: **IntelGram v18 - macOS Stability And Telegram Icon**. IntelGram versions count product updates sequentially from v1; AyuGram Desktop `v6.7.8` remains the upstream source version.
 
 ## Main Features
 
@@ -19,6 +19,7 @@ Current product release: **IntelGram v17 - Reliable Telegram Disguise Trigger**.
 - Turn on Liquid Glass with cached native or local-image blur, adaptive tint and contrast, wallpaper-colored diffusion, moving specular highlights, edge refraction, subtle grain, and an optional removable local background image.
 - Make the interface more lively with Quick Snap, Smooth Flow, Diabolical, Springy, or the optional high-elasticity Liquid Bounce preset while preserving reduced-motion and power-saving behavior.
 - Triple-click anywhere on the blue IntelGram Desktop version heading to switch the app's visible identity to Telegram Desktop while keeping every enabled local profile, collectible, badge, and channel presentation active.
+- Keep disguise mode stable through window activation and `@username` navigation on macOS, with a correctly sized rounded-square Telegram Dock icon.
 - Render a local display name, UID, primary username, up to 20 other usernames, anonymous number, bio, profile photo, and native Telegram badge presentation for your own account.
 - Show a public channel on your own profile as a clearly labeled local showcase, then open its private local-only workspace to create, edit, pin, copy, or delete local posts, attach local files, and customize a local title, description, and photo without changing Telegram.
 - Enable **Local ownership** from any broadcast channel's **IntelGram** submenu to reveal the native broadcast composer and Manage actions, then place persistent local text broadcasts directly in that channel's real timeline with native reply, edit, pin, reaction, copy, delete, and selection controls without sending them to Telegram.
@@ -57,6 +58,8 @@ Current product release: **IntelGram v17 - Reliable Telegram Disguise Trigger**.
 Open **IntelGram Preferences** and click anywhere on the blue **IntelGram Desktop v...** heading three times within 1.2 seconds to enable Telegram disguise mode. The trigger counts physical mouse clicks across the heading instead of relying on text-link activation. IntelGram immediately returns to Telegram's normal Settings screen and changes the visible app name, logo, Dock or taskbar icon, tray icon, window title, menus, About surface, and drawer footer to Telegram Desktop. Your enabled local profile, collectible, badge, and local channel presentation stays active.
 
 To restore IntelGram, open the main drawer and click the **Telegram Desktop** footer three times within 1.2 seconds. The footer uses the same physical-click handling. The selection is saved locally across restarts and sends no Telegram account or profile request.
+
+On macOS, the current release also prevents disguise mode's hidden Ghost Mode menu actions from being touched during focus changes and keeps the own-profile username QR subscription independent of temporary profile-layout state. Opening an `@username`, switching windows, and refreshing local usernames no longer uses either invalid callback path. The Telegram Dock artwork is now a full-size rounded-square icon instead of a circular logo placed inside a second white tile.
 
 Open **IntelGram Preferences -> Local Profile & Collectibles** to configure:
 
@@ -134,7 +137,7 @@ Liquid Glass uses a native behind-window material on macOS, the Windows DWM back
 ## Source And Verification
 
 - [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch) contains the complete IntelGram implementation.
-- Patch SHA-256: `6078852ae646a274d379345cf3457b858341d4337049197d445cb6201b75105e`
+- Patch SHA-256: `45d751b46b62993b21bc9724458cfb3ba141031045d8df1e09ef7835f9a83cb0`
 - The patch pins [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui) commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`, which carries IntelGram's shared motion-preset hook and Liquid Bounce transition.
 - [`build_intelgram_branding.py`](build_intelgram_branding.py) applies the cross-platform IntelGram product identity.
 - [`validate_intelgram_patch.py`](validate_intelgram_patch.py) verifies the feature hooks, protected-content boundaries, and absence of custom Telegram mutation requests before each platform build.

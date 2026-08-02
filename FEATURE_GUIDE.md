@@ -6,6 +6,8 @@ Open **IntelGram Preferences** and click anywhere on the blue **IntelGram Deskto
 
 To switch back, open the main drawer and click **Telegram Desktop** at the bottom three times within 1.2 seconds. The choice is saved on this device and does not alter your Telegram account.
 
+On macOS, v18 also fixes the disguise-mode crash that could occur during window activation or after opening an `@username`. Its Dock icon now uses the same full rounded-square Telegram artwork shown by macOS instead of a small circular logo inside a white tile.
+
 ## Where do I change my local profile?
 
 Open **IntelGram Preferences -> Local Profile & Collectibles**. The controls are grouped into **Identity**, **Usernames, bio and contact**, **Profile photo**, and **Collectibles**. Each field has its own switch or action, so you can use only the pieces you want.

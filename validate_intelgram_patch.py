@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import hashlib
 import pathlib
 import subprocess
 import sys
 
 BASELINE = "b25513a06ff88be0b3f4c928252b56c3da39cec7"
 LIB_UI_COMMIT = "b9a30917daf2bd8fdc17ccd9682acca178882b7b"
+TELEGRAM_MAC_ICON_SHA256 = (
+    "b82ae7291bd5fe75257ba7b10f04eb720aa1bd07a233a3e9f4998db6e4b2d3b0"
+)
 
 
 def fail(message: str) -> None:
@@ -22,6 +26,14 @@ def require(root: pathlib.Path, path: str, needles: tuple[str, ...]) -> None:
     for needle in needles:
         if needle not in text:
             fail(f"{path} does not contain {needle!r}")
+
+
+def require_sha256(path: pathlib.Path, expected: str, label: str) -> None:
+    if not path.is_file():
+        fail(f"missing {label}")
+    actual = hashlib.sha256(path.read_bytes()).hexdigest()
+    if actual != expected:
+        fail(f"{label} has SHA-256 {actual}, expected {expected}")
 
 
 def main() -> None:
@@ -276,6 +288,9 @@ def main() -> None:
             "ayu_LocalProfileChannelProfileLabel",
             "Ayu::ShowLocalChannelWorkspace(window);",
             "Ayu::LocalChannelDisplayTitle(channel)",
+            "const auto profilePeer = _peer;",
+            "UsernamesValue(profilePeer)",
+            "Ayu::LocalProfileUsernameActive(profilePeer)",
         ),
         "Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp": (
             "LocalProfileBadgeStyleFor(",
@@ -353,6 +368,10 @@ def main() -> None:
             "NSVisualEffectBlendingModeBehindWindow",
             "void SetWindowVisualEffect(",
         ),
+        "Telegram/SourceFiles/platform/mac/global_menu_mac.mm": (
+            "if (!Ayu::DiscreetModeEnabled())",
+            "if (_ghostMode) {\n\t\tconst auto ghost = resolveGhostSettings();",
+        ),
         "Telegram/SourceFiles/platform/win/specific_win.cpp": (
             "DwmSetWindowAttribute",
             "DwmEnableBlurBehindWindow",
@@ -390,6 +409,19 @@ def main() -> None:
     }
     for path, needles in requirements.items():
         require(root, path, needles)
+
+    require_sha256(
+        root
+        / "Telegram/Telegram/AppIcon-Telegram.icon/Assets/app.png",
+        TELEGRAM_MAC_ICON_SHA256,
+        "rounded-square Telegram macOS icon",
+    )
+    require_sha256(
+        pathlib.Path(__file__).resolve().parent
+        / "branding/icons/telegram/app.png",
+        TELEGRAM_MAC_ICON_SHA256,
+        "Telegram branding source icon",
+    )
 
     lib_ui_commit = subprocess.run(
         ["git", "-C", str(root / "Telegram/lib_ui"), "rev-parse", "HEAD"],
@@ -472,6 +504,12 @@ def main() -> None:
         root
         / "Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp"
     ).read_text(encoding="utf-8", errors="strict")
+    profile_actions = (
+        root
+        / "Telegram/SourceFiles/info/profile/info_profile_actions.cpp"
+    ).read_text(encoding="utf-8", errors="strict")
+    if "Ayu::LocalProfileUsernameActive(_peer)" in profile_actions:
+        fail("profile username callback still captures DetailsFiller state")
     language = (
         root
         / "Telegram/Resources/langs/lang.strings"
