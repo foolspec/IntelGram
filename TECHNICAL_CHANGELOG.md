@@ -9,11 +9,11 @@ IntelGram product versions advance sequentially from v1. AyuGram Desktop `v6.7.8
 ### Source Baseline And Patch
 
 - Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
-- Source commit: `ade8a17c0f2f2de4410fd1756032f7c3b3dfc683` on the recovered local implementation branch.
+- Source commit: `d1131bf5a506f53bba8fc3146e12b3d5941e59d4` on the recovered local implementation branch.
 - Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
 - Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
-- Patch SHA-256: `45d751b46b62993b21bc9724458cfb3ba141031045d8df1e09ef7835f9a83cb0`.
-- Patch footprint: 108 files, 13,062 insertions, and 675 deletions relative to the pinned source.
+- Patch SHA-256: `2813dfcd9b5e64cba4e69c0e4b27cec87763e5d0da62ce770b0a6114aa2ade4c`.
+- Patch footprint: 108 files, 13,068 insertions, and 675 deletions relative to the pinned source.
 - `Telegram/lib_ui` remains pinned to public fork commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
 
 ### Crash Repairs
@@ -26,7 +26,8 @@ IntelGram product versions advance sequentially from v1. AyuGram Desktop `v6.7.8
 
 - `AppIcon-Telegram.icon` now receives a 256 x 256 rounded-square Telegram source image rather than a circular source image that macOS framed inside another white tile.
 - The deterministic branding source uses the same image, keeping clean CI builds identical to the recovered source checkout.
-- `validate_intelgram_patch.py` requires the guarded menu block, lifetime-safe `profilePeer` callback, absence of the old `_peer` callback expression, and exact SHA-256 of both Telegram icon inputs.
+- `Ayu::VisualEffects::WindowAnimationRefreshInterval()` now bounds the slow whole-window optical highlight timer to 24 through 30 Hz instead of 30 through 120 Hz. Telegram's scrolling and interaction animation engine is unchanged.
+- `validate_intelgram_patch.py` requires the guarded menu block, lifetime-safe `profilePeer` callback, absence of the old `_peer` callback expression, paced glass refresh constants, and exact SHA-256 of both Telegram icon inputs.
 - The complete patch remains subject to alias equality, whitespace, clean-application, mutation-boundary, platform build, packaging, and launch checks. No full local build is run because the upstream instructions delegate compilation to GitHub Actions.
 
 ## IntelGram v17 Reliable Telegram Disguise Trigger - 2026-07-31

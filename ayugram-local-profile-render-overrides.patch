@@ -992,7 +992,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/Telegram/Resources/langs/lang.strings b/Telegram/Resources/langs/lang.strings
-index 7380587e7..c8488ff6a 100644
+index 7380587e7..af1141ec9 100644
 --- a/Telegram/Resources/langs/lang.strings
 +++ b/Telegram/Resources/langs/lang.strings
 @@ -7971,14 +7971,60 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -1090,8 +1090,8 @@ index 7380587e7..c8488ff6a 100644
 +"ayu_IntelGramUpdateLogLabel" = "Open in IntelGram";
 +"ayu_IntelGramUpdateLogTitle" = "IntelGram update log";
 +"ayu_IntelGramUpdateLogCurrentTitle" = "Latest update";
-+"ayu_IntelGramUpdateLogDisguise" = "**Telegram disguise mode**\n- Triple-click anywhere on the blue IntelGram Desktop version heading in IntelGram Preferences to switch the visible app name, logo, Dock or taskbar icon, tray icon, window title, menus, About surface, and drawer branding to Telegram Desktop.\n- The trigger counts physical mouse clicks and allows 1.2 seconds for the three-click sequence.\n- The app immediately returns to Telegram's normal Settings screen so IntelGram-only labels are no longer visible.\n- macOS menu refreshes now skip Ghost Mode actions hidden by the disguise, preventing focus changes and @username links from closing the app.\n- The disguised macOS Dock icon uses full-size Telegram artwork without a duplicate white tile.\n- Local profile, collectible, badge, and local channel presentation remains enabled because the switch changes only this client's visible product identity.\n- To restore IntelGram, open the main drawer and triple-click the Telegram Desktop footer.\n- The choice is saved locally and never changes your Telegram account or sends a request.";
-+"ayu_IntelGramUpdateLogCurrent" = "**Native local channel ownership**\n- Open a broadcast channel's three-dot menu, choose IntelGram, then Local ownership.\n- The existing channel view gains Telegram's native Broadcast a message composer, owner-style Manage actions, and persistent local text broadcasts inside the real timeline.\n- Right-click a local broadcast for Telegram's reaction strip plus Reply, Edit, Pin or Unpin, Copy Text, Copy Post Link, Forward, Delete, and Select.\n- Local replies, edits, pins, reactions, Stars, and links persist. Broadcast engagement controls starting and maximum views, increment size, interval, six baseline reactions, and paid Stars.\n- Views and reaction clicks update only this client. Forward creates a text handoff; no synthetic message ID, reaction, payment, pin, edit, delete, or post is sent to Telegram.\n- Local ownership hides contradictory Join, Leave, and Report rows while active and can be disabled independently for every channel.\n- Media, voice, stickers, inline results, scheduled posts, and files remain blocked so nothing can upload to Telegram.\n\n**Liquid Glass & Motion**\n- Liquid Glass layers adaptive tint and contrast, wallpaper-aware diffusion, cursor-reactive specular light, refractive edges, internal reflections, and subtle film grain over native desktop blur.\n- Material animation follows the active display refresh rate up to 120 Hz and pauses while IntelGram is hidden, inactive, or respecting reduced-motion and power-saving settings.\n- Control sidebar, chat, menu, dialog, and panel transparency separately; choose a private local backdrop and tune image opacity, blur, tint, surface opacity, and optical intensity without fading text, icons, avatars, or media.\n- Quick Snap is compact and immediate. Smooth Flow is calm and critically damped. Diabolical is brisk with stronger depth. Springy settles gently. The optional Liquid Bounce pack adds the most elastic lift and a controlled overshoot.\n- The profile username editor matches Telegram's native title, @username field, validation row, help text, and button layout while saving only IntelGram's local render value.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
++"ayu_IntelGramUpdateLogDisguise" = "**Telegram disguise mode**\n- Triple-click anywhere on the blue IntelGram Desktop version heading in IntelGram Preferences to switch the visible app name, logo, Dock or taskbar icon, tray icon, window title, menus, About surface, and drawer branding to Telegram Desktop.\n- The trigger counts physical mouse clicks and allows 1.2 seconds for the three-click sequence.\n- The app immediately returns to Telegram's normal Settings screen so IntelGram-only labels are no longer visible.\n- macOS menu refreshes now skip Ghost Mode actions hidden by the disguise, preventing focus changes and @username links from closing the app.\n- The disguised macOS Dock icon uses full-size Telegram artwork without a duplicate white tile.\n- Decorative glass highlights now refresh efficiently at 30 Hz instead of repainting the entire window at up to 120 Hz; scrolling and normal UI animations remain independent.\n- Local profile, collectible, badge, and local channel presentation remains enabled because the switch changes only this client's visible product identity.\n- To restore IntelGram, open the main drawer and triple-click the Telegram Desktop footer.\n- The choice is saved locally and never changes your Telegram account or sends a request.";
++"ayu_IntelGramUpdateLogCurrent" = "**Native local channel ownership**\n- Open a broadcast channel's three-dot menu, choose IntelGram, then Local ownership.\n- The existing channel view gains Telegram's native Broadcast a message composer, owner-style Manage actions, and persistent local text broadcasts inside the real timeline.\n- Right-click a local broadcast for Telegram's reaction strip plus Reply, Edit, Pin or Unpin, Copy Text, Copy Post Link, Forward, Delete, and Select.\n- Local replies, edits, pins, reactions, Stars, and links persist. Broadcast engagement controls starting and maximum views, increment size, interval, six baseline reactions, and paid Stars.\n- Views and reaction clicks update only this client. Forward creates a text handoff; no synthetic message ID, reaction, payment, pin, edit, delete, or post is sent to Telegram.\n- Local ownership hides contradictory Join, Leave, and Report rows while active and can be disabled independently for every channel.\n- Media, voice, stickers, inline results, scheduled posts, and files remain blocked so nothing can upload to Telegram.\n\n**Liquid Glass & Motion**\n- Liquid Glass layers adaptive tint and contrast, wallpaper-aware diffusion, cursor-reactive specular light, refractive edges, internal reflections, and subtle film grain over native desktop blur.\n- Slow decorative material highlights use a paced 30 Hz refresh to avoid full-window repaint lag; normal scrolling and interaction animations stay on Telegram's independent display-synced path.\n- Control sidebar, chat, menu, dialog, and panel transparency separately; choose a private local backdrop and tune image opacity, blur, tint, surface opacity, and optical intensity without fading text, icons, avatars, or media.\n- Quick Snap is compact and immediate. Smooth Flow is calm and critically damped. Diabolical is brisk with stronger depth. Springy settles gently. The optional Liquid Bounce pack adds the most elastic lift and a controlled overshoot.\n- The profile username editor matches Telegram's native title, @username field, validation row, help text, and button layout while saving only IntelGram's local render value.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
 +"ayu_IntelGramUpdateLogFeaturesTitle" = "Main IntelGram features";
 +"ayu_IntelGramUpdateLogFeatures" = "**Local profile, channels, and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, personal channel rendering, and public-channel showcase rendering.\n- Automatic clone mirroring and manual local controls cover Premium, verified, SCAM, FAKE, DIRECT, emoji status, and organization verification badges.\n- Per-channel local ownership with native owner-style controls and persistent text broadcasts rendered inside the selected channel's real timeline.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity and customization**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native themes, cloud theme browsing, chat wallpapers, adaptive Liquid Glass, native blur, five motion packs, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
 +"ayu_IntelGramUpdateLogPrivacyTitle" = "Local-only boundary";
@@ -12739,10 +12739,10 @@ index 950f22d7e..054c87bbc 100644
 +rpl::producer<TextWithEntities> IDValue(MsgId topicRootId);
 diff --git a/Telegram/SourceFiles/ayu/ui/visual_effects.cpp b/Telegram/SourceFiles/ayu/ui/visual_effects.cpp
 new file mode 100644
-index 000000000..d52aff33f
+index 000000000..e2afc158c
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/visual_effects.cpp
-@@ -0,0 +1,576 @@
+@@ -0,0 +1,582 @@
 +#include "ayu/ui/visual_effects.h"
 +
 +#include "ayu/ayu_settings.h"
@@ -12769,6 +12769,9 @@ index 000000000..d52aff33f
 +
 +namespace Ayu::VisualEffects {
 +namespace {
++
++constexpr auto kMinimumGlassRefreshRate = 24.;
++constexpr auto kMaximumGlassRefreshRate = 30.;
 +
 +struct PaletteEntry {
 +	const char *name;
@@ -13314,8 +13317,11 @@ index 000000000..d52aff33f
 +	const auto refreshRate = screen
 +		? screen->refreshRate()
 +		: 60.;
-+	const auto capped = std::clamp(refreshRate, 30., 120.);
-+	return std::max(int(std::round(1000. / capped)), 8);
++	const auto capped = std::clamp(
++		refreshRate,
++		kMinimumGlassRefreshRate,
++		kMaximumGlassRefreshRate);
++	return int(std::round(1000. / capped));
 +}
 +
 +} // namespace Ayu::VisualEffects

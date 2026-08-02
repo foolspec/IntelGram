@@ -181,7 +181,7 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - Use deterministic 1-2% film grain to reduce color banding and anti-aliased inner and outer edge light.
 - Choose a local image as the whole-app backdrop, then adjust its opacity and blur or remove it completely.
 - Cache decoded, blurred, and scaled-cover backdrop images instead of rebuilding them for every frame.
-- Follow the active display refresh rate up to 120 Hz while visible and active, then pause optical animation while hidden, inactive, or reduced motion is enabled.
+- Pace the slow decorative optical layer at 30 Hz to avoid full-window repaint lag, while leaving normal scrolling and interaction animations on Telegram's independent display-synced path; pause the optical layer while hidden, inactive, or reduced motion is enabled.
 - Enable enhanced animations separately from transparency.
 - Choose Quick Snap, Smooth Flow, Diabolical, Springy, or Liquid Bounce motion for existing transitions, dialogs, drawers, controls, and navigation.
 - Quick Snap is compact and immediate; Smooth Flow is calm and critically damped; Diabolical is brisk with stronger depth; Springy settles gently without overshoot; Liquid Bounce is the most elastic and adds a controlled overshoot.

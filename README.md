@@ -82,7 +82,7 @@ The collectible picker opens as a native visual collection gallery. Choose a col
 
 The local-profile page is split into focused identity, contact, photo, and collectible groups. **IntelGram Preferences -> Appearance & Backgrounds** contains visual theme cards, the in-app cloud theme gallery, a visible action for removing the selected custom theme, a live chat-background preview, Telegram's wallpaper gallery, local-image selection, tiling controls, and the IntelGram app-icon picker. **Navigation & Layout** separately contains chat-folder, tray, and drawer controls. macOS uses full-bleed platform artwork without a duplicate white frame or inset. The name-color editor uses your currently rendered local display name in its preview.
 
-Open **IntelGram Preferences -> Glass & Motion** for the optical-material controls. Liquid Glass can independently soften the chat list/sidebar, message surfaces, and menus/dialogs, then layer adaptive tint and contrast, wallpaper-colored diffusion, cursor-reactive highlights, moving reflections, refractive edges, and fine anti-banding grain over native desktop blur or a removable local whole-app image. The backdrop and scaled-cover image are cached, and active material motion follows the display refresh rate up to 120 Hz while pausing when the window is hidden, inactive, or reduced motion is enabled.
+Open **IntelGram Preferences -> Glass & Motion** for the optical-material controls. Liquid Glass can independently soften the chat list/sidebar, message surfaces, and menus/dialogs, then layer adaptive tint and contrast, wallpaper-colored diffusion, cursor-reactive highlights, moving reflections, refractive edges, and fine anti-banding grain over native desktop blur or a removable local whole-app image. The backdrop and scaled-cover image are cached, while slow decorative highlights use a paced 30 Hz refresh and stop when the window is hidden, inactive, or reduced motion is enabled. Telegram's normal scrolling and interaction animations remain on their independent display-synced path.
 
 Enhanced Animations applies one selected pack across existing IntelGram transitions, dialogs, drawers, controls, and navigation. **Quick Snap** is compact and immediate, **Smooth Flow** is calm and critically damped, **Diabolical** is brisk with stronger depth, **Springy** settles gently without overshoot, and **Liquid Bounce** adds the most elastic lift with a controlled overshoot. The optional window-opening fade follows the same accessibility gate. Turning either master switch off restores normal IntelGram appearance or motion immediately.
 
@@ -137,7 +137,7 @@ Liquid Glass uses a native behind-window material on macOS, the Windows DWM back
 ## Source And Verification
 
 - [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch) contains the complete IntelGram implementation.
-- Patch SHA-256: `45d751b46b62993b21bc9724458cfb3ba141031045d8df1e09ef7835f9a83cb0`
+- Patch SHA-256: `2813dfcd9b5e64cba4e69c0e4b27cec87763e5d0da62ce770b0a6114aa2ade4c`
 - The patch pins [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui) commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`, which carries IntelGram's shared motion-preset hook and Liquid Bounce transition.
 - [`build_intelgram_branding.py`](build_intelgram_branding.py) applies the cross-platform IntelGram product identity.
 - [`validate_intelgram_patch.py`](validate_intelgram_patch.py) verifies the feature hooks, protected-content boundaries, and absence of custom Telegram mutation requests before each platform build.

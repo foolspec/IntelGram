@@ -34,6 +34,7 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 - Prevented macOS global-menu refreshes from dereferencing Ghost Mode actions that are intentionally absent while Telegram disguise mode is active. This fixes the focus-change crash reached when opening `@username` links.
 - Made the own-profile username QR visibility subscription retain its peer directly instead of reading a destroyed temporary profile-layout helper during later username updates.
 - Replaced the disguised macOS circular source artwork with Telegram's full rounded-square icon so the Dock no longer shows a tiny logo inside a second white tile.
+- Reduced Liquid Glass background work by pacing its slow decorative highlight layer at 30 Hz instead of repainting the whole window at up to 120 Hz; scrolling and normal UI animations remain independent.
 
 ### Validation
 

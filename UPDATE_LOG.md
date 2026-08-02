@@ -22,7 +22,7 @@
 - Appearance & Backgrounds: native visual theme cards, in-app cloud themes, imported theme files, a visible remove-current-theme action, Telegram's wallpaper gallery, custom local images, live background preview, tiling controls, and the IntelGram icon set.
 - Liquid Glass: cached native or local-image blur with adaptive tint and contrast, wallpaper-colored diffusion, cursor-reactive highlights, moving specular reflections, subtle edge refraction, internal reflections, anti-banding grain, and anti-aliased edges.
 - Optical controls: separate switches for adaptive material, dynamic highlights, refractive edges, and an intensity slider, alongside the existing sidebar/chat/panel, tint, opacity, and removable backdrop controls.
-- Material performance: active highlights follow the display refresh rate up to 120 Hz while blurred and scaled image results are cached; repainting pauses while hidden, inactive, or reduced motion is enabled.
+- Material performance: slow decorative highlights use a paced 30 Hz refresh while blurred and scaled image results are cached; repainting pauses while hidden, inactive, or reduced motion is enabled, and normal UI animations remain display-synced independently.
 - Enhanced Animations: Quick Snap, Smooth Flow, Diabolical, Springy, and Liquid Bounce apply across existing transitions, dialogs, drawers, controls, and navigation, with an optional window-opening animation.
 - Motion guide: Quick Snap is immediate, Smooth Flow is critically damped, Diabolical is brisk with stronger depth, Springy settles gently, and Liquid Bounce adds the strongest controlled overshoot.
 - Accessibility: IntelGram's reduced-motion and power-saving switch remains authoritative and disables the added motion behavior.
@@ -52,7 +52,7 @@
 - Local channel showcase: choose a public `@channel` or `t.me` link to render it on your own profile with an explicit **Local showcase** label; lookup is read-only and does not claim ownership, join the channel, grant permissions, or modify Telegram.
 - Local channel workspace: open the showcase as a private local feed, create text posts with optional local-file attachments, edit/delete/pin/copy them, and configure a local title, description, and photo without publishing or modifying a Telegram channel.
 - In-app update log: **IntelGram Preferences -> Update log** opens a bundled native summary without requiring GitHub.
-- Current source patch SHA-256: `45d751b46b62993b21bc9724458cfb3ba141031045d8df1e09ef7835f9a83cb0`.
+- Current source patch SHA-256: `2813dfcd9b5e64cba4e69c0e4b27cec87763e5d0da62ce770b0a6114aa2ade4c`.
 - Privacy boundary: no Telegram profile mutation, contact import, automatic channel join, channel ownership or permission mutation, collectible transaction, or protected-content bypass.
 - Protected content: Restrict Saving Content and self-destructing items remain metadata-only jump-back references; bodies, links, filenames, revisions, and media are excluded from rules, exports, and backups.
 - Branding consistency: product-facing window, settings, version, and notification-preview titles use IntelGram while upstream attribution remains intact.

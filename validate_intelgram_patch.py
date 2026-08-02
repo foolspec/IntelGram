@@ -145,6 +145,8 @@ def main() -> None:
             "AdaptiveTint(",
             "EdgePath(",
             "WindowAnimationEnabled(",
+            "kMinimumGlassRefreshRate = 24.",
+            "kMaximumGlassRefreshRate = 30.",
             "void PaintWindow(",
         ),
         "Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp": (
