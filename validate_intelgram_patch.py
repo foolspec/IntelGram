@@ -377,8 +377,10 @@ def main() -> None:
             'CFSTR("_LSSetApplicationInformationItem")',
             'CFSTR("_kLSDisplayNameKey")',
             "NSProcessInfo.processInfo.processName = nativeName;",
+            "static const auto handle = dlopen(",
             "image.toCGImage()",
             "initWithCGImage:nativeImage",
+            "size:NSZeroSize] autorelease]",
             "applicationIconImage",
         ),
         "Telegram/SourceFiles/platform/mac/global_menu_mac.mm": (

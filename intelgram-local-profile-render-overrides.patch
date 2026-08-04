@@ -17043,7 +17043,7 @@ index 51a09b5b5..3b64cab28 100644
  #ifndef OS_MAC_STORE
  	return u"/tmp/"_q + hash + '-' + cGUIDStr();
 diff --git a/Telegram/SourceFiles/platform/mac/specific_mac_p.mm b/Telegram/SourceFiles/platform/mac/specific_mac_p.mm
-index 997f6d2d5..addf48abc 100644
+index 997f6d2d5..c84fc68be 100644
 --- a/Telegram/SourceFiles/platform/mac/specific_mac_p.mm
 +++ b/Telegram/SourceFiles/platform/mac/specific_mac_p.mm
 @@ -24,6 +24,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -17078,7 +17078,7 @@ index 997f6d2d5..addf48abc 100644
 +	CFDictionaryRef *);
 +
 +void SetLaunchServicesDisplayName(NSString *name) {
-+	const auto handle = dlopen(
++	static const auto handle = dlopen(
 +		"/System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices",
 +		RTLD_LAZY | RTLD_LOCAL);
 +	if (!handle) {
@@ -17154,9 +17154,9 @@ index 997f6d2d5..addf48abc 100644
 +		if (!nativeImage) {
 +			return;
 +		}
-+		const auto applicationIcon = [[NSImage alloc]
++		const auto applicationIcon = [[[NSImage alloc]
 +			initWithCGImage:nativeImage
-+			size:NSZeroSize];
++			size:NSZeroSize] autorelease];
 +		CGImageRelease(nativeImage);
 +		if (applicationIcon) {
 +			NSApplication.sharedApplication.applicationIconImage

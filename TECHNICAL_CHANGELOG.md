@@ -9,10 +9,10 @@ IntelGram product versions advance sequentially from v1. AyuGram Desktop `v6.7.8
 ### Source Baseline And Patch
 
 - Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
-- Source commit: `31ef2a00a40d3fcfe0b39a7fdc325723559a58c9` on the recovered local implementation branch.
+- Source commit: `83881572307c8f85802349fb6aa6c4007deec527` on the recovered local implementation branch.
 - Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
 - Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
-- Patch SHA-256: `4028f78d460e27a887ccb41a26e3b1e5a20a5650468ffd0d8c592fa7ec4e4094`.
+- Patch SHA-256: `619a859553db9e3958cafc18f6ed9f2b62c123c5e31356918c435ec05e2531c7`.
 - Patch footprint: 108 files, 13,160 insertions, and 692 deletions relative to the pinned source.
 - `Telegram/lib_ui` remains pinned to public fork commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
 
@@ -21,6 +21,7 @@ IntelGram product versions advance sequentially from v1. AyuGram Desktop `v6.7.8
 - `Ayu::ApplyDisplayIdentity()` now applies `VisibleClientShortName()`, producing the exact runtime labels **Telegram** and **IntelGram** instead of the longer product heading.
 - `Platform::SetApplicationDisplayName()` updates `NSProcessInfo`, the AppKit menu title, and the running Launch Services display-name item after `NSApplication` is initialized.
 - Launch Services symbols are resolved dynamically and guarded, preserving compatibility when a private symbol is unavailable while retaining Qt and AppKit title updates.
+- The framework handle is initialized once and the temporary native icon is autoreleased, so repeated hidden-mode toggles do not accumulate native resources.
 - A standalone native toggle probe verified that the live Launch Services entry changes from **Telegram** back to **IntelGram** without restarting or changing the bundle on disk.
 
 ### Direct Dock Artwork
