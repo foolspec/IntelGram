@@ -24,6 +24,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "styles/style_window.h"
 #include "platform/platform_specific.h"
 
+#include <dlfcn.h>
 #include <QtGui/QWindow>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QMenu>
@@ -47,6 +48,51 @@ using Platform::NS2QString;
 namespace {
 
 constexpr auto kIgnoreActivationTimeoutMs = 500;
+constexpr auto kLaunchServicesSessionId = -2;
+
+using GetCurrentApplicationAsn = CFTypeRef (*)(void);
+using SetApplicationInformationItem = OSStatus (*)(
+	int,
+	CFTypeRef,
+	CFStringRef,
+	CFStringRef,
+	CFDictionaryRef *);
+
+void SetLaunchServicesDisplayName(NSString *name) {
+	const auto handle = dlopen(
+		"/System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices",
+		RTLD_LAZY | RTLD_LOCAL);
+	if (!handle) {
+		return;
+	}
+	const auto bundle = CFBundleGetBundleWithIdentifier(
+		CFSTR("com.apple.LaunchServices"));
+	if (!bundle) {
+		return;
+	}
+	const auto getAsn = reinterpret_cast<GetCurrentApplicationAsn>(
+		CFBundleGetFunctionPointerForName(
+			bundle,
+			CFSTR("_LSGetCurrentApplicationASN")));
+	const auto setItem = reinterpret_cast<SetApplicationInformationItem>(
+		CFBundleGetFunctionPointerForName(
+			bundle,
+			CFSTR("_LSSetApplicationInformationItem")));
+	const auto displayNameKey = reinterpret_cast<CFStringRef *>(
+		CFBundleGetDataPointerForName(
+			bundle,
+			CFSTR("_kLSDisplayNameKey")));
+	const auto asn = getAsn ? getAsn() : nullptr;
+	if (!setItem || !displayNameKey || !*displayNameKey || !asn) {
+		return;
+	}
+	setItem(
+		kLaunchServicesSessionId,
+		asn,
+		*displayNameKey,
+		(__bridge CFStringRef)name,
+		nullptr);
+}
 
 void SetupDockMenu() {
 	static const auto DockMenu = std::make_unique<QMenu>();
@@ -192,27 +238,43 @@ namespace Platform {
 
 void SetApplicationIcon(const QIcon &icon) {
 	const auto iconName = AyuAssets::currentAppLogoName();
-    if (iconName.isEmpty()) {
-        return;
-    }
+	if (iconName.isEmpty()) {
+		return;
+	}
 
-	const auto name = QString("AppIcon-")
-		+ iconName[0].toUpper()
-		+ iconName.mid(1);
-    @autoreleasepool {
-        if (name == QString("AppIcon-Default")) {
-            NSApplication.sharedApplication.applicationIconImage = nil;
-            return;
-        }
-        
-        // NSString *iconPath = [NSBundle.mainBundle pathForResource:Q2NSString(name) ofType:@"icns"];
-        // NSImage *icon = [[NSImage alloc] initWithContentsOfFile:iconPath];
-		NSImage *icon = [NSBundle.mainBundle imageForResource:Q2NSString(name)];
+	@autoreleasepool {
+		if (iconName == AyuAssets::DEFAULT_ICON) {
+			NSApplication.sharedApplication.applicationIconImage = nil;
+			return;
+		}
+		const auto image = icon.pixmap(QSize(512, 512)).toImage();
+		const auto nativeImage = image.toCGImage();
+		if (!nativeImage) {
+			return;
+		}
+		const auto applicationIcon = [[NSImage alloc]
+			initWithCGImage:nativeImage
+			size:NSZeroSize];
+		CGImageRelease(nativeImage);
+		if (applicationIcon) {
+			NSApplication.sharedApplication.applicationIconImage
+				= applicationIcon;
+		}
+	}
+}
 
-        if (icon) {
-            NSApplication.sharedApplication.applicationIconImage = icon;
-        }
-    }
+void SetApplicationDisplayName(const QString &name) {
+	@autoreleasepool {
+		const auto nativeName = Q2NSString(name);
+		const auto application = NSApplication.sharedApplication;
+		NSProcessInfo.processInfo.processName = nativeName;
+		if (const auto menu = application.mainMenu) {
+			if (menu.numberOfItems > 0) {
+				[menu itemAtIndex:0].title = nativeName;
+			}
+		}
+		SetLaunchServicesDisplayName(nativeName);
+	}
 }
 
 } // namespace Platform

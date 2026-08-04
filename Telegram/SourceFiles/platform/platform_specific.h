@@ -38,6 +38,12 @@ enum class SystemSettingsType {
 };
 
 void SetApplicationIcon(const QIcon &icon);
+#ifdef Q_OS_MAC
+void SetApplicationDisplayName(const QString &name);
+#else
+inline void SetApplicationDisplayName(const QString &) {
+}
+#endif
 [[nodiscard]] QString SingleInstanceLocalServerName(const QString &hash);
 [[nodiscard]] PermissionStatus GetPermissionStatus(PermissionType type);
 void RequestPermission(PermissionType type, Fn<void(PermissionStatus)> resultCallback);

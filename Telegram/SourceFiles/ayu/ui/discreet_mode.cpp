@@ -3,6 +3,7 @@
 #include "ayu/ayu_settings.h"
 #include "ayu/ui/ayu_logo.h"
 #include "core/application.h"
+#include "platform/platform_specific.h"
 #include "tray.h"
 #include "window/main_window.h"
 
@@ -20,7 +21,9 @@ namespace Ayu {
 namespace {
 
 void ApplyDisplayIdentity() {
-	QGuiApplication::setApplicationDisplayName(VisibleClientName());
+	const auto name = VisibleClientShortName();
+	QGuiApplication::setApplicationDisplayName(name);
+	Platform::SetApplicationDisplayName(name);
 }
 
 void RefreshApplicationIcon() {
