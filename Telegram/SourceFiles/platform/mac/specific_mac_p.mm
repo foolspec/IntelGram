@@ -59,7 +59,7 @@ using SetApplicationInformationItem = OSStatus (*)(
 	CFDictionaryRef *);
 
 void SetLaunchServicesDisplayName(NSString *name) {
-	const auto handle = dlopen(
+	static const auto handle = dlopen(
 		"/System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices",
 		RTLD_LAZY | RTLD_LOCAL);
 	if (!handle) {
@@ -252,9 +252,9 @@ void SetApplicationIcon(const QIcon &icon) {
 		if (!nativeImage) {
 			return;
 		}
-		const auto applicationIcon = [[NSImage alloc]
+		const auto applicationIcon = [[[NSImage alloc]
 			initWithCGImage:nativeImage
-			size:NSZeroSize];
+			size:NSZeroSize] autorelease];
 		CGImageRelease(nativeImage);
 		if (applicationIcon) {
 			NSApplication.sharedApplication.applicationIconImage
