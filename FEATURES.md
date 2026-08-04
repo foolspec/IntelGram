@@ -21,8 +21,9 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - Activates by clicking anywhere on the blue **IntelGram Desktop v...** heading three times within 1.2 seconds in IntelGram Preferences.
 - Counts physical left-button presses instead of link activations, so Qt text selection cannot swallow the gesture.
 - Changes the visible app identity to Telegram Desktop, including the app logo, Dock or taskbar icon, tray icon, window title, menus, About surface, Preferences entry, and drawer footer.
+- Sets the running macOS application and Dock title to exactly **Telegram** while disguise mode is active, then restores **IntelGram** with the same hidden gesture.
 - Keeps macOS menu refreshes safe while the disguise hides IntelGram and Ghost Mode menus, including when an `@username` link activates another window.
-- Uses full-size rounded-square Telegram artwork for the disguised macOS Dock icon without a duplicate white tile.
+- Renders the full rounded-square Telegram artwork directly for the disguised macOS Dock icon without an adaptive white tile or extra frame.
 - Returns to Telegram's normal Settings screen immediately after activation so the IntelGram Preferences page is no longer visible.
 - Keeps enabled local profile fields, cloning, collectibles, badges, local channel showcase, and local ownership rendering active.
 - Persists locally across restarts.

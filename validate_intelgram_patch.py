@@ -229,6 +229,7 @@ def main() -> None:
             "Telegram Desktop",
             "IntelGram Desktop",
             "setApplicationDisplayName",
+            "SetApplicationDisplayName(name)",
             "refreshApplicationIcon",
             "DestroyGlobalMenu",
             "CreateGlobalMenu",
@@ -371,6 +372,15 @@ def main() -> None:
             "NSVisualEffectBlendingModeBehindWindow",
             "void SetWindowVisualEffect(",
         ),
+        "Telegram/SourceFiles/platform/mac/specific_mac_p.mm": (
+            'CFSTR("_LSGetCurrentApplicationASN")',
+            'CFSTR("_LSSetApplicationInformationItem")',
+            'CFSTR("_kLSDisplayNameKey")',
+            "NSProcessInfo.processInfo.processName = nativeName;",
+            "image.toCGImage()",
+            "initWithCGImage:nativeImage",
+            "applicationIconImage",
+        ),
         "Telegram/SourceFiles/platform/mac/global_menu_mac.mm": (
             "if (!Ayu::DiscreetModeEnabled())",
             "if (_ghostMode) {\n\t\tconst auto ghost = resolveGhostSettings();",
@@ -413,6 +423,12 @@ def main() -> None:
     for path, needles in requirements.items():
         require(root, path, needles)
 
+    require_sha256(
+        root
+        / "Telegram/Resources/art/ayu/telegram/app.png",
+        TELEGRAM_MAC_ICON_SHA256,
+        "rounded-square Telegram runtime icon",
+    )
     require_sha256(
         root
         / "Telegram/Telegram/AppIcon-Telegram.icon/Assets/app.png",

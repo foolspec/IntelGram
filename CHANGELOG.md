@@ -8,6 +8,7 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 
 | Version | Published | Update |
 | --- | --- | --- |
+| v19 | 2026-08-03 | Exact Telegram Disguise Identity |
 | v18 | 2026-08-02 | macOS Stability And Telegram Icon |
 | v17 | 2026-07-31 | Reliable Telegram Disguise Trigger |
 | v16 | 2026-07-31 | Telegram Disguise Mode |
@@ -26,6 +27,20 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 | v3 | 2026-07-14 | Multiplatform Launch |
 | v2 | 2026-07-13 | Local Profile Build Refresh |
 | v1 | 2026-07-13 | Initial Local Profile |
+
+## IntelGram v19 Exact Telegram Disguise Identity - 2026-08-03
+
+### Fixed
+
+- Changed the hidden-mode application identity from the generic Telegram Desktop label to the exact running title **Telegram**.
+- Updated the live macOS Launch Services identity so the Dock label changes to **Telegram** immediately and returns to **IntelGram** when hidden mode is undone.
+- Replaced the macOS alternate-icon catalog lookup with direct rendering of the selected app image, preventing the Telegram icon from appearing as a tiny tile inside a white frame.
+- Replaced the circular runtime Telegram image with the same rounded-square artwork used by the normal Telegram macOS application.
+
+### Restore And Privacy
+
+- To undo hidden mode, open the main drawer and click the **Telegram Desktop** footer three times within 1.2 seconds.
+- The change affects only this client's local process name, menus, title, and icon. It does not alter a Telegram account, profile, channel, message, or server-side setting.
 
 ## IntelGram v18 macOS Stability And Telegram Icon - 2026-08-02
 
