@@ -252,95 +252,13 @@ No. IntelGram uses its own macOS bundle ID, Windows application ID, and Linux de
 
 </details>
 
-<details><summary>📥 How do I use local Stars?</summary>
-
-Open **Settings -> My Stars**. The row shows your on-device balance. **Top Up Balance** lists Telegram's 15 Stars packages; pick one to open Telegram's checkout panel, where the demo American Express card is already saved. Pay adds the Stars to the on-device balance — no real card data is collected and nothing is sent to Telegram or a payment provider.
-
-</details>
-
-<details><summary>🔒 What is Frozen Account Backup?</summary>
-
-It creates one encrypted `.intelvault` archive containing IntelGram's structured local export and permitted cached files. Encryption uses the passphrase you enter — keep it safe, because IntelGram does not upload or recover it. Telegram login keys and session credentials are deliberately excluded.
-
-</details>
-
-<details><summary>🔍 Where is the message vault?</summary>
-
-Open **IntelGram Preferences -> Vault & Search**. **Search this account** searches the active account; **Search all accounts** and **Unified account inbox** label results with the account they belong to. IntelGram indexes messages as this build receives or loads them, so older history appears as it is loaded.
-
-</details>
-
-<details><summary>🎨 How do I change themes or the app icon?</summary>
-
-Open **IntelGram Preferences -> Appearance & Backgrounds**. Pick from the light and dark theme cards, browse Telegram cloud themes, or set a chat background from the wallpaper gallery or a local image. **App Icon** offers the pink primary artwork, the pink profile-art alternate, and twelve color variants.
-
-</details>
-
-<details><summary>📡 Does IntelGram send anything to Telegram?</summary>
-
-IntelGram adds no Telegram account or profile update, contact import, collectible transaction, ownership change, channel ownership or permission change, or automatic channel join. Restrict Saving Content and self-destruct flags are enforced in the vault, exports, and saved moments.
-
-</details>
-
-<details><summary>🔄 How do I reset IntelGram's local settings?</summary>
-
-Open **IntelGram Preferences -> Advanced & Maintenance**, where the reset controls live alongside diagnostics and URL registration.
-
-</details>
-
-<details><summary>📰 Where can I read what's new?</summary>
-
-Open **IntelGram Preferences -> Update log**. The bundled dialog summarizes the latest update, the main features, and the local-only privacy boundary. **View full changelog** opens the longer history on GitHub.
-
-</details>
-
-<details><summary>👥 How do I clone a profile locally?</summary>
-
-First open the other user's profile so IntelGram has loaded it. Copy their UID, choose **Clone profile locally by UID**, paste the UID, and confirm. IntelGram mirrors only data visible to you, including Premium, verified, emoji-status, and personal-channel presentation. Choose **Stop cloning profile** to return to your own local fields.
-
-</details>
-
-<details><summary>🔎 How do I find somebody by UID or phone?</summary>
-
-Use the normal search field above the chat list. Paste a UID, `id: UID`, or a phone number. A known matching profile appears under **Found by ID or phone**. This cannot discover strangers or hidden phone numbers; the peer must already be loaded and the phone must already be visible.
-
-</details>
-
-<details><summary>🎁 How do I browse collectible gifts?</summary>
-
-Choose **Choose featured collectible** or **Manage pinned collectible gifts**. The first screen is a native gallery of collection artwork. Click a collection, scroll through its numbered collectibles, and click the exact artwork you want; more items load as you reach the end. The entire selection flow stays inside IntelGram.
-
-</details>
-
-<details><summary>🏅 How do I get the IntelGram supporter badge?</summary>
-
-Open **IntelGram Preferences -> IntelGram -> Telegram**, then press Telegram's normal **Join** button on `@intelgrams`. IntelGram reads that locally known membership state and displays the badge on your own profile. It does not join the channel automatically, and leaving the channel removes the badge after Telegram updates the channel state.
-
-</details>
-
-<details><summary>📋 How do I add private contact notes?</summary>
-
-Open a person's chat, then choose **Private note for current contact** under **Contacts & Automation**. You can store a note, tags, relationship/context text, and an optional reminder date. **All private profile notes** shows the saved list and due reminders.
-
-</details>
-
-<details><summary>📤 How do I export a chat or account?</summary>
-
-Open **IntelGram Preferences -> Export & Backup** and choose the current chat or current account. IntelGram writes HTML, PDF, Markdown, JSON, and ZIP files to the folder you select. Select messages in a chat and use **Export selected messages** to export only that selection.
-
-</details>
-
-<details><summary>✨ How do I make the app transparent or more animated?</summary>
-
-Open **IntelGram Preferences -> Glass & Motion**. Enable Liquid Glass, choose which surfaces use the material, and adjust tint, opacity, and edge refraction. Enable Enhanced Animations separately and pick a pack: Quick Snap, Smooth Flow, Diabolical, Springy, or Liquid Bounce. Both master switches can be turned off at any time, and reduced-motion or power-saving mode still takes priority.
-
-</details>
-
 <details><summary>📝 Where do I report a bug or ask a question?</summary>
 
 Open an issue on [GitHub](https://github.com/foolspec/IntelGram/issues), ask in [Discussions](https://github.com/foolspec/IntelGram/discussions), or join [@intelgrams](https://t.me/intelgrams) on Telegram.
 
 </details>
+
+More questions are answered in [Discussions](https://github.com/foolspec/IntelGram/discussions).
 
 ## Building
 
