@@ -744,16 +744,42 @@ jobs:
           grep -F -- 'cmake --build ../out --config "${CONFIG:-Release}" -- -k 0' \
             tdesktop/Telegram/build/docker/centos_env/build.sh
           docker pull ghcr.io/telegramdesktop/tdesktop/centos_env:latest
-          docker run --rm \
+          mkdir -p "$GITHUB_WORKSPACE/ada"
+          docker run --rm -i \
             -u "$(id -u)" \
             -e CMAKE_BUILD_PARALLEL_LEVEL=3 \
             -v "$GITHUB_WORKSPACE/tdesktop:/usr/src/tdesktop" \
-            -v "$GITHUB_WORKSPACE/ci-cmake:/usr/src/ci-cmake:ro" \
+            -v "$GITHUB_WORKSPACE/ada:/work/ada" \
             ghcr.io/telegramdesktop/tdesktop/centos_env:latest \
-            /usr/src/tdesktop/Telegram/build/docker/centos_env/build.sh \
+            bash -eux <<'CONTAINER_EOS'
+          mkdir -p /work/ada
+          if [ ! -s /work/ada/config-path.txt ]; then
+            rm -rf /work/ada/src /work/ada/build /work/ada/install
+            git init /work/ada/src
+            git -C /work/ada/src remote add origin https://github.com/ada-url/ada.git
+            git -C /work/ada/src fetch --depth=1 origin 010f7c45aeaff1205452e7da2df8702cf725fb3e
+            git -C /work/ada/src reset --hard FETCH_HEAD
+            cmake -S /work/ada/src -B /work/ada/build \
+              -DCMAKE_INSTALL_PREFIX=/work/ada/install \
+              -DCMAKE_INSTALL_LIBDIR=lib \
+              -DBUILD_SHARED_LIBS=OFF \
+              -DADA_TESTING=OFF \
+              -DADA_TOOLS=OFF \
+              -DADA_INCLUDE_URL_PATTERN=OFF
+            cmake --build /work/ada/build --parallel 3
+            cmake --install /work/ada/build
+            find /work/ada/install -type f \( -name 'ada-config.cmake' -o -name 'adaConfig.cmake' \) -print -quit > /work/ada/config-path.txt
+            test -s /work/ada/config-path.txt
+          fi
+          ADA_CONFIG="$(cat /work/ada/config-path.txt)"
+          ADA_DIR="$(dirname "$ADA_CONFIG")"
+          echo "ada_DIR=$ADA_DIR"
+          cd /usr/src/tdesktop
+          ./Telegram/build/docker/centos_env/build.sh \
             -D TDESKTOP_API_ID=2040 \
             -D TDESKTOP_API_HASH=b18441a1ff607e10a989891a5462e627 \
-            -D ada_DIR=/usr/src/ci-cmake/ada
+            -D ada_DIR="$ADA_DIR"
+          CONTAINER_EOS
 
       - name: Verify, launch, and package
         run: |
