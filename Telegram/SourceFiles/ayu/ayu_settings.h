@@ -366,6 +366,9 @@ public:
 	[[nodiscard]] bool localProfileGiftEnabled() const { return _localProfileGiftEnabled.current(); }
 	[[nodiscard]] const QString &localProfileGift() const { return _localProfileGift.current(); }
 	[[nodiscard]] const QString &localProfileGifts() const { return _localProfileGifts.current(); }
+	[[nodiscard]] int localStarsBalance() const { return _localStarsBalance.current(); }
+	[[nodiscard]] const QString &localStarsActivity() const { return _localStarsActivity.current(); }
+	[[nodiscard]] const QString &localStarsCardName() const { return _localStarsCardName.current(); }
 	[[nodiscard]] bool showChannelReactions() const { return _showChannelReactions.current(); }
 	[[nodiscard]] bool showGroupReactions() const { return _showGroupReactions.current(); }
 	[[nodiscard]] bool showPrivateChatReactions() const { return _showPrivateChatReactions.current(); }
@@ -490,6 +493,9 @@ public:
 	void setLocalProfileGiftEnabled(bool val);
 	void setLocalProfileGift(const QString &val);
 	void setLocalProfileGifts(const QString &val);
+	void setLocalStarsBalance(int val);
+	void setLocalStarsActivity(const QString &val);
+	void setLocalStarsCardName(const QString &val);
 	void setShowChannelReactions(bool val);
 	void setShowGroupReactions(bool val);
 	void setShowPrivateChatReactions(bool val);
@@ -678,6 +684,12 @@ public:
 	[[nodiscard]] rpl::producer<QString> localProfileGiftChanges() const { return _localProfileGift.changes(); }
 	[[nodiscard]] rpl::producer<QString> localProfileGiftsValue() const { return _localProfileGifts.value(); }
 	[[nodiscard]] rpl::producer<QString> localProfileGiftsChanges() const { return _localProfileGifts.changes(); }
+	[[nodiscard]] rpl::producer<int> localStarsBalanceValue() const { return _localStarsBalance.value(); }
+	[[nodiscard]] rpl::producer<int> localStarsBalanceChanges() const { return _localStarsBalance.changes(); }
+	[[nodiscard]] rpl::producer<QString> localStarsActivityValue() const { return _localStarsActivity.value(); }
+	[[nodiscard]] rpl::producer<QString> localStarsActivityChanges() const { return _localStarsActivity.changes(); }
+	[[nodiscard]] rpl::producer<QString> localStarsCardNameValue() const { return _localStarsCardName.value(); }
+	[[nodiscard]] rpl::producer<QString> localStarsCardNameChanges() const { return _localStarsCardName.changes(); }
 	[[nodiscard]] rpl::producer<bool> showChannelReactionsValue() const { return _showChannelReactions.value(); }
 	[[nodiscard]] rpl::producer<bool> showChannelReactionsChanges() const { return _showChannelReactions.changes(); }
 	[[nodiscard]] rpl::producer<bool> showGroupReactionsValue() const { return _showGroupReactions.value(); }
@@ -870,6 +882,9 @@ private:
 	rpl::variable<bool> _localProfileGiftEnabled = false;
 	rpl::variable<QString> _localProfileGift;
 	rpl::variable<QString> _localProfileGifts;
+	rpl::variable<int> _localStarsBalance = 0;
+	rpl::variable<QString> _localStarsActivity;
+	rpl::variable<QString> _localStarsCardName;
 	rpl::variable<bool> _showChannelReactions = true;
 	rpl::variable<bool> _showGroupReactions = true;
 	rpl::variable<bool> _showPrivateChatReactions = true;

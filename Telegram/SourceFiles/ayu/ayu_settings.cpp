@@ -944,6 +944,30 @@ void AyuSettings::setLocalProfileGifts(const QString &val) {
 	save();
 }
 
+void AyuSettings::setLocalStarsBalance(int val) {
+	const auto bounded = std::clamp(
+		val,
+		0,
+		Ayu::kMaxLocalStarsBalance);
+	if (_localStarsBalance.current() == bounded) return;
+	_localStarsBalance = bounded;
+	save();
+}
+
+void AyuSettings::setLocalStarsActivity(const QString &val) {
+	const auto normalized = val.left(Ayu::kMaxLocalStarsActivityLength);
+	if (_localStarsActivity.current() == normalized) return;
+	_localStarsActivity = normalized;
+	save();
+}
+
+void AyuSettings::setLocalStarsCardName(const QString &val) {
+	const auto normalized = val.trimmed().left(Ayu::kMaxLocalStarsCardNameLength);
+	if (_localStarsCardName.current() == normalized) return;
+	_localStarsCardName = normalized;
+	save();
+}
+
 void AyuSettings::setShowChannelReactions(bool val) {
 	if (_showChannelReactions.current() == val) return;
 	_showChannelReactions = val;
@@ -1391,6 +1415,9 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
 		{"localProfileGiftEnabled", s._localProfileGiftEnabled.current()},
 		{"localProfileGift", s._localProfileGift.current()},
 		{"localProfileGifts", s._localProfileGifts.current()},
+		{"localStarsBalance", s._localStarsBalance.current()},
+		{"localStarsActivity", s._localStarsActivity.current()},
+		{"localStarsCardName", s._localStarsCardName.current()},
 		{"showChannelReactions", s._showChannelReactions.current()},
 		{"showGroupReactions", s._showGroupReactions.current()},
 		{"showPrivateChatReactions", s._showPrivateChatReactions.current()},
@@ -1578,6 +1605,18 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
 	s._localProfileGiftEnabled = j.value("localProfileGiftEnabled", defaults._localProfileGiftEnabled.current());
 	s._localProfileGift = Ayu::NormalizeLocalProfileGift(j.value("localProfileGift", defaults._localProfileGift.current()));
 	s._localProfileGifts = Ayu::NormalizeLocalProfileGifts(j.value("localProfileGifts", defaults._localProfileGifts.current()));
+	s._localStarsBalance = std::clamp(
+		j.value("localStarsBalance", defaults._localStarsBalance.current()),
+		0,
+		Ayu::kMaxLocalStarsBalance);
+	s._localStarsActivity = j.value(
+		"localStarsActivity",
+		defaults._localStarsActivity.current()).left(
+			Ayu::kMaxLocalStarsActivityLength);
+	s._localStarsCardName = j.value(
+		"localStarsCardName",
+		defaults._localStarsCardName.current()).trimmed().left(
+			Ayu::kMaxLocalStarsCardNameLength);
 	s._showChannelReactions = j.value("showChannelReactions", defaults._showChannelReactions.current());
 	s._showGroupReactions = j.value("showGroupReactions", defaults._showGroupReactions.current());
 	s._showPrivateChatReactions = j.value("showPrivateChatReactions", defaults._showPrivateChatReactions.current());

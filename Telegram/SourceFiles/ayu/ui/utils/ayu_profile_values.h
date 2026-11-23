@@ -44,6 +44,9 @@ constexpr auto kMaxLocalProfilePhotoLength = 4096;
 constexpr auto kMaxLocalProfileGiftReferenceLength = 512;
 constexpr auto kMaxLocalProfileGiftsCount = 7;
 constexpr auto kMaxLocalProfileGiftsLength = 4096;
+constexpr auto kMaxLocalStarsBalance = 1'000'000'000;
+constexpr auto kMaxLocalStarsActivityLength = 6000;
+constexpr auto kMaxLocalStarsCardNameLength = 64;
 
 [[nodiscard]] QString NormalizeLocalProfileName(QString name);
 [[nodiscard]] QString NormalizeLocalProfileId(QString id);
