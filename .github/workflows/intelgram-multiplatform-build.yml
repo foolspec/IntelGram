@@ -329,7 +329,6 @@ jobs:
 
   windows_dependencies_1:
     name: Windows dependencies 1 of 9
-    needs: macos
     if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'windows') && inputs.windows_dependency_run_id == '' }}
     uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
     with:
@@ -884,7 +883,7 @@ jobs:
             --title "IntelGram $PRODUCT_VERSION - $RELEASE_NAME" \
             --notes "## IntelGram $PRODUCT_VERSION $RELEASE_NAME
 
-          IntelGram adds a local Stars wallet and gift flow under Local Profile. A demo American Express card with a fixed sample number and an explicit DEMO - AMEX - NO REAL PAYMENT label drives simulated 50/100/250/500/1000 Star purchases. Six collectible-style gifts, recipient labels, balance checks, and timestamped local history are all stored on-device only.
+          Local Stars live in Telegram's native My Stars screen, and top-up runs through Telegram's real 15 Stars packages with the native checkout panel. A demo American Express card with a fixed sample number and an explicit DEMO - AMEX - NO REAL PAYMENT label is already saved on the panel, so checkout completes locally with no real payment. Six collectible-style gifts, recipient labels, and balance checks are all stored on-device only.
 
           No real card details are collected, no payment provider is contacted, and no Telegram payment, reaction, message-send, or gift-transfer API is invoked. Built from the official AyuGram Desktop $SOURCE_TAG upstream source." \
             "${RELEASE_ASSETS[@]}"
