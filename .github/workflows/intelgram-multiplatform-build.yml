@@ -1,0 +1,834 @@
+name: IntelGram Multiplatform Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Platform to build
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - macos
+          - windows
+          - linux
+      windows_dependency_run_id:
+        description: Optional completed run ID containing the final Windows dependency cache
+        required: false
+        default: ""
+        type: string
+      windows_dependency_run_attempt:
+        description: Run attempt for the reusable Windows dependency cache
+        required: false
+        default: "1"
+        type: string
+      macos_dependency_run_id:
+        description: Optional completed run ID containing the final macOS dependency cache
+        required: false
+        default: ""
+        type: string
+      macos_dependency_run_attempt:
+        description: Run attempt for the reusable macOS dependency cache
+        required: false
+        default: "1"
+        type: string
+      macos_stage5_run_id:
+        description: Optional run ID containing a completed macOS Qt-stage cache
+        required: false
+        default: ""
+        type: string
+      macos_stage5_run_attempt:
+        description: Run attempt for the reusable macOS Qt-stage cache
+        required: false
+        default: "1"
+        type: string
+
+concurrency:
+  group: intelgram-multiplatform-build-${{ github.event_name == 'workflow_dispatch' && inputs.platform || 'all' }}
+  cancel-in-progress: true
+
+permissions:
+  actions: read
+  contents: write
+
+env:
+  SOURCE_TAG: v6.7.8
+  RELEASE_NAME: Exact Telegram Disguise Identity
+  RELEASE_SLUG: exact-telegram-disguise-identity
+  PATCH_SHA256: 619a859553db9e3958cafc18f6ed9f2b62c123c5e31356918c435ec05e2531c7
+  LIB_UI_COMMIT: b9a30917daf2bd8fdc17ccd9682acca178882b7b
+  LIB_UI_REF: codex/intelgram-liquid-bounce-20260726
+
+jobs:
+  macos_dependencies_1:
+    name: macOS dependencies 1 of 6
+    if: ${{ (github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'macos') && inputs.macos_dependency_run_id == '' && inputs.macos_stage5_run_id == '' }}
+    uses: ./.github/workflows/intelgram-macos-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-macos26-libraries-stage-1-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-macos26-libraries-stage-1-${{ github.run_id }}-
+        intelgram-v6.7.8-macos26-libraries-stage-1-
+        ayugram-v6.7.8-macos26-libraries-final-v2
+        ayugram-v6.7.8-macos26-libraries-stage-2-v2
+        ayugram-v6.7.8-macos26-libraries-stage-1-v2
+      stages: patches xz zlib mozjpeg openssl3 opus rnnoise libiconv
+      completion_marker: macos-dependencies-stage-1.complete
+      stage_timeout_minutes: 300
+
+  macos_dependencies_2:
+    name: macOS dependencies 2 of 6
+    needs: macos_dependencies_1
+    uses: ./.github/workflows/intelgram-macos-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-macos26-libraries-stage-2-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-macos26-libraries-stage-2-${{ github.run_id }}-
+        intelgram-v6.7.8-macos26-libraries-stage-2-
+        intelgram-v6.7.8-macos26-libraries-stage-1-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-macos26-libraries-stage-1-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: macos-dependencies-stage-1.complete
+      stages: dav1d openh264 libavif libde265 libwebp libheif libjxl
+      completion_marker: macos-dependencies-stage-2.complete
+      stage_timeout_minutes: 300
+
+  macos_dependencies_3:
+    name: macOS dependencies 3 of 6
+    needs: macos_dependencies_2
+    uses: ./.github/workflows/intelgram-macos-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-macos26-libraries-stage-3-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-macos26-libraries-stage-3-${{ github.run_id }}-
+        intelgram-v6.7.8-macos26-libraries-stage-3-
+        intelgram-v6.7.8-macos26-libraries-stage-2-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-macos26-libraries-stage-2-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: macos-dependencies-stage-2.complete
+      stages: libvpx liblcms2 regex ffmpeg openal-soft
+      completion_marker: macos-dependencies-stage-3.complete
+      stage_timeout_minutes: 300
+
+  macos_dependencies_breakpad:
+    name: macOS dependencies 4 of 6 - Breakpad
+    needs: macos_dependencies_3
+    uses: ./.github/workflows/intelgram-macos-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-macos26-libraries-breakpad-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-macos26-libraries-breakpad-${{ github.run_id }}-
+        intelgram-v6.7.8-macos26-libraries-breakpad-
+        intelgram-v6.7.8-macos26-libraries-stage-3-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-macos26-libraries-stage-3-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: macos-dependencies-stage-3.complete
+      completion_marker: macos-dependencies-breakpad.complete
+      stage_timeout_minutes: 90
+      breakpad: true
+
+  macos_dependencies_final_1:
+    name: macOS dependencies 5 of 6 - Qt
+    needs: macos_dependencies_breakpad
+    uses: ./.github/workflows/intelgram-macos-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-macos26-libraries-final-1-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-macos26-libraries-final-1-${{ github.run_id }}-
+        intelgram-v6.7.8-macos26-libraries-final-1-
+        intelgram-v6.7.8-macos26-libraries-breakpad-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-macos26-libraries-breakpad-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: macos-dependencies-breakpad.complete
+      stages: crashpad qt_6.2.13
+      completion_marker: macos-dependencies-final-1.complete
+      stage_timeout_minutes: 300
+
+  macos_dependencies_final:
+    name: macOS dependencies 6 of 6 - complete
+    needs: macos_dependencies_final_1
+    if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'macos') && inputs.macos_dependency_run_id == '' && (inputs.macos_stage5_run_id != '' || needs.macos_dependencies_final_1.result == 'success') }}
+    uses: ./.github/workflows/intelgram-macos-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-macos26-libraries-final-v3-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-macos26-libraries-final-v3-${{ github.run_id }}-
+        intelgram-v6.7.8-macos26-libraries-final-v3-
+        intelgram-v6.7.8-macos26-libraries-final-1-${{ inputs.macos_stage5_run_id || github.run_id }}-${{ inputs.macos_stage5_run_id != '' && inputs.macos_stage5_run_attempt || github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-macos26-libraries-final-1-${{ inputs.macos_stage5_run_id || github.run_id }}-${{ inputs.macos_stage5_run_id != '' && inputs.macos_stage5_run_attempt || github.run_attempt }}
+      prerequisite_marker: macos-dependencies-final-1.complete
+      stages: tg_owt ada tde2e
+      completion_marker: macos-dependencies-final.complete
+      stage_timeout_minutes: 300
+
+  macos:
+    name: macOS Apple Silicon
+    needs: macos_dependencies_final
+    if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'macos') && (inputs.macos_dependency_run_id != '' || needs.macos_dependencies_final.result == 'success') }}
+    runs-on: macos-26
+    timeout-minutes: 350
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+      CMAKE_BUILD_PARALLEL_LEVEL: "3"
+      MACOS_DEPENDENCY_RUN_ID: ${{ inputs.macos_dependency_run_id || github.run_id }}
+      MACOS_DEPENDENCY_RUN_ATTEMPT: ${{ inputs.macos_dependency_run_id != '' && inputs.macos_dependency_run_attempt || github.run_attempt }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install documented tools
+        run: brew install automake wget pkg-config gnu-tar nasm meson coreutils
+
+      - name: Clone official source
+        run: |
+          set -euxo pipefail
+          git clone --recursive --branch "$SOURCE_TAG" --single-branch https://github.com/AyuGram/AyuGramDesktop.git tdesktop
+          test "$(git -C tdesktop rev-parse HEAD)" = "b25513a06ff88be0b3f4c928252b56c3da39cec7"
+          git -C tdesktop submodule status --recursive
+
+      - name: Wait for final macOS dependency cache
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREREQUISITE_CACHE_KEY: intelgram-v6.7.8-macos26-libraries-final-v3-${{ env.MACOS_DEPENDENCY_RUN_ID }}-${{ env.MACOS_DEPENDENCY_RUN_ATTEMPT }}
+        run: |
+          set -euo pipefail
+          deadline=$((SECONDS + 720))
+          while (( SECONDS < deadline )); do
+            encoded="$(python3 -c 'import os, urllib.parse; print(urllib.parse.quote(os.environ["PREREQUISITE_CACHE_KEY"], safe=""))')"
+            if gh api "repos/$GITHUB_REPOSITORY/actions/caches?key=$encoded" \
+              --jq '.actions_caches[].key' | grep -Fx "$PREREQUISITE_CACHE_KEY"; then
+              echo "Final dependency cache is visible: $PREREQUISITE_CACHE_KEY"
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "Final macOS dependency cache did not become visible: $PREREQUISITE_CACHE_KEY" >&2
+          exit 1
+
+      - name: Restore dependencies
+        id: macos-dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            Libraries
+            macos-dependencies-*.complete
+          key: intelgram-v6.7.8-macos26-libraries-final-v3-${{ env.MACOS_DEPENDENCY_RUN_ID }}-${{ env.MACOS_DEPENDENCY_RUN_ATTEMPT }}
+
+      - name: Verify final macOS dependency cache
+        run: test -f macos-dependencies-final.complete
+
+      - name: Apply IntelGram changes
+        run: |
+          set -euxo pipefail
+          test "$(shasum -a 256 intelgram-local-profile-render-overrides.patch | awk '{print $1}')" = "$PATCH_SHA256"
+          git -C tdesktop apply --check "$GITHUB_WORKSPACE/intelgram-local-profile-render-overrides.patch"
+          git -C tdesktop apply "$GITHUB_WORKSPACE/intelgram-local-profile-render-overrides.patch"
+          git -C tdesktop submodule sync -- Telegram/lib_ui
+          git -C tdesktop submodule update --init --force Telegram/lib_ui
+          git -C tdesktop/Telegram/lib_ui remote set-url origin https://github.com/foolspec/lib_ui.git
+          git -C tdesktop/Telegram/lib_ui fetch --no-tags --depth=1 origin "$LIB_UI_REF"
+          git -C tdesktop/Telegram/lib_ui checkout --detach FETCH_HEAD
+          test "$(git -C tdesktop/Telegram/lib_ui rev-parse HEAD)" = "$LIB_UI_COMMIT"
+          (cd tdesktop && python3 "$GITHUB_WORKSPACE/build_intelgram_branding.py")
+          git -C tdesktop diff --check
+          added="$(git -C tdesktop diff --unified=0 --no-ext-diff | sed -n '/^+/ { /^+++/d; p; }')"
+          if printf '%s\n' "$added" | grep -E 'MTP(account_(CheckUsername|Update(Profile|Username|EmojiStatus|PersonalChannel))|channels_(JoinChannel|CreateChannel|DeleteChannel|Edit(Admin|Photo|Title)|InviteToChannel)|contacts_ImportContacts|messages_(EditMessage|SendMessage|UpdatePinnedMessage)|payments_(TransferStarGift|ToggleStarGiftsPinnedToTop))'; then
+            echo "Unexpected Telegram mutation reference."
+            exit 1
+          fi
+          python3 validate_intelgram_patch.py tdesktop
+          grep -n 'ayu_LocalProfileIdEnabled' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
+          grep -n 'ShowLocalProfileUsernameEditor' tdesktop/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
+          grep -n 'AddUsernameCheckLabel(container' tdesktop/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
+          grep -n 'requestFullPeer(user)' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
+          grep -n 'LocalProfilePersonalChannelValue' tdesktop/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
+          grep -n 'ResolveAndShowUniqueGiftForLocalProfile' tdesktop/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp
+          grep -n 'referenceMatches' tdesktop/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp
+          grep -n 'LocalProfileUsernameActive(peer)' tdesktop/Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp
+          grep -n 'Ayu::LocalProfilePhone(user)' tdesktop/Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp
+          grep -n 'Ayu::LocalProfileUserpicActive(peer)' tdesktop/Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp
+          grep -n 'Ayu::LocalProfileName(to)' tdesktop/Telegram/SourceFiles/boxes/gift_premium_box.cpp
+          grep -n 'localProfileRecipientId' tdesktop/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
+          grep -n 'BadgeValueForPeer' tdesktop/Telegram/SourceFiles/info/profile/info_profile_values.cpp
+          grep -n 'requestStarGifts' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
+          grep -n 'LoadLocalGiftCollectionFallback' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
+          grep -n 'LocalProfileNameValue(peer)' tdesktop/Telegram/SourceFiles/boxes/peers/edit_peer_color_box.cpp
+          grep -n 'AyuAssets::GRAPHITE_ICON' tdesktop/Telegram/SourceFiles/ayu/ui/components/icon_picker.cpp
+          grep -n 'isIntelGramChannelMember' tdesktop/Telegram/SourceFiles/ayu/utils/telegram_helpers.cpp
+          grep -n 'ayu_IntelGramLinksTechnicalChangelog' tdesktop/Telegram/Resources/langs/lang.strings
+          grep -n 'ShowIntelGramUpdateLog' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
+          grep -n 'userByPhone(phoneQuery)' tdesktop/Telegram/SourceFiles/dialogs/dialogs_widget.cpp
+          grep -n 'set(output_name "IntelGram")' tdesktop/Telegram/CMakeLists.txt
+          grep -n 'Ayu::VisibleClientShortName()' tdesktop/Telegram/SourceFiles/window/main_window.cpp
+          grep -n 'kDiscreetModeClickTimeout' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
+          grep -n 'showOther(MainId())' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
+          grep -n 'tr::ayu_IntelGramUpdateLogDisguise' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
+          grep -n 'Ayu::VisibleClientName()' tdesktop/Telegram/SourceFiles/intro/intro_widget.cpp
+          grep -n '"scale": 1.0' tdesktop/Telegram/Telegram/AppIcon-Default.icon/icon.json
+          test -s tdesktop/Telegram/Telegram/AppIcon-Default.icon/Assets/app.png
+
+      - name: Configure and build
+        run: |
+          set -euxo pipefail
+          cd tdesktop/Telegram
+          ./configure.sh \
+            -D TDESKTOP_API_ID=2040 \
+            -D TDESKTOP_API_HASH=b18441a1ff607e10a989891a5462e627 \
+            -D CMAKE_OSX_ARCHITECTURES=arm64
+          cmake --build ../out --config Release --target Telegram --parallel 3
+
+      - name: Verify, launch, and package
+        run: |
+          set -euxo pipefail
+          APP_PATH="$(find tdesktop/out/Release -maxdepth 2 -type d -name 'IntelGram.app' | head -n 1)"
+          test -d "$APP_PATH"
+          BINARY="$APP_PATH/Contents/MacOS/IntelGram"
+          test -x "$BINARY"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP_PATH/Contents/Info.plist")" = "io.github.foolspec.IntelGram"
+          PACKAGE_ROOT="$RUNNER_TEMP/intelgram-package"
+          TEST_ROOT="$RUNNER_TEMP/intelgram-smoke"
+          mkdir -p "$PACKAGE_ROOT" "$TEST_ROOT"
+          ditto "$APP_PATH" "$PACKAGE_ROOT/IntelGram.app"
+          xattr -cr "$PACKAGE_ROOT/IntelGram.app"
+          codesign --force --deep --sign - "$PACKAGE_ROOT/IntelGram.app"
+          codesign --verify --deep --strict --verbose=2 "$PACKAGE_ROOT/IntelGram.app"
+          "$PACKAGE_ROOT/IntelGram.app/Contents/MacOS/IntelGram" -workdir "$TEST_ROOT" > launch-macos.log 2>&1 &
+          PID=$!
+          sleep 12
+          kill -0 "$PID"
+          kill "$PID"
+          wait "$PID" || true
+          ln -s /Applications "$PACKAGE_ROOT/Applications"
+          ditto -c -k --sequesterRsrc --keepParent "$PACKAGE_ROOT/IntelGram.app" IntelGram-macOS-Apple-Silicon.zip
+          hdiutil create -volname "IntelGram" -srcfolder "$PACKAGE_ROOT" -ov -format UDZO IntelGram-macOS-Apple-Silicon.dmg
+          shasum -a 256 IntelGram-macOS-Apple-Silicon.dmg IntelGram-macOS-Apple-Silicon.zip > IntelGram-macOS-sha256.txt
+          {
+            echo "Platform: macOS Apple Silicon"
+            echo "Application: IntelGram.app"
+            echo "Bundle identifier: io.github.foolspec.IntelGram"
+            echo "Source: $SOURCE_TAG ($(git -C tdesktop rev-parse HEAD))"
+            echo "Patch: $PATCH_SHA256"
+            echo "Launch smoke test: PASS"
+          } > IntelGram-macOS-validation.txt
+
+      - name: Upload macOS package
+        uses: actions/upload-artifact@v4
+        with:
+          name: IntelGram-macOS-Apple-Silicon
+          path: |
+            IntelGram-macOS-Apple-Silicon.dmg
+            IntelGram-macOS-Apple-Silicon.zip
+            IntelGram-macOS-sha256.txt
+            IntelGram-macOS-validation.txt
+            launch-macos.log
+          if-no-files-found: error
+          compression-level: 0
+
+  windows_dependencies_1:
+    name: Windows dependencies 1 of 9
+    needs: macos
+    if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'windows') && inputs.windows_dependency_run_id == '' }}
+    uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-windows2022-libraries-stage-1-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-windows2022-libraries-stage-1-${{ github.run_id }}-
+        intelgram-v6.7.8-windows2022-libraries-stage-1-
+      stages: patches msys64 python NuGet jom gyp lzma zlib
+      completion_marker: windows-dependencies-stage-1.complete
+      stage_timeout_minutes: 100
+
+  windows_dependencies_2:
+    name: Windows dependencies 2 of 9
+    needs: windows_dependencies_1
+    if: ${{ always() && needs.windows_dependencies_1.result == 'success' }}
+    uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-windows2022-libraries-stage-2-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-windows2022-libraries-stage-2-${{ github.run_id }}-
+        intelgram-v6.7.8-windows2022-libraries-stage-2-
+        intelgram-v6.7.8-windows2022-libraries-stage-1-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-windows2022-libraries-stage-1-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: windows-dependencies-stage-1.complete
+      stages: jom mozjpeg openssl3 opus rnnoise gas-preprocessor
+      completion_marker: windows-dependencies-stage-2.complete
+      stage_timeout_minutes: 180
+
+  windows_dependencies_3:
+    name: Windows dependencies 3 of 9
+    needs: windows_dependencies_2
+    if: ${{ always() && needs.windows_dependencies_2.result == 'success' }}
+    uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-windows2022-libraries-stage-3-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-windows2022-libraries-stage-3-${{ github.run_id }}-
+        intelgram-v6.7.8-windows2022-libraries-stage-3-
+        intelgram-v6.7.8-windows2022-libraries-stage-2-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-windows2022-libraries-stage-2-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: windows-dependencies-stage-2.complete
+      stages: dav1d openh264 libavif libde265 libwebp libheif
+      completion_marker: windows-dependencies-stage-3.complete
+      stage_timeout_minutes: 180
+
+  windows_dependencies_4:
+    name: Windows dependencies 4 of 9
+    needs: windows_dependencies_3
+    if: ${{ always() && needs.windows_dependencies_3.result == 'success' }}
+    uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-windows2022-libraries-stage-4-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-windows2022-libraries-stage-4-${{ github.run_id }}-
+        intelgram-v6.7.8-windows2022-libraries-stage-4-
+        intelgram-v6.7.8-windows2022-libraries-stage-3-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-windows2022-libraries-stage-3-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: windows-dependencies-stage-3.complete
+      stages: libjxl libvpx liblcms2 nv-codec-headers regex ffmpeg openal-soft
+      completion_marker: windows-dependencies-stage-4.complete
+      stage_timeout_minutes: 240
+      number_of_processors: "1"
+      serialize_libvpx_msbuild: true
+
+  windows_dependencies_breakpad:
+    name: Windows dependencies 5 of 9 - Breakpad
+    needs: windows_dependencies_4
+    if: ${{ always() && needs.windows_dependencies_4.result == 'success' }}
+    uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-windows2022-libraries-breakpad-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-windows2022-libraries-breakpad-${{ github.run_id }}-
+        intelgram-v6.7.8-windows2022-libraries-breakpad-
+        intelgram-v6.7.8-windows2022-libraries-stage-4-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-windows2022-libraries-stage-4-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: windows-dependencies-stage-4.complete
+      stages: breakpad
+      completion_marker: windows-dependencies-breakpad.complete
+      stage_timeout_minutes: 150
+
+  windows_dependencies_angle:
+    name: Windows dependencies 6 of 9 - ANGLE
+    needs: windows_dependencies_breakpad
+    if: ${{ always() && needs.windows_dependencies_breakpad.result == 'success' }}
+    uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-windows2022-libraries-angle-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-windows2022-libraries-angle-${{ github.run_id }}-
+        intelgram-v6.7.8-windows2022-libraries-angle-
+        intelgram-v6.7.8-windows2022-libraries-breakpad-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-windows2022-libraries-breakpad-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: windows-dependencies-breakpad.complete
+      stages: tg_angle
+      completion_marker: windows-dependencies-angle.complete
+      stage_timeout_minutes: 180
+
+  windows_dependencies_owt:
+    name: Windows dependencies 7 of 9 - WebRTC
+    needs: windows_dependencies_angle
+    if: ${{ always() && needs.windows_dependencies_angle.result == 'success' }}
+    uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-windows2022-libraries-owt-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-windows2022-libraries-owt-${{ github.run_id }}-
+        intelgram-v6.7.8-windows2022-libraries-owt-
+        intelgram-v6.7.8-windows2022-libraries-angle-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-windows2022-libraries-angle-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: windows-dependencies-angle.complete
+      stages: tg_owt
+      completion_marker: windows-dependencies-owt.complete
+      stage_timeout_minutes: 240
+
+  windows_dependencies_final_libraries:
+    name: Windows dependencies 8 of 9 - final libraries
+    needs: windows_dependencies_owt
+    if: ${{ always() && needs.windows_dependencies_owt.result == 'success' }}
+    uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-windows2022-libraries-final-libraries-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-windows2022-libraries-final-libraries-${{ github.run_id }}-
+        intelgram-v6.7.8-windows2022-libraries-final-libraries-
+        intelgram-v6.7.8-windows2022-libraries-owt-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-windows2022-libraries-owt-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: windows-dependencies-owt.complete
+      stages: ada protobuf tde2e
+      completion_marker: windows-dependencies-final-libraries.complete
+      stage_timeout_minutes: 180
+
+  windows_dependencies_complete:
+    name: Windows dependencies 9 of 9 - complete
+    needs: windows_dependencies_final_libraries
+    if: ${{ always() && needs.windows_dependencies_final_libraries.result == 'success' }}
+    uses: ./.github/workflows/intelgram-windows-dependency-stage.yml
+    with:
+      cache_key: intelgram-v6.7.8-windows2022-libraries-final-v2-${{ github.run_id }}-${{ github.run_attempt }}
+      restore_key: |
+        intelgram-v6.7.8-windows2022-libraries-final-v2-${{ github.run_id }}-
+        intelgram-v6.7.8-windows2022-libraries-final-v2-
+        intelgram-v6.7.8-windows2022-libraries-final-libraries-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_cache_key: intelgram-v6.7.8-windows2022-libraries-final-libraries-${{ github.run_id }}-${{ github.run_attempt }}
+      prerequisite_marker: windows-dependencies-final-libraries.complete
+      completion_marker: windows-dependencies-final.complete
+      stage_timeout_minutes: 330
+      number_of_processors: "1"
+
+  windows:
+    name: Windows x64
+    needs: windows_dependencies_complete
+    if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'windows') && (inputs.windows_dependency_run_id != '' || needs.windows_dependencies_complete.result == 'success') }}
+    runs-on: windows-2022
+    timeout-minutes: 350
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: "1"
+      WINDOWS_DEPENDENCY_RUN_ID: ${{ inputs.windows_dependency_run_id || github.run_id }}
+      WINDOWS_DEPENDENCY_RUN_ATTEMPT: ${{ inputs.windows_dependency_run_id != '' && inputs.windows_dependency_run_attempt || github.run_attempt }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure Visual Studio build environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Clone official source
+        shell: pwsh
+        run: |
+          git clone --recursive --branch $env:SOURCE_TAG --single-branch https://github.com/AyuGram/AyuGramDesktop.git tdesktop
+          if ((git -C tdesktop rev-parse HEAD) -ne "b25513a06ff88be0b3f4c928252b56c3da39cec7") { throw "Unexpected source commit" }
+          git -C tdesktop submodule status --recursive
+
+      - name: Wait for final Windows dependency cache
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREREQUISITE_CACHE_KEY: intelgram-v6.7.8-windows2022-libraries-final-v2-${{ env.WINDOWS_DEPENDENCY_RUN_ID }}-${{ env.WINDOWS_DEPENDENCY_RUN_ATTEMPT }}
+        run: |
+          $deadline = (Get-Date).AddMinutes(12)
+          do {
+            $encoded = [Uri]::EscapeDataString($env:PREREQUISITE_CACHE_KEY)
+            $response = gh api "repos/$env:GITHUB_REPOSITORY/actions/caches?key=$encoded" | ConvertFrom-Json
+            if ($response.actions_caches.key -contains $env:PREREQUISITE_CACHE_KEY) {
+              Write-Host "Final dependency cache is visible: $env:PREREQUISITE_CACHE_KEY"
+              exit 0
+            }
+            Start-Sleep -Seconds 15
+          } while ((Get-Date) -lt $deadline)
+          throw "Final dependency cache did not become visible: $env:PREREQUISITE_CACHE_KEY"
+
+      - name: Restore dependencies
+        id: windows-dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            Libraries
+            ThirdParty
+            windows-dependencies-*.complete
+          key: intelgram-v6.7.8-windows2022-libraries-final-v2-${{ env.WINDOWS_DEPENDENCY_RUN_ID }}-${{ env.WINDOWS_DEPENDENCY_RUN_ATTEMPT }}
+
+      - name: Verify final Windows dependency cache
+        shell: pwsh
+        run: |
+          if (-not (Test-Path windows-dependencies-final.complete)) { throw "Final Windows dependency marker was not restored" }
+
+      - name: Limit MSVC compiler fanout
+        shell: pwsh
+        run: |
+          $optionsPath = "tdesktop/cmake/options_win.cmake"
+          $options = [IO.File]::ReadAllText($optionsPath)
+          $updated = $options.Replace(
+            "/MP     # Enable multi process build.",
+            "/MP1    # Limit compiler fanout for generated Qt resources.")
+          if ($updated -eq $options) { throw "Expected the pinned /MP compiler option" }
+          [IO.File]::WriteAllText($optionsPath, $updated, [Text.UTF8Encoding]::new($false))
+          Select-String -Path $optionsPath -SimpleMatch "/MP1"
+
+      - name: Apply IntelGram changes
+        shell: pwsh
+        run: |
+          $patchPath = Join-Path $env:GITHUB_WORKSPACE "intelgram-local-profile-render-overrides.patch"
+          $patch = [IO.File]::ReadAllText($patchPath).Replace("`r`n", "`n")
+          [IO.File]::WriteAllText($patchPath, $patch, [Text.UTF8Encoding]::new($false))
+          $actual = (Get-FileHash intelgram-local-profile-render-overrides.patch -Algorithm SHA256).Hash.ToLower()
+          if ($actual -ne $env:PATCH_SHA256) { throw "Patch hash mismatch" }
+          git -C tdesktop apply --check "$env:GITHUB_WORKSPACE/intelgram-local-profile-render-overrides.patch"
+          git -C tdesktop apply "$env:GITHUB_WORKSPACE/intelgram-local-profile-render-overrides.patch"
+          git -C tdesktop submodule sync -- Telegram/lib_ui
+          git -C tdesktop submodule update --init --force Telegram/lib_ui
+          git -C tdesktop/Telegram/lib_ui remote set-url origin https://github.com/foolspec/lib_ui.git
+          git -C tdesktop/Telegram/lib_ui fetch --no-tags --depth=1 origin $env:LIB_UI_REF
+          git -C tdesktop/Telegram/lib_ui checkout --detach FETCH_HEAD
+          if ((git -C tdesktop/Telegram/lib_ui rev-parse HEAD).Trim() -ne $env:LIB_UI_COMMIT) { throw "Telegram/lib_ui commit mismatch" }
+          Push-Location tdesktop
+          python "$env:GITHUB_WORKSPACE/build_intelgram_branding.py"
+          Pop-Location
+          git -C tdesktop diff --check
+          $added = git -C tdesktop diff --unified=0 --no-ext-diff |
+            Where-Object { $_.StartsWith('+') -and -not $_.StartsWith('+++') }
+          if ($added | Select-String -Pattern 'MTP(account_(CheckUsername|Update(Profile|Username|EmojiStatus|PersonalChannel))|channels_(JoinChannel|CreateChannel|DeleteChannel|Edit(Admin|Photo|Title)|InviteToChannel)|contacts_ImportContacts|messages_(EditMessage|SendMessage|UpdatePinnedMessage)|payments_(TransferStarGift|ToggleStarGiftsPinnedToTop))') { throw "Unexpected Telegram mutation reference" }
+          python validate_intelgram_patch.py tdesktop
+          Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp -Pattern ayu_LocalProfileIdEnabled
+          Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp -Pattern ShowLocalProfileUsernameEditor
+          Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp -SimpleMatch 'AddUsernameCheckLabel(container'
+          Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp -SimpleMatch 'requestFullPeer(user)'
+          Select-String -Path tdesktop/Telegram/SourceFiles/info/profile/info_profile_actions.cpp -SimpleMatch LocalProfilePersonalChannelValue
+          Select-String -Path tdesktop/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp -SimpleMatch ResolveAndShowUniqueGiftForLocalProfile
+          Select-String -Path tdesktop/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp -SimpleMatch referenceMatches
+          Select-String -Path tdesktop/Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp -SimpleMatch 'LocalProfileUsernameActive(peer)'
+          Select-String -Path tdesktop/Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp -SimpleMatch 'Ayu::LocalProfilePhone(user)'
+          Select-String -Path tdesktop/Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp -SimpleMatch 'Ayu::LocalProfileUserpicActive(peer)'
+          Select-String -Path tdesktop/Telegram/SourceFiles/boxes/gift_premium_box.cpp -SimpleMatch 'Ayu::LocalProfileName(to)'
+          Select-String -Path tdesktop/Telegram/SourceFiles/settings/settings_credits_graphics.cpp -SimpleMatch localProfileRecipientId
+          Select-String -Path tdesktop/Telegram/SourceFiles/info/profile/info_profile_values.cpp -SimpleMatch BadgeValueForPeer
+          Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp -SimpleMatch LoadLocalGiftCollectionFallback
+          Select-String -Path tdesktop/Telegram/SourceFiles/boxes/peers/edit_peer_color_box.cpp -SimpleMatch 'LocalProfileNameValue(peer)'
+          Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/components/icon_picker.cpp -SimpleMatch 'AyuAssets::GRAPHITE_ICON'
+          Select-String -Path tdesktop/Telegram/SourceFiles/ayu/utils/telegram_helpers.cpp -Pattern isIntelGramChannelMember
+          Select-String -Path tdesktop/Telegram/Resources/langs/lang.strings -Pattern ayu_IntelGramLinksTechnicalChangelog
+          Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp -Pattern ShowIntelGramUpdateLog
+          Select-String -Path tdesktop/Telegram/SourceFiles/core/version.h -Pattern 'AppFile = "IntelGram"'
+          Select-String -Path tdesktop/Telegram/SourceFiles/window/main_window.cpp -SimpleMatch 'Ayu::VisibleClientShortName()'
+          Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp -SimpleMatch kDiscreetModeClickTimeout
+          Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp -SimpleMatch 'showOther(MainId())'
+          Select-String -Path tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp -SimpleMatch 'tr::ayu_IntelGramUpdateLogDisguise'
+          Select-String -Path tdesktop/Telegram/SourceFiles/intro/intro_widget.cpp -SimpleMatch 'Ayu::VisibleClientName()'
+
+      - name: Configure and build
+        shell: cmd
+        working-directory: tdesktop\Telegram
+        run: |
+          call configure.bat x64 -D TDESKTOP_API_ID=2040 -D TDESKTOP_API_HASH=b18441a1ff607e10a989891a5462e627 -D CMAKE_MSVC_DEBUG_INFORMATION_FORMAT:STRING=
+          cmake --build ..\out --config Release --target Telegram --parallel 1
+
+      - name: Verify, launch, and package
+        shell: pwsh
+        run: |
+          $candidates = @(Get-ChildItem tdesktop/out -Filter IntelGram.exe -File -Recurse)
+          if ($candidates.Count -ne 1) {
+            Get-ChildItem tdesktop/out -Filter *.exe -File -Recurse | ForEach-Object FullName
+            throw "Expected one IntelGram.exe build output, found $($candidates.Count)"
+          }
+          $binary = $candidates[0].FullName
+          $binaryDirectory = $candidates[0].DirectoryName
+          $testRoot = Join-Path $env:RUNNER_TEMP "intelgram-smoke"
+          New-Item -ItemType Directory -Force $testRoot | Out-Null
+          $process = Start-Process -FilePath $binary -ArgumentList "-workdir", "`"$testRoot`"" -PassThru -RedirectStandardOutput launch-windows.log -RedirectStandardError launch-windows-error.log
+          Start-Sleep -Seconds 12
+          if ($process.HasExited) { throw "IntelGram exited during launch smoke test" }
+          Stop-Process -Id $process.Id -Force
+          $package = New-Item -ItemType Directory -Force IntelGram-Windows-x64
+          Copy-Item $binary (Join-Path $package.FullName "IntelGram.exe")
+          Get-ChildItem $binaryDirectory -Filter *.dll -File | Copy-Item -Destination $package
+          $updater = Join-Path $binaryDirectory "Updater.exe"
+          if (Test-Path $updater) { Copy-Item $updater $package }
+          Compress-Archive -Path IntelGram-Windows-x64 -DestinationPath IntelGram-Windows-x64.zip -CompressionLevel Optimal
+          (Get-FileHash IntelGram-Windows-x64.zip -Algorithm SHA256).Hash.ToLower() + "  IntelGram-Windows-x64.zip" | Set-Content IntelGram-Windows-sha256.txt
+          @(
+            "Platform: Windows x64",
+            "Application: IntelGram.exe",
+            "Application ID: {7AF76B28-0DD4-4CCB-BFA8-53CC3079650D}",
+            "Source: $env:SOURCE_TAG (b25513a06ff88be0b3f4c928252b56c3da39cec7)",
+            "Patch: $env:PATCH_SHA256",
+            "Launch smoke test: PASS"
+          ) | Set-Content IntelGram-Windows-validation.txt
+
+      - name: Upload Windows package
+        uses: actions/upload-artifact@v4
+        with:
+          name: IntelGram-Windows-x64
+          path: |
+            IntelGram-Windows-x64.zip
+            IntelGram-Windows-sha256.txt
+            IntelGram-Windows-validation.txt
+            launch-windows.log
+            launch-windows-error.log
+          if-no-files-found: error
+          compression-level: 0
+
+  linux:
+    name: Linux x64
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'linux' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install launch-test tools
+        run: sudo apt-get update && sudo apt-get install -y libopengl0 xvfb
+
+      - name: Clone official source
+        run: |
+          set -euxo pipefail
+          git clone --recursive --branch "$SOURCE_TAG" --single-branch https://github.com/AyuGram/AyuGramDesktop.git tdesktop
+          test "$(git -C tdesktop rev-parse HEAD)" = "b25513a06ff88be0b3f4c928252b56c3da39cec7"
+          git -C tdesktop submodule status --recursive
+
+      - name: Apply IntelGram changes
+        run: |
+          set -euxo pipefail
+          test "$(sha256sum intelgram-local-profile-render-overrides.patch | awk '{print $1}')" = "$PATCH_SHA256"
+          git -C tdesktop apply --check "$GITHUB_WORKSPACE/intelgram-local-profile-render-overrides.patch"
+          git -C tdesktop apply "$GITHUB_WORKSPACE/intelgram-local-profile-render-overrides.patch"
+          git -C tdesktop submodule sync -- Telegram/lib_ui
+          git -C tdesktop submodule update --init --force Telegram/lib_ui
+          git -C tdesktop/Telegram/lib_ui remote set-url origin https://github.com/foolspec/lib_ui.git
+          git -C tdesktop/Telegram/lib_ui fetch --no-tags --depth=1 origin "$LIB_UI_REF"
+          git -C tdesktop/Telegram/lib_ui checkout --detach FETCH_HEAD
+          test "$(git -C tdesktop/Telegram/lib_ui rev-parse HEAD)" = "$LIB_UI_COMMIT"
+          (cd tdesktop && python3 "$GITHUB_WORKSPACE/build_intelgram_branding.py")
+          git -C tdesktop diff --check
+          added="$(git -C tdesktop diff --unified=0 --no-ext-diff | sed -n '/^+/ { /^+++/d; p; }')"
+          if printf '%s\n' "$added" | grep -E 'MTP(account_(CheckUsername|Update(Profile|Username|EmojiStatus|PersonalChannel))|channels_(JoinChannel|CreateChannel|DeleteChannel|Edit(Admin|Photo|Title)|InviteToChannel)|contacts_ImportContacts|messages_(EditMessage|SendMessage|UpdatePinnedMessage)|payments_(TransferStarGift|ToggleStarGiftsPinnedToTop))'; then
+            echo "Unexpected Telegram mutation reference."
+            exit 1
+          fi
+          python3 validate_intelgram_patch.py tdesktop
+          grep -n 'ayu_LocalProfileIdEnabled' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
+          grep -n 'ShowLocalProfileUsernameEditor' tdesktop/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
+          grep -n 'AddUsernameCheckLabel(container' tdesktop/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
+          grep -n 'requestFullPeer(user)' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
+          grep -n 'LocalProfilePersonalChannelValue' tdesktop/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
+          grep -n 'ResolveAndShowUniqueGiftForLocalProfile' tdesktop/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp
+          grep -n 'referenceMatches' tdesktop/Telegram/SourceFiles/info/profile/info_profile_top_bar.cpp
+          grep -n 'LocalProfileUsernameActive(peer)' tdesktop/Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp
+          grep -n 'Ayu::LocalProfilePhone(user)' tdesktop/Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp
+          grep -n 'Ayu::LocalProfileUserpicActive(peer)' tdesktop/Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp
+          grep -n 'Ayu::LocalProfileName(to)' tdesktop/Telegram/SourceFiles/boxes/gift_premium_box.cpp
+          grep -n 'localProfileRecipientId' tdesktop/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
+          grep -n 'BadgeValueForPeer' tdesktop/Telegram/SourceFiles/info/profile/info_profile_values.cpp
+          grep -n 'LoadLocalGiftCollectionFallback' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
+          grep -n 'LocalProfileNameValue(peer)' tdesktop/Telegram/SourceFiles/boxes/peers/edit_peer_color_box.cpp
+          grep -n 'AyuAssets::GRAPHITE_ICON' tdesktop/Telegram/SourceFiles/ayu/ui/components/icon_picker.cpp
+          grep -n 'isIntelGramChannelMember' tdesktop/Telegram/SourceFiles/ayu/utils/telegram_helpers.cpp
+          grep -n 'ayu_IntelGramLinksTechnicalChangelog' tdesktop/Telegram/Resources/langs/lang.strings
+          grep -n 'ShowIntelGramUpdateLog' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
+          grep -n 'AppFile = "IntelGram"' tdesktop/Telegram/SourceFiles/core/version.h
+          grep -n 'Ayu::VisibleClientShortName()' tdesktop/Telegram/SourceFiles/window/main_window.cpp
+          grep -n 'kDiscreetModeClickTimeout' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
+          grep -n 'showOther(MainId())' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
+          grep -n 'tr::ayu_IntelGramUpdateLogDisguise' tdesktop/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
+          grep -n 'Ayu::VisibleClientName()' tdesktop/Telegram/SourceFiles/intro/intro_widget.cpp
+
+      - name: Build with the documented Linux container
+        run: |
+          set -euxo pipefail
+          # shellcheck disable=SC2016
+          sed -i 's|cmake --build ../out --config "${CONFIG:-Release}"|cmake --build ../out --config "${CONFIG:-Release}" -- -k 0|' \
+            tdesktop/Telegram/build/docker/centos_env/build.sh
+          # shellcheck disable=SC2016
+          grep -F -- 'cmake --build ../out --config "${CONFIG:-Release}" -- -k 0' \
+            tdesktop/Telegram/build/docker/centos_env/build.sh
+          docker pull ghcr.io/telegramdesktop/tdesktop/centos_env:latest
+          docker run --rm \
+            -u "$(id -u)" \
+            -e CMAKE_BUILD_PARALLEL_LEVEL=3 \
+            -v "$GITHUB_WORKSPACE/tdesktop:/usr/src/tdesktop" \
+            ghcr.io/telegramdesktop/tdesktop/centos_env:latest \
+            /usr/src/tdesktop/Telegram/build/docker/centos_env/build.sh \
+            -D TDESKTOP_API_ID=2040 \
+            -D TDESKTOP_API_HASH=b18441a1ff607e10a989891a5462e627
+
+      - name: Verify, launch, and package
+        run: |
+          set -euxo pipefail
+          BINARY="$(find tdesktop/out -type f -name IntelGram -perm -111 | head -n 1)"
+          test -x "$BINARY"
+          TEST_ROOT="$RUNNER_TEMP/intelgram-smoke"
+          mkdir -p "$TEST_ROOT" IntelGram-Linux-x64
+          export INTELGRAM_BINARY="$BINARY"
+          export INTELGRAM_TEST_ROOT="$TEST_ROOT"
+          export INTELGRAM_LAUNCH_LOG="$GITHUB_WORKSPACE/launch-linux.log"
+          export QT_OPENGL=software
+          export LIBGL_ALWAYS_SOFTWARE=1
+          # shellcheck disable=SC2016
+          xvfb-run -a -s "-screen 0 1280x800x24" bash -euo pipefail -c '
+            "$INTELGRAM_BINARY" -workdir "$INTELGRAM_TEST_ROOT" > "$INTELGRAM_LAUNCH_LOG" 2>&1 &
+            app_pid=$!
+            sleep 4
+            if ! kill -0 "$app_pid"; then
+              cat "$INTELGRAM_LAUNCH_LOG"
+              wait "$app_pid"
+            fi
+            kill "$app_pid"
+            wait "$app_pid" || true
+          '
+          cat launch-linux.log
+          cp "$BINARY" IntelGram-Linux-x64/IntelGram
+          tar -C IntelGram-Linux-x64 -czf IntelGram-Linux-x64.tar.gz IntelGram
+          sha256sum IntelGram-Linux-x64.tar.gz > IntelGram-Linux-sha256.txt
+          {
+            echo "Platform: Linux x64"
+            echo "Application: IntelGram"
+            echo "Desktop ID: io.github.foolspec.intelgram"
+            echo "Source: $SOURCE_TAG ($(git -C tdesktop rev-parse HEAD))"
+            echo "Patch: $PATCH_SHA256"
+            echo "Launch smoke test: PASS"
+          } > IntelGram-Linux-validation.txt
+
+      - name: Upload Linux package
+        uses: actions/upload-artifact@v4
+        with:
+          name: IntelGram-Linux-x64
+          path: |
+            IntelGram-Linux-x64.tar.gz
+            IntelGram-Linux-sha256.txt
+            IntelGram-Linux-validation.txt
+            launch-linux.log
+          if-no-files-found: error
+          compression-level: 0
+
+  release:
+    name: Publish IntelGram release
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.platform == 'all' }}
+    runs-on: ubuntu-24.04
+    needs: [macos, windows, linux]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: IntelGram-*
+          path: release-assets
+          merge-multiple: true
+
+      - name: Publish permanent release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euxo pipefail
+          cp intelgram-local-profile-render-overrides.patch release-assets/
+          cp intelgram-local-profile-render-overrides.patch release-assets/ayugram-local-profile-render-overrides.patch
+          cp build_intelgram_branding.py release-assets/
+          cp validate_intelgram_patch.py release-assets/
+          python3 -m zipfile -c release-assets/IntelGram-branding-assets.zip branding/icons generate_intelgram_character_icons.py
+          find release-assets -maxdepth 1 -type f -print -exec ls -lh {} \;
+          mapfile -d '' RELEASE_ASSETS < <(find release-assets -maxdepth 1 -type f ! -empty -print0)
+          test "${#RELEASE_ASSETS[@]}" -gt 0
+          RELEASE_NUMBER="$(
+            gh api --paginate "repos/$GITHUB_REPOSITORY/releases?per_page=100" \
+              --jq '.[].name' \
+              | sed -nE 's/^IntelGram v([0-9]+) - .+$/\1/p' \
+              | sort -n \
+              | tail -1
+          )"
+          RELEASE_NUMBER="$(( ${RELEASE_NUMBER:-0} + 1 ))"
+          PRODUCT_VERSION="v$RELEASE_NUMBER"
+          TAG="intelgram-${PRODUCT_VERSION}-${RELEASE_SLUG}-${GITHUB_RUN_ID}"
+          gh release create "$TAG" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$TARGET_SHA" \
+            --latest \
+            --title "IntelGram $PRODUCT_VERSION - $RELEASE_NAME" \
+            --notes "## IntelGram $PRODUCT_VERSION $RELEASE_NAME
+
+          IntelGram fixes the macOS crashes reached by window activation, @username navigation, later local-username refreshes, and Settings search indexing. It replaces the inset circular Dock artwork with Telegram's full rounded-square icon and paces the slow Liquid Glass highlight layer to remove unnecessary full-window repaint load. The fixes are local UI lifetime, rendering, and artwork changes only; no Telegram account, profile, channel, or message data is changed.
+
+          Built from the official AyuGram Desktop $SOURCE_TAG upstream source." \
+            "${RELEASE_ASSETS[@]}"
