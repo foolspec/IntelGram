@@ -12,7 +12,7 @@ IntelGram product versions advance sequentially from v1. AyuGram Desktop `v6.7.8
 - Source commit: `83881572307c8f85802349fb6aa6c4007deec527` on the recovered local implementation branch.
 - Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
 - Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
-- Patch SHA-256: `d0cbbd063c159bfdaa905ca3aeda431a85d4ff4a793db9dc871c5f9a49cd4ed0`.
+- Patch SHA-256: `f4d2c79e40fd982ef7e8df95594b3df4927822297ab9074d18cb9d0588fb9c64`.
 - Patch footprint: 108 files, 13,658 insertions, and 684 deletions relative to the pinned source.
 - `Telegram/lib_ui` remains pinned to public fork commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
 
