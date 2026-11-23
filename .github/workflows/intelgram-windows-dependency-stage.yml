@@ -1,0 +1,265 @@
+name: IntelGram Windows Dependency Stage
+
+# Prepare the official pinned dependency set in cacheable platform slices.
+
+on:
+  workflow_call:
+    inputs:
+      cache_key:
+        required: true
+        type: string
+      restore_key:
+        required: false
+        default: ""
+        type: string
+      prerequisite_cache_key:
+        required: false
+        default: ""
+        type: string
+      prerequisite_marker:
+        required: false
+        default: ""
+        type: string
+      stages:
+        required: false
+        default: ""
+        type: string
+      completion_marker:
+        required: true
+        type: string
+      stage_timeout_minutes:
+        required: false
+        default: 300
+        type: number
+      number_of_processors:
+        required: false
+        default: "3"
+        type: string
+      serialize_libvpx_msbuild:
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  prepare:
+    runs-on: windows-2022
+    timeout-minutes: 355
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: "3"
+      NUMBER_OF_PROCESSORS: ${{ inputs.number_of_processors }}
+      PYTHONUNBUFFERED: "1"
+    steps:
+      - name: Configure Visual Studio build environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Clone official source
+        shell: pwsh
+        run: |
+          git clone --recursive --branch v6.7.8 --single-branch https://github.com/AyuGram/AyuGramDesktop.git tdesktop
+          if ((git -C tdesktop rev-parse HEAD) -ne "b25513a06ff88be0b3f4c928252b56c3da39cec7") { throw "Unexpected source commit" }
+
+      - name: Wait for prerequisite cache visibility
+        if: ${{ inputs.prerequisite_cache_key != '' }}
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREREQUISITE_CACHE_KEY: ${{ inputs.prerequisite_cache_key }}
+        run: |
+          $deadline = (Get-Date).AddMinutes(12)
+          do {
+            $encoded = [Uri]::EscapeDataString($env:PREREQUISITE_CACHE_KEY)
+            $response = gh api "repos/$env:GITHUB_REPOSITORY/actions/caches?key=$encoded" | ConvertFrom-Json
+            if ($response.actions_caches.key -contains $env:PREREQUISITE_CACHE_KEY) {
+              Write-Host "Prerequisite cache is visible: $env:PREREQUISITE_CACHE_KEY"
+              exit 0
+            }
+            Start-Sleep -Seconds 15
+          } while ((Get-Date) -lt $deadline)
+          throw "Prerequisite cache did not become visible: $env:PREREQUISITE_CACHE_KEY"
+
+      - name: Restore accumulated dependencies
+        id: dependencies
+        continue-on-error: true
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            Libraries
+            ThirdParty
+            windows-dependencies-*.complete
+          key: ${{ inputs.cache_key }}
+          restore-keys: ${{ inputs.restore_key }}
+
+      - name: Detect incomplete prerequisite restore
+        if: ${{ inputs.prerequisite_cache_key != '' }}
+        shell: pwsh
+        env:
+          PREREQUISITE_MARKER: ${{ inputs.prerequisite_marker }}
+        run: |
+          if (-not (Test-Path $env:PREREQUISITE_MARKER)) {
+            Write-Warning "The accumulated cache did not restore completely; retrying the exact prerequisite cache."
+            "RESTORE_PREREQUISITE_CACHE=1" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            Start-Sleep -Seconds 30
+          }
+
+      - name: Restore prerequisite cache directly
+        if: ${{ env.RESTORE_PREREQUISITE_CACHE == '1' }}
+        continue-on-error: true
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            Libraries
+            ThirdParty
+            windows-dependencies-*.complete
+          key: ${{ inputs.prerequisite_cache_key }}
+
+      - name: Detect prerequisite restore retry
+        if: ${{ env.RESTORE_PREREQUISITE_CACHE == '1' }}
+        shell: pwsh
+        env:
+          PREREQUISITE_MARKER: ${{ inputs.prerequisite_marker }}
+        run: |
+          if (-not (Test-Path $env:PREREQUISITE_MARKER)) {
+            Write-Warning "The direct prerequisite restore was incomplete; retrying once more."
+            "RESTORE_PREREQUISITE_CACHE_AGAIN=1" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+            Start-Sleep -Seconds 45
+          }
+
+      - name: Restore prerequisite cache directly again
+        if: ${{ env.RESTORE_PREREQUISITE_CACHE_AGAIN == '1' }}
+        continue-on-error: true
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            Libraries
+            ThirdParty
+            windows-dependencies-*.complete
+          key: ${{ inputs.prerequisite_cache_key }}
+
+      - name: Verify prerequisite cache contents
+        shell: pwsh
+        env:
+          PREREQUISITE_MARKER: ${{ inputs.prerequisite_marker }}
+        run: |
+          if ($env:PREREQUISITE_MARKER -and -not (Test-Path $env:PREREQUISITE_MARKER)) {
+            throw "Prerequisite marker was not restored: $env:PREREQUISITE_MARKER"
+          }
+          "CACHE_INPUT_VALID=1" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Restore cached tool paths
+        shell: pwsh
+        run: |
+          $jom = Get-ChildItem ThirdParty -Filter jom.exe -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($jom) {
+            $jom.DirectoryName | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+            Write-Host "Using jom from $($jom.DirectoryName)"
+          }
+
+      - name: Install MSYS2 Yasm for libvpx
+        if: ${{ inputs.serialize_libvpx_msbuild }}
+        shell: pwsh
+        run: |
+          $pacman = Join-Path $PWD "ThirdParty\msys64\usr\bin\pacman.exe"
+          if (-not (Test-Path $pacman)) { throw "MSYS2 pacman was not restored" }
+          & $pacman -S --noconfirm --needed mingw-w64-x86_64-yasm
+          if ($LASTEXITCODE -ne 0) { throw "Could not install the pinned MSYS2 Yasm package" }
+          $directory = Join-Path $PWD "ThirdParty\msys64\mingw64\bin"
+          $executable = Join-Path $directory "yasm.exe"
+          if (-not (Test-Path $executable)) { throw "MSYS2 Yasm executable was not installed" }
+          $probeSource = Join-Path $directory "intelgram-yasm-probe.asm"
+          $probeObject = Join-Path $directory "intelgram-yasm-probe.obj"
+          @(
+            "section .text"
+            "global intelgram_yasm_probe"
+            "intelgram_yasm_probe:"
+            "    ret"
+          ) | Set-Content -Path $probeSource -Encoding ascii
+          & $executable -f win64 -o $probeObject $probeSource
+          if ($LASTEXITCODE -ne 0 -or -not (Test-Path $probeObject) -or (Get-Item $probeObject).Length -le 0) {
+            throw "Pinned Yasm executable could not assemble a Win64 object"
+          }
+          Write-Host "MSYS2 Yasm size: $((Get-Item $executable).Length) bytes"
+          Write-Host "MSYS2 Yasm SHA-256: $((Get-FileHash -Algorithm SHA256 $executable).Hash)"
+          Remove-Item $probeSource, $probeObject -Force
+          $directory | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Serialize libvpx MSBuild projects
+        if: ${{ inputs.serialize_libvpx_msbuild }}
+        shell: pwsh
+        run: |
+          $expectedYasm = (Resolve-Path "ThirdParty\msys64\mingw64\bin\yasm.exe").Path
+          $selectedYasm = (Get-Command yasm -ErrorAction Stop).Source
+          if ($selectedYasm -ne $expectedYasm) { throw "Unexpected Yasm executable selected: $selectedYasm" }
+          Write-Host "Using pinned Yasm from $selectedYasm"
+          $matches = @(Get-ChildItem Libraries -Filter build_libvpx_win.sh -Recurse -File -ErrorAction SilentlyContinue)
+          if ($matches.Count -ne 1) { throw "Expected exactly one upstream libvpx build helper under Libraries, found $($matches.Count)" }
+          $path = $matches[0].FullName
+          $directory = $matches[0].DirectoryName
+          $name = $matches[0].Name
+          git -C $directory checkout -- $name
+          if ($LASTEXITCODE -ne 0) { throw "Could not restore the pinned upstream libvpx build helper" }
+          $content = [System.IO.File]::ReadAllText($path)
+          $needle = 'make -j$NUMBER_OF_PROCESSORS'
+          $injection = "sed -i 's/-m -t:Build/-m:1 -t:Build/' build/make/gen_msvs_sln.sh`ngrep -F -- '-m:1 -t:Build' build/make/gen_msvs_sln.sh`n`n"
+          $index = $content.IndexOf($needle, [System.StringComparison]::Ordinal)
+          if ($index -lt 0) { throw "Could not locate the libvpx make command in $path" }
+          $content = $content.Insert($index, $injection)
+          [System.IO.File]::WriteAllText($path, $content, [System.Text.UTF8Encoding]::new($false))
+          Get-Content $path
+
+      - name: Harden parallel Qt metadata generation
+        shell: pwsh
+        run: |
+          $path = "tdesktop\Telegram\build\prepare\prepare.py"
+          $content = [System.IO.File]::ReadAllText($path)
+          $newline = if ($content.Contains("`r`n")) { "`r`n" } else { "`n" }
+          $needle = "win:${newline}    cd qtbase"
+          $replacement = @(
+            "win:"
+            "    if not exist qtimageformats\mkspecs\modules-inst mkdir qtimageformats\mkspecs\modules-inst"
+            "    if not exist qtsvg\mkspecs\modules-inst mkdir qtsvg\mkspecs\modules-inst"
+            "    cd qtbase"
+          ) -join $newline
+          $matches = ([regex]::Matches($content, [regex]::Escape($needle))).Count
+          if ($matches -ne 2) {
+            throw "Expected two Qt Windows preparation blocks, found $matches"
+          }
+          $content = $content.Replace($needle, $replacement)
+          [System.IO.File]::WriteAllText($path, $content, [System.Text.UTF8Encoding]::new($false))
+
+      - name: Prepare dependency stage
+        shell: cmd
+        timeout-minutes: ${{ inputs.stage_timeout_minutes }}
+        run: |
+          if exist "${{ inputs.completion_marker }}" (
+            echo Dependency stage is already complete.
+            exit /b 0
+          )
+          if "${{ inputs.stages }}"=="" (
+            call tdesktop\Telegram\build\prepare\win.bat silent
+          ) else (
+            call tdesktop\Telegram\build\prepare\win.bat silent ${{ inputs.stages }}
+          )
+          if %errorlevel% neq 0 exit /b %errorlevel%
+          type nul > "${{ inputs.completion_marker }}"
+
+      - name: Prune installed Qt source tree from cache
+        shell: pwsh
+        run: |
+          $source = Join-Path $PWD "Libraries\win64\qt_6.2.13"
+          $install = Join-Path $PWD "Libraries\win64\Qt-6.2.13"
+          if ((Test-Path $source) -and (Test-Path $install)) {
+            Write-Host "Removing installed Qt source tree from the dependency cache: $source"
+            Remove-Item $source -Recurse -Force
+          }
+
+      - name: Save accumulated dependencies
+        if: ${{ always() && env.CACHE_INPUT_VALID == '1' }}
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            Libraries
+            ThirdParty
+            windows-dependencies-*.complete
+          key: ${{ inputs.cache_key }}

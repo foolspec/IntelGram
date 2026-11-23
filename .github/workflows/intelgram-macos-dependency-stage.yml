@@ -1,0 +1,180 @@
+name: IntelGram macOS Dependency Stage
+
+# Prepare the official pinned dependency set in cacheable platform slices.
+
+on:
+  workflow_call:
+    inputs:
+      cache_key:
+        required: true
+        type: string
+      restore_key:
+        required: false
+        default: ""
+        type: string
+      prerequisite_cache_key:
+        required: false
+        default: ""
+        type: string
+      prerequisite_marker:
+        required: false
+        default: ""
+        type: string
+      stages:
+        required: false
+        default: ""
+        type: string
+      completion_marker:
+        required: true
+        type: string
+      stage_timeout_minutes:
+        required: false
+        default: 300
+        type: number
+      breakpad:
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  prepare:
+    runs-on: macos-26
+    timeout-minutes: 355
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: "3"
+      HOMEBREW_NO_AUTO_UPDATE: "1"
+      HOMEBREW_NO_INSTALL_CLEANUP: "1"
+    steps:
+      - name: Install documented tools
+        run: brew install automake wget pkg-config gnu-tar nasm meson coreutils
+
+      - name: Clone official source
+        run: |
+          set -euxo pipefail
+          git clone --recursive --branch v6.7.8 --single-branch https://github.com/AyuGram/AyuGramDesktop.git tdesktop
+          test "$(git -C tdesktop rev-parse HEAD)" = "b25513a06ff88be0b3f4c928252b56c3da39cec7"
+
+      - name: Wait for prerequisite cache visibility
+        if: ${{ inputs.prerequisite_cache_key != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PREREQUISITE_CACHE_KEY: ${{ inputs.prerequisite_cache_key }}
+        run: |
+          set -euo pipefail
+          deadline=$((SECONDS + 720))
+          while (( SECONDS < deadline )); do
+            encoded="$(python3 -c 'import os, urllib.parse; print(urllib.parse.quote(os.environ["PREREQUISITE_CACHE_KEY"], safe=""))')"
+            if gh api "repos/$GITHUB_REPOSITORY/actions/caches?key=$encoded" \
+              --jq '.actions_caches[].key' | grep -Fx "$PREREQUISITE_CACHE_KEY"; then
+              echo "Prerequisite cache is visible: $PREREQUISITE_CACHE_KEY"
+              exit 0
+            fi
+            sleep 15
+          done
+          echo "Final prerequisite cache did not become visible: $PREREQUISITE_CACHE_KEY" >&2
+          exit 1
+
+      - name: Restore accumulated dependencies
+        id: dependencies
+        continue-on-error: true
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            Libraries
+            macos-dependencies-*.complete
+          key: ${{ inputs.cache_key }}
+          restore-keys: ${{ inputs.restore_key }}
+
+      - name: Detect incomplete prerequisite restore
+        if: ${{ inputs.prerequisite_cache_key != '' }}
+        env:
+          PREREQUISITE_MARKER: ${{ inputs.prerequisite_marker }}
+        run: |
+          if [[ ! -f "$PREREQUISITE_MARKER" ]]; then
+            echo "The accumulated cache did not include $PREREQUISITE_MARKER; restoring the exact prerequisite."
+            echo "RESTORE_PREREQUISITE_CACHE=1" >> "$GITHUB_ENV"
+            sleep 20
+          fi
+
+      - name: Restore prerequisite cache directly
+        if: ${{ env.RESTORE_PREREQUISITE_CACHE == '1' }}
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            Libraries
+            macos-dependencies-*.complete
+          key: ${{ inputs.prerequisite_cache_key }}
+
+      - name: Verify prerequisite cache contents
+        env:
+          PREREQUISITE_MARKER: ${{ inputs.prerequisite_marker }}
+        run: |
+          set -euo pipefail
+          if [[ -n "$PREREQUISITE_MARKER" ]]; then
+            test -f "$PREREQUISITE_MARKER"
+          fi
+
+      - name: Prepare dependency stage
+        if: ${{ !inputs.breakpad }}
+        timeout-minutes: ${{ inputs.stage_timeout_minutes }}
+        env:
+          COMPLETION_MARKER: ${{ inputs.completion_marker }}
+          STAGES: ${{ inputs.stages }}
+        run: |
+          set -euxo pipefail
+          if [[ -f "$COMPLETION_MARKER" ]]; then
+            echo "Dependency stage is already complete."
+          else
+            cd tdesktop
+            # Intentional word splitting passes the controlled stage list as arguments.
+            # shellcheck disable=SC2086
+            ./Telegram/build/prepare/mac.sh silent $STAGES
+            cd ..
+            touch "$COMPLETION_MARKER"
+          fi
+          echo "STAGE_COMPLETE=1" >> "$GITHUB_ENV"
+
+      - name: Prepare Breakpad with bounded retries
+        if: ${{ inputs.breakpad }}
+        timeout-minutes: ${{ inputs.stage_timeout_minutes }}
+        env:
+          COMPLETION_MARKER: ${{ inputs.completion_marker }}
+        run: |
+          set -euxo pipefail
+          if [[ -f "$COMPLETION_MARKER" ]]; then
+            echo "Breakpad stage is already complete."
+          else
+            cd tdesktop
+            perl -0pi -e 's/xcodebuild -project Breakpad\.xcodeproj/xcodebuild -jobs 3 -project Breakpad.xcodeproj/g' Telegram/build/prepare/prepare.py
+            grep -n 'xcodebuild -jobs 3 -project Breakpad.xcodeproj' Telegram/build/prepare/prepare.py
+            success=0
+            for attempt in 1 2 3; do
+              if gtimeout --signal=TERM --kill-after=30s 20m ./Telegram/build/prepare/mac.sh silent breakpad; then
+                success=1
+                break
+              fi
+              echo "Breakpad attempt $attempt did not finish; retrying cleanly."
+            done
+            test "$success" = 1
+            cd ..
+            touch "$COMPLETION_MARKER"
+          fi
+          echo "STAGE_COMPLETE=1" >> "$GITHUB_ENV"
+
+      - name: Prune installed Qt source tree from cache
+        if: ${{ env.STAGE_COMPLETE == '1' }}
+        run: |
+          set -euo pipefail
+          if [[ -d Libraries/qt_6.2.13 && -d Libraries/local/Qt-6.2.13 ]]; then
+            du -sh Libraries/qt_6.2.13 Libraries/local/Qt-6.2.13
+            rm -rf Libraries/qt_6.2.13
+          fi
+
+      - name: Save accumulated dependencies
+        if: ${{ env.STAGE_COMPLETE == '1' }}
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            Libraries
+            macos-dependencies-*.complete
+          key: ${{ inputs.cache_key }}
