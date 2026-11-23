@@ -77,13 +77,13 @@ jobs:
           set -euxo pipefail
           docker pull ghcr.io/telegramdesktop/tdesktop/centos_env:latest
           docker run --rm ghcr.io/telegramdesktop/tdesktop/centos_env:latest \
-            bash -euxo pipefail -c '
+            bash -euxc '
               echo "=== ada files ==="
-              find / -xdev \( -iname "ada.h" -o -iname "libada*" -o -iname "adaConfig.cmake" -o -iname "ada-config.cmake" \) 2>/dev/null | sort | sed -n "1,120p"
+              find / -xdev \( -iname "ada.h" -o -iname "libada*" -o -iname "adaConfig.cmake" -o -iname "ada-config.cmake" \) 2>/dev/null | sort | sed -n "1,120p" || true
               echo "=== /usr/local tree ==="
-              find /usr/local -maxdepth 3 -type d 2>/dev/null | sort | sed -n "1,160p"
+              find /usr/local -maxdepth 3 -type d 2>/dev/null | sort | sed -n "1,160p" || true
               echo "=== ada dirs ==="
-              find /usr -type d -iname "*ada*" 2>/dev/null | sort | sed -n "1,80p"
+              find /usr -type d -iname "*ada*" 2>/dev/null | sort | sed -n "1,80p" || true
             '
 
   macos_dependencies_1:
