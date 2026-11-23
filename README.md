@@ -20,6 +20,9 @@
 <div align="center">
 <a href="https://github.com/foolspec/IntelGram/releases/latest">
 <img src="branding/badges/Download.svg" alt="Download"></a>
+</div>
+
+<div align="center">
 <a href="https://github.com/foolspec/IntelGram/discussions/new/choose">
 <img src="https://img.shields.io/github/discussions-search?query=repo%3Afoolspec%2FIntelGram%20is%3Aopen&style=flat&logo=TheConversation&logoColor=white&label=Ask%20Question&color=6e40c9" alt="Ask Question"></a>
 <a href="https://github.com/foolspec/IntelGram/issues/new?template=bug-report.yaml">
