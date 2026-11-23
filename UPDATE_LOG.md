@@ -1,13 +1,20 @@
 # IntelGram Update Log
 
-## Current Update: IntelGram v20
+## Current Update: IntelGram v21
 
 - Base source: official AyuGram Desktop `v6.7.8` at `b25513a06ff88be0b3f4c928252b56c3da39cec7` with required submodules.
-- Product versioning: IntelGram releases advance sequentially from v1; the current product release is v20, while `v6.7.8` identifies only the upstream AyuGram source.
+- Product versioning: IntelGram releases advance sequentially from v1; the current product release is v21, while `v6.7.8` identifies only the upstream AyuGram source.
 - Product identity: IntelGram on macOS, Windows, and Linux with separate application identifiers.
 - Source delivery: one complete IntelGram patch plus deterministic branding and validation scripts.
 - Build delivery: GitHub Actions packages macOS Apple Silicon, Windows x64, and Linux x64.
 - Build reliability: macOS and Windows dependency preparation uses bounded cache stages, platform cache creation is serialized, installed Qt source trees are pruned, macOS can resume directly from a completed Qt stage, and Windows-only runs carry every dependency stage through to the packaged application.
+- Native My Stars: Stars balance and top-up now live in Telegram's own My Stars screen; Settings shows the local balance on the My Stars row.
+- Real Stars packages: Top Up Balance lists Telegram's 15 Stars packages and prices, from 100 to 150,000 Stars.
+- Native checkout: tapping a package opens Telegram's checkout panel with the demo American Express card already saved as the payment method; Pay adds the Stars to the on-device balance.
+- Payment boundary: no real card details are collected, no payment provider is contacted, and no Telegram payment API is invoked.
+
+## IntelGram v20 Local Stars & Gifts
+
 - Local Stars wallet: a persistent on-device Stars balance appears in a dedicated **Local Stars & Gifts** subsection under Local Profile with a clear local-only disclaimer.
 - Demo Amex checkout: a rendered sample American Express card with a fixed number, fixed expiry, editable cardholder name, and **DEMO - AMEX - NO REAL PAYMENT** label accompanies 50/100/250/500/1000 Star presets and a simulated purchase flow.
 - Local gift sending: six collectible-style gifts, a recipient label, balance validation, and local deduction replace any real gift transfer API.

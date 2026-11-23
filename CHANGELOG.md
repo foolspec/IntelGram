@@ -8,6 +8,7 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 
 | Version | Published | Update |
 | --- | --- | --- |
+| v21 | 2026-11-23 | Local Stars & Gifts |
 | v20 | 2026-11-22 | Local Stars & Gifts |
 | v19 | 2026-08-03 | Exact Telegram Disguise Identity |
 | v18 | 2026-08-02 | macOS Stability And Telegram Icon |
@@ -28,6 +29,21 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 | v3 | 2026-07-14 | Multiplatform Launch |
 | v2 | 2026-07-13 | Local Profile Build Refresh |
 | v1 | 2026-07-13 | Initial Local Profile |
+
+## IntelGram v21 Local Stars & Gifts - 2026-11-23
+
+### Changed
+
+- Stars balance and top-up moved out of the custom Local Profile section and into Telegram's native **My Stars** screen. Settings now shows the local balance on the **My Stars** row, and **Top Up Balance** opens Telegram's own package list.
+- Top-up now uses Telegram's real 15 Stars packages and prices, from 100 Stars to 150,000 Stars, with the same collapsed and expanded list Telegram shows.
+- Tapping a package opens Telegram's native checkout panel, with the demo American Express card already saved as the payment method and the usual Cancel and Pay buttons.
+- Paying completes locally: the amount is added to the on-device Stars balance, with the usual success animation. No real payment is made and no payment provider is contacted.
+- The custom **Buy Stars** dialog, local gift composer, and transaction history dialog were removed from Local Profile now that Stars live in the native flow.
+
+### Privacy
+
+- The checkout uses the same fixed demo card data as before. IntelGram does not ask for a real card number, store card details, transmit payment data, or contact any payment provider.
+- Top-up never calls Telegram's payment APIs. Stars exist only inside this client's settings file.
 
 ## IntelGram v20 Local Stars & Gifts - 2026-11-22
 

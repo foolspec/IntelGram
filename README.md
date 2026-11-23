@@ -6,7 +6,7 @@ IntelGram is a cross-platform AyuGram Desktop build focused on local profile cus
 
 [All features](FEATURES.md) | [Feature guide](FEATURE_GUIDE.md) | [Changelog](CHANGELOG.md) | [Technical changelog](TECHNICAL_CHANGELOG.md) | [Update log](UPDATE_LOG.md)
 
-Current product release: **IntelGram v20 - Local Stars & Gifts**. IntelGram versions count product updates sequentially from v1; AyuGram Desktop `v6.7.8` remains the upstream source version.
+Current product release: **IntelGram v21 - Local Stars & Gifts**. IntelGram versions count product updates sequentially from v1; AyuGram Desktop `v6.7.8` remains the upstream source version.
 
 ## Main Features
 

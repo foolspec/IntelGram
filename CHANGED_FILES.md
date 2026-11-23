@@ -5,7 +5,7 @@ patch relative to official AyuGram Desktop `v6.7.8` commit
 `b25513a06ff88be0b3f4c928252b56c3da39cec7`.
 
 Patch SHA-256:
-`f4d2c79e40fd982ef7e8df95594b3df4927822297ab9074d18cb9d0588fb9c64`
+`c7befba853cc1917df39417fbfb8eed2847a53ccd2d9f9a9a703fac999d42513`
 
 ## Added
 
@@ -61,6 +61,7 @@ Patch SHA-256:
 - `Telegram/SourceFiles/boxes/gift_premium_box.cpp`
 - `Telegram/SourceFiles/boxes/peers/edit_peer_color_box.cpp`
 - `Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp`
+- `Telegram/SourceFiles/boxes/send_credits_box.cpp`
 - `Telegram/SourceFiles/core/local_url_handlers.cpp`
 - `Telegram/SourceFiles/core/local_url_handlers.h`
 - `Telegram/SourceFiles/data/data_auto_download.cpp`
@@ -93,6 +94,7 @@ Patch SHA-256:
 - `Telegram/SourceFiles/info/profile/info_profile_values.cpp`
 - `Telegram/SourceFiles/intro/intro_widget.cpp`
 - `Telegram/SourceFiles/media/view/media_view_overlay_widget.cpp`
+- `Telegram/SourceFiles/payments/payments_non_panel_process.cpp`
 - `Telegram/SourceFiles/platform/linux/main_window_linux.cpp`
 - `Telegram/SourceFiles/platform/linux/specific_linux.cpp`
 - `Telegram/SourceFiles/platform/mac/global_menu_mac.mm`
@@ -101,6 +103,7 @@ Patch SHA-256:
 - `Telegram/SourceFiles/platform/mac/window_title_mac.mm`
 - `Telegram/SourceFiles/platform/platform_specific.h`
 - `Telegram/SourceFiles/platform/win/specific_win.cpp`
+- `Telegram/SourceFiles/settings/sections/settings_credits.cpp`
 - `Telegram/SourceFiles/settings/sections/settings_information.cpp`
 - `Telegram/SourceFiles/settings/sections/settings_main.cpp`
 - `Telegram/SourceFiles/settings/sections/settings_notifications.cpp`

@@ -111,17 +111,13 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 
 ## Local Stars & Gifts
 
-- Adds a **Local Stars & Gifts** subsection under Local Profile with a persistent on-device Stars balance.
+- Shows the on-device Stars balance on Telegram's native **My Stars** row in Settings.
+- Opens Telegram's native **My Stars** screen for balance and top-up, with the same 15 Stars packages and prices Telegram offers.
+- Checks out through Telegram's native payment panel, with the demo American Express card already saved as the payment method.
 - Renders a demo American Express card with a fixed sample number, fixed expiry, and an editable cardholder name.
-- Shows an explicit **DEMO - AMEX - NO REAL PAYMENT** label on the card and in the section description.
-- Offers 50, 100, 250, 500, and 1000 Star presets in a **Buy Stars** dialog.
+- Shows an explicit **DEMO - AMEX - NO REAL PAYMENT** label on the card.
 - Adds the chosen amount to the local balance after a simulated checkout, without asking for real card details.
-- Offers six collectible-style local gifts with Star costs in a **Send a local gift** dialog.
-- Checks the local balance before sending, shows how many Stars are missing, and deducts the gift cost locally.
-- Lets you label the local recipient; an empty label falls back to **Local mirror**.
-- Records timestamped purchases and gifts in a **Transaction history** dialog and supports clearing that history.
-- Supports a full reset of balance, history, and cardholder name.
-- Never contacts a payment provider or Telegram's payment, reaction, message-send, or gift-transfer APIs.
+- Never contacts a payment provider or Telegram's payment APIs.
 
 ## Universal Message Vault
 

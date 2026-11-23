@@ -4,6 +4,32 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 
 IntelGram product versions advance sequentially from v1. AyuGram Desktop `v6.7.8` is retained below only as upstream source provenance or inside legacy build tags.
 
+## IntelGram v21 Local Stars & Gifts - 2026-11-23
+
+### Source Baseline And Patch
+
+- Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
+- Source commit: `a22f340ac7abbeecf0d3d53c0a075582b985a7c7` on `codex/intelgram-local-stars-my-stars`.
+- Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
+- Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
+- Patch SHA-256: `c7befba853cc1917df39417fbfb8eed2847a53ccd2d9f9a9a703fac999d42513`.
+- Patch footprint: 111 files, 13,978 insertions, and 717 deletions relative to the pinned source.
+- `Telegram/lib_ui` remains pinned to public fork commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
+
+### Native My Stars Integration
+
+- The custom Local Profile **Local Stars & Gifts** subsection is removed; `BuildPremiumSection` now labels the native **My Stars** row with `AyuSettings::localStarsBalanceValue()`.
+- `FillCreditOptions` returns Telegram's real 15 Stars packages and prices (100–150,000 Stars), and `BuyStarsHandler` now uses that shared list instead of its own placeholder options.
+- `LocalStarsCheckout` (in `settings_credits_graphics.cpp`) implements `Payments::Ui::PanelDelegate` and drives the native payments panel with a fabricated invoice ("Telegram Stars Top-Up", seller "Premium Bot", USD) and the pre-saved demo Amex card as the saved payment method.
+- Paying credits `AyuSettings::localStarsBalance` only and plays the success animation; no `MTPpayments_*` request is made. Panel teardown is deferred to the next event-loop turn so the panel is never destroyed inside its own event handler.
+- `SendStarsForm` and the non-panel payment process short-circuit `intelgram_stars_*` products locally instead of calling Telegram's payment APIs.
+- The legacy `ShowLocalStarsBuyBox`, gift, and activity dialogs remain in `settings_other.cpp` but are no longer reachable from the settings UI.
+
+### Render-Only Boundary
+
+- No `MTPpayments_*`, `MTPmessages_Send*`, `MTPchannels_*`, or account-update reference was added; the patch validator's forbidden-mutation scan still passes.
+- No new network, card-processing, or payment-provider integration exists. All Stars state lives in the local settings file.
+
 ## IntelGram v20 Local Stars & Gifts - 2026-11-22
 
 ### Source Baseline And Patch

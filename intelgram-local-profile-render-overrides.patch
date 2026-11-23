@@ -1114,7 +1114,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/Telegram/Resources/langs/lang.strings b/Telegram/Resources/langs/lang.strings
-index 7380587e7..6b23fe37d 100644
+index 7380587e7..2159c930b 100644
 --- a/Telegram/Resources/langs/lang.strings
 +++ b/Telegram/Resources/langs/lang.strings
 @@ -7971,14 +7971,60 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -1213,7 +1213,7 @@ index 7380587e7..6b23fe37d 100644
 +"ayu_IntelGramUpdateLogTitle" = "IntelGram update log";
 +"ayu_IntelGramUpdateLogCurrentTitle" = "Latest update";
 +"ayu_IntelGramUpdateLogDisguise" = "**Telegram disguise mode**\n- Triple-click anywhere on the blue IntelGram Desktop version heading in IntelGram Preferences to switch the visible app name, logo, Dock or taskbar icon, tray icon, window title, menus, About surface, and drawer branding to Telegram Desktop.\n- The trigger counts physical mouse clicks and allows 1.2 seconds for the three-click sequence.\n- The app immediately returns to Telegram's normal Settings screen so IntelGram-only labels are no longer visible.\n- macOS menu refreshes now skip Ghost Mode actions hidden by the disguise, preventing focus changes and @username links from closing the app.\n- Settings search now indexes Vault reminders through the active session instead of requiring a live settings window, preventing its previous quit.\n- The disguised macOS running app and Dock label use the exact title Telegram.\n- The disguised macOS Dock icon is rendered directly from the full rounded-square Telegram artwork without a duplicate white tile or extra system frame.\n- Decorative glass highlights now refresh efficiently at 30 Hz instead of repainting the entire window at up to 120 Hz; scrolling and normal UI animations remain independent.\n- Local profile, collectible, badge, and local channel presentation remains enabled because the switch changes only this client's visible product identity.\n- To restore IntelGram, open the main drawer and triple-click the Telegram Desktop footer.\n- The choice is saved locally and never changes your Telegram account or sends a request.";
-+"ayu_IntelGramUpdateLogCurrent" = "**Native local channel ownership**\n- Open a broadcast channel's three-dot menu, choose IntelGram, then Local ownership.\n- The existing channel view gains Telegram's native Broadcast a message composer, owner-style Manage actions, and persistent local text broadcasts inside the real timeline.\n- Right-click a local broadcast for Telegram's reaction strip plus Reply, Edit, Pin or Unpin, Copy Text, Copy Post Link, Forward, Delete, and Select.\n- Local replies, edits, pins, reactions, Stars, and links persist. Broadcast engagement controls starting and maximum views, increment size, interval, six baseline reactions, and paid Stars.\n- Views and reaction clicks update only this client. Forward creates a text handoff; no synthetic message ID, reaction, payment, pin, edit, delete, or post is sent to Telegram.\n- Local ownership hides contradictory Join, Leave, and Report rows while active and can be disabled independently for every channel.\n- Media, voice, stickers, inline results, scheduled posts, and files remain blocked so nothing can upload to Telegram.\n\n**Liquid Glass & Motion**\n- Liquid Glass layers adaptive tint and contrast, wallpaper-aware diffusion, cursor-reactive specular light, refractive edges, internal reflections, and subtle film grain over native desktop blur.\n- Slow decorative material highlights use a paced 30 Hz refresh to avoid full-window repaint lag; normal scrolling and interaction animations stay on Telegram's independent display-synced path.\n- Control sidebar, chat, menu, dialog, and panel transparency separately; choose a private local backdrop and tune image opacity, blur, tint, surface opacity, and optical intensity without fading text, icons, avatars, or media.\n- Quick Snap is compact and immediate. Smooth Flow is calm and critically damped. Diabolical is brisk with stronger depth. Springy settles gently. The optional Liquid Bounce pack adds the most elastic lift and a controlled overshoot.\n- The profile username editor matches Telegram's native title, @username field, validation row, help text, and button layout while saving only IntelGram's local render value.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
++"ayu_IntelGramUpdateLogCurrent" = "**Local Stars in My Stars**\n- Local Stars moved from IntelGram settings into Telegram-native My Stars.\n- The balance and top-up flow use the normal Stars UI, but purchases are simulated locally only: no real Telegram payment, no real money, and no server-side purchase.\n- Local Stars top-ups update the local IntelGram balance for testing and local workflows.\n\n**Native local channel ownership**\n- Open a broadcast channel's three-dot menu, choose IntelGram, then Local ownership.\n- The existing channel view gains Telegram's native Broadcast a message composer, owner-style Manage actions, and persistent local text broadcasts inside the real timeline.\n- Right-click a local broadcast for Telegram's reaction strip plus Reply, Edit, Pin or Unpin, Copy Text, Copy Post Link, Forward, Delete, and Select.\n- Local replies, edits, pins, reactions, Stars, and links persist. Broadcast engagement controls starting and maximum views, increment size, interval, six baseline reactions, and paid Stars.\n- Views and reaction clicks update only this client. Forward creates a text handoff; no synthetic message ID, reaction, payment, pin, edit, delete, or post is sent to Telegram.\n- Local ownership hides contradictory Join, Leave, and Report rows while active and can be disabled independently for every channel.\n- Media, voice, stickers, inline results, scheduled posts, and files remain blocked so nothing can upload to Telegram.\n\n**Liquid Glass & Motion**\n- Liquid Glass layers adaptive tint and contrast, wallpaper-aware diffusion, cursor-reactive specular light, refractive edges, internal reflections, and subtle film grain over native desktop blur.\n- Slow decorative material highlights use a paced 30 Hz refresh to avoid full-window repaint lag; normal scrolling and interaction animations stay on Telegram's independent display-synced path.\n- Control sidebar, chat, menu, dialog, and panel transparency separately; choose a private local backdrop and tune image opacity, blur, tint, surface opacity, and optical intensity without fading text, icons, avatars, or media.\n- Quick Snap is compact and immediate. Smooth Flow is calm and critically damped. Diabolical is brisk with stronger depth. Springy settles gently. The optional Liquid Bounce pack adds the most elastic lift and a controlled overshoot.\n- The profile username editor matches Telegram's native title, @username field, validation row, help text, and button layout while saving only IntelGram's local render value.\n- Universal local full-text search covers messages, filenames, media types, and links already received by IntelGram, with a unified view across signed-in accounts.\n- Export Center creates chat or account HTML, PDF, Markdown, JSON, and ZIP archives. Frozen Account Backup streams the full set and permitted downloaded files into one AES-256-GCM encrypted archive without leaving plaintext exports behind.\n- Telegram's protected-content and self-destruct restrictions remain enforced throughout the vault, rules, exports, and legacy local save paths.";
 +"ayu_IntelGramUpdateLogFeaturesTitle" = "Main IntelGram features";
 +"ayu_IntelGramUpdateLogFeatures" = "**Local profile, channels, and collectibles**\n- Display name, UID, primary and other usernames, anonymous number, bio, profile photo, personal channel rendering, and public-channel showcase rendering.\n- Automatic clone mirroring and manual local controls cover Premium, verified, SCAM, FAKE, DIRECT, emoji status, and organization verification badges.\n- Per-channel local ownership with native owner-style controls and persistent text broadcasts rendered inside the selected channel's real timeline.\n- Local profile cloning from a user already visible to IntelGram, plus cached lookup by UID or a phone number visible to your account.\n- Native collectible collection galleries, one featured collectible, up to six pinned collectibles, and local owner/profile rendering.\n\n**Private productivity and customization**\n- Universal message vault, unified account inbox, timeline tools, edit/deletion history, smart folders, contact notes with reminders and history, identity inspector, local rules, anti-spam review, and per-chat controls.\n- Native themes, cloud theme browsing, chat wallpapers, adaptive Liquid Glass, native blur, five motion packs, icon swapping, and interface controls.\n- Local HTML, PDF, Markdown, JSON, ZIP, and encrypted Frozen Account Backup exports with permitted cached media.";
 +"ayu_IntelGramUpdateLogPrivacyTitle" = "Local-only boundary";
@@ -8719,7 +8719,7 @@ index a4b1e7ad4..9e4d787a7 100644
  	builder.addSkip();
  }
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-index 929cf4609..3b4ff7010 100644
+index 929cf4609..082c88e95 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 @@ -6,33 +6,58 @@
@@ -8769,10 +8769,7 @@ index 929cf4609..3b4ff7010 100644
 +#include "ui/vertical_list.h"
  #include "window/themes/window_theme.h"
 +#include "window/window_session_controller.h"
- 
--#include <QDesktopServices>
--#include <QGuiApplication>
--#include <QSvgRenderer>
++
 +#include "styles/style_ayu_styles.h"
 +#include "styles/style_boxes.h"
 +#include "styles/style_layers.h"
@@ -8787,7 +8784,10 @@ index 929cf4609..3b4ff7010 100644
 +#include <QtGui/QLinearGradient>
 +#include <QPointer>
 +#include <QRegularExpression>
-+
+ 
+-#include <QDesktopServices>
+-#include <QGuiApplication>
+-#include <QSvgRenderer>
 +#include <array>
 +#include <vector>
  
@@ -8807,11 +8807,6 @@ index 929cf4609..3b4ff7010 100644
 +	bool gift = false;
 +	int amount = 0;
 +	QString label;
-+};
-+
-+struct LocalStarsGiftOption {
-+	QString name;
-+	int cost = 0;
  };
  
 -Asset getAsset(const QString &name) {
@@ -8819,6 +8814,11 @@ index 929cf4609..3b4ff7010 100644
 -	const auto normalized = name.toLower();
 -	QString icon = QString(":/gui/icons/ayu/donates/%1.svg").arg(normalized);
 -	QColor background = isNightMode ? QColor(0xEEEEEE) : QColor(0x242B2C);
++struct LocalStarsGiftOption {
++	QString name;
++	int cost = 0;
++};
++
 +QString CleanLocalStarsLabel(QString label) {
 +	return label.replace(',', ' ').replace('\n', ' ').trimmed();
 +}
@@ -8933,7 +8933,9 @@ index 929cf4609..3b4ff7010 100644
 +			bounds.adjusted(0.5, 0.5, -0.5, -0.5),
 +			rounding,
 +			rounding);
-+
+ 
+-		auto svgIcon = QSvgRenderer(iconData.icon);
+-		svgIcon.render(&p, Rect(size));
 +		const auto in = st::localStarsCardPadding;
 +		const auto content = QRect(
 +			in.left(),
@@ -8966,9 +8968,7 @@ index 929cf4609..3b4ff7010 100644
 +				content.width(), st::boxTextFont->height),
 +			Qt::AlignLeft | Qt::AlignVCenter,
 +			tr::ayu_LocalStarsCardNumber(tr::now));
- 
--		auto svgIcon = QSvgRenderer(iconData.icon);
--		svgIcon.render(&p, Rect(size));
++
 +		const auto bottomTop = content.bottom()
 +			- st::normalFont->height * 2;
 +		p.setFont(st::normalFont);
@@ -9042,7 +9042,10 @@ index 929cf4609..3b4ff7010 100644
 -		Ui::show(std::move(box));
 -	});
 -}
--
++private:
++	QString _holder;
++};
+ 
 -void BuildDonations(SectionBuilder &builder) {
 -	builder.add([](const BuildContext &ctx) {
 -		v::match(ctx, [&](const WidgetContext &wctx) {
@@ -9057,10 +9060,6 @@ index 929cf4609..3b4ff7010 100644
 -				"boosty"
 -			)->setClickedCallback([=] {
 -				QDesktopServices::openUrl(QString("https://boosty.to/alexeyzavar"));
-+private:
-+	QString _holder;
-+};
-+
 +void ShowLocalStarsBuyBox(
 +		not_null<Window::SessionController*> controller) {
 +	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
@@ -9273,7 +9272,7 @@ index 929cf4609..3b4ff7010 100644
  
  	ayu.addSettingToggle({
  		.id = u"ayu/crashReporting"_q,
-@@ -193,10 +435,1214 @@ void BuildCrashReporting(SectionBuilder &builder, AyuSectionBuilder &ayu) {
+@@ -193,10 +435,1162 @@ void BuildCrashReporting(SectionBuilder &builder, AyuSectionBuilder &ayu) {
  #endif
  }
  
@@ -10421,59 +10420,7 @@ index 929cf4609..3b4ff7010 100644
 +		},
 +	});
 +	builder.addDividerText(tr::ayu_LocalProfileGiftDescription());
-+	builder.addSkip();
-+	builder.addDivider();
-+	builder.addSkip();
-+	builder.addSubsectionTitle(tr::ayu_LocalStarsHeader());
-+	builder.addDividerText(rpl::single(tr::ayu_LocalStarsBalanceValue(
-+		tr::now,
-+		lt_amount,
-+		QString::number(AyuSettings::getInstance().localStarsBalance()))));
-+	builder.addButton({
-+		.id = u"ayu/localStarsBuy"_q,
-+		.title = tr::ayu_LocalStarsBuy(),
-+		.icon = { &st::menuIconStar },
-+		.onClick = [=] {
-+			ShowLocalStarsBuyBox(controller);
-+		},
-+	});
-+	builder.addButton({
-+		.id = u"ayu/localStarsGift"_q,
-+		.title = tr::ayu_LocalStarsSendGift(),
-+		.icon = { &st::menuIconGiftPremium },
-+		.onClick = [=] {
-+			ShowLocalStarsGiftBox(controller);
-+		},
-+	});
-+	builder.addButton({
-+		.id = u"ayu/localStarsActivity"_q,
-+		.title = tr::ayu_LocalStarsActivity(),
-+		.icon = { &st::menuIconPremium },
-+		.onClick = [=] {
-+			ShowLocalStarsActivityBox(controller);
-+		},
-+	});
-+	builder.addButton({
-+		.id = u"ayu/localStarsReset"_q,
-+		.title = tr::ayu_LocalStarsReset(),
-+		.icon = { &st::menuIconDelete },
-+		.onClick = [=] {
-+			controller->show(Ui::MakeConfirmBox({
-+				.text = tr::ayu_LocalStarsResetConfirm(tr::rich),
-+				.confirmed = [=](Fn<void()> &&close) {
-+					auto &settings = AyuSettings::getInstance();
-+					settings.setLocalStarsBalance(0);
-+					settings.setLocalStarsActivity(QString());
-+					settings.setLocalStarsCardName(QString());
-+					controller->showToast(
-+						tr::ayu_LocalStarsResetDone(tr::now));
-+					close();
-+				},
-+				.confirmText = tr::lng_box_yes(),
-+			}));
-+		},
-+	});
-+	builder.addDividerText(tr::ayu_LocalStarsDescription());
++	// Local Stars moved to Telegram-native My Stars / Credits flow.
 +	builder.addDividerText(tr::ayu_LocalProfileCredit());
 +}
 +
@@ -10488,7 +10435,7 @@ index 929cf4609..3b4ff7010 100644
  	builder.addButton({
  		.id = u"ayu/registerUrlScheme"_q,
  		.title = tr::ayu_RegisterURLScheme(),
-@@ -228,13 +1674,23 @@ void BuildOtherThings(SectionBuilder &builder) {
+@@ -228,13 +1622,23 @@ void BuildOtherThings(SectionBuilder &builder) {
  const auto kMeta = BuildHelper({
  	.id = AyuOther::Id(),
  	.parentId = AyuMain::Id(),
@@ -10515,7 +10462,7 @@ index 929cf4609..3b4ff7010 100644
  	BuildCrashReporting(builder, ayu);
  	BuildOtherThings(builder);
  });
-@@ -242,7 +1698,7 @@ const auto kMeta = BuildHelper({
+@@ -242,7 +1646,7 @@ const auto kMeta = BuildHelper({
  } // namespace
  
  rpl::producer<QString> AyuOther::title() {
@@ -10524,7 +10471,7 @@ index 929cf4609..3b4ff7010 100644
  }
  
  AyuOther::AyuOther(
-@@ -258,6 +1714,23 @@ void AyuOther::setupContent() {
+@@ -258,6 +1662,23 @@ void AyuOther::setupContent() {
  	Ui::ResizeFitChild(this, content);
  }
  
@@ -14422,6 +14369,24 @@ index e2d4aa8a7..d4b4872cd 100644
  	const auto userpicPhotoId = peer->userpicPhotoId();
  	const auto userpicPhoto = (userpicPhotoId
  		&& (userpicPhotoId != PeerData::kUnknownPhotoId)
+diff --git a/Telegram/SourceFiles/boxes/send_credits_box.cpp b/Telegram/SourceFiles/boxes/send_credits_box.cpp
+index b3b237c07..87143524a 100644
+--- a/Telegram/SourceFiles/boxes/send_credits_box.cpp
++++ b/Telegram/SourceFiles/boxes/send_credits_box.cpp
+@@ -576,6 +576,13 @@ void SendStarsForm(
+ 		not_null<Main::Session*> session,
+ 		std::shared_ptr<Payments::CreditsFormData> data,
+ 		Fn<void(std::optional<QString>)> done) {
++	const auto isIntelGramLocalTopup =
++		data
++		&& data->invoice.product.startsWith(u"intelgram_stars_"_q);
++	if (isIntelGramLocalTopup) {
++		done(std::nullopt);
++		return;
++	}
+ 	session->api().request(MTPpayments_SendStarsForm(
+ 		MTP_long(data->formId),
+ 		data->inputInvoice
 diff --git a/Telegram/SourceFiles/core/local_url_handlers.cpp b/Telegram/SourceFiles/core/local_url_handlers.cpp
 index 7595146a2..82271563b 100644
 --- a/Telegram/SourceFiles/core/local_url_handlers.cpp
@@ -17327,6 +17292,39 @@ index 1fb8ed681..1497e22e0 100644
  }
  
  bool OverlayWidget::showCopyMediaRestriction(bool skipPRemiumCheck) {
+diff --git a/Telegram/SourceFiles/payments/payments_non_panel_process.cpp b/Telegram/SourceFiles/payments/payments_non_panel_process.cpp
+index fa517bf9c..13322a17a 100644
+--- a/Telegram/SourceFiles/payments/payments_non_panel_process.cpp
++++ b/Telegram/SourceFiles/payments/payments_non_panel_process.cpp
+@@ -46,6 +46,9 @@ void ProcessCreditsPayment(
+ 		QPointer<QWidget> fireworks,
+ 		std::shared_ptr<CreditsFormData> form,
+ 		Fn<void(CheckoutResult)> maybeReturnToBot) {
++	const auto isIntelGramLocalTopup =
++		form
++		&& form->invoice.product.startsWith(u"intelgram_stars_"_q);
+ 	const auto hasBadResult = [=](Settings::SmallBalanceResult result) {
+ 		if (result == Settings::SmallBalanceResult::Blocked) {
+ 			if (const auto onstack = maybeReturnToBot) {
+@@ -100,11 +103,17 @@ void ProcessCreditsPayment(
+ 				onstack(CheckoutResult::Paid);
+ 			}
+ 		};
++		if (isIntelGramLocalTopup) {
++			done(std::nullopt);
++			return;
++		}
+ 		Ui::SendStarsForm(&show->session(), form, done);
+ 	};
+ 	using namespace Settings;
+ 	auto source = Ui::SmallBalanceSourceFromForm(form);
+-	if (form->starGiftForm || IsPremiumForStarsInvoice(form->id)) {
++	if (isIntelGramLocalTopup) {
++		done(SmallBalanceResult::Success);
++	} else if (form->starGiftForm || IsPremiumForStarsInvoice(form->id)) {
+ 		const auto credits = form->invoice.credits;
+ 		MaybeRequestBalanceIncrease(show, credits, source, done);
+ 	} else {
 diff --git a/Telegram/SourceFiles/platform/linux/main_window_linux.cpp b/Telegram/SourceFiles/platform/linux/main_window_linux.cpp
 index 1133f5ab4..584fa06ff 100644
 --- a/Telegram/SourceFiles/platform/linux/main_window_linux.cpp
@@ -17381,7 +17379,7 @@ diff --git a/Telegram/SourceFiles/platform/mac/global_menu_mac.mm b/Telegram/Sou
 index 2b9876d76..23471b409 100644
 --- a/Telegram/SourceFiles/platform/mac/global_menu_mac.mm
 +++ b/Telegram/SourceFiles/platform/mac/global_menu_mac.mm
-@@ -33,6 +33,7 @@
+@@ -33,6 +33,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  
  // AyuGram includes
  #include "ayu/ayu_settings.h"
@@ -17389,7 +17387,7 @@ index 2b9876d76..23471b409 100644
  
  
  namespace Platform {
-@@ -327,26 +328,28 @@ void ForceDisabled(QAction *action, bool disabled) {
+@@ -327,26 +328,28 @@ void Manager::recomputeState() {
  		disabled(Field::kTagPre) || disabled(Field::kTagCode));
  	ForceDisabled(_clearFormat, markdownState.disabled());
  
@@ -17438,7 +17436,7 @@ index 2b9876d76..23471b409 100644
  	}
  }
  
-@@ -358,7 +361,7 @@ void ForceDisabled(QAction *action, bool disabled) {
+@@ -358,7 +361,7 @@ void Manager::buildAppleMenu(QMenu *main) {
  			});
  		};
  		const auto about = main->addAction(
@@ -17447,7 +17445,7 @@ index 2b9876d76..23471b409 100644
  			std::move(callback));
  		about->setMenuRole(QAction::AboutQtRole);
  	}
-@@ -672,11 +675,13 @@ void ForceDisabled(QAction *action, bool disabled) {
+@@ -672,11 +675,13 @@ void Manager::buildWindowMenu(QMenu *window) {
  }
  
  void Manager::buildMenu() {
@@ -17467,7 +17465,7 @@ diff --git a/Telegram/SourceFiles/platform/mac/specific_mac.mm b/Telegram/Source
 index 51a09b5b5..3b64cab28 100644
 --- a/Telegram/SourceFiles/platform/mac/specific_mac.mm
 +++ b/Telegram/SourceFiles/platform/mac/specific_mac.mm
-@@ -35,6 +35,7 @@
+@@ -35,6 +35,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include <IOKit/hidsystem/ev_keymap.h>
  #include <mach-o/dyld.h>
  #include <AVFoundation/AVFoundation.h>
@@ -17545,7 +17543,7 @@ diff --git a/Telegram/SourceFiles/platform/mac/specific_mac_p.mm b/Telegram/Sour
 index 997f6d2d5..c84fc68be 100644
 --- a/Telegram/SourceFiles/platform/mac/specific_mac_p.mm
 +++ b/Telegram/SourceFiles/platform/mac/specific_mac_p.mm
-@@ -24,6 +24,7 @@
+@@ -24,6 +24,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "styles/style_window.h"
  #include "platform/platform_specific.h"
  
@@ -17553,7 +17551,7 @@ index 997f6d2d5..c84fc68be 100644
  #include <QtGui/QWindow>
  #include <QtWidgets/QApplication>
  #include <QtWidgets/QMenu>
-@@ -39,7 +40,7 @@
+@@ -39,7 +40,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include <IOKit/hidsystem/ev_keymap.h>
  
  // AyuGram includes
@@ -17562,7 +17560,7 @@ index 997f6d2d5..c84fc68be 100644
  
  using Platform::Q2NSString;
  using Platform::NS2QString;
-@@ -47,6 +48,51 @@
+@@ -47,6 +48,51 @@ using Platform::NS2QString;
  namespace {
  
  constexpr auto kIgnoreActivationTimeoutMs = 500;
@@ -17614,7 +17612,7 @@ index 997f6d2d5..c84fc68be 100644
  
  void SetupDockMenu() {
  	static const auto DockMenu = std::make_unique<QMenu>();
-@@ -191,26 +237,44 @@ - (void) ignoreApplicationActivationRightNow {
+@@ -191,26 +237,44 @@ ApplicationDelegate *_sharedDelegate = nil;
  namespace Platform {
  
  void SetApplicationIcon(const QIcon &icon) {
@@ -17683,7 +17681,7 @@ diff --git a/Telegram/SourceFiles/platform/mac/window_title_mac.mm b/Telegram/So
 index 8d3d2b7c5..6f4a1e6c7 100644
 --- a/Telegram/SourceFiles/platform/mac/window_title_mac.mm
 +++ b/Telegram/SourceFiles/platform/mac/window_title_mac.mm
-@@ -13,6 +13,7 @@
+@@ -13,6 +13,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "styles/style_window.h"
  #include "styles/style_media_view.h"
  #include "window/window_controller.h"
@@ -17773,6 +17771,89 @@ index 67d40e071..ce1d4c1bb 100644
  PermissionStatus GetPermissionStatus(PermissionType type) {
  	if (type == PermissionType::Microphone) {
  		PermissionStatus result = PermissionStatus::Granted;
+diff --git a/Telegram/SourceFiles/settings/sections/settings_credits.cpp b/Telegram/SourceFiles/settings/sections/settings_credits.cpp
+index c2d1c009a..b0c54aa61 100644
+--- a/Telegram/SourceFiles/settings/sections/settings_credits.cpp
++++ b/Telegram/SourceFiles/settings/sections/settings_credits.cpp
+@@ -10,6 +10,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "api/api_credits.h"
+ #include "api/api_earn.h"
+ #include "api/api_statistics.h"
++#include "ayu/ayu_settings.h"
+ #include "base/call_delayed.h"
+ #include "boxes/gift_credits_box.h"
+ #include "boxes/gift_premium_box.h"
+@@ -587,7 +588,10 @@ void Credits::setupContent() {
+ 				lt_amount,
+ 				(isCurrency
+ 					? controller()->session().credits().tonBalanceValue()
+-					: controller()->session().credits().balanceValue()
++					: AyuSettings::getInstance().localStarsBalanceValue(
++					) | rpl::map([](int value) {
++						return CreditsAmount(value);
++					})
+ 				) | rpl::map(
+ 					Lang::FormatCreditsAmountDecimal
+ 				) | rpl::map(tr::bold),
+@@ -722,7 +726,10 @@ base::weak_qptr<Ui::RpWidget> Credits::createPinnedToTop(
+ 			&controller()->session(),
+ 			isCurrency
+ 				? controller()->session().credits().tonBalanceValue()
+-				: controller()->session().credits().balanceValue(),
++				: AyuSettings::getInstance().localStarsBalanceValue(
++				) | rpl::map([](int value) {
++					return CreditsAmount(value);
++				}),
+ 			true,
+ 			content->heightValue() | rpl::map([=](int height) {
+ 				const auto ratio = float64(height - content->minimumHeight())
+@@ -1103,11 +1110,10 @@ Fn<void()> BuyStarsHandler::handler(
+ 		box->setTitle(tr::lng_credits_summary_options_subtitle());
+ 		const auto inner = box->verticalLayout();
+ 		const auto self = show->session().user();
+-		const auto options = _api
+-			? _api->options()
+-			: Data::CreditTopupOptions();
+ 		const auto amount = CreditsAmount();
+ 		const auto weak = base::make_weak(box);
++		// No preloaded options: FillCreditOptions fills in the local
++		// IntelGram packages, so the list stays in one place.
+ 		FillCreditOptions(show, inner, self, amount, [=] {
+ 			if (const auto strong = weak.get()) {
+ 				strong->closeBox();
+@@ -1115,29 +1121,15 @@ Fn<void()> BuyStarsHandler::handler(
+ 			if (const auto onstack = paid) {
+ 				onstack();
+ 			}
+-		}, box->showFinishes(), nullptr, options);
++		}, box->showFinishes(), nullptr, {});
+ 
+ 		box->addButton(tr::lng_close(), [=] {
+ 			box->closeBox();
+ 		});
+ 	};
+ 	return crl::guard(this, [=] {
+-		if (_api && !_api->options().empty()) {
+-			_loading = false;
+-			show->show(Box(crl::guard(this, optionsBox)));
+-		} else {
+-			_loading = true;
+-			const auto user = show->session().user();
+-			_api = std::make_unique<Api::CreditsTopupOptions>(user);
+-			_api->request(
+-			) | rpl::on_error_done([=](const QString &error) {
+-				_loading = false;
+-				show->showToast(error);
+-			}, [=] {
+-				_loading = false;
+-				show->show(Box(crl::guard(this, optionsBox)));
+-			}, _lifetime);
+-		}
++		_loading = false;
++		show->show(Box(crl::guard(this, optionsBox)));
+ 	});
+ }
+ 
 diff --git a/Telegram/SourceFiles/settings/sections/settings_information.cpp b/Telegram/SourceFiles/settings/sections/settings_information.cpp
 index 24f2034f9..db4692a46 100644
 --- a/Telegram/SourceFiles/settings/sections/settings_information.cpp
@@ -17821,19 +17902,20 @@ index 24f2034f9..db4692a46 100644
  		parent,
  		rpl::duplicate(text),
 diff --git a/Telegram/SourceFiles/settings/sections/settings_main.cpp b/Telegram/SourceFiles/settings/sections/settings_main.cpp
-index fbe74c4c0..ae76cf096 100644
+index fbe74c4c0..857a8fd00 100644
 --- a/Telegram/SourceFiles/settings/sections/settings_main.cpp
 +++ b/Telegram/SourceFiles/settings/sections/settings_main.cpp
-@@ -9,6 +9,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -9,6 +9,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  
  #include "settings/settings_common_session.h"
  
 +#include "ayu/ui/utils/ayu_profile_values.h"
 +#include "ayu/ui/discreet_mode.h"
++#include "ayu/ayu_settings.h"
  #include "api/api_cloud_password.h"
  #include "api/api_credits.h"
  #include "api/api_global_privacy.h"
-@@ -230,12 +232,7 @@ Cover::Cover(
+@@ -230,12 +233,7 @@ Cover::Cover(
  			_badge.widget(),
  			_badge.sizeTag());
  	});
@@ -17847,7 +17929,7 @@ index fbe74c4c0..ae76cf096 100644
  	rpl::merge(
  		_badge.updated(),
  		_exteraBadge.updated()
-@@ -251,7 +248,8 @@ Cover::Cover(
+@@ -251,7 +249,8 @@ Cover::Cover(
  	Info::Profile::UsernamesValue(
  		_user
  	) | rpl::on_next([=](const auto &usernames) {
@@ -17857,7 +17939,7 @@ index fbe74c4c0..ae76cf096 100644
  		refreshNameGeometry(width());
  		refreshQrButtonGeometry(width());
  	}, _qrButton->lifetime());
-@@ -282,9 +280,11 @@ void Cover::initViewers() {
+@@ -282,9 +281,11 @@ void Cover::initViewers() {
  		refreshNameGeometry(width());
  	}, lifetime());
  
@@ -17872,7 +17954,7 @@ index fbe74c4c0..ae76cf096 100644
  		_idText = value.text;
  		updateIdText();
  	}, lifetime());
-@@ -302,13 +302,10 @@ void Cover::initViewers() {
+@@ -302,13 +303,10 @@ void Cover::initViewers() {
  		if (_controller->showFrozenError()) {
  			return;
  		}
@@ -17889,7 +17971,7 @@ index fbe74c4c0..ae76cf096 100644
  		}
  	});
  }
-@@ -381,15 +378,17 @@ void BuildSectionButtons(SectionBuilder &builder) {
+@@ -381,15 +379,17 @@ void BuildSectionButtons(SectionBuilder &builder) {
  	const auto controller = builder.controller();
  	const auto showOther = builder.showOther();
  
@@ -17916,6 +17998,21 @@ index fbe74c4c0..ae76cf096 100644
  
  	if (!session->supportMode()) {
  		builder.addSectionButton({
+@@ -546,10 +546,10 @@ void BuildPremiumSection(SectionBuilder &builder) {
+ 	builder.addPremiumButton({
+ 		.id = u"main/credits"_q,
+ 		.title = tr::lng_settings_credits(),
+-		.label = session->credits().balanceValue(
+-		) | rpl::map([](CreditsAmount c) {
+-			return c
+-				? Lang::FormatCreditsAmountToShort(c).string
++		.label = AyuSettings::getInstance().localStarsBalanceValue(
++		) | rpl::map([](int value) {
++			return value
++				? Lang::FormatCountToShort(value).string
+ 				: QString();
+ 		}),
+ 		.credits = true,
 diff --git a/Telegram/SourceFiles/settings/sections/settings_notifications.cpp b/Telegram/SourceFiles/settings/sections/settings_notifications.cpp
 index 224794a86..bc3609e6a 100644
 --- a/Telegram/SourceFiles/settings/sections/settings_notifications.cpp
@@ -17940,10 +18037,419 @@ index 224794a86..bc3609e6a 100644
  
  		st::notifyClose.icon.paint(p, w - st::notifyClosePos.x() - st::notifyClose.width + st::notifyClose.iconPosition.x(), st::notifyClosePos.y() + st::notifyClose.iconPosition.y(), w);
 diff --git a/Telegram/SourceFiles/settings/settings_credits_graphics.cpp b/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
-index 9ac4584e4..56133a250 100644
+index 9ac4584e4..af7b814b5 100644
 --- a/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
 +++ b/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
-@@ -2722,7 +2722,11 @@ void GlobalStarGiftBox(
+@@ -12,6 +12,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "api/api_earn.h"
+ #include "api/api_premium.h"
+ #include "apiwrap.h"
++#include "ayu/ayu_settings.h"
+ #include "base/random.h"
+ #include "base/timer_rpl.h"
+ #include "base/unixtime.h"
+@@ -26,6 +27,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "core/application.h"
+ #include "core/click_handler_types.h"
+ #include "core/click_handler_types.h" // UrlClickHandler
++#include "core/file_utilities.h"
+ #include "core/ui_integration.h"
+ #include "data/components/credits.h"
+ #include "data/components/recent_shared_media_gifts.h"
+@@ -62,9 +64,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "payments/payments_checkout_process.h"
+ #include "payments/payments_form.h"
+ #include "payments/payments_non_panel_process.h"
++#include "payments/ui/payments_panel.h"
++#include "payments/ui/payments_panel_data.h"
++#include "payments/ui/payments_panel_delegate.h"
+ #include "settings/settings_common_session.h"
+ #include "settings/sections/settings_credits.h"
+ #include "statistics/widgets/chart_header_widget.h"
++#include "storage/storage_account.h"
++#include "ui/boxes/boost_box.h" // Ui::StartFireworks.
+ #include "ui/boxes/confirm_box.h"
+ #include "ui/controls/button_labels.h"
+ #include "ui/controls/ton_common.h"
+@@ -97,6 +104,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "ui/wrap/slide_wrap.h"
+ #include "ui/wrap/vertical_layout.h"
+ #include "ui/ui_utility.h"
++#include "webview/webview_common.h"
++#include "window/themes/window_theme.h"
+ #include "window/window_session_controller.h"
+ #include "styles/style_calls.h"
+ #include "styles/style_channel_earn.h"
+@@ -379,6 +388,283 @@ void AddViewMediaHandler(
+ 	}, thumb->lifetime());
+ }
+ 
++// Title of the pre-saved demo card shown in the local checkout, e.g.
++// "AMEX •••• 10005".
++[[nodiscard]] QString LocalStarsSavedCardTitle() {
++	return u"AMEX •••• "_q
++		+ tr::ayu_LocalStarsCardNumber(tr::now).right(5);
++}
++
++class LocalStarsCheckout;
++LocalStarsCheckout *ActiveLocalStarsCheckout = nullptr;
++
++// Local-only Stars checkout.
++//
++// Drives Telegram's native payments panel (Payments::Ui::Panel) with a
++// locally built invoice and the pre-saved demo card, so topping up looks
++// exactly like a real Stars purchase while completing entirely on this
++// device: no server request is made and no real money moves.
++//
++// Self-owned: created by Start(), destroyed by finish() from the next
++// event-loop turn, once the panel is done with it.
++class LocalStarsCheckout final : public Payments::Ui::PanelDelegate {
++public:
++	static void Start(
++		std::shared_ptr<Main::SessionShow> show,
++		Data::CreditTopupOption option,
++		QPointer<QWidget> fireworks,
++		Fn<void()> paid) {
++		if (const auto active = ActiveLocalStarsCheckout) {
++			active->finish(Payments::CheckoutResult::Cancelled);
++		}
++		const auto checkout = new LocalStarsCheckout(
++			std::move(show),
++			std::move(option),
++			fireworks,
++			std::move(paid));
++		ActiveLocalStarsCheckout = checkout;
++		checkout->show();
++	}
++
++private:
++	LocalStarsCheckout(
++		std::shared_ptr<Main::SessionShow> show,
++		Data::CreditTopupOption option,
++		QPointer<QWidget> fireworks,
++		Fn<void()> paid)
++	: _show(std::move(show))
++	, _session(&_show->session())
++	, _option(std::move(option))
++	, _fireworks(fireworks)
++	, _paid(std::move(paid))
++	, _panel(std::make_unique<Payments::Ui::Panel>(this)) {
++		buildInvoiceAndMethod();
++		_panel->savedMethodChosen(
++		) | rpl::on_next([this](QString id) {
++			chooseSavedMethod(id);
++		}, _panel->lifetime());
++		_panel->backRequests(
++		) | rpl::on_next([this] {
++			panelCancelEdit();
++		}, _panel->lifetime());
++	}
++
++	void buildInvoiceAndMethod() {
++		const auto label = QString::number(_option.credits)
++			+ u" Telegram Stars"_q;
++		_invoice.currency = _option.currency;
++		_invoice.cover.title = u"Telegram Stars Top-Up"_q;
++		_invoice.cover.description = TextWithEntities{ label };
++		_invoice.cover.seller = u"Premium Bot"_q;
++		_invoice.prices = {
++			Payments::Ui::LabeledPrice{ label, int64(_option.amount) },
++		};
++		_method.native.supported = true;
++		_method.native.canSaveInformation = true;
++		_method.savedMethods = {
++			Payments::Ui::PaymentMethodSaved{
++				u"intelgram-local-card"_q,
++				LocalStarsSavedCardTitle(),
++			},
++		};
++		_method.savedMethodIndex = 0;
++		_method.canSaveInformation = true;
++	}
++
++	void show() {
++		showForm();
++		_panel->requestActivate();
++	}
++
++	void showForm() {
++		_panel->showForm(
++			_invoice,
++			Payments::Ui::RequestedInformation(),
++			_method,
++			Payments::Ui::ShippingOptions());
++	}
++
++	void chooseSavedMethod(const QString &id) {
++		const auto &list = _method.savedMethods;
++		const auto i = ranges::find(
++			list,
++			id,
++			&Payments::Ui::PaymentMethodSaved::id);
++		if (i != end(list)) {
++			_method.savedMethodIndex = int(i - begin(list));
++		}
++		showForm();
++	}
++
++	void finish(Payments::CheckoutResult result) {
++		if (_finished) {
++			return;
++		}
++		_finished = true;
++		const auto paid = _paid;
++		// Finish from the next event-loop turn: this runs inside panel
++		// callbacks, so destroying the panel right away would tear the
++		// widget down underneath its own event handler.
++		crl::on_main([this, result, paid] {
++			if (result == Payments::CheckoutResult::Paid && paid) {
++				paid();
++			}
++			if (ActiveLocalStarsCheckout == this) {
++				ActiveLocalStarsCheckout = nullptr;
++			}
++			delete this;
++		});
++	}
++
++	void panelRequestClose() override {
++		finish(Payments::CheckoutResult::Cancelled);
++	}
++
++	void panelCloseSure() override {
++		finish(Payments::CheckoutResult::Cancelled);
++	}
++
++	void panelSubmit() override {
++		if (_finished) {
++			return;
++		}
++		auto &settings = AyuSettings::getInstance();
++		settings.setLocalStarsBalance(
++			settings.localStarsBalance() + int(_option.credits));
++		if (const auto widget = _fireworks.data()) {
++			Ui::StartFireworks(widget);
++		}
++		finish(Payments::CheckoutResult::Paid);
++	}
++
++	void panelTrustAndSubmit() override {
++		panelSubmit();
++	}
++
++	void panelAcceptTermsAndSubmit() override {
++		panelSubmit();
++	}
++
++	void panelWebviewMessage(const QJsonDocument &, bool) override {
++	}
++
++	bool panelWebviewNavigationAttempt(const QString &) override {
++		return true;
++	}
++
++	void panelSetPassword() override {
++	}
++
++	void panelOpenUrl(const QString &url) override {
++		File::OpenUrl(url);
++	}
++
++	void panelCancelEdit() override {
++		showForm();
++	}
++
++	void panelEditPaymentMethod() override {
++		_panel->choosePaymentMethod(_method);
++	}
++
++	void panelEditShippingInformation() override {
++	}
++
++	void panelEditName() override {
++	}
++
++	void panelEditEmail() override {
++	}
++
++	void panelEditPhone() override {
++	}
++
++	void panelChooseShippingOption() override {
++	}
++
++	void panelChangeShippingOption(const QString &) override {
++	}
++
++	void panelChooseTips() override {
++	}
++
++	void panelChangeTips(int64) override {
++	}
++
++	void panelValidateInformation(
++		Payments::Ui::RequestedInformation) override {
++	}
++
++	void panelValidateCard(
++		Payments::Ui::UncheckedCardDetails data,
++		bool) override {
++		// A card entered here is kept only on this device, as the saved
++		// local method for the next top-up.
++		auto digits = QString();
++		for (const auto ch : data.number) {
++			if (ch.isDigit()) {
++				digits.append(ch);
++			}
++		}
++		const auto brand = digits.startsWith(u"4"_q)
++			? u"Visa"_q
++			: digits.startsWith(u"5"_q)
++			? u"Mastercard"_q
++			: digits.startsWith(u"3"_q)
++			? u"AMEX"_q
++			: digits.startsWith(u"6"_q)
++			? u"Discover"_q
++			: u"Card"_q;
++		_method.savedMethods = {
++			Payments::Ui::PaymentMethodSaved{
++				u"intelgram-local-card"_q,
++				brand
++					+ u" •••• "_q
++					+ (digits.size() > 4 ? digits.right(4) : digits),
++			},
++		};
++		_method.savedMethodIndex = 0;
++		if (!data.cardholderName.isEmpty()) {
++			AyuSettings::getInstance().setLocalStarsCardName(
++				data.cardholderName);
++		}
++		showForm();
++	}
++
++	void panelShowBox(object_ptr<Ui::BoxContent> box) override {
++		_panel->showBox(std::move(box));
++	}
++
++	QVariant panelClickHandlerContext() override {
++		return QVariant::fromValue(ClickHandlerContext{
++			.show = _panel->uiShow(),
++		});
++	}
++
++	Webview::StorageId panelWebviewStorageId() override {
++		return _session->local().resolveStorageIdOther();
++	}
++
++	Webview::ThemeParams panelWebviewThemeParams() override {
++		return Window::Theme::WebViewParams();
++	}
++
++	std::optional<QDate> panelOverrideExpireDateThreshold() override {
++		return std::nullopt;
++	}
++
++	std::shared_ptr<Main::SessionShow> _show;
++	const not_null<Main::Session*> _session;
++	Data::CreditTopupOption _option;
++	QPointer<QWidget> _fireworks;
++	Fn<void()> _paid;
++	const std::unique_ptr<Payments::Ui::Panel> _panel;
++	Payments::Ui::Invoice _invoice;
++	Payments::Ui::PaymentMethodDetails _method;
++	bool _finished = false;
++
++};
++
+ } // namespace
+ 
+ void AddMiniStars(
+@@ -463,6 +749,29 @@ void FillCreditOptions(
+ 		std::vector<Data::CreditTopupOption> preloadedTopupOptions,
+ 		bool dark,
+ 		PeerId spendPurposePeerId) {
++	const auto localIntelGramTopup = true;
++	if (localIntelGramTopup && preloadedTopupOptions.empty()) {
++		// The same packages and prices Telegram itself offers, so the
++		// local top-up looks exactly like a real one. The extended
++		// options are the ones shown after "More Options".
++		preloadedTopupOptions = {
++			{ 100, u"intelgram_stars_100"_q, u"USD"_q, 169, false, 0 },
++			{ 150, u"intelgram_stars_150"_q, u"USD"_q, 249, true, 0 },
++			{ 250, u"intelgram_stars_250"_q, u"USD"_q, 403, false, 0 },
++			{ 350, u"intelgram_stars_350"_q, u"USD"_q, 559, true, 0 },
++			{ 500, u"intelgram_stars_500"_q, u"USD"_q, 789, false, 0 },
++			{ 750, u"intelgram_stars_750"_q, u"USD"_q, 1179, true, 0 },
++			{ 1000, u"intelgram_stars_1000"_q, u"USD"_q, 1569, false, 0 },
++			{ 1500, u"intelgram_stars_1500"_q, u"USD"_q, 2339, true, 0 },
++			{ 2500, u"intelgram_stars_2500"_q, u"USD"_q, 3899, false, 0 },
++			{ 5000, u"intelgram_stars_5000"_q, u"USD"_q, 7799, true, 0 },
++			{ 10000, u"intelgram_stars_10000"_q, u"USD"_q, 15599, false, 0 },
++			{ 25000, u"intelgram_stars_25000"_q, u"USD"_q, 38900, true, 0 },
++			{ 50000, u"intelgram_stars_50000"_q, u"USD"_q, 77900, false, 0 },
++			{ 100000, u"intelgram_stars_100000"_q, u"USD"_q, 154900, true, 0 },
++			{ 150000, u"intelgram_stars_150000"_q, u"USD"_q, 232900, false, 0 },
++		};
++	}
+ 	const auto options = container->add(
+ 		object_ptr<Ui::SlideWrap<Ui::VerticalLayout>>(
+ 			container,
+@@ -647,6 +956,22 @@ void FillCreditOptions(
+ 					buttonHeight);
+ 			}, button->lifetime());
+ 			button->setClickedCallback([=] {
++				if (localIntelGramTopup) {
++					const auto weak = base::make_weak(button);
++					LocalStarsCheckout::Start(
++						show,
++						option,
++						weak ? weak->window() : nullptr,
++						[=] {
++							if (const auto strong = weak.get()) {
++								strong->window()->setFocus();
++							}
++							if (const auto onstack = paid) {
++								onstack();
++							}
++						});
++					return;
++				}
+ 				const auto invoice = Payments::InvoiceCredits{
+ 					.session = &show->session(),
+ 					.randomId = UniqueIdFromOption(option),
+@@ -701,7 +1026,9 @@ void FillCreditOptions(
+ 	using ApiOptions = Api::CreditsTopupOptions;
+ 	const auto apiCredits = content->lifetime().make_state<ApiOptions>(peer);
+ 
+-	if (show->session().premiumPossible()) {
++	if (localIntelGramTopup) {
++		fill(std::move(preloadedTopupOptions));
++	} else if (show->session().premiumPossible()) {
+ 		if (preloadedTopupOptions.empty()) {
+ 			fillLoading();
+ 			std::move(showFinishes) | rpl::on_next([=] {
+@@ -721,12 +1048,14 @@ void FillCreditOptions(
+ 		}
+ 	}
+ 
+-	show->session().premiumPossibleValue(
+-	) | rpl::on_next([=](bool premiumPossible) {
+-		if (!premiumPossible) {
+-			fill({});
+-		}
+-	}, content->lifetime());
++	if (!localIntelGramTopup) {
++		show->session().premiumPossibleValue(
++		) | rpl::on_next([=](bool premiumPossible) {
++			if (!premiumPossible) {
++				fill({});
++			}
++		}, content->lifetime());
++	}
+ }
+ 
+ [[nodiscard]] object_ptr<Ui::FlatLabel> CreateCreditsTermsLabel(
+@@ -2722,7 +3051,11 @@ void GlobalStarGiftBox(
  		CreditsEntryBoxStyleOverrides st) {
  	const auto selfId = show->session().userPeerId();
  	const auto ownerId = data.unique ? data.unique->ownerId.value : 0;

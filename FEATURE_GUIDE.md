@@ -10,11 +10,11 @@ On macOS, v19 titles the running app and Dock entry exactly **Telegram**, and it
 
 ## Where do I change my local profile?
 
-Open **IntelGram Preferences -> Local Profile & Collectibles**. The controls are grouped into **Identity**, **Usernames, bio and contact**, **Profile photo**, **Collectibles**, and **Local Stars & Gifts**. Each field has its own switch or action, so you can use only the pieces you want.
+Open **IntelGram Preferences -> Local Profile & Collectibles**. The controls are grouped into **Identity**, **Usernames, bio and contact**, **Profile photo**, and **Collectibles**. Each field has its own switch or action, so you can use only the pieces you want.
 
-## How do I use local Stars and send local gifts?
+## How do I use local Stars?
 
-Open **IntelGram Preferences -> Local Profile & Collectibles -> Local Stars & Gifts**. **Buy Stars** shows a demo American Express card with a fixed sample number and a clearly marked local-only checkout; pick 50, 100, 250, 500, or 1000 Stars, then add them to the on-device balance. **Send a local gift** offers six collectible-style gifts, checks the balance, asks for an optional recipient label, and records the gift locally. **Transaction history** shows the timestamped local activity, and **Reset local Stars** clears the balance, history, and demo cardholder. No real card data is collected and nothing is sent to Telegram or a payment provider.
+Open **Settings -> My Stars**. The row shows your on-device balance. **Top Up Balance** lists Telegram's 15 Stars packages; pick one to open Telegram's checkout panel, where the demo American Express card is already saved as the payment method. Pay adds the Stars to the on-device balance. No real card data is collected and nothing is sent to Telegram or a payment provider.
 
 ## How do I change my local username?
 
