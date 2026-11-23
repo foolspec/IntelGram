@@ -744,12 +744,13 @@ jobs:
           grep -F -- 'cmake --build ../out --config "${CONFIG:-Release}" -- -k 0' \
             tdesktop/Telegram/build/docker/centos_env/build.sh
           docker pull ghcr.io/telegramdesktop/tdesktop/centos_env:latest
-          mkdir -p "$GITHUB_WORKSPACE/ada"
+          mkdir -p "$GITHUB_WORKSPACE/ada" "$GITHUB_WORKSPACE/protobuf"
           docker run --rm -i \
             -u "$(id -u)" \
             -e CMAKE_BUILD_PARALLEL_LEVEL=3 \
             -v "$GITHUB_WORKSPACE/tdesktop:/usr/src/tdesktop" \
             -v "$GITHUB_WORKSPACE/ada:/work/ada" \
+            -v "$GITHUB_WORKSPACE/protobuf:/work/protobuf" \
             ghcr.io/telegramdesktop/tdesktop/centos_env:latest \
             bash -eux <<'CONTAINER_EOS'
           mkdir -p /work/ada
@@ -771,14 +772,39 @@ jobs:
             find /work/ada/install -type f \( -name 'ada-config.cmake' -o -name 'adaConfig.cmake' \) -print -quit > /work/ada/config-path.txt
             test -s /work/ada/config-path.txt
           fi
+          if [ ! -s /work/protobuf/config-path.txt ]; then
+            rm -rf /work/protobuf/src /work/protobuf/build /work/protobuf/install
+            git init /work/protobuf/src
+            git -C /work/protobuf/src remote add origin https://github.com/protocolbuffers/protobuf.git
+            git -C /work/protobuf/src fetch --depth=1 origin 934a01c21238708610bcbde7a9d93a7d297c249d
+            git -C /work/protobuf/src reset --hard FETCH_HEAD
+            git -C /work/protobuf/src submodule update --init --recursive --depth=1
+            cmake -S /work/protobuf/src -B /work/protobuf/build \
+              -DCMAKE_INSTALL_PREFIX=/work/protobuf/install \
+              -DCMAKE_INSTALL_LIBDIR=lib \
+              -DBUILD_SHARED_LIBS=OFF \
+              -Dprotobuf_BUILD_TESTS=OFF \
+              -Dprotobuf_BUILD_PROTOBUF_BINARIES=ON \
+              -Dprotobuf_BUILD_LIBPROTOC=ON \
+              -Dprotobuf_WITH_ZLIB=OFF
+            cmake --build /work/protobuf/build --parallel 3
+            cmake --install /work/protobuf/build
+            find /work/protobuf/install -type f \( -name 'protobuf-config.cmake' -o -name 'protobufConfig.cmake' \) -print -quit > /work/protobuf/config-path.txt
+            test -s /work/protobuf/config-path.txt
+          fi
           ADA_CONFIG="$(cat /work/ada/config-path.txt)"
           ADA_DIR="$(dirname "$ADA_CONFIG")"
+          PROTOBUF_CONFIG="$(cat /work/protobuf/config-path.txt)"
+          PROTOBUF_DIR="$(dirname "$PROTOBUF_CONFIG")"
           echo "ada_DIR=$ADA_DIR"
+          echo "protobuf_DIR=$PROTOBUF_DIR"
           cd /usr/src/tdesktop
           ./Telegram/build/docker/centos_env/build.sh \
             -D TDESKTOP_API_ID=2040 \
             -D TDESKTOP_API_HASH=b18441a1ff607e10a989891a5462e627 \
-            -D ada_DIR="$ADA_DIR"
+            -D ada_DIR="$ADA_DIR" \
+            -D protobuf_DIR="$PROTOBUF_DIR" \
+            -D PROTOBUF_PROTOC_EXECUTABLE=/work/protobuf/install/bin/protoc
           CONTAINER_EOS
 
       - name: Verify, launch, and package
