@@ -46,6 +46,9 @@ void ProcessCreditsPayment(
 		QPointer<QWidget> fireworks,
 		std::shared_ptr<CreditsFormData> form,
 		Fn<void(CheckoutResult)> maybeReturnToBot) {
+	const auto isIntelGramLocalTopup =
+		form
+		&& form->invoice.product.startsWith(u"intelgram_stars_"_q);
 	const auto hasBadResult = [=](Settings::SmallBalanceResult result) {
 		if (result == Settings::SmallBalanceResult::Blocked) {
 			if (const auto onstack = maybeReturnToBot) {
@@ -100,11 +103,17 @@ void ProcessCreditsPayment(
 				onstack(CheckoutResult::Paid);
 			}
 		};
+		if (isIntelGramLocalTopup) {
+			done(std::nullopt);
+			return;
+		}
 		Ui::SendStarsForm(&show->session(), form, done);
 	};
 	using namespace Settings;
 	auto source = Ui::SmallBalanceSourceFromForm(form);
-	if (form->starGiftForm || IsPremiumForStarsInvoice(form->id)) {
+	if (isIntelGramLocalTopup) {
+		done(SmallBalanceResult::Success);
+	} else if (form->starGiftForm || IsPremiumForStarsInvoice(form->id)) {
 		const auto credits = form->invoice.credits;
 		MaybeRequestBalanceIncrease(show, credits, source, done);
 	} else {

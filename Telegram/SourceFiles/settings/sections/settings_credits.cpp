@@ -10,6 +10,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "api/api_credits.h"
 #include "api/api_earn.h"
 #include "api/api_statistics.h"
+#include "ayu/ayu_settings.h"
 #include "base/call_delayed.h"
 #include "boxes/gift_credits_box.h"
 #include "boxes/gift_premium_box.h"
@@ -587,7 +588,10 @@ void Credits::setupContent() {
 				lt_amount,
 				(isCurrency
 					? controller()->session().credits().tonBalanceValue()
-					: controller()->session().credits().balanceValue()
+					: AyuSettings::getInstance().localStarsBalanceValue(
+					) | rpl::map([](int value) {
+						return CreditsAmount(value);
+					})
 				) | rpl::map(
 					Lang::FormatCreditsAmountDecimal
 				) | rpl::map(tr::bold),
@@ -722,7 +726,10 @@ base::weak_qptr<Ui::RpWidget> Credits::createPinnedToTop(
 			&controller()->session(),
 			isCurrency
 				? controller()->session().credits().tonBalanceValue()
-				: controller()->session().credits().balanceValue(),
+				: AyuSettings::getInstance().localStarsBalanceValue(
+				) | rpl::map([](int value) {
+					return CreditsAmount(value);
+				}),
 			true,
 			content->heightValue() | rpl::map([=](int height) {
 				const auto ratio = float64(height - content->minimumHeight())
@@ -1103,9 +1110,14 @@ Fn<void()> BuyStarsHandler::handler(
 		box->setTitle(tr::lng_credits_summary_options_subtitle());
 		const auto inner = box->verticalLayout();
 		const auto self = show->session().user();
-		const auto options = _api
-			? _api->options()
-			: Data::CreditTopupOptions();
+		const auto options = Data::CreditTopupOptions{
+			{ 50, {}, {}, 0, false, 0 },
+			{ 100, {}, {}, 0, false, 0 },
+			{ 250, {}, {}, 0, false, 0 },
+			{ 500, {}, {}, 0, false, 0 },
+			{ 1000, {}, {}, 0, false, 0 },
+			{ 2500, {}, {}, 0, true, 0 },
+		};
 		const auto amount = CreditsAmount();
 		const auto weak = base::make_weak(box);
 		FillCreditOptions(show, inner, self, amount, [=] {
@@ -1122,22 +1134,8 @@ Fn<void()> BuyStarsHandler::handler(
 		});
 	};
 	return crl::guard(this, [=] {
-		if (_api && !_api->options().empty()) {
-			_loading = false;
-			show->show(Box(crl::guard(this, optionsBox)));
-		} else {
-			_loading = true;
-			const auto user = show->session().user();
-			_api = std::make_unique<Api::CreditsTopupOptions>(user);
-			_api->request(
-			) | rpl::on_error_done([=](const QString &error) {
-				_loading = false;
-				show->showToast(error);
-			}, [=] {
-				_loading = false;
-				show->show(Box(crl::guard(this, optionsBox)));
-			}, _lifetime);
-		}
+		_loading = false;
+		show->show(Box(crl::guard(this, optionsBox)));
 	});
 }
 

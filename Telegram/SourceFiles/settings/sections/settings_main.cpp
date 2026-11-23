@@ -11,6 +11,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 #include "ayu/ui/utils/ayu_profile_values.h"
 #include "ayu/ui/discreet_mode.h"
+#include "ayu/ayu_settings.h"
 #include "api/api_cloud_password.h"
 #include "api/api_credits.h"
 #include "api/api_global_privacy.h"
@@ -545,10 +546,10 @@ void BuildPremiumSection(SectionBuilder &builder) {
 	builder.addPremiumButton({
 		.id = u"main/credits"_q,
 		.title = tr::lng_settings_credits(),
-		.label = session->credits().balanceValue(
-		) | rpl::map([](CreditsAmount c) {
-			return c
-				? Lang::FormatCreditsAmountToShort(c).string
+		.label = AyuSettings::getInstance().localStarsBalanceValue(
+		) | rpl::map([](int value) {
+			return value
+				? Lang::FormatCountToShort(value).string
 				: QString();
 		}),
 		.credits = true,

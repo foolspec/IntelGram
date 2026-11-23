@@ -576,6 +576,13 @@ void SendStarsForm(
 		not_null<Main::Session*> session,
 		std::shared_ptr<Payments::CreditsFormData> data,
 		Fn<void(std::optional<QString>)> done) {
+	const auto isIntelGramLocalTopup =
+		data
+		&& data->invoice.product.startsWith(u"intelgram_stars_"_q);
+	if (isIntelGramLocalTopup) {
+		done(std::nullopt);
+		return;
+	}
 	session->api().request(MTPpayments_SendStarsForm(
 		MTP_long(data->formId),
 		data->inputInvoice

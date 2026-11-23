@@ -1579,59 +1579,7 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		},
 	});
 	builder.addDividerText(tr::ayu_LocalProfileGiftDescription());
-	builder.addSkip();
-	builder.addDivider();
-	builder.addSkip();
-	builder.addSubsectionTitle(tr::ayu_LocalStarsHeader());
-	builder.addDividerText(rpl::single(tr::ayu_LocalStarsBalanceValue(
-		tr::now,
-		lt_amount,
-		QString::number(AyuSettings::getInstance().localStarsBalance()))));
-	builder.addButton({
-		.id = u"ayu/localStarsBuy"_q,
-		.title = tr::ayu_LocalStarsBuy(),
-		.icon = { &st::menuIconStar },
-		.onClick = [=] {
-			ShowLocalStarsBuyBox(controller);
-		},
-	});
-	builder.addButton({
-		.id = u"ayu/localStarsGift"_q,
-		.title = tr::ayu_LocalStarsSendGift(),
-		.icon = { &st::menuIconGiftPremium },
-		.onClick = [=] {
-			ShowLocalStarsGiftBox(controller);
-		},
-	});
-	builder.addButton({
-		.id = u"ayu/localStarsActivity"_q,
-		.title = tr::ayu_LocalStarsActivity(),
-		.icon = { &st::menuIconPremium },
-		.onClick = [=] {
-			ShowLocalStarsActivityBox(controller);
-		},
-	});
-	builder.addButton({
-		.id = u"ayu/localStarsReset"_q,
-		.title = tr::ayu_LocalStarsReset(),
-		.icon = { &st::menuIconDelete },
-		.onClick = [=] {
-			controller->show(Ui::MakeConfirmBox({
-				.text = tr::ayu_LocalStarsResetConfirm(tr::rich),
-				.confirmed = [=](Fn<void()> &&close) {
-					auto &settings = AyuSettings::getInstance();
-					settings.setLocalStarsBalance(0);
-					settings.setLocalStarsActivity(QString());
-					settings.setLocalStarsCardName(QString());
-					controller->showToast(
-						tr::ayu_LocalStarsResetDone(tr::now));
-					close();
-				},
-				.confirmText = tr::lng_box_yes(),
-			}));
-		},
-	});
-	builder.addDividerText(tr::ayu_LocalStarsDescription());
+	// Local Stars moved to Telegram-native My Stars / Credits flow.
 	builder.addDividerText(tr::ayu_LocalProfileCredit());
 }
 

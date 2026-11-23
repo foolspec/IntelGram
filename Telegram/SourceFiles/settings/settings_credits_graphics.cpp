@@ -12,6 +12,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "api/api_earn.h"
 #include "api/api_premium.h"
 #include "apiwrap.h"
+#include "ayu/ayu_settings.h"
 #include "base/random.h"
 #include "base/timer_rpl.h"
 #include "base/unixtime.h"
@@ -61,6 +62,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "main/main_session.h"
 #include "payments/payments_checkout_process.h"
 #include "payments/payments_form.h"
+#include "payments/payments_non_panel_process.h"
 #include "payments/payments_non_panel_process.h"
 #include "settings/settings_common_session.h"
 #include "settings/sections/settings_credits.h"
@@ -463,6 +465,17 @@ void FillCreditOptions(
 		std::vector<Data::CreditTopupOption> preloadedTopupOptions,
 		bool dark,
 		PeerId spendPurposePeerId) {
+	const auto localIntelGramTopup = true;
+	if (localIntelGramTopup && preloadedTopupOptions.empty()) {
+		preloadedTopupOptions = {
+			{ 50, u"intelgram_stars_50"_q, u"USD"_q, 99, false, 0 },
+			{ 100, u"intelgram_stars_100"_q, u"USD"_q, 199, false, 0 },
+			{ 250, u"intelgram_stars_250"_q, u"USD"_q, 499, false, 0 },
+			{ 500, u"intelgram_stars_500"_q, u"USD"_q, 999, false, 0 },
+			{ 1000, u"intelgram_stars_1000"_q, u"USD"_q, 1999, false, 0 },
+			{ 2500, u"intelgram_stars_2500"_q, u"USD"_q, 4999, true, 0 },
+		};
+	}
 	const auto options = container->add(
 		object_ptr<Ui::SlideWrap<Ui::VerticalLayout>>(
 			container,
@@ -647,6 +660,56 @@ void FillCreditOptions(
 					buttonHeight);
 			}, button->lifetime());
 			button->setClickedCallback([=] {
+				if (localIntelGramTopup) {
+					auto form = Payments::CreditsFormData();
+					form.id = Payments::InvoiceId{
+						Payments::InvoiceCredits{
+							.session = &show->session(),
+							.randomId = UniqueIdFromOption(option),
+							.credits = option.credits,
+							.product = option.product,
+							.currency = option.currency,
+							.amount = option.amount,
+							.extended = option.extended,
+							.giftPeerId = PeerId(option.giftBarePeerId),
+							.spendPurposePeerId = spendPurposePeerId,
+						}
+					};
+					form.title = tr::lng_credits_summary_options_subtitle(tr::now);
+					form.invoice = Payments::InvoiceCredits{
+						.session = &show->session(),
+						.randomId = UniqueIdFromOption(option),
+						.credits = option.credits,
+						.product = option.product,
+						.currency = option.currency,
+						.amount = option.amount,
+						.extended = option.extended,
+						.giftPeerId = PeerId(option.giftBarePeerId),
+						.spendPurposePeerId = spendPurposePeerId,
+					};
+					const auto shared = std::make_shared<Payments::CreditsFormData>(
+						std::move(form));
+					const auto weak = base::make_weak(button);
+					Payments::ProcessCreditsPayment(
+						show,
+						weak ? weak->window() : nullptr,
+						shared,
+						[=](Payments::CheckoutResult result) {
+							if (const auto strong = weak.get()) {
+								strong->window()->setFocus();
+							}
+							if (result == Payments::CheckoutResult::Paid) {
+								auto &settings = AyuSettings::getInstance();
+								settings.setLocalStarsBalance(
+									settings.localStarsBalance()
+										+ int(option.credits));
+								if (const auto onstack = paid) {
+									onstack();
+								}
+							}
+						});
+					return;
+				}
 				const auto invoice = Payments::InvoiceCredits{
 					.session = &show->session(),
 					.randomId = UniqueIdFromOption(option),
@@ -677,7 +740,7 @@ void FillCreditOptions(
 		}
 
 		// Footer.
-		{
+		if (!localIntelGramTopup) {
 			auto text = tr::lng_credits_summary_options_about(
 				lt_link,
 				rpl::combine(
@@ -701,7 +764,9 @@ void FillCreditOptions(
 	using ApiOptions = Api::CreditsTopupOptions;
 	const auto apiCredits = content->lifetime().make_state<ApiOptions>(peer);
 
-	if (show->session().premiumPossible()) {
+	if (localIntelGramTopup) {
+		fill(std::move(preloadedTopupOptions));
+	} else if (show->session().premiumPossible()) {
 		if (preloadedTopupOptions.empty()) {
 			fillLoading();
 			std::move(showFinishes) | rpl::on_next([=] {
@@ -721,12 +786,14 @@ void FillCreditOptions(
 		}
 	}
 
-	show->session().premiumPossibleValue(
-	) | rpl::on_next([=](bool premiumPossible) {
-		if (!premiumPossible) {
-			fill({});
-		}
-	}, content->lifetime());
+	if (!localIntelGramTopup) {
+		show->session().premiumPossibleValue(
+		) | rpl::on_next([=](bool premiumPossible) {
+			if (!premiumPossible) {
+				fill({});
+			}
+		}, content->lifetime());
+	}
 }
 
 [[nodiscard]] object_ptr<Ui::FlatLabel> CreateCreditsTermsLabel(
