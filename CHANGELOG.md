@@ -8,6 +8,7 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 
 | Version | Published | Update |
 | --- | --- | --- |
+| v20 | 2026-11-22 | Local Stars & Gifts |
 | v19 | 2026-08-03 | Exact Telegram Disguise Identity |
 | v18 | 2026-08-02 | macOS Stability And Telegram Icon |
 | v17 | 2026-07-31 | Reliable Telegram Disguise Trigger |
@@ -27,6 +28,21 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 | v3 | 2026-07-14 | Multiplatform Launch |
 | v2 | 2026-07-13 | Local Profile Build Refresh |
 | v1 | 2026-07-13 | Initial Local Profile |
+
+## IntelGram v20 Local Stars & Gifts - 2026-11-22
+
+### Added
+
+- A **Local Stars & Gifts** section under Local Profile with a persistent local Stars balance, amount presets, a local-only purchase flow, and a local gift composer.
+- A rendered demo American Express card with a fixed sample number, editable cardholder name, expiry, and an explicit **DEMO - AMEX - NO REAL PAYMENT** label.
+- A **Buy Stars** dialog that adds the selected amount to the local balance after a simulated checkout, then records the entry in local history.
+- A **Send a local gift** dialog with six collectible-style gift options, a recipient label, balance checking, and local-only gift records.
+- A **Transaction history** dialog with timestamped local purchases and gifts, plus clear-history and full-reset actions.
+
+### Privacy
+
+- The checkout uses fixed demo card data. IntelGram does not ask for a real card number, store card details, transmit payment data, or contact any payment provider.
+- Buy and gift actions never call Telegram's payment, reaction, message-send, or gift-transfer APIs. Stars and gifts exist only inside this client's settings file.
 
 ## IntelGram v19 Exact Telegram Disguise Identity - 2026-08-03
 

@@ -6,7 +6,7 @@ IntelGram is a cross-platform AyuGram Desktop build focused on local profile cus
 
 [All features](FEATURES.md) | [Feature guide](FEATURE_GUIDE.md) | [Changelog](CHANGELOG.md) | [Technical changelog](TECHNICAL_CHANGELOG.md) | [Update log](UPDATE_LOG.md)
 
-Current product release: **IntelGram v19 - Exact Telegram Disguise Identity**. IntelGram versions count product updates sequentially from v1; AyuGram Desktop `v6.7.8` remains the upstream source version.
+Current product release: **IntelGram v20 - Local Stars & Gifts**. IntelGram versions count product updates sequentially from v1; AyuGram Desktop `v6.7.8` remains the upstream source version.
 
 ## Main Features
 
@@ -137,7 +137,7 @@ Liquid Glass uses a native behind-window material on macOS, the Windows DWM back
 ## Source And Verification
 
 - [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch) contains the complete IntelGram implementation.
-- Patch SHA-256: `619a859553db9e3958cafc18f6ed9f2b62c123c5e31356918c435ec05e2531c7`
+- Patch SHA-256: `d0cbbd063c159bfdaa905ca3aeda431a85d4ff4a793db9dc871c5f9a49cd4ed0`
 - The patch pins [`foolspec/lib_ui`](https://github.com/foolspec/lib_ui) commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`, which carries IntelGram's shared motion-preset hook and Liquid Bounce transition.
 - [`build_intelgram_branding.py`](build_intelgram_branding.py) applies the cross-platform IntelGram product identity.
 - [`validate_intelgram_patch.py`](validate_intelgram_patch.py) verifies the feature hooks, protected-content boundaries, and absence of custom Telegram mutation requests before each platform build.
