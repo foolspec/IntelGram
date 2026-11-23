@@ -21,8 +21,8 @@ New in v21: local Stars moved into Telegram's native My Stars screen, and top-up
 [![Release](https://img.shields.io/github/v/release/foolspec/IntelGram?display_name=tag&style=flat&color=2ea44f)](https://github.com/foolspec/IntelGram/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/foolspec/IntelGram/total?style=flat&color=fb9233)](https://github.com/foolspec/IntelGram/releases)
 
-[![Download for macOS](https://img.shields.io/badge/macOS-Apple_Silicon_DMG-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-macOS-Apple-Silicon.dmg)
-[![Download for Windows](https://img.shields.io/badge/Windows-x64_ZIP-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Windows-x64.zip)
+[![Download for macOS](https://img.shields.io/badge/macOS-Apple_Silicon_DMG-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-macOS-Apple-Silicon.dmg)<br>
+[![Download for Windows](https://img.shields.io/badge/Windows-x64_ZIP-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Windows-x64.zip)<br>
 [![Download for Linux](https://img.shields.io/badge/Linux-x64_tar.gz-E95420?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Linux-x64.tar.gz)
 
 1. Download the build for your platform above.
@@ -291,6 +291,48 @@ Open **IntelGram Preferences -> Advanced & Maintenance**, where the reset contro
 <details><summary>📰 Where can I read what's new?</summary>
 
 Open **IntelGram Preferences -> Update log**. The bundled dialog summarizes the latest update, the main features, and the local-only privacy boundary. **View full changelog** opens the longer history on GitHub.
+
+</details>
+
+<details><summary>👥 How do I clone a profile locally?</summary>
+
+First open the other user's profile so IntelGram has loaded it. Copy their UID, choose **Clone profile locally by UID**, paste the UID, and confirm. IntelGram mirrors only data visible to you, including Premium, verified, emoji-status, and personal-channel presentation. Choose **Stop cloning profile** to return to your own local fields.
+
+</details>
+
+<details><summary>🔎 How do I find somebody by UID or phone?</summary>
+
+Use the normal search field above the chat list. Paste a UID, `id: UID`, or a phone number. A known matching profile appears under **Found by ID or phone**. This cannot discover strangers or hidden phone numbers; the peer must already be loaded and the phone must already be visible.
+
+</details>
+
+<details><summary>🎁 How do I browse collectible gifts?</summary>
+
+Choose **Choose featured collectible** or **Manage pinned collectible gifts**. The first screen is a native gallery of collection artwork. Click a collection, scroll through its numbered collectibles, and click the exact artwork you want; more items load as you reach the end. The entire selection flow stays inside IntelGram.
+
+</details>
+
+<details><summary>🏅 How do I get the IntelGram supporter badge?</summary>
+
+Open **IntelGram Preferences -> IntelGram -> Telegram**, then press Telegram's normal **Join** button on `@intelgrams`. IntelGram reads that locally known membership state and displays the badge on your own profile. It does not join the channel automatically, and leaving the channel removes the badge after Telegram updates the channel state.
+
+</details>
+
+<details><summary>📋 How do I add private contact notes?</summary>
+
+Open a person's chat, then choose **Private note for current contact** under **Contacts & Automation**. You can store a note, tags, relationship/context text, and an optional reminder date. **All private profile notes** shows the saved list and due reminders.
+
+</details>
+
+<details><summary>📤 How do I export a chat or account?</summary>
+
+Open **IntelGram Preferences -> Export & Backup** and choose the current chat or current account. IntelGram writes HTML, PDF, Markdown, JSON, and ZIP files to the folder you select. Select messages in a chat and use **Export selected messages** to export only that selection.
+
+</details>
+
+<details><summary>✨ How do I make the app transparent or more animated?</summary>
+
+Open **IntelGram Preferences -> Glass & Motion**. Enable Liquid Glass, choose which surfaces use the material, and adjust tint, opacity, and edge refraction. Enable Enhanced Animations separately and pick a pack: Quick Snap, Smooth Flow, Diabolical, Springy, or Liquid Bounce. Both master switches can be turned off at any time, and reduced-motion or power-saving mode still takes priority.
 
 </details>
 
