@@ -16,7 +16,11 @@ New in v21: local Stars moved into Telegram's native My Stars screen, and top-up
 [![Release](https://img.shields.io/github/v/release/foolspec/IntelGram?display_name=tag&style=flat)](https://github.com/foolspec/IntelGram/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/foolspec/IntelGram/total?style=flat&color=fb9233)](https://github.com/foolspec/IntelGram/releases)
 
-1. Download the latest build for your platform: [macOS Apple Silicon (DMG)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-macOS-Apple-Silicon.dmg), [Windows x64 (ZIP)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Windows-x64.zip), or [Linux x64 (tar.gz)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Linux-x64.tar.gz).
+[![Download for macOS](https://img.shields.io/badge/macOS-Apple_Silicon_DMG-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-macOS-Apple-Silicon.dmg)
+[![Download for Windows](https://img.shields.io/badge/Windows-x64_ZIP-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Windows-x64.zip)
+[![Download for Linux](https://img.shields.io/badge/Linux-x64_tar.gz-E95420?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Linux-x64.tar.gz)
+
+1. Download the build for your platform above.
 
 2. macOS: open the DMG and drag `IntelGram.app` to Applications. Windows: extract the ZIP and run `IntelGram.exe`. Linux: extract the tarball and run `IntelGram`.
 
