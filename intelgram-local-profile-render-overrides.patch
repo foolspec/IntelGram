@@ -8719,7 +8719,7 @@ index a4b1e7ad4..9e4d787a7 100644
  	builder.addSkip();
  }
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-index 929cf4609..994786880 100644
+index 929cf4609..3b4ff7010 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 @@ -6,33 +6,58 @@
@@ -9094,10 +9094,10 @@ index 929cf4609..994786880 100644
 +			box->verticalLayout(),
 +			tr::ayu_LocalStarsDescription());
 +		box->addButton(
-+			tr::ayu_LocalStarsPay(
++			rpl::single(tr::ayu_LocalStarsPay(
 +				tr::now,
 +				lt_amount,
-+				QString::number(group->current())),
++				QString::number(group->current()))),
 +			[=] {
 +				auto &mutableSettings = AyuSettings::getInstance();
 +				const auto amount = group->current();
@@ -9273,7 +9273,7 @@ index 929cf4609..994786880 100644
  
  	ayu.addSettingToggle({
  		.id = u"ayu/crashReporting"_q,
-@@ -193,10 +435,1213 @@ void BuildCrashReporting(SectionBuilder &builder, AyuSectionBuilder &ayu) {
+@@ -193,10 +435,1214 @@ void BuildCrashReporting(SectionBuilder &builder, AyuSectionBuilder &ayu) {
  #endif
  }
  
@@ -10425,9 +10425,10 @@ index 929cf4609..994786880 100644
 +	builder.addDivider();
 +	builder.addSkip();
 +	builder.addSubsectionTitle(tr::ayu_LocalStarsHeader());
-+	builder.addDividerText(tr::ayu_LocalStarsBalanceValue(
++	builder.addDividerText(rpl::single(tr::ayu_LocalStarsBalanceValue(
++		tr::now,
 +		lt_amount,
-+		QString::number(AyuSettings::getInstance().localStarsBalance())));
++		QString::number(AyuSettings::getInstance().localStarsBalance()))));
 +	builder.addButton({
 +		.id = u"ayu/localStarsBuy"_q,
 +		.title = tr::ayu_LocalStarsBuy(),
@@ -10487,7 +10488,7 @@ index 929cf4609..994786880 100644
  	builder.addButton({
  		.id = u"ayu/registerUrlScheme"_q,
  		.title = tr::ayu_RegisterURLScheme(),
-@@ -228,13 +1673,23 @@ void BuildOtherThings(SectionBuilder &builder) {
+@@ -228,13 +1674,23 @@ void BuildOtherThings(SectionBuilder &builder) {
  const auto kMeta = BuildHelper({
  	.id = AyuOther::Id(),
  	.parentId = AyuMain::Id(),
@@ -10514,7 +10515,7 @@ index 929cf4609..994786880 100644
  	BuildCrashReporting(builder, ayu);
  	BuildOtherThings(builder);
  });
-@@ -242,7 +1697,7 @@ const auto kMeta = BuildHelper({
+@@ -242,7 +1698,7 @@ const auto kMeta = BuildHelper({
  } // namespace
  
  rpl::producer<QString> AyuOther::title() {
@@ -10523,7 +10524,7 @@ index 929cf4609..994786880 100644
  }
  
  AyuOther::AyuOther(
-@@ -258,6 +1713,23 @@ void AyuOther::setupContent() {
+@@ -258,6 +1714,23 @@ void AyuOther::setupContent() {
  	Ui::ResizeFitChild(this, content);
  }
  
