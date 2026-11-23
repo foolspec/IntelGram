@@ -267,10 +267,10 @@ void ShowLocalStarsBuyBox(
 			box->verticalLayout(),
 			tr::ayu_LocalStarsDescription());
 		box->addButton(
-			tr::ayu_LocalStarsPay(
+			rpl::single(tr::ayu_LocalStarsPay(
 				tr::now,
 				lt_amount,
-				QString::number(group->current())),
+				QString::number(group->current()))),
 			[=] {
 				auto &mutableSettings = AyuSettings::getInstance();
 				const auto amount = group->current();
@@ -1583,9 +1583,10 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 	builder.addDivider();
 	builder.addSkip();
 	builder.addSubsectionTitle(tr::ayu_LocalStarsHeader());
-	builder.addDividerText(tr::ayu_LocalStarsBalanceValue(
+	builder.addDividerText(rpl::single(tr::ayu_LocalStarsBalanceValue(
+		tr::now,
 		lt_amount,
-		QString::number(AyuSettings::getInstance().localStarsBalance())));
+		QString::number(AyuSettings::getInstance().localStarsBalance()))));
 	builder.addButton({
 		.id = u"ayu/localStarsBuy"_q,
 		.title = tr::ayu_LocalStarsBuy(),
