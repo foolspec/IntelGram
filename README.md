@@ -22,6 +22,11 @@
 <img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat" alt="PRs welcome"></a>
 </div>
 
+<div align="center">
+<img src="branding/badges/Trending.svg" alt="GitHub Trending">
+<img src="branding/badges/TrendShift.svg" alt="TrendShift">
+</div>
+
 Imagine opening Telegram and your profile, your Stars balance, and the entire look of the app are exactly how you want them — without changing anything about your account. IntelGram is a Telegram Desktop build, based on AyuGram, focused on local profile customization, local Stars, and private on-device tools. Everything it adds runs on your device only.
 
 New in v21: local Stars moved into Telegram's native My Stars screen, and top-up runs through Telegram's real 15 Stars packages with a native checkout panel. See the [changelog](CHANGELOG.md).
