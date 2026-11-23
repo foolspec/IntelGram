@@ -5,7 +5,7 @@
 <img src="branding/badges/Download.svg" alt="Download"></a>
 <br>
 <a href="https://github.com/foolspec/IntelGram/discussions/new/choose">
-<img src="https://img.shields.io/github/discussions-search?query=repo%3Afoolspec%2FIntelGram%20is%3Aopen&style=flat&logo=TheConversation&logoColor=white&label=Ask%20Question" alt="Ask Question"></a>
+<img src="https://img.shields.io/github/discussions-search?query=repo%3Afoolspec%2FIntelGram%20is%3Aopen&style=flat&logo=TheConversation&logoColor=white&label=Ask%20Question&color=6e40c9" alt="Ask Question"></a>
 <a href="https://github.com/foolspec/IntelGram/issues/new?template=bug-report.yaml">
 <img src="https://img.shields.io/github/issues-search?query=repo%3Afoolspec%2FIntelGram%20is%3Aopen%20label%3Abug&style=flat&logo=ghostery&logoColor=white&label=New%20Bug&color=fdc12c" alt="New Bug"></a>
 <a href="https://t.me/intelgrams">
@@ -18,7 +18,7 @@ New in v21: local Stars moved into Telegram's native My Stars screen, and top-up
 
 ## Installation
 
-[![Release](https://img.shields.io/github/v/release/foolspec/IntelGram?display_name=tag&style=flat)](https://github.com/foolspec/IntelGram/releases/latest)
+[![Release](https://img.shields.io/github/v/release/foolspec/IntelGram?display_name=tag&style=flat&color=2ea44f)](https://github.com/foolspec/IntelGram/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/foolspec/IntelGram/total?style=flat&color=fb9233)](https://github.com/foolspec/IntelGram/releases)
 
 [![Download for macOS](https://img.shields.io/badge/macOS-Apple_Silicon_DMG-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-macOS-Apple-Silicon.dmg)
@@ -222,27 +222,81 @@ These controls only change how your own profile is rendered inside this IntelGra
 
 ## FAQ
 
-<details><summary>Can anyone else see my local profile?</summary>
+<details><summary>👁️ Can anyone else see my local profile?</summary>
 
 No. The overrides are visible only in this IntelGram installation. Screenshots will naturally show what IntelGram rendered, but Telegram and other users receive none of these local values.
 
 </details>
 
-<details><summary>Is the Stars top-up a real payment?</summary>
+<details><summary>⭐ Is the Stars top-up a real payment?</summary>
 
 No. It is a local-only simulation: paying credits your on-device balance, with no real money, no payment provider, and no Telegram payment API involved.
 
 </details>
 
-<details><summary>Does IntelGram replace Telegram or AyuGram?</summary>
+<details><summary>🎭 How do I turn on the hidden Telegram mode?</summary>
+
+Open **IntelGram Preferences** and click the blue **IntelGram Desktop v...** heading three times within 1.2 seconds. The app name, icon, window title, menus, and About surface switch to Telegram Desktop. To switch back, open the main drawer and click **Telegram Desktop** at the bottom three times. The choice is saved on this device only.
+
+</details>
+
+<details><summary>🆓 Is IntelGram free and open source?</summary>
+
+Yes. IntelGram is free, and the source is open under the GNU General Public License v3.0. See [LICENSE](LICENSE).
+
+</details>
+
+<details><summary>💻 Does IntelGram replace Telegram or AyuGram?</summary>
 
 No. IntelGram uses its own macOS bundle ID, Windows application ID, and Linux desktop ID, so it coexists with a normal AyuGram installation without overwriting it.
 
 </details>
 
-<details><summary>Where do I report a bug or ask a question?</summary>
+<details><summary>📥 How do I use local Stars?</summary>
 
-Open an issue on [GitHub](https://github.com/foolspec/IntelGram/issues), or join [@intelgrams](https://t.me/intelgrams) on Telegram.
+Open **Settings -> My Stars**. The row shows your on-device balance. **Top Up Balance** lists Telegram's 15 Stars packages; pick one to open Telegram's checkout panel, where the demo American Express card is already saved. Pay adds the Stars to the on-device balance — no real card data is collected and nothing is sent to Telegram or a payment provider.
+
+</details>
+
+<details><summary>🔒 What is Frozen Account Backup?</summary>
+
+It creates one encrypted `.intelvault` archive containing IntelGram's structured local export and permitted cached files. Encryption uses the passphrase you enter — keep it safe, because IntelGram does not upload or recover it. Telegram login keys and session credentials are deliberately excluded.
+
+</details>
+
+<details><summary>🔍 Where is the message vault?</summary>
+
+Open **IntelGram Preferences -> Vault & Search**. **Search this account** searches the active account; **Search all accounts** and **Unified account inbox** label results with the account they belong to. IntelGram indexes messages as this build receives or loads them, so older history appears as it is loaded.
+
+</details>
+
+<details><summary>🎨 How do I change themes or the app icon?</summary>
+
+Open **IntelGram Preferences -> Appearance & Backgrounds**. Pick from the light and dark theme cards, browse Telegram cloud themes, or set a chat background from the wallpaper gallery or a local image. **App Icon** offers the pink primary artwork, the pink profile-art alternate, and twelve color variants.
+
+</details>
+
+<details><summary>📡 Does IntelGram send anything to Telegram?</summary>
+
+IntelGram adds no Telegram account or profile update, contact import, collectible transaction, ownership change, channel ownership or permission change, or automatic channel join. Restrict Saving Content and self-destruct flags are enforced in the vault, exports, and saved moments.
+
+</details>
+
+<details><summary>🔄 How do I reset IntelGram's local settings?</summary>
+
+Open **IntelGram Preferences -> Advanced & Maintenance**, where the reset controls live alongside diagnostics and URL registration.
+
+</details>
+
+<details><summary>📰 Where can I read what's new?</summary>
+
+Open **IntelGram Preferences -> Update log**. The bundled dialog summarizes the latest update, the main features, and the local-only privacy boundary. **View full changelog** opens the longer history on GitHub.
+
+</details>
+
+<details><summary>📝 Where do I report a bug or ask a question?</summary>
+
+Open an issue on [GitHub](https://github.com/foolspec/IntelGram/issues), ask in [Discussions](https://github.com/foolspec/IntelGram/discussions), or join [@intelgrams](https://t.me/intelgrams) on Telegram.
 
 </details>
 
