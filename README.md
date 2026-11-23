@@ -1,9 +1,25 @@
 <div align="center">
 <a href="#installation">
-<img src="branding/banner.png"></a><br>
+<img src="branding/banner.png"></a>
+</div>
+
+<div align="center">
+<img src="branding/badges/Trending.svg" alt="GitHub Trending">
+<img src="branding/badges/TrendShift.svg" alt="TrendShift">
+</div>
+
+<div align="center">
+<a href="https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-macOS-Apple-Silicon.dmg">
+<img src="branding/badges/Download-macOS.svg" alt="Download for macOS"></a>
+<a href="https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Windows-x64.zip">
+<img src="branding/badges/Download-Windows.svg" alt="Download for Windows"></a>
+<a href="https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Linux-x64.tar.gz">
+<img src="branding/badges/Download-Linux.svg" alt="Download for Linux"></a>
+</div>
+
+<div align="center">
 <a href="https://github.com/foolspec/IntelGram/releases/latest">
 <img src="branding/badges/Download.svg" alt="Download"></a>
-<br>
 <a href="https://github.com/foolspec/IntelGram/discussions/new/choose">
 <img src="https://img.shields.io/github/discussions-search?query=repo%3Afoolspec%2FIntelGram%20is%3Aopen&style=flat&logo=TheConversation&logoColor=white&label=Ask%20Question&color=6e40c9" alt="Ask Question"></a>
 <a href="https://github.com/foolspec/IntelGram/issues/new?template=bug-report.yaml">
@@ -23,8 +39,13 @@
 </div>
 
 <div align="center">
-<img src="branding/badges/Trending.svg" alt="GitHub Trending">
-<img src="branding/badges/TrendShift.svg" alt="TrendShift">
+<a href="#installation">Installation</a> ·
+<a href="#local-stars">Local Stars</a> ·
+<a href="#local-profile">Local Profile</a> ·
+<a href="#appearance">Appearance</a> ·
+<a href="#faq">FAQ</a> ·
+<a href="FEATURE_GUIDE.md">Docs</a> ·
+<a href="#powered-by">Powered By</a>
 </div>
 
 Imagine opening Telegram and your profile, your Stars balance, and the entire look of the app are exactly how you want them — without changing anything about your account. IntelGram is a Telegram Desktop build, based on AyuGram, focused on local profile customization, local Stars, and private on-device tools. Everything it adds runs on your device only.
@@ -36,13 +57,9 @@ New in v21: local Stars moved into Telegram's native My Stars screen, and top-up
 [![Release](https://img.shields.io/github/v/release/foolspec/IntelGram?display_name=tag&style=flat&color=2ea44f)](https://github.com/foolspec/IntelGram/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/foolspec/IntelGram/total?style=flat&color=fb9233)](https://github.com/foolspec/IntelGram/releases)
 
-[![Download for macOS](branding/badges/Download-macOS.svg)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-macOS-Apple-Silicon.dmg)<br>
-[![Download for Windows](branding/badges/Download-Windows.svg)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Windows-x64.zip)<br>
-[![Download for Linux](branding/badges/Download-Linux.svg)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Linux-x64.tar.gz)
-
 [latest release](https://github.com/foolspec/IntelGram/releases/latest) · macOS: Apple Silicon .dmg · Windows: x64 .zip · Linux: x64 .tar.gz · [all releases](https://github.com/foolspec/IntelGram/releases)
 
-1. Download the build for your platform above.
+1. Download the build for your platform using the buttons at the top of this page.
 
 2. macOS: open the DMG and drag `IntelGram.app` to Applications. Windows: extract the ZIP and run `IntelGram.exe`. Linux: extract the tarball and run `IntelGram`.
 
