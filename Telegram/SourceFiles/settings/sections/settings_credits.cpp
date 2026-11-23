@@ -1110,16 +1110,10 @@ Fn<void()> BuyStarsHandler::handler(
 		box->setTitle(tr::lng_credits_summary_options_subtitle());
 		const auto inner = box->verticalLayout();
 		const auto self = show->session().user();
-		const auto options = Data::CreditTopupOptions{
-			{ 50, {}, {}, 0, false, 0 },
-			{ 100, {}, {}, 0, false, 0 },
-			{ 250, {}, {}, 0, false, 0 },
-			{ 500, {}, {}, 0, false, 0 },
-			{ 1000, {}, {}, 0, false, 0 },
-			{ 2500, {}, {}, 0, true, 0 },
-		};
 		const auto amount = CreditsAmount();
 		const auto weak = base::make_weak(box);
+		// No preloaded options: FillCreditOptions fills in the local
+		// IntelGram packages, so the list stays in one place.
 		FillCreditOptions(show, inner, self, amount, [=] {
 			if (const auto strong = weak.get()) {
 				strong->closeBox();
@@ -1127,7 +1121,7 @@ Fn<void()> BuyStarsHandler::handler(
 			if (const auto onstack = paid) {
 				onstack();
 			}
-		}, box->showFinishes(), nullptr, options);
+		}, box->showFinishes(), nullptr, {});
 
 		box->addButton(tr::lng_close(), [=] {
 			box->closeBox();

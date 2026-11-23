@@ -27,6 +27,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "core/application.h"
 #include "core/click_handler_types.h"
 #include "core/click_handler_types.h" // UrlClickHandler
+#include "core/file_utilities.h"
 #include "core/ui_integration.h"
 #include "data/components/credits.h"
 #include "data/components/recent_shared_media_gifts.h"
@@ -63,10 +64,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "payments/payments_checkout_process.h"
 #include "payments/payments_form.h"
 #include "payments/payments_non_panel_process.h"
-#include "payments/payments_non_panel_process.h"
+#include "payments/ui/payments_panel.h"
+#include "payments/ui/payments_panel_data.h"
+#include "payments/ui/payments_panel_delegate.h"
 #include "settings/settings_common_session.h"
 #include "settings/sections/settings_credits.h"
 #include "statistics/widgets/chart_header_widget.h"
+#include "storage/storage_account.h"
+#include "ui/boxes/boost_box.h" // Ui::StartFireworks.
 #include "ui/boxes/confirm_box.h"
 #include "ui/controls/button_labels.h"
 #include "ui/controls/ton_common.h"
@@ -99,6 +104,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/wrap/slide_wrap.h"
 #include "ui/wrap/vertical_layout.h"
 #include "ui/ui_utility.h"
+#include "webview/webview_common.h"
+#include "window/themes/window_theme.h"
 #include "window/window_session_controller.h"
 #include "styles/style_calls.h"
 #include "styles/style_channel_earn.h"
@@ -381,6 +388,283 @@ void AddViewMediaHandler(
 	}, thumb->lifetime());
 }
 
+// Title of the pre-saved demo card shown in the local checkout, e.g.
+// "AMEX •••• 10005".
+[[nodiscard]] QString LocalStarsSavedCardTitle() {
+	return u"AMEX •••• "_q
+		+ tr::ayu_LocalStarsCardNumber(tr::now).right(5);
+}
+
+class LocalStarsCheckout;
+LocalStarsCheckout *ActiveLocalStarsCheckout = nullptr;
+
+// Local-only Stars checkout.
+//
+// Drives Telegram's native payments panel (Payments::Ui::Panel) with a
+// locally built invoice and the pre-saved demo card, so topping up looks
+// exactly like a real Stars purchase while completing entirely on this
+// device: no server request is made and no real money moves.
+//
+// Self-owned: created by Start(), destroyed by finish() from the next
+// event-loop turn, once the panel is done with it.
+class LocalStarsCheckout final : public Payments::Ui::PanelDelegate {
+public:
+	static void Start(
+		std::shared_ptr<Main::SessionShow> show,
+		Data::CreditTopupOption option,
+		QPointer<QWidget> fireworks,
+		Fn<void()> paid) {
+		if (const auto active = ActiveLocalStarsCheckout) {
+			active->finish(Payments::CheckoutResult::Cancelled);
+		}
+		const auto checkout = new LocalStarsCheckout(
+			std::move(show),
+			std::move(option),
+			fireworks,
+			std::move(paid));
+		ActiveLocalStarsCheckout = checkout;
+		checkout->show();
+	}
+
+private:
+	LocalStarsCheckout(
+		std::shared_ptr<Main::SessionShow> show,
+		Data::CreditTopupOption option,
+		QPointer<QWidget> fireworks,
+		Fn<void()> paid)
+	: _show(std::move(show))
+	, _session(&_show->session())
+	, _option(std::move(option))
+	, _fireworks(fireworks)
+	, _paid(std::move(paid))
+	, _panel(std::make_unique<Payments::Ui::Panel>(this)) {
+		buildInvoiceAndMethod();
+		_panel->savedMethodChosen(
+		) | rpl::on_next([this](QString id) {
+			chooseSavedMethod(id);
+		}, _panel->lifetime());
+		_panel->backRequests(
+		) | rpl::on_next([this] {
+			panelCancelEdit();
+		}, _panel->lifetime());
+	}
+
+	void buildInvoiceAndMethod() {
+		const auto label = QString::number(_option.credits)
+			+ u" Telegram Stars"_q;
+		_invoice.currency = _option.currency;
+		_invoice.cover.title = u"Telegram Stars Top-Up"_q;
+		_invoice.cover.description = TextWithEntities{ label };
+		_invoice.cover.seller = u"Premium Bot"_q;
+		_invoice.prices = {
+			Payments::Ui::LabeledPrice{ label, int64(_option.amount) },
+		};
+		_method.native.supported = true;
+		_method.native.canSaveInformation = true;
+		_method.savedMethods = {
+			Payments::Ui::PaymentMethodSaved{
+				u"intelgram-local-card"_q,
+				LocalStarsSavedCardTitle(),
+			},
+		};
+		_method.savedMethodIndex = 0;
+		_method.canSaveInformation = true;
+	}
+
+	void show() {
+		showForm();
+		_panel->requestActivate();
+	}
+
+	void showForm() {
+		_panel->showForm(
+			_invoice,
+			Payments::Ui::RequestedInformation(),
+			_method,
+			Payments::Ui::ShippingOptions());
+	}
+
+	void chooseSavedMethod(const QString &id) {
+		const auto &list = _method.savedMethods;
+		const auto i = ranges::find(
+			list,
+			id,
+			&Payments::Ui::PaymentMethodSaved::id);
+		if (i != end(list)) {
+			_method.savedMethodIndex = int(i - begin(list));
+		}
+		showForm();
+	}
+
+	void finish(Payments::CheckoutResult result) {
+		if (_finished) {
+			return;
+		}
+		_finished = true;
+		const auto paid = _paid;
+		// Finish from the next event-loop turn: this runs inside panel
+		// callbacks, so destroying the panel right away would tear the
+		// widget down underneath its own event handler.
+		crl::on_main([this, result, paid] {
+			if (result == Payments::CheckoutResult::Paid && paid) {
+				paid();
+			}
+			if (ActiveLocalStarsCheckout == this) {
+				ActiveLocalStarsCheckout = nullptr;
+			}
+			delete this;
+		});
+	}
+
+	void panelRequestClose() override {
+		finish(Payments::CheckoutResult::Cancelled);
+	}
+
+	void panelCloseSure() override {
+		finish(Payments::CheckoutResult::Cancelled);
+	}
+
+	void panelSubmit() override {
+		if (_finished) {
+			return;
+		}
+		auto &settings = AyuSettings::getInstance();
+		settings.setLocalStarsBalance(
+			settings.localStarsBalance() + int(_option.credits));
+		if (const auto widget = _fireworks.data()) {
+			Ui::StartFireworks(widget);
+		}
+		finish(Payments::CheckoutResult::Paid);
+	}
+
+	void panelTrustAndSubmit() override {
+		panelSubmit();
+	}
+
+	void panelAcceptTermsAndSubmit() override {
+		panelSubmit();
+	}
+
+	void panelWebviewMessage(const QJsonDocument &, bool) override {
+	}
+
+	bool panelWebviewNavigationAttempt(const QString &) override {
+		return true;
+	}
+
+	void panelSetPassword() override {
+	}
+
+	void panelOpenUrl(const QString &url) override {
+		File::OpenUrl(url);
+	}
+
+	void panelCancelEdit() override {
+		showForm();
+	}
+
+	void panelEditPaymentMethod() override {
+		_panel->choosePaymentMethod(_method);
+	}
+
+	void panelEditShippingInformation() override {
+	}
+
+	void panelEditName() override {
+	}
+
+	void panelEditEmail() override {
+	}
+
+	void panelEditPhone() override {
+	}
+
+	void panelChooseShippingOption() override {
+	}
+
+	void panelChangeShippingOption(const QString &) override {
+	}
+
+	void panelChooseTips() override {
+	}
+
+	void panelChangeTips(int64) override {
+	}
+
+	void panelValidateInformation(
+		Payments::Ui::RequestedInformation) override {
+	}
+
+	void panelValidateCard(
+		Payments::Ui::UncheckedCardDetails data,
+		bool) override {
+		// A card entered here is kept only on this device, as the saved
+		// local method for the next top-up.
+		auto digits = QString();
+		for (const auto ch : data.number) {
+			if (ch.isDigit()) {
+				digits.append(ch);
+			}
+		}
+		const auto brand = digits.startsWith(u"4"_q)
+			? u"Visa"_q
+			: digits.startsWith(u"5"_q)
+			? u"Mastercard"_q
+			: digits.startsWith(u"3"_q)
+			? u"AMEX"_q
+			: digits.startsWith(u"6"_q)
+			? u"Discover"_q
+			: u"Card"_q;
+		_method.savedMethods = {
+			Payments::Ui::PaymentMethodSaved{
+				u"intelgram-local-card"_q,
+				brand
+					+ u" •••• "_q
+					+ (digits.size() > 4 ? digits.right(4) : digits),
+			},
+		};
+		_method.savedMethodIndex = 0;
+		if (!data.cardholderName.isEmpty()) {
+			AyuSettings::getInstance().setLocalStarsCardName(
+				data.cardholderName);
+		}
+		showForm();
+	}
+
+	void panelShowBox(object_ptr<Ui::BoxContent> box) override {
+		_panel->showBox(std::move(box));
+	}
+
+	QVariant panelClickHandlerContext() override {
+		return QVariant::fromValue(ClickHandlerContext{
+			.show = _panel->uiShow(),
+		});
+	}
+
+	Webview::StorageId panelWebviewStorageId() override {
+		return _session->local().resolveStorageIdOther();
+	}
+
+	Webview::ThemeParams panelWebviewThemeParams() override {
+		return Window::Theme::WebViewParams();
+	}
+
+	std::optional<QDate> panelOverrideExpireDateThreshold() override {
+		return std::nullopt;
+	}
+
+	std::shared_ptr<Main::SessionShow> _show;
+	const not_null<Main::Session*> _session;
+	Data::CreditTopupOption _option;
+	QPointer<QWidget> _fireworks;
+	Fn<void()> _paid;
+	const std::unique_ptr<Payments::Ui::Panel> _panel;
+	Payments::Ui::Invoice _invoice;
+	Payments::Ui::PaymentMethodDetails _method;
+	bool _finished = false;
+
+};
+
 } // namespace
 
 void AddMiniStars(
@@ -467,13 +751,25 @@ void FillCreditOptions(
 		PeerId spendPurposePeerId) {
 	const auto localIntelGramTopup = true;
 	if (localIntelGramTopup && preloadedTopupOptions.empty()) {
+		// The same packages and prices Telegram itself offers, so the
+		// local top-up looks exactly like a real one. The extended
+		// options are the ones shown after "More Options".
 		preloadedTopupOptions = {
-			{ 50, u"intelgram_stars_50"_q, u"USD"_q, 99, false, 0 },
-			{ 100, u"intelgram_stars_100"_q, u"USD"_q, 199, false, 0 },
-			{ 250, u"intelgram_stars_250"_q, u"USD"_q, 499, false, 0 },
-			{ 500, u"intelgram_stars_500"_q, u"USD"_q, 999, false, 0 },
-			{ 1000, u"intelgram_stars_1000"_q, u"USD"_q, 1999, false, 0 },
-			{ 2500, u"intelgram_stars_2500"_q, u"USD"_q, 4999, true, 0 },
+			{ 100, u"intelgram_stars_100"_q, u"USD"_q, 169, false, 0 },
+			{ 150, u"intelgram_stars_150"_q, u"USD"_q, 249, true, 0 },
+			{ 250, u"intelgram_stars_250"_q, u"USD"_q, 403, false, 0 },
+			{ 350, u"intelgram_stars_350"_q, u"USD"_q, 559, true, 0 },
+			{ 500, u"intelgram_stars_500"_q, u"USD"_q, 789, false, 0 },
+			{ 750, u"intelgram_stars_750"_q, u"USD"_q, 1179, true, 0 },
+			{ 1000, u"intelgram_stars_1000"_q, u"USD"_q, 1569, false, 0 },
+			{ 1500, u"intelgram_stars_1500"_q, u"USD"_q, 2339, true, 0 },
+			{ 2500, u"intelgram_stars_2500"_q, u"USD"_q, 3899, false, 0 },
+			{ 5000, u"intelgram_stars_5000"_q, u"USD"_q, 7799, true, 0 },
+			{ 10000, u"intelgram_stars_10000"_q, u"USD"_q, 15599, false, 0 },
+			{ 25000, u"intelgram_stars_25000"_q, u"USD"_q, 38900, true, 0 },
+			{ 50000, u"intelgram_stars_50000"_q, u"USD"_q, 77900, false, 0 },
+			{ 100000, u"intelgram_stars_100000"_q, u"USD"_q, 154900, true, 0 },
+			{ 150000, u"intelgram_stars_150000"_q, u"USD"_q, 232900, false, 0 },
 		};
 	}
 	const auto options = container->add(
@@ -661,51 +957,17 @@ void FillCreditOptions(
 			}, button->lifetime());
 			button->setClickedCallback([=] {
 				if (localIntelGramTopup) {
-					auto form = Payments::CreditsFormData();
-					form.id = Payments::InvoiceId{
-						Payments::InvoiceCredits{
-							.session = &show->session(),
-							.randomId = UniqueIdFromOption(option),
-							.credits = option.credits,
-							.product = option.product,
-							.currency = option.currency,
-							.amount = option.amount,
-							.extended = option.extended,
-							.giftPeerId = PeerId(option.giftBarePeerId),
-							.spendPurposePeerId = spendPurposePeerId,
-						}
-					};
-					form.title = tr::lng_credits_summary_options_subtitle(tr::now);
-					form.invoice = Payments::InvoiceCredits{
-						.session = &show->session(),
-						.randomId = UniqueIdFromOption(option),
-						.credits = option.credits,
-						.product = option.product,
-						.currency = option.currency,
-						.amount = option.amount,
-						.extended = option.extended,
-						.giftPeerId = PeerId(option.giftBarePeerId),
-						.spendPurposePeerId = spendPurposePeerId,
-					};
-					const auto shared = std::make_shared<Payments::CreditsFormData>(
-						std::move(form));
 					const auto weak = base::make_weak(button);
-					Payments::ProcessCreditsPayment(
+					LocalStarsCheckout::Start(
 						show,
+						option,
 						weak ? weak->window() : nullptr,
-						shared,
-						[=](Payments::CheckoutResult result) {
+						[=] {
 							if (const auto strong = weak.get()) {
 								strong->window()->setFocus();
 							}
-							if (result == Payments::CheckoutResult::Paid) {
-								auto &settings = AyuSettings::getInstance();
-								settings.setLocalStarsBalance(
-									settings.localStarsBalance()
-										+ int(option.credits));
-								if (const auto onstack = paid) {
-									onstack();
-								}
+							if (const auto onstack = paid) {
+								onstack();
 							}
 						});
 					return;
@@ -740,7 +1002,7 @@ void FillCreditOptions(
 		}
 
 		// Footer.
-		if (!localIntelGramTopup) {
+		{
 			auto text = tr::lng_credits_summary_options_about(
 				lt_link,
 				rpl::combine(
