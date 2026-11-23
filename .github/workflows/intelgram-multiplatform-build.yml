@@ -67,25 +67,6 @@ env:
   LIB_UI_REF: codex/intelgram-liquid-bounce-20260726
 
 jobs:
-  diagnose_linux_image:
-    name: Diagnose Linux image
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.platform == 'linux' }}
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Inspect centos_env image
-        run: |
-          set -euxo pipefail
-          docker pull ghcr.io/telegramdesktop/tdesktop/centos_env:latest
-          docker run --rm ghcr.io/telegramdesktop/tdesktop/centos_env:latest \
-            bash -euxc '
-              echo "=== ada files ==="
-              find / -xdev \( -iname "ada.h" -o -iname "libada*" -o -iname "adaConfig.cmake" -o -iname "ada-config.cmake" \) 2>/dev/null | sort | sed -n "1,120p" || true
-              echo "=== /usr/local tree ==="
-              find /usr/local -maxdepth 3 -type d 2>/dev/null | sort | sed -n "1,160p" || true
-              echo "=== ada dirs ==="
-              find /usr -type d -iname "*ada*" 2>/dev/null | sort | sed -n "1,80p" || true
-            '
-
   macos_dependencies_1:
     name: macOS dependencies 1 of 6
     if: ${{ (github.event_name != 'workflow_dispatch' || inputs.platform == 'all' || inputs.platform == 'macos') && inputs.macos_dependency_run_id == '' && inputs.macos_stage5_run_id == '' }}
