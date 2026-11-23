@@ -60,8 +60,8 @@ permissions:
 
 env:
   SOURCE_TAG: v6.7.8
-  RELEASE_NAME: Exact Telegram Disguise Identity
-  RELEASE_SLUG: exact-telegram-disguise-identity
+  RELEASE_NAME: Local Stars & Gifts
+  RELEASE_SLUG: local-stars-gifts
   PATCH_SHA256: 619a859553db9e3958cafc18f6ed9f2b62c123c5e31356918c435ec05e2531c7
   LIB_UI_COMMIT: b9a30917daf2bd8fdc17ccd9682acca178882b7b
   LIB_UI_REF: codex/intelgram-liquid-bounce-20260726
