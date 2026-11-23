@@ -19,7 +19,7 @@ on:
         description: Short feature title shown after the IntelGram version
         required: true
       release_version:
-        description: Optional product version such as v19; leave empty to use the next sequential version
+        description: Optional product version such as v20; leave empty to use the next sequential version
         required: false
         default: ""
 
