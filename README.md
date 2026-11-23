@@ -31,9 +31,9 @@ New in v21: local Stars moved into Telegram's native My Stars screen, and top-up
 [![Release](https://img.shields.io/github/v/release/foolspec/IntelGram?display_name=tag&style=flat&color=2ea44f)](https://github.com/foolspec/IntelGram/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/foolspec/IntelGram/total?style=flat&color=fb9233)](https://github.com/foolspec/IntelGram/releases)
 
-[![Download for macOS](https://img.shields.io/badge/DOWNLOAD_FOR_MAC_%28APPLE_SILICON%29-DMG-229ED9?style=for-the-badge&labelColor=000000&logo=apple&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-macOS-Apple-Silicon.dmg)<br>
-[![Download for Windows](https://img.shields.io/badge/DOWNLOAD_FOR_WINDOWS-ZIP-0078D6?style=for-the-badge&labelColor=000000&logo=windows&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Windows-x64.zip)<br>
-[![Download for Linux](https://img.shields.io/badge/DOWNLOAD_FOR_LINUX-TAR.GZ-E95420?style=for-the-badge&labelColor=000000&logo=linux&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Linux-x64.tar.gz)
+[![Download for macOS](branding/badges/Download-macOS.svg)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-macOS-Apple-Silicon.dmg)<br>
+[![Download for Windows](branding/badges/Download-Windows.svg)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Windows-x64.zip)<br>
+[![Download for Linux](branding/badges/Download-Linux.svg)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Linux-x64.tar.gz)
 
 [latest release](https://github.com/foolspec/IntelGram/releases/latest) · macOS: Apple Silicon .dmg · Windows: x64 .zip · Linux: x64 .tar.gz · [all releases](https://github.com/foolspec/IntelGram/releases)
 
