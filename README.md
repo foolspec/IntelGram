@@ -1,9 +1,15 @@
-![IntelGram](branding/banner.png)
-
-[![Download](https://img.shields.io/badge/Download-latest-2ea44f?style=flat&logo=github)](https://github.com/foolspec/IntelGram/releases/latest)
-[![Telegram](https://img.shields.io/badge/Telegram-@intelgrams-229ED9?style=flat&logo=telegram)](https://t.me/intelgrams)
+<div align="center">
+<a href="#installation">
+<img src="branding/banner.png"></a><br>
+<a href="https://github.com/foolspec/IntelGram/releases/latest">
+<img src="https://img.shields.io/badge/Download-latest-2ea44f?style=flat&logo=github" alt="Download"></a>
+<a href="https://t.me/intelgrams">
+<img src="https://img.shields.io/badge/Telegram-@intelgrams-229ED9?style=flat&logo=telegram" alt="Telegram"></a>
+</div>
 
 Imagine opening Telegram and your profile, your Stars balance, and the entire look of the app are exactly how you want them — without changing anything about your account. IntelGram is a Telegram Desktop build, based on AyuGram, focused on local profile customization, local Stars, and private on-device tools. Everything it adds runs on your device only.
+
+New in v21: local Stars moved into Telegram's native My Stars screen, and top-up runs through Telegram's real 15 Stars packages with a native checkout panel. See the [changelog](CHANGELOG.md).
 
 ## Installation
 
@@ -20,47 +26,216 @@ Imagine opening Telegram and your profile, your Stars balance, and the entire lo
 
 ## Local Stars
 
-Your on-device Stars balance lives on Telegram's native **My Stars** row in Settings. **Top Up Balance** opens Telegram's own package list — the real 15 packages, from 100 to 150,000 Stars. Picking one opens Telegram's native checkout panel with the demo American Express card already saved; Pay adds the Stars to your local balance. Nothing is sent to Telegram or a payment provider.
+Your on-device Stars balance lives on Telegram's native **My Stars** row in Settings. **Top Up Balance** opens Telegram's own package list, and paying credits your local balance with the usual success animation.
+
+<details><summary>How top-up works</summary>
+
+**Top Up Balance** lists the real 15 Stars packages Telegram offers, from 100 to 150,000 Stars. Picking one opens Telegram's native checkout panel with the demo American Express card already saved as the payment method. The card carries an explicit **DEMO - AMEX - NO REAL PAYMENT** label and an editable cardholder name. Pay adds the Stars to your on-device balance only.
+
+</details>
+
+<details><summary>What it never does</summary>
+
+No real card details are ever asked for. Nothing is sent to Telegram or a payment provider, and Telegram's payment APIs are never contacted. The balance exists only inside this IntelGram installation.
+
+</details>
 
 ## Local Profile
 
-Set a local display name, UID, usernames, bio, profile photo, badges, emoji status, and verification in **IntelGram Preferences -> Local Profile & Collectibles**. You can clone the visible profile of any user already loaded in IntelGram by entering their UID.
+Open **IntelGram Preferences -> Local Profile & Collectibles** to reshape how your own profile renders inside IntelGram. Every field has its own switch, so you can use only the pieces you want.
 
-### Disguise Mode
+#### 👤 Profile fields
 
-Triple-click the blue **IntelGram Desktop v...** heading in IntelGram Preferences and the app's visible identity switches to Telegram Desktop: app name, logo, Dock icon, tray icon, window title, menus, and About surface. Your local profile and collectibles stay active. Triple-click the **Telegram Desktop** drawer footer to come back.
+<details><summary>Every field you can override</summary>
 
-### Collectibles
+Set a local display name, UID, primary username and up to 20 other usernames, an anonymous number, bio, and profile photo from a file on your device. The username editor visually matches Telegram's native Username dialog, including the `@username` field, validation row, and buttons — but it never asks Telegram whether a name is available and never updates the account. Each value can be cleared individually to return to the real Telegram-rendered value, and everything survives a restart.
 
-Browse Telegram's live collectible catalog, inspect numbered gifts in a scrollable grid, and paste Telegram, Getgems, or TON item links. Feature one collectible as the local profile backdrop and pin up to six around the local avatar.
+</details>
 
-### Local Channels
+#### 👥 Clone a profile
 
-Enable **Local ownership** from any broadcast channel's **IntelGram** submenu to place persistent local text broadcasts directly in that channel's real timeline, with native reply, edit, pin, and reaction controls. Nothing is sent to Telegram — views and reactions update only this client.
+<details><summary>How cloning works</summary>
+
+First open the other user's profile so IntelGram has loaded it, then choose **Clone profile locally by UID** and paste their UID. IntelGram refreshes that already-known profile read-only and mirrors only data visible to you: name, UID, usernames, visible phone, bio, photo, profile colors, Premium, verified, SCAM, FAKE, DIRECT, organization verification, emoji status, personal channel, and featured collectible. If the source has none of those elements, the cloned view shows none. Choose **Stop cloning profile** to return to your own local fields.
+
+</details>
+
+#### ✅ Badges
+
+<details><summary>Badges and emoji status</summary>
+
+Badges default to **Automatic**, which follows your clone profile or your real Telegram badge state. You can instead hide the primary badge or select Premium, verified, SCAM, FAKE, or DIRECT. Optional document-ID fields use Telegram's native custom-emoji renderer for an emoji status and an organization-verification symbol. Badges update everywhere they render: profile headers, chat headers, dialog rows, and search results.
+
+</details>
+
+#### 🎭 Disguise Mode
+
+<details><summary>How to switch</summary>
+
+Triple-click anywhere on the blue **IntelGram Desktop v...** heading in IntelGram Preferences within 1.2 seconds and the app's visible identity switches to Telegram Desktop: app name, logo, Dock or taskbar icon, tray icon, window title, menus, About surface, and drawer footer. The page returns to Telegram's normal Settings screen immediately, so IntelGram Preferences is no longer visible. On macOS the running app and Dock entry are titled exactly **Telegram**, with the full rounded-square Telegram artwork. Your local profile, collectibles, and badges stay active. Triple-click the **Telegram Desktop** drawer footer to come back. The choice is saved locally.
+
+</details>
+
+#### 🎁 Collectibles
+
+<details><summary>How to browse</summary>
+
+Choose **Choose featured collectible** or **Manage pinned collectible gifts** to open a native gallery of collection artwork from Telegram's live star-gift catalog. Click a collection to scroll its exact numbered gifts, and click the artwork to select one — the whole flow stays inside IntelGram. You can also paste a Telegram gift slug, `t.me/nft` link, Getgems item URL, or TON NFT address. Feature one collectible as the local profile backdrop and pin up to six around the local avatar. Ownership, sender, date, and transaction data are never changed.
+
+</details>
+
+#### 📢 Local Channels
+
+<details><summary>Local ownership in a real channel</summary>
+
+Open any broadcast channel, open the three-dot menu, and choose **IntelGram -> Local ownership**. The same channel screen now shows Telegram's native **Broadcast a message...** composer and owner-style **Manage channel** actions. Type a text post and send it normally; IntelGram intercepts it and inserts it into that channel's timeline as a persistent local message, with the native reaction strip and Reply, Edit, Pin, Copy, Delete, and Select controls. The **Broadcast engagement** editor sets starting and maximum views, increment size and interval, baseline reactions, and a paid-Star display count. Media, voice, stickers, and scheduled posts stay blocked so nothing can upload.
+
+</details>
+
+<details><summary>Local channel workspace</summary>
+
+Click the **Local showcase** row on your profile or choose **Open local channel** in Local Profile settings. The private **Local-only channel** workspace keeps up to eight selected public channels, each with local text posts, optional local-file attachments, and its own title, description, and photo. Posts support editing, pinning, copying, and deleting. Nothing is published to the public channel.
+
+</details>
+
+#### 🔍 Find by UID or phone
+
+<details><summary>How lookup works</summary>
+
+Paste a numeric UID, `id: UID`, or a visible phone number into the normal chat-list search field and a matching profile appears under **Found by ID or phone**. Lookup is limited to peers already loaded by IntelGram and phone numbers already visible to your account, and it bypasses remote message, topic, and username search. No contact import or address-book sync is added.
+
+</details>
 
 ## Appearance
 
-### Liquid Glass
+#### ✨ Liquid Glass
 
-Turn on Liquid Glass in **IntelGram Preferences -> Glass & Motion** to layer adaptive tint, wallpaper-colored diffusion, cursor-reactive highlights, and refractive edges over native desktop blur. Chat list, message surfaces, and menus can be softened independently.
+<details><summary>What you can tune</summary>
 
-### Motion
+Turn on Liquid Glass in **IntelGram Preferences -> Glass & Motion** to layer adaptive tint and contrast, wallpaper-colored diffusion, cursor-reactive highlights, refractive edges, and fine grain over native desktop blur — or a removable local whole-app image. Chat list, message surfaces, and menus can be softened independently, and text, icons, avatars, and media stay fully opaque. The slow decorative layer refreshes at a paced 30 Hz and pauses while hidden, inactive, or when reduced motion is enabled, so scrolling stays smooth.
 
-Five global motion presets — Quick Snap, Smooth Flow, Diabolical, Springy, and the optional high-elasticity Liquid Bounce — apply across transitions, dialogs, drawers, and navigation.
+</details>
 
-### Themes and icons
+#### 🎬 Motion
 
-Browse visual theme cards and cloud themes, import custom themes, and pick any local image as the chat background with a live preview. Choose the pink character icon, its profile-art variant, or any of twelve color variants from the in-app icon picker.
+<details><summary>The five presets</summary>
 
-## Vault and Exports
+Enable Enhanced Animations, then choose a pack: **Quick Snap** is compact and immediate; **Smooth Flow** is calm and critically damped; **Diabolical** is brisk with stronger depth; **Springy** settles gently without overshoot; **Liquid Bounce** is the most elastic, with a controlled overshoot. Presets apply across transitions, dialogs, drawers, and navigation, while reduced-motion and power-saving behavior is preserved.
 
-Search messages, media, links, and filenames already received by IntelGram with an on-device full-text vault and a unified inbox across signed-in accounts. Jump-to-date, conversation statistics, saved moments, and locally observed edit and deletion history are built in.
+</details>
 
-Export selected messages, a chat, or an account to HTML, PDF, Markdown, JSON, or ZIP. Frozen Account Backup streams everything into one AES-256-GCM encrypted archive without leaving plaintext exports behind. Telegram's protected-content and self-destruct restrictions stay enforced throughout.
+#### 🎨 Themes and icons
+
+<details><summary>Themes, backgrounds, and icons</summary>
+
+Browse Telegram's native light and dark theme cards with visual previews, browse cloud themes inside IntelGram, and import `.tdesktop-theme`, `.tdesktop-palette`, or image files through the native file picker. Pick any local image as the chat background with a live preview, tiling, and wide-layout controls. The in-app icon picker offers the pink character icon, its profile-art variant, or twelve color variants.
+
+<p>
+  <img src="branding/icons/character/masters/intelgram-pink-front.png" alt="Pink character" width="32" />
+  <img src="branding/icons/character/masters/intelgram-pink-profile.png" alt="Pink profile" width="32" />
+  <img src="branding/icons/color/Linux/hicolor/256x256/apps/intelgram-square-01-midnight-purple.png" alt="Midnight purple" width="32" />
+  <img src="branding/icons/color/Linux/hicolor/256x256/apps/intelgram-square-02-telegram-blue.png" alt="Telegram blue" width="32" />
+  <img src="branding/icons/color/Linux/hicolor/256x256/apps/intelgram-square-03-deep-navy.png" alt="Deep navy" width="32" />
+  <img src="branding/icons/color/Linux/hicolor/256x256/apps/intelgram-square-04-cyan-teal.png" alt="Cyan teal" width="32" />
+  <img src="branding/icons/color/Linux/hicolor/256x256/apps/intelgram-square-05-indigo.png" alt="Indigo" width="32" />
+  <img src="branding/icons/color/Linux/hicolor/256x256/apps/intelgram-square-06-black-green.png" alt="Black green" width="32" />
+  <img src="branding/icons/color/Linux/hicolor/256x256/apps/intelgram-square-07-crimson.png" alt="Crimson" width="32" />
+  <img src="branding/icons/color/Linux/hicolor/256x256/apps/intelgram-square-08-coral.png" alt="Coral" width="32" />
+  <img src="branding/icons/color/Linux/hicolor/256x256/apps/intelgram-square-09-slate-blue.png" alt="Slate blue" width="32" />
+  <img src="branding/icons/color/Linux/hicolor/256x256/apps/intelgram-square-10-lilac.png" alt="Lilac" width="32" />
+  <img src="branding/icons/color/Linux/hicolor/256x256/apps/intelgram-square-11-white-blue.png" alt="White blue" width="32" />
+  <img src="branding/icons/color/Linux/hicolor/256x256/apps/intelgram-square-12-graphite.png" alt="Graphite" width="32" />
+</p>
+
+</details>
+
+## Vault and Search
+
+Search everything IntelGram has already received, across every signed-in account, without anything leaving your device.
+
+#### 🔎 Search and timeline
+
+<details><summary>What's indexed</summary>
+
+A private SQLite index with full-text search covers received message text, filenames, media types, and links. Search the current account, all accounts, or the unified inbox with clear account labels. Jump to a date in any chat, view conversation statistics, browse compact media history and locally observed edit and deletion history, and save private moments with a title, note, and tags. Protected messages appear only as metadata and jump-back references.
+
+</details>
+
+#### 🗂️ Smart folders and rules
+
+<details><summary>How rules work</summary>
+
+Smart folders filter your chats locally: **Unread from real people**, **Work**, **High priority**, **Needs reply**, and **Spam review**. Rules match a keyword, link, photo, or file on newly indexed messages and can tag, save a moment, mute locally, or send the item to spam review. Unknown senders and suspicious invite links can be routed to local review. Forward queues always open Telegram's native confirmation picker, and protected content can never enter one.
+
+</details>
+
+#### 📝 Private contact notes
+
+<details><summary>Notes, reminders, and snapshots</summary>
+
+Attach private notes, tags, relationship text, and an optional reminder date to any loaded contact, with a local history of note changes. Due reminders show on the **Contacts & Automation** page. The opt-in identity inspector snapshots only public fields already visible to IntelGram: name, usernames, badge flags, and shared-group count.
+
+</details>
+
+#### 💬 Per-chat controls
+
+<details><summary>What you can set per chat</summary>
+
+Set private tags and priority, download mode (Telegram default, manual, Wi-Fi only, or always), a read reminder, a local-only draft preference that prevents that chat's draft from being uploaded, and a local notification mute that never touches Telegram's server-side notification settings.
+
+</details>
+
+## Exports and Backup
+
+#### 📤 Export formats
+
+<details><summary>What an export contains</summary>
+
+Export selected messages, a chat, or an account to HTML, PDF, Markdown, JSON, or ZIP. Account exports include contacts already visible to the account, profile notes and history, identity snapshots, rules and activity, smart-folder policies, moments, and revisions — without exposing host filesystem paths in JSON. Telegram's protected-content and self-destruct restrictions stay enforced throughout.
+
+</details>
+
+#### 🔒 Frozen Account Backup
+
+<details><summary>How the encrypted archive works</summary>
+
+Frozen Account Backup streams the full structured export and permitted downloaded files into one `.intelvault` archive, encrypted with AES-256-GCM and a passphrase you enter (PBKDF2-HMAC-SHA256, 250,000 iterations). No plaintext export files are left behind, and Telegram login keys, session credentials, protected media, and self-destructing content are deliberately excluded.
+
+</details>
+
+## Organized Preferences
+
+IntelGram Preferences groups everything into **Customize**, **Power tools**, and **Client settings**: Local Profile & Collectibles, Appearance & Backgrounds, Glass & Motion, Navigation & Layout, Vault & Search, Contacts & Automation, Export & Backup, and Advanced & Maintenance.
 
 ## Local means local
 
 These controls only change how your own profile is rendered inside this IntelGram installation. They do not change your Telegram display name, photo, bio, username, UID, or collectible ownership, and other Telegram users do not see the local overrides.
+
+## FAQ
+
+<details><summary>Can anyone else see my local profile?</summary>
+
+No. The overrides are visible only in this IntelGram installation. Screenshots will naturally show what IntelGram rendered, but Telegram and other users receive none of these local values.
+
+</details>
+
+<details><summary>Is the Stars top-up a real payment?</summary>
+
+No. It is a local-only simulation: paying credits your on-device balance, with no real money, no payment provider, and no Telegram payment API involved.
+
+</details>
+
+<details><summary>Does IntelGram replace Telegram or AyuGram?</summary>
+
+No. IntelGram uses its own macOS bundle ID, Windows application ID, and Linux desktop ID, so it coexists with a normal AyuGram installation without overwriting it.
+
+</details>
+
+<details><summary>Where do I report a bug or ask a question?</summary>
+
+Open an issue on [GitHub](https://github.com/foolspec/IntelGram/issues), or join [@intelgrams](https://t.me/intelgrams) on Telegram.
+
+</details>
 
 ## Building
 
