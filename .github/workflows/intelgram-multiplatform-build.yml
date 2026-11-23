@@ -804,6 +804,8 @@ jobs:
             -D TDESKTOP_API_HASH=b18441a1ff607e10a989891a5462e627 \
             -D ada_DIR="$ADA_DIR" \
             -D protobuf_DIR="$PROTOBUF_DIR" \
+            -D absl_DIR=/work/protobuf/install/lib/cmake/absl \
+            -D utf8_range_DIR=/work/protobuf/install/lib/cmake/utf8_range \
             -D PROTOBUF_PROTOC_EXECUTABLE=/work/protobuf/install/bin/protoc
           CONTAINER_EOS
 
