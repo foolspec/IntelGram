@@ -226,6 +226,7 @@ jobs:
             throw "Expected two Qt Windows preparation blocks, found $matches"
           }
           $content = $content.Replace($needle, $replacement)
+          $content = $content.Replace('mingw-w64-x86_64-diffutils ^', 'diffutils ^')
           [System.IO.File]::WriteAllText($path, $content, [System.Text.UTF8Encoding]::new($false))
 
       - name: Prepare dependency stage
