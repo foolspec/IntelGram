@@ -10,6 +10,14 @@
 <img src="https://img.shields.io/github/issues-search?query=repo%3Afoolspec%2FIntelGram%20is%3Aopen%20label%3Abug&style=flat&logo=ghostery&logoColor=white&label=New%20Bug&color=fdc12c" alt="New Bug"></a>
 <a href="https://t.me/intelgrams">
 <img src="https://img.shields.io/badge/Telegram-@intelgrams-229ED9?style=flat&logo=telegram" alt="Telegram"></a>
+<a href="https://github.com/foolspec/IntelGram/blob/main/LICENSE">
+<img src="https://img.shields.io/github/license/foolspec/IntelGram?style=flat&color=blueviolet" alt="License"></a>
+<a href="https://github.com/foolspec/IntelGram/commits/main">
+<img src="https://img.shields.io/github/last-commit/foolspec/IntelGram?style=flat&color=ff69b4" alt="Last commit"></a>
+<a href="https://isocpp.org/">
+<img src="https://img.shields.io/badge/language-C%2B%2B-00599C?style=flat&logo=cplusplus&logoColor=white" alt="C++"></a>
+<a href="https://www.qt.io/">
+<img src="https://img.shields.io/badge/framework-Qt_6-41CD52?style=flat&logo=qt&logoColor=white" alt="Qt 6"></a>
 </div>
 
 Imagine opening Telegram and your profile, your Stars balance, and the entire look of the app are exactly how you want them — without changing anything about your account. IntelGram is a Telegram Desktop build, based on AyuGram, focused on local profile customization, local Stars, and private on-device tools. Everything it adds runs on your device only.
