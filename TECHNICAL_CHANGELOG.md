@@ -4,6 +4,38 @@ This file records implementation-level changes to IntelGram's custom layer. Prod
 
 IntelGram product versions advance sequentially from v1. AyuGram Desktop `v6.7.8` is retained below only as upstream source provenance or inside legacy build tags.
 
+## IntelGram v20 Local Stars & Gifts - 2026-11-22
+
+### Source Baseline And Patch
+
+- Upstream source: official AyuGram Desktop `v6.7.8`, commit `b25513a06ff88be0b3f4c928252b56c3da39cec7`, with required submodules.
+- Source commit: `83881572307c8f85802349fb6aa6c4007deec527` on the recovered local implementation branch.
+- Delivery patch: [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch).
+- Compatibility alias: [`ayugram-local-profile-render-overrides.patch`](ayugram-local-profile-render-overrides.patch), byte-for-byte identical.
+- Patch SHA-256: `d0cbbd063c159bfdaa905ca3aeda431a85d4ff4a793db9dc871c5f9a49cd4ed0`.
+- Patch footprint: 108 files, 13,658 insertions, and 684 deletions relative to the pinned source.
+- `Telegram/lib_ui` remains pinned to public fork commit `b9a30917daf2bd8fdc17ccd9682acca178882b7b`.
+
+### Local Stars State
+
+- `AyuSettings` now persists `localStarsBalance`, `localStarsActivity`, and `localStarsCardName` in `tdata/ayu_settings.json` using the existing settings lifecycle.
+- Balance is clamped to `Ayu::kMaxLocalStarsBalance`; activity is capped at `Ayu::kMaxLocalStarsActivityLength` and 40 entries; cardholder names are trimmed and capped at `Ayu::kMaxLocalStarsCardNameLength`.
+- Getters, setters, `value()`/`changes()` producers, `to_json`, and `from_json` follow the existing AyuSettings pattern.
+
+### Local Stars Interface
+
+- `Settings::BuildLocalProfile` gains a **Local Stars & Gifts** subsection with balance readout, Buy Stars, Send a local gift, Transaction history, Reset, and a local-only disclaimer.
+- `LocalStarsCard` is a custom `Ui::RpWidget` that paints a rounded demo Amex card using style-driven dimensions from `ayu_styles.style`; it uses a fixed sample number and a fixed expiry.
+- `ShowLocalStarsBuyBox` offers 50/100/250/500/1000 Star presets, edits the demo cardholder, adds to the local balance, and appends a purchase entry.
+- `ShowLocalStarsGiftBox` offers six collectible-style gifts with local costs, validates the balance, deducts locally, and appends a gift entry with the recipient label.
+- `ShowLocalStarsActivityBox` renders timestamped local history and supports clearing it; Reset restores balance, history, and cardholder to defaults.
+- Activity entries are stored as a compact newline-delimited `date,type,amount,label` string and parsed defensively with bounded input.
+
+### Render-Only Boundary
+
+- No `MTPpayments_*`, `MTPmessages_Send*`, `MTPchannels_*`, or account-update reference was added; the patch validator's forbidden-mutation scan still passes.
+- No new network, card-processing, or payment-provider integration exists. All Stars state lives in the local settings file.
+
 ## IntelGram v19 Exact Telegram Disguise Identity - 2026-08-03
 
 ### Source Baseline And Patch

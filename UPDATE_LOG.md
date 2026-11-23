@@ -1,13 +1,21 @@
 # IntelGram Update Log
 
-## Current Update: IntelGram v19
+## Current Update: IntelGram v20
 
 - Base source: official AyuGram Desktop `v6.7.8` at `b25513a06ff88be0b3f4c928252b56c3da39cec7` with required submodules.
-- Product versioning: IntelGram releases advance sequentially from v1; the current product release is v19, while `v6.7.8` identifies only the upstream AyuGram source.
+- Product versioning: IntelGram releases advance sequentially from v1; the current product release is v20, while `v6.7.8` identifies only the upstream AyuGram source.
 - Product identity: IntelGram on macOS, Windows, and Linux with separate application identifiers.
 - Source delivery: one complete IntelGram patch plus deterministic branding and validation scripts.
 - Build delivery: GitHub Actions packages macOS Apple Silicon, Windows x64, and Linux x64.
 - Build reliability: macOS and Windows dependency preparation uses bounded cache stages, platform cache creation is serialized, installed Qt source trees are pruned, macOS can resume directly from a completed Qt stage, and Windows-only runs carry every dependency stage through to the packaged application.
+- Local Stars wallet: a persistent on-device Stars balance appears in a dedicated **Local Stars & Gifts** subsection under Local Profile with a clear local-only disclaimer.
+- Demo Amex checkout: a rendered sample American Express card with a fixed number, fixed expiry, editable cardholder name, and **DEMO - AMEX - NO REAL PAYMENT** label accompanies 50/100/250/500/1000 Star presets and a simulated purchase flow.
+- Local gift sending: six collectible-style gifts, a recipient label, balance validation, and local deduction replace any real gift transfer API.
+- Local history: timestamped purchases and gifts are recorded on-device, with clear-history and full-reset actions.
+- Payment boundary: no real card details are collected, no payment provider is contacted, and no Telegram payment, reaction, message-send, or gift-transfer API is invoked.
+
+## IntelGram v19 Exact Telegram Disguise Identity
+
 - macOS disguise stability: global-menu refreshes skip the Ghost Mode actions that are intentionally not created in Telegram disguise mode, preventing the window-activation crash reached by opening `@username` links.
 - Username refresh stability: the own-profile QR visibility subscription now retains its peer directly instead of reading a destroyed temporary layout helper.
 - Settings search stability: Vault reminder indexing uses the active session and no longer requires a settings window controller, preventing the previous search shortcut quit.
@@ -54,7 +62,7 @@
 - Local channel showcase: choose a public `@channel` or `t.me` link to render it on your own profile with an explicit **Local showcase** label; lookup is read-only and does not claim ownership, join the channel, grant permissions, or modify Telegram.
 - Local channel workspace: open the showcase as a private local feed, create text posts with optional local-file attachments, edit/delete/pin/copy them, and configure a local title, description, and photo without publishing or modifying a Telegram channel.
 - In-app update log: **IntelGram Preferences -> Update log** opens a bundled native summary without requiring GitHub.
-- Current source patch SHA-256: `619a859553db9e3958cafc18f6ed9f2b62c123c5e31356918c435ec05e2531c7`.
+- Current source patch SHA-256: `d0cbbd063c159bfdaa905ca3aeda431a85d4ff4a793db9dc871c5f9a49cd4ed0`.
 - Privacy boundary: no Telegram profile mutation, contact import, automatic channel join, channel ownership or permission mutation, collectible transaction, or protected-content bypass.
 - Protected content: Restrict Saving Content and self-destructing items remain metadata-only jump-back references; bodies, links, filenames, revisions, and media are excluded from rules, exports, and backups.
 - Branding consistency: product-facing window, settings, version, and notification-preview titles use IntelGram while upstream attribution remains intact.
