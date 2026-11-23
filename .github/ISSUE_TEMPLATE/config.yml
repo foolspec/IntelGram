@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Ask a question
+    url: https://github.com/foolspec/IntelGram/discussions/new/choose
+    about: Questions and discussion live in GitHub Discussions.
+  - name: Telegram channel
+    url: https://t.me/intelgrams
+    about: Join @intelgrams for news and discussion.

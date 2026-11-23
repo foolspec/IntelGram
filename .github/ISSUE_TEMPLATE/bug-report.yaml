@@ -1,0 +1,52 @@
+name: Bug report
+description: Report a problem with IntelGram
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please fill in the details below so the issue can be reproduced.
+  - type: input
+    id: version
+    attributes:
+      label: IntelGram version
+      description: Find it in IntelGram Preferences -> Update log.
+      placeholder: v21
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - macOS (Apple Silicon)
+        - Windows (x64)
+        - Linux (x64)
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you expected to happen, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The exact steps to make the bug happen.
+      placeholder: |
+        1. Open ...
+        2. Click ...
+        3. See the problem
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Screenshots, screen recordings, or extra context.
+    validations:
+      required: false

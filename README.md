@@ -2,7 +2,12 @@
 <a href="#installation">
 <img src="branding/banner.png"></a><br>
 <a href="https://github.com/foolspec/IntelGram/releases/latest">
-<img src="https://img.shields.io/badge/Download-latest-2ea44f?style=flat&logo=github" alt="Download"></a>
+<img src="branding/badges/Download.svg" alt="Download"></a>
+<br>
+<a href="https://github.com/foolspec/IntelGram/discussions/new/choose">
+<img src="https://img.shields.io/github/discussions-search?query=repo%3Afoolspec%2FIntelGram%20is%3Aopen&style=flat&logo=TheConversation&logoColor=white&label=Ask%20Question" alt="Ask Question"></a>
+<a href="https://github.com/foolspec/IntelGram/issues/new?template=bug-report.yaml">
+<img src="https://img.shields.io/github/issues-search?query=repo%3Afoolspec%2FIntelGram%20is%3Aopen%20label%3Abug&style=flat&logo=ghostery&logoColor=white&label=New%20Bug&color=fdc12c" alt="New Bug"></a>
 <a href="https://t.me/intelgrams">
 <img src="https://img.shields.io/badge/Telegram-@intelgrams-229ED9?style=flat&logo=telegram" alt="Telegram"></a>
 </div>
