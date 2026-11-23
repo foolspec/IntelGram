@@ -18,6 +18,8 @@
 <img src="https://img.shields.io/badge/language-C%2B%2B-00599C?style=flat&logo=cplusplus&logoColor=white" alt="C++"></a>
 <a href="https://www.qt.io/">
 <img src="https://img.shields.io/badge/framework-Qt_6-41CD52?style=flat&logo=qt&logoColor=white" alt="Qt 6"></a>
+<a href="https://github.com/foolspec/IntelGram/blob/main/CONTRIBUTING.md">
+<img src="https://img.shields.io/badge/PRs-welcome-brightgreen?style=flat" alt="PRs welcome"></a>
 </div>
 
 Imagine opening Telegram and your profile, your Stars balance, and the entire look of the app are exactly how you want them — without changing anything about your account. IntelGram is a Telegram Desktop build, based on AyuGram, focused on local profile customization, local Stars, and private on-device tools. Everything it adds runs on your device only.
@@ -29,9 +31,11 @@ New in v21: local Stars moved into Telegram's native My Stars screen, and top-up
 [![Release](https://img.shields.io/github/v/release/foolspec/IntelGram?display_name=tag&style=flat&color=2ea44f)](https://github.com/foolspec/IntelGram/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/foolspec/IntelGram/total?style=flat&color=fb9233)](https://github.com/foolspec/IntelGram/releases)
 
-[![Download for macOS](https://img.shields.io/badge/macOS-Apple_Silicon_DMG-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-macOS-Apple-Silicon.dmg)<br>
-[![Download for Windows](https://img.shields.io/badge/Windows-x64_ZIP-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Windows-x64.zip)<br>
-[![Download for Linux](https://img.shields.io/badge/Linux-x64_tar.gz-E95420?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Linux-x64.tar.gz)
+[![Download for macOS](https://img.shields.io/badge/DOWNLOAD_FOR_MAC_%28APPLE_SILICON%29-DMG-229ED9?style=for-the-badge&labelColor=000000&logo=apple&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-macOS-Apple-Silicon.dmg)<br>
+[![Download for Windows](https://img.shields.io/badge/DOWNLOAD_FOR_WINDOWS-ZIP-0078D6?style=for-the-badge&labelColor=000000&logo=windows&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Windows-x64.zip)<br>
+[![Download for Linux](https://img.shields.io/badge/DOWNLOAD_FOR_LINUX-TAR.GZ-E95420?style=for-the-badge&labelColor=000000&logo=linux&logoColor=white)](https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Linux-x64.tar.gz)
+
+[latest release](https://github.com/foolspec/IntelGram/releases/latest) · macOS: Apple Silicon .dmg · Windows: x64 .zip · Linux: x64 .tar.gz · [all releases](https://github.com/foolspec/IntelGram/releases)
 
 1. Download the build for your platform above.
 
@@ -271,6 +275,23 @@ More questions are answered in [Discussions](https://github.com/foolspec/IntelGr
 ## Building
 
 IntelGram is built from the official AyuGram Desktop `v6.7.8` source, with the complete implementation in [`intelgram-local-profile-render-overrides.patch`](intelgram-local-profile-render-overrides.patch). Every release includes SHA-256 checksums and platform validation notes. The [feature guide](FEATURE_GUIDE.md) walks through every workflow, and [FEATURES.md](FEATURES.md) documents the full feature surface.
+
+## Powered By
+
+[![AyuGram](https://img.shields.io/badge/AyuGram-v6.7.8-229ED9?style=flat&logo=telegram&logoColor=white)](https://github.com/AyuGram/AyuGramDesktop)
+[![Telegram Desktop](https://img.shields.io/badge/Telegram_Desktop-upstream-0088cc?style=flat)](https://github.com/telegramdesktop/tdesktop)
+[![Qt](https://img.shields.io/badge/Qt-6.2.13-41CD52?style=flat&logo=qt&logoColor=white)](https://www.qt.io/)
+[![CMake](https://img.shields.io/badge/CMake-build-064F8C?style=flat&logo=cmake&logoColor=white)](https://cmake.org/)
+[![Breakpad](https://img.shields.io/badge/Breakpad-crash_reporting-9E9E9E?style=flat)](https://chromium.googlesource.com/breakpad/breakpad/)
+
+| Service | Purpose |
+| ------- | ------- |
+| AyuGram Desktop (v6.7.8) | The Telegram client IntelGram is built on |
+| Telegram Desktop | The upstream open-source client |
+| Qt 6 (6.2.13) | The UI framework |
+| C++ | The implementation language |
+| CMake | The build system |
+| Breakpad | Crash reporting |
 
 ## Credits
 
