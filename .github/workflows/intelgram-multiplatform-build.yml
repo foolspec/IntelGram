@@ -728,12 +728,21 @@ jobs:
           docker run --rm \
             -u "$(id -u)" \
             -e CMAKE_BUILD_PARALLEL_LEVEL=3 \
-            -v "$GITHUB_WORKSPACE/tdesktop:/usr/src/tdesktop" \
+            -v "$GITHUB_WORKSPACE/tdesktop:/work/tdesktop" \
             ghcr.io/telegramdesktop/tdesktop/centos_env:latest \
-            /usr/src/tdesktop/Telegram/build/docker/centos_env/build.sh \
-            -D TDESKTOP_API_ID=2040 \
-            -D TDESKTOP_API_HASH=b18441a1ff607e10a989891a5462e627 \
-            -D DESKTOP_APP_USE_PACKAGED=OFF
+            bash -euxo pipefail -c '
+              if [ ! -d /usr/src/tdesktop/Libraries ]; then
+                echo "centos_env image is missing /usr/src/tdesktop/Libraries" >&2
+                exit 1
+              fi
+              rm -rf /work/tdesktop/Libraries
+              ln -s /usr/src/tdesktop/Libraries /work/tdesktop/Libraries
+              cd /work/tdesktop
+              ./Telegram/build/docker/centos_env/build.sh \
+                -D TDESKTOP_API_ID=2040 \
+                -D TDESKTOP_API_HASH=b18441a1ff607e10a989891a5462e627 \
+                -D DESKTOP_APP_USE_PACKAGED=OFF
+            '
 
       - name: Verify, launch, and package
         run: |
