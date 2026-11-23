@@ -1,0 +1,22 @@
+name: IntelGram CentOS Image Inspect
+
+on:
+  workflow_dispatch:
+
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Inspect centos_env image
+        run: |
+          set -euxo pipefail
+          docker pull ghcr.io/telegramdesktop/tdesktop/centos_env:latest
+          docker run --rm ghcr.io/telegramdesktop/tdesktop/centos_env:latest \
+            bash -euxo pipefail -c '
+              echo "=== ada files ==="
+              find / -xdev \( -iname "ada.h" -o -iname "libada*" -o -iname "adaConfig.cmake" -o -iname "ada-config.cmake" \) 2>/dev/null | sort | sed -n "1,120p"
+              echo "=== /usr/local tree ==="
+              find /usr/local -maxdepth 3 -type d 2>/dev/null | sort | sed -n "1,160p"
+              echo "=== cmake package dirs ==="
+              find /usr -type d -iname "*ada*" 2>/dev/null | sort | sed -n "1,80p"
+            '
