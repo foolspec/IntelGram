@@ -4,17 +4,17 @@
 </div>
 
 <div align="center">
-<img src="branding/badges/Trending.svg" alt="GitHub Trending">
-<img src="branding/badges/TrendShift.svg" alt="TrendShift">
+<img src="branding/badges/Trending.svg" alt="GitHub Trending" height="55">
+<img src="branding/badges/TrendShift.svg" alt="TrendShift" height="55">
 </div>
 
 <div align="center">
 <a href="https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-macOS-Apple-Silicon.dmg">
-<img src="branding/badges/Download-macOS.svg" alt="Download for macOS"></a>
+<img src="branding/badges/Download-macOS.svg" alt="Download for macOS" height="32"></a>
 <a href="https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Windows-x64.zip">
-<img src="branding/badges/Download-Windows.svg" alt="Download for Windows"></a>
+<img src="branding/badges/Download-Windows.svg" alt="Download for Windows" height="32"></a>
 <a href="https://github.com/foolspec/IntelGram/releases/latest/download/IntelGram-Linux-x64.tar.gz">
-<img src="branding/badges/Download-Linux.svg" alt="Download for Linux"></a>
+<img src="branding/badges/Download-Linux.svg" alt="Download for Linux" height="32"></a>
 </div>
 
 <div align="center">
