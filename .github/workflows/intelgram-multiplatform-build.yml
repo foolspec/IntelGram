@@ -62,7 +62,7 @@ env:
   SOURCE_TAG: v6.7.8
   RELEASE_NAME: Local Gifts, Premium & Business
   RELEASE_SLUG: local-gifts-premium-and-business
-  PATCH_SHA256: e5558bbfc20d6cdfa454e83f75d9a01b4d4a8ce796b73430a45aee5bb54ad71b
+  PATCH_SHA256: e232f604bc48f525ac4b918455515f1986e283e0e90bfa080cadf890a1918380
   LIB_UI_COMMIT: b9a30917daf2bd8fdc17ccd9682acca178882b7b
   LIB_UI_REF: codex/intelgram-liquid-bounce-20260726
 
