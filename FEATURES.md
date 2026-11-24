@@ -113,11 +113,17 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 
 - Shows the on-device Stars balance on Telegram's native **My Stars** row in Settings.
 - Opens Telegram's native **My Stars** screen for balance and top-up, with the same 15 Stars packages and prices Telegram offers.
-- Checks out through Telegram's native payment panel, with the demo American Express card already saved as the payment method.
+- Checks out through Telegram's native payment panel, with the demo American Express card already saved as the payment method and the Stars cover thumbnail shown.
 - Renders a demo American Express card with a fixed sample number, fixed expiry, and an editable cardholder name.
 - Shows an explicit **DEMO - AMEX - NO REAL PAYMENT** label on the card.
 - Adds the chosen amount to the local balance after a simulated checkout, without asking for real card details.
-- Never contacts a payment provider or Telegram's payment APIs.
+- Gifts Stars to friends through Telegram's native gift flow, deducting from the local balance with the native sent confirmation.
+- Buys and sends gifts with local Stars at Telegram's native star prices, including the optional upgrade fee.
+- Keeps up to 200 locally owned gifts in the profile Gifts tab, in Telegram's native grid with detail popups and All Gifts / Collectibles filtering.
+- Tracks local Stars proceeds with available, total, and lifetime balances, the 21-day maturity rule, a local Fragment-style withdrawal flow, and a statistics view.
+- Offers local Earn Stars options from Mini Apps: Demo Quest, Demo Game, and Demo Ad credit 50, 25, and 10 Stars.
+- Simulates Telegram Premium and Business purchases end to end: the native plan picker and checkout panel, and afterwards the Premium badge, subscribed state, and Business feature screens appear as if the account owns them.
+- Never contacts a payment provider or Telegram's payment, gift-transfer, or subscription APIs.
 
 ## Universal Message Vault
 

@@ -1114,7 +1114,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/Telegram/Resources/langs/lang.strings b/Telegram/Resources/langs/lang.strings
-index 7380587e7..2159c930b 100644
+index 7380587e7..6c8c18e13 100644
 --- a/Telegram/Resources/langs/lang.strings
 +++ b/Telegram/Resources/langs/lang.strings
 @@ -7971,14 +7971,60 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -1223,7 +1223,7 @@ index 7380587e7..2159c930b 100644
  "ayu_CategoriesHeader" = "Categories";
  "ayu_SupportHeader" = "Support";
  "ayu_SupportDescription1" = "Support Development";
-@@ -8070,8 +8135,175 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8070,8 +8135,183 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SupportBoxReceiveBadgeInfo" = "After payment verification, you will receive a unique badge that will be displayed on your profile and visible to other users.";
  "ayu_CrashReporting" = "Crash Reporting";
  "ayu_CrashReportingDescription" = "When this option is enabled, you'll be prompted to send a report after the app crashes. You can decide whether to send it or not.";
@@ -1393,6 +1393,14 @@ index 7380587e7..2159c930b 100644
 +"ayu_LocalStarsResetDone" = "Local Stars reset.";
 +"ayu_LocalStarsPurchaseEntry" = "Added {amount} Stars via demo Amex";
 +"ayu_LocalStarsGiftEntry" = "Sent {gift} to {recipient}";
++"ayu_LocalEarnAbout" = "Simulated mini-app rewards. Stars you earn here are added to your local balance only.";
++"ayu_LocalEarnQuest" = "Demo Quest";
++"ayu_LocalEarnGame" = "Demo Game";
++"ayu_LocalEarnAd" = "Demo Ad";
++"ayu_LocalStarsWithdrawConfirm#one" = "Withdraw {count} Star from your available balance? This is a local simulation — no real withdrawal takes place.";
++"ayu_LocalStarsWithdrawConfirm#other" = "Withdraw {count} Stars from your available balance? This is a local simulation — no real withdrawal takes place.";
++"ayu_LocalStarsWithdrawn#one" = "{count} Star withdrawn.";
++"ayu_LocalStarsWithdrawn#other" = "{count} Stars withdrawn.";
 +"ayu_LocalProfileCredit" = "IntelGram local profile tools by fool.";
  "ayu_ResetSettings" = "Reset Settings";
 -"ayu_ResetSettingsConfirmation" = "Are you sure you want to reset **all** AyuGram preferences to their defaults?";
@@ -1400,7 +1408,7 @@ index 7380587e7..2159c930b 100644
  "ayu_DisableColorfulCover" = "Disable adaptive color";
  "ayu_EnableColorfulCover" = "Enable adaptive color";
  "ayu_CustomizationHeader" = "Customization";
-@@ -8130,14 +8362,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8130,14 +8370,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SettingsBiggerWindow" = "Bigger Window";
  "ayu_SettingsIncreaseWebviewHeight" = "Increase Content Height";
  "ayu_SettingsIncreaseWebviewWidth" = "Increase Content Width";
@@ -1417,7 +1425,7 @@ index 7380587e7..2159c930b 100644
  "ayu_ImportDataDescription" = "It will replace the current database.";
  "ayu_ImportDataConfirm" = "Yes, replace existing";
  "ayu_ImportDataCancel" = "No, close window";
-@@ -8204,7 +8436,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8204,7 +8444,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_FiltersClearPopupAltActionText" = "Clear unknown";
  "ayu_AppIconHeader" = "App Icon";
  "ayu_IconDefault" = "Default";
@@ -1426,7 +1434,7 @@ index 7380587e7..2159c930b 100644
  "ayu_IconDiscord" = "Discord";
  "ayu_IconSpotify" = "Spotify";
  "ayu_IconExtera" = "extera";
-@@ -8214,8 +8446,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8214,8 +8454,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_IconAyuTyan" = "AyuTyan";
  "ayu_WALMode" = "Enable WAL mode";
  "ayu_PushNotificationCount" = "FCM notifications received";
@@ -1437,7 +1445,7 @@ index 7380587e7..2159c930b 100644
  "ayu_TelegramCacheDatabase" = "Telegram Messages Database";
  "ayu_ConfirmationsTitle" = "Confirmations";
  "ayu_StickerConfirmation" = "For Stickers";
-@@ -8288,9 +8520,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8288,9 +8528,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_SuggestGhostModeStoryText" = "Do you want to enable **Ghost Mode** before viewing the story?";
  "ayu_SuggestGhostModeStoryActionTextYes" = "Yes";
  "ayu_SuggestGhostModeStoryActionTextNo" = "No";
@@ -1449,7 +1457,7 @@ index 7380587e7..2159c930b 100644
  "ayu_HideNextViewsDescriptionAyu" = "Hide my views forever, until Ghost Mode is disabled.";
  "ayu_EnableGhostModeStories" = "Enable Ghost Mode";
  "ayu_GhostModeIsActive" = "Ghost Mode is Active";
-@@ -8355,28 +8587,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -8355,28 +8595,156 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  "ayu_ContextCopyID" = "Copy ID";
  "ayu_IDCopiedToast" = "ID copied to clipboard.";
  "ayu_ContextHideMessage" = "Hide";
@@ -1628,6 +1636,26 @@ index 3b1f5fc04..a09cc249b 100644
          <file alias="art/ayu/win95/app.png">../../art/ayu/win95/app.png</file>
          <file alias="art/ayu/win95/app_icon.ico">../../art/ayu/win95/app_icon.ico</file>
          <file alias="art/ayu/yaplus/app.svg">../../art/ayu/yaplus/app.svg</file>
+diff --git a/Telegram/SourceFiles/api/api_premium_option.cpp b/Telegram/SourceFiles/api/api_premium_option.cpp
+index 3acd9aca2..7ac532441 100644
+--- a/Telegram/SourceFiles/api/api_premium_option.cpp
++++ b/Telegram/SourceFiles/api/api_premium_option.cpp
+@@ -28,6 +28,7 @@ Data::PremiumSubscriptionOption CreateSubscriptionOption(
+ 	const auto hasDiscount = (discount > 0);
+ 	return {
+ 		.months = months,
++		.amount = amount,
+ 		.duration = Ui::FormatTTL(months * 86400 * 31),
+ 		.discount = hasDiscount
+ 			? QString::fromUtf8("\xe2\x88\x92%1%").arg(discount)
+@@ -43,6 +44,7 @@ Data::PremiumSubscriptionOption CreateSubscriptionOption(
+ 		.costPerYear = Ui::FillAmountAndCurrency(
+ 			int64(base::SafeRound(amount / float64(months / 12.))),
+ 			currency),
++		.currency = currency,
+ 		.botUrl = botUrl,
+ 	};
+ }
 diff --git a/Telegram/SourceFiles/api/api_views.cpp b/Telegram/SourceFiles/api/api_views.cpp
 index 54e1b7e85..b9cce3683 100644
 --- a/Telegram/SourceFiles/api/api_views.cpp
@@ -1724,7 +1752,7 @@ index 2fa8a2a3f..2c0ecb5a4 100644
  	initWorker();
  	initRCManager();
 diff --git a/Telegram/SourceFiles/ayu/ayu_settings.cpp b/Telegram/SourceFiles/ayu/ayu_settings.cpp
-index 2280020ce..856da544a 100644
+index 2280020ce..0722b2a7e 100644
 --- a/Telegram/SourceFiles/ayu/ayu_settings.cpp
 +++ b/Telegram/SourceFiles/ayu/ayu_settings.cpp
 @@ -11,6 +11,7 @@
@@ -1872,7 +1900,7 @@ index 2280020ce..856da544a 100644
  void AyuSettings::setRemoveMessageTail(bool val) {
  	if (_removeMessageTail.current() == val) return;
  	_removeMessageTail = val;
-@@ -681,6 +798,176 @@ void AyuSettings::setLocalPremium(bool val) {
+@@ -681,6 +798,197 @@ void AyuSettings::setLocalPremium(bool val) {
  	save();
  }
  
@@ -2046,10 +2074,31 @@ index 2280020ce..856da544a 100644
 +	save();
 +}
 +
++void AyuSettings::setLocalGifts(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalGifts(val);
++	if (_localGifts.current() == normalized) return;
++	_localGifts = normalized;
++	save();
++}
++
++void AyuSettings::setLocalStarsEarnings(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalStarsEarnings(val);
++	if (_localStarsEarnings.current() == normalized) return;
++	_localStarsEarnings = normalized;
++	save();
++}
++
++void AyuSettings::setLocalStarsWithdrawn(int val) {
++	const auto bounded = std::clamp(val, 0, Ayu::kMaxLocalStarsBalance);
++	if (_localStarsWithdrawn.current() == bounded) return;
++	_localStarsWithdrawn = bounded;
++	save();
++}
++
  void AyuSettings::setShowChannelReactions(bool val) {
  	if (_showChannelReactions.current() == val) return;
  	_showChannelReactions = val;
-@@ -699,6 +986,12 @@ void AyuSettings::setShowPrivateChatReactions(bool val) {
+@@ -699,6 +1007,12 @@ void AyuSettings::setShowPrivateChatReactions(bool val) {
  	save();
  }
  
@@ -2062,7 +2111,7 @@ index 2280020ce..856da544a 100644
  void AyuSettings::setAppIcon(const QString &val) {
  	if (_appIcon.current() == val) return;
  	_appIcon = val;
-@@ -1080,12 +1373,55 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
+@@ -1080,12 +1394,58 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
  		{"increaseWebviewHeight", s._increaseWebviewHeight.current()},
  		{"increaseWebviewWidth", s._increaseWebviewWidth.current()},
  		{"materialSwitches", s._materialSwitches.current()},
@@ -2111,6 +2160,9 @@ index 2280020ce..856da544a 100644
 +		{"localStarsBalance", s._localStarsBalance.current()},
 +		{"localStarsActivity", s._localStarsActivity.current()},
 +		{"localStarsCardName", s._localStarsCardName.current()},
++		{"localGifts", s._localGifts.current()},
++		{"localStarsEarnings", s._localStarsEarnings.current()},
++		{"localStarsWithdrawn", s._localStarsWithdrawn.current()},
  		{"showChannelReactions", s._showChannelReactions.current()},
  		{"showGroupReactions", s._showGroupReactions.current()},
  		{"showPrivateChatReactions", s._showPrivateChatReactions.current()},
@@ -2118,7 +2170,7 @@ index 2280020ce..856da544a 100644
  		{"appIcon", s._appIcon.current()},
  		{"simpleQuotesAndReplies", s._simpleQuotesAndReplies.current()},
  		{"hideFastShare", s._hideFastShare.current()},
-@@ -1180,12 +1516,111 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
+@@ -1180,12 +1540,121 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
  	s._increaseWebviewHeight = j.value("increaseWebviewHeight", defaults._increaseWebviewHeight.current());
  	s._increaseWebviewWidth = j.value("increaseWebviewWidth", defaults._increaseWebviewWidth.current());
  	s._materialSwitches = j.value("materialSwitches", defaults._materialSwitches.current());
@@ -2223,6 +2275,16 @@ index 2280020ce..856da544a 100644
 +		"localStarsCardName",
 +		defaults._localStarsCardName.current()).trimmed().left(
 +			Ayu::kMaxLocalStarsCardNameLength);
++	s._localGifts = Ayu::NormalizeLocalGifts(j.value(
++		"localGifts",
++		defaults._localGifts.current()));
++	s._localStarsEarnings = Ayu::NormalizeLocalStarsEarnings(j.value(
++		"localStarsEarnings",
++		defaults._localStarsEarnings.current()));
++	s._localStarsWithdrawn = std::clamp(
++		j.value("localStarsWithdrawn", defaults._localStarsWithdrawn.current()),
++		0,
++		Ayu::kMaxLocalStarsBalance);
  	s._showChannelReactions = j.value("showChannelReactions", defaults._showChannelReactions.current());
  	s._showGroupReactions = j.value("showGroupReactions", defaults._showGroupReactions.current());
  	s._showPrivateChatReactions = j.value("showPrivateChatReactions", defaults._showPrivateChatReactions.current());
@@ -2231,7 +2293,7 @@ index 2280020ce..856da544a 100644
  	s._simpleQuotesAndReplies = j.value("simpleQuotesAndReplies", defaults._simpleQuotesAndReplies.current());
  	s._hideFastShare = j.value("hideFastShare", defaults._hideFastShare.current());
 diff --git a/Telegram/SourceFiles/ayu/ayu_settings.h b/Telegram/SourceFiles/ayu/ayu_settings.h
-index 97a043921..5a2d5859c 100644
+index 97a043921..c5ec23572 100644
 --- a/Telegram/SourceFiles/ayu/ayu_settings.h
 +++ b/Telegram/SourceFiles/ayu/ayu_settings.h
 @@ -51,6 +51,24 @@ enum class SendWithoutSoundOption {
@@ -2284,7 +2346,7 @@ index 97a043921..5a2d5859c 100644
  class GhostModeAccountSettings {
  public:
  	GhostModeAccountSettings();
-@@ -288,12 +324,55 @@ public:
+@@ -288,12 +324,58 @@ public:
  	[[nodiscard]] bool increaseWebviewHeight() const { return _increaseWebviewHeight.current(); }
  	[[nodiscard]] bool increaseWebviewWidth() const { return _increaseWebviewWidth.current(); }
  	[[nodiscard]] bool materialSwitches() const { return _materialSwitches.current(); }
@@ -2333,6 +2395,9 @@ index 97a043921..5a2d5859c 100644
 +	[[nodiscard]] int localStarsBalance() const { return _localStarsBalance.current(); }
 +	[[nodiscard]] const QString &localStarsActivity() const { return _localStarsActivity.current(); }
 +	[[nodiscard]] const QString &localStarsCardName() const { return _localStarsCardName.current(); }
++	[[nodiscard]] const QString &localGifts() const { return _localGifts.current(); }
++	[[nodiscard]] const QString &localStarsEarnings() const { return _localStarsEarnings.current(); }
++	[[nodiscard]] int localStarsWithdrawn() const { return _localStarsWithdrawn.current(); }
  	[[nodiscard]] bool showChannelReactions() const { return _showChannelReactions.current(); }
  	[[nodiscard]] bool showGroupReactions() const { return _showGroupReactions.current(); }
  	[[nodiscard]] bool showPrivateChatReactions() const { return _showPrivateChatReactions.current(); }
@@ -2340,7 +2405,7 @@ index 97a043921..5a2d5859c 100644
  	[[nodiscard]] const QString &appIcon() const { return _appIcon.current(); }
  	[[nodiscard]] bool simpleQuotesAndReplies() const { return _simpleQuotesAndReplies.current(); }
  	[[nodiscard]] bool hideFastShare() const { return _hideFastShare.current(); }
-@@ -372,12 +451,55 @@ public:
+@@ -372,12 +454,58 @@ public:
  	void setIncreaseWebviewHeight(bool val);
  	void setIncreaseWebviewWidth(bool val);
  	void setMaterialSwitches(bool val);
@@ -2389,6 +2454,9 @@ index 97a043921..5a2d5859c 100644
 +	void setLocalStarsBalance(int val);
 +	void setLocalStarsActivity(const QString &val);
 +	void setLocalStarsCardName(const QString &val);
++	void setLocalGifts(const QString &val);
++	void setLocalStarsEarnings(const QString &val);
++	void setLocalStarsWithdrawn(int val);
  	void setShowChannelReactions(bool val);
  	void setShowGroupReactions(bool val);
  	void setShowPrivateChatReactions(bool val);
@@ -2396,7 +2464,7 @@ index 97a043921..5a2d5859c 100644
  	void setAppIcon(const QString &val);
  	void setSimpleQuotesAndReplies(bool val);
  	void setHideFastShare(bool val);
-@@ -479,18 +601,103 @@ public:
+@@ -479,18 +607,109 @@ public:
  	[[nodiscard]] rpl::producer<bool> increaseWebviewWidthChanges() const { return _increaseWebviewWidth.changes(); }
  	[[nodiscard]] rpl::producer<bool> materialSwitchesValue() const { return _materialSwitches.value(); }
  	[[nodiscard]] rpl::producer<bool> materialSwitchesChanges() const { return _materialSwitches.changes(); }
@@ -2489,6 +2557,12 @@ index 97a043921..5a2d5859c 100644
 +	[[nodiscard]] rpl::producer<QString> localStarsActivityChanges() const { return _localStarsActivity.changes(); }
 +	[[nodiscard]] rpl::producer<QString> localStarsCardNameValue() const { return _localStarsCardName.value(); }
 +	[[nodiscard]] rpl::producer<QString> localStarsCardNameChanges() const { return _localStarsCardName.changes(); }
++	[[nodiscard]] rpl::producer<QString> localGiftsValue() const { return _localGifts.value(); }
++	[[nodiscard]] rpl::producer<QString> localGiftsChanges() const { return _localGifts.changes(); }
++	[[nodiscard]] rpl::producer<QString> localStarsEarningsValue() const { return _localStarsEarnings.value(); }
++	[[nodiscard]] rpl::producer<QString> localStarsEarningsChanges() const { return _localStarsEarnings.changes(); }
++	[[nodiscard]] rpl::producer<int> localStarsWithdrawnValue() const { return _localStarsWithdrawn.value(); }
++	[[nodiscard]] rpl::producer<int> localStarsWithdrawnChanges() const { return _localStarsWithdrawn.changes(); }
  	[[nodiscard]] rpl::producer<bool> showChannelReactionsValue() const { return _showChannelReactions.value(); }
  	[[nodiscard]] rpl::producer<bool> showChannelReactionsChanges() const { return _showChannelReactions.changes(); }
  	[[nodiscard]] rpl::producer<bool> showGroupReactionsValue() const { return _showGroupReactions.value(); }
@@ -2500,7 +2574,7 @@ index 97a043921..5a2d5859c 100644
  	[[nodiscard]] rpl::producer<QString> appIconValue() const { return _appIcon.value(); }
  	[[nodiscard]] rpl::producer<QString> appIconChanges() const { return _appIcon.changes(); }
  	[[nodiscard]] rpl::producer<bool> simpleQuotesAndRepliesValue() const { return _simpleQuotesAndReplies.value(); }
-@@ -633,12 +840,55 @@ private:
+@@ -633,12 +852,58 @@ private:
  	rpl::variable<bool> _increaseWebviewHeight = false;
  	rpl::variable<bool> _increaseWebviewWidth = false;
  	rpl::variable<bool> _materialSwitches = true;
@@ -2549,6 +2623,9 @@ index 97a043921..5a2d5859c 100644
 +	rpl::variable<int> _localStarsBalance = 0;
 +	rpl::variable<QString> _localStarsActivity;
 +	rpl::variable<QString> _localStarsCardName;
++	rpl::variable<QString> _localGifts;
++	rpl::variable<QString> _localStarsEarnings;
++	rpl::variable<int> _localStarsWithdrawn = 0;
  	rpl::variable<bool> _showChannelReactions = true;
  	rpl::variable<bool> _showGroupReactions = true;
  	rpl::variable<bool> _showPrivateChatReactions = true;
@@ -5228,7 +5305,7 @@ index 762bd564c..1812ad0cf 100644
  void loadAppIco();
  QString appIcoPath();
 diff --git a/Telegram/SourceFiles/ayu/ui/ayu_styles.style b/Telegram/SourceFiles/ayu/ui/ayu_styles.style
-index 66059b446..f1d0ffdaf 100644
+index 66059b446..29dea0703 100644
 --- a/Telegram/SourceFiles/ayu/ui/ayu_styles.style
 +++ b/Telegram/SourceFiles/ayu/ui/ayu_styles.style
 @@ -18,6 +18,12 @@ iconPickerSelectedRounding: 12px;
@@ -5244,18 +5321,6 @@ index 66059b446..f1d0ffdaf 100644
  recentStickersLimitPadding: margins(22px, 4px, 22px, 8px);
  imageViewPadding: margins(22px, 10px, 22px, 10px);
  imageViewInnerPadding: margins(16px, 16px, 16px, 16px);
-@@ -29,6 +35,11 @@ stickerRoundingSize: 5px;
- 
- messageShotPadding: 4px;
- 
-+localStarsCardWidth: 320px;
-+localStarsCardHeight: 200px;
-+localStarsCardRounding: 16px;
-+localStarsCardPadding: margins(22px, 20px, 22px, 20px);
-+
- topBarAdmins: IconButton {
- 	width: 40px;
- 	height: topBarHeight;
 diff --git a/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp b/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp
 index 8fceff22c..ea1ec7a06 100644
 --- a/Telegram/SourceFiles/ayu/ui/context_menu/context_menu.cpp
@@ -8719,10 +8784,10 @@ index a4b1e7ad4..9e4d787a7 100644
  	builder.addSkip();
  }
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-index 929cf4609..082c88e95 100644
+index 929cf4609..473f76287 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-@@ -6,33 +6,58 @@
+@@ -6,33 +6,51 @@
  // Copyright @Radolyn, 2026
  #include "ayu/ui/settings/settings_other.h"
  
@@ -8770,43 +8835,54 @@ index 929cf4609..082c88e95 100644
  #include "window/themes/window_theme.h"
 +#include "window/window_session_controller.h"
 +
-+#include "styles/style_ayu_styles.h"
 +#include "styles/style_boxes.h"
 +#include "styles/style_layers.h"
 +#include "styles/style_menu_icons.h"
 +#include "styles/style_settings.h"
-+#include "ui/painter.h"
-+#include "ui/rp_widget.h"
-+#include "ui/widgets/labels.h"
-+
-+#include <QtCore/QDateTime>
-+#include <QtCore/QStringList>
-+#include <QtGui/QLinearGradient>
-+#include <QPointer>
-+#include <QRegularExpression>
  
 -#include <QDesktopServices>
 -#include <QGuiApplication>
 -#include <QSvgRenderer>
-+#include <array>
++#include <QtCore/QStringList>
++#include <QPointer>
++#include <QRegularExpression>
++
 +#include <vector>
  
  namespace Settings {
  
-@@ -41,144 +66,361 @@ using namespace AyuBuilder;
+@@ -41,162 +59,1179 @@ using namespace AyuBuilder;
  
  namespace {
  
 -struct Asset {
 -	QString icon;
 -	QColor background;
-+constexpr auto kLocalStarsActivityEntries = 40;
++void BuildCrashReporting(SectionBuilder &builder, AyuSectionBuilder &ayu) {
++#ifndef TDESKTOP_DISABLE_AUTOUPDATE
++	builder.addSubsectionTitle(tr::ayu_DiagnosticsHeader());
 +
-+struct LocalStarsEntry {
-+	int date = 0;
-+	bool gift = false;
-+	int amount = 0;
-+	QString label;
++	ayu.addSettingToggle({
++		.id = u"ayu/crashReporting"_q,
++		.altIds = { u"ayu/crashlytics"_q },
++		.title = tr::ayu_CrashReporting(),
++		.getter = &AyuSettings::crashReporting,
++		.setter = &AyuSettings::setCrashReporting,
++		.icon = { &st::menuIconReport },
++	});
++	builder.addSkip();
++	builder.addDividerText(tr::ayu_CrashReportingDescription());
++#endif
++}
++
++enum class LocalGiftTarget {
++	Featured,
++	Pinned,
++};
++
++struct LocalGiftCollection {
++	QString title;
++	QString slug;
  };
  
 -Asset getAsset(const QString &name) {
@@ -8814,93 +8890,37 @@ index 929cf4609..082c88e95 100644
 -	const auto normalized = name.toLower();
 -	QString icon = QString(":/gui/icons/ayu/donates/%1.svg").arg(normalized);
 -	QColor background = isNightMode ? QColor(0xEEEEEE) : QColor(0x242B2C);
-+struct LocalStarsGiftOption {
-+	QString name;
-+	int cost = 0;
++struct LocalGiftBrowserState {
++	rpl::variable<Ui::GiftsDescriptor> gifts;
++	std::vector<Info::PeerGifts::GiftDescriptor> items;
++	std::vector<LocalGiftCollection> collections;
++	std::unique_ptr<Api::PremiumGiftCodeOptions> catalog;
++	rpl::lifetime catalogLifetime;
++	int nextNumber = 1;
++	bool loading = false;
++	bool exhausted = false;
 +};
 +
-+QString CleanLocalStarsLabel(QString label) {
-+	return label.replace(',', ' ').replace('\n', ' ').trimmed();
-+}
++constexpr auto kLocalGiftBrowserPageSize = 12;
 +
-+QString SerializeLocalStarsActivity(
-+		const std::vector<LocalStarsEntry> &entries) {
-+	auto lines = QStringList();
-+	for (const auto &entry : entries) {
-+		lines.push_back(QString("%1,%2,%3,%4")
-+			.arg(entry.date)
-+			.arg(entry.gift ? 1 : 0)
-+			.arg(entry.amount)
-+			.arg(CleanLocalStarsLabel(entry.label)));
-+	}
-+	return lines.join('\n');
-+}
-+
-+std::vector<LocalStarsEntry> ParseLocalStarsActivity(const QString &raw) {
-+	auto result = std::vector<LocalStarsEntry>();
-+	for (const auto &line : raw.split('\n', Qt::SkipEmptyParts)) {
-+		const auto parts = line.split(',', Qt::KeepEmptyParts);
-+		if (parts.size() != 4) {
-+			continue;
-+		}
-+		auto ok = false;
-+		const auto date = parts[0].toInt(&ok);
-+		if (!ok) {
-+			continue;
-+		}
-+		const auto giftValue = parts[1].toInt(&ok);
-+		if (!ok) {
-+			continue;
-+		}
-+		const auto amount = parts[2].toInt(&ok);
-+		if (!ok || amount < 0) {
-+			continue;
-+		}
-+		result.push_back({ date, giftValue == 1, amount, parts[3] });
-+	}
-+	return result;
-+}
-+
-+void AppendLocalStarsEntry(LocalStarsEntry entry) {
-+	auto entries = ParseLocalStarsActivity(
-+		AyuSettings::getInstance().localStarsActivity());
-+	entry.date = int(QDateTime::currentSecsSinceEpoch());
-+	entries.push_back(std::move(entry));
-+	while (entries.size() > kLocalStarsActivityEntries) {
-+		entries.erase(entries.begin());
-+	}
-+	AyuSettings::getInstance().setLocalStarsActivity(
-+		SerializeLocalStarsActivity(entries));
-+}
-+
-+std::vector<LocalStarsGiftOption> LocalStarsGiftOptions() {
++[[nodiscard]] std::vector<LocalGiftCollection> LocalGiftCollections() {
  	return {
 -		.icon = std::move(icon),
 -		.background = std::move(background)
-+		{ u"Plush Pepe #1"_q, 50 },
-+		{ u"Scared Cat #1"_q, 100 },
-+		{ u"Piggy Robot #1"_q, 150 },
-+		{ u"Toy Bear #1"_q, 250 },
-+		{ u"Diamond Ring #1"_q, 500 },
-+		{ u"Astral Shard #1"_q, 1000 },
++		{ u"Scared Cat"_q, u"ScaredCat"_q },
++		{ u"Plush Pepe"_q, u"PlushPepe"_q },
++		{ u"Toy Bear"_q, u"ToyBear"_q },
++		{ u"Chill Flame"_q, u"ChillFlame"_q },
++		{ u"Precious Peach"_q, u"PreciousPeach"_q },
++		{ u"Heart Locket"_q, u"HeartLocket"_q },
++		{ u"Diamond Ring"_q, u"DiamondRing"_q },
++		{ u"Astral Shard"_q, u"AstralShard"_q },
  	};
  }
  
 -QImage getImage(const QString &name) {
 -	const auto iconData = getAsset(name);
-+class LocalStarsCard final : public Ui::RpWidget {
-+public:
-+	LocalStarsCard(not_null<QWidget*> parent, QString holder)
-+	: Ui::RpWidget(parent)
-+	, _holder(std::move(holder)) {
-+		resize(st::localStarsCardWidth, st::localStarsCardHeight);
-+	}
-+
-+	void setHolder(QString holder) {
-+		_holder = std::move(holder);
-+		update();
-+	}
- 
+-
 -	const auto factor = style::DevicePixelRatio();
 -	const auto size = st::menuIconLink.size();
 -	auto image = QImage(
@@ -8910,86 +8930,49 @@ index 929cf4609..082c88e95 100644
 -	image.fill(Qt::transparent);
 -	{
 -		auto p = QPainter(&image);
-+protected:
-+	void paintEvent(QPaintEvent *e) override {
-+		auto p = Painter(this);
- 		auto hq = PainterHighQualityEnabler(p);
-+		const auto bounds = QRectF(QPointF(), QSizeF(size()));
-+		const auto rounding = st::localStarsCardRounding;
- 
-+		auto gradient = QLinearGradient(bounds.topLeft(), bounds.bottomRight());
-+		gradient.setColorAt(0., QColor(48, 54, 82));
-+		gradient.setColorAt(0.55, QColor(19, 22, 35));
-+		gradient.setColorAt(1., QColor(66, 45, 96));
- 		p.setPen(Qt::NoPen);
+-		auto hq = PainterHighQualityEnabler(p);
+-
+-		p.setPen(Qt::NoPen);
 -		p.setBrush(iconData.background);
 -		p.drawRoundedRect(Rect(size), size.width() / 4., size.height() / 4.);
 -		p.setBrush(Qt::transparent);
-+		p.setBrush(gradient);
-+		p.drawRoundedRect(bounds, rounding, rounding);
-+		p.setPen(QColor(255, 255, 255, 24));
-+		p.setBrush(Qt::NoBrush);
-+		p.drawRoundedRect(
-+			bounds.adjusted(0.5, 0.5, -0.5, -0.5),
-+			rounding,
-+			rounding);
- 
+-
 -		auto svgIcon = QSvgRenderer(iconData.icon);
 -		svgIcon.render(&p, Rect(size));
-+		const auto in = st::localStarsCardPadding;
-+		const auto content = QRect(
-+			in.left(),
-+			in.top(),
-+			width() - in.left() - in.right(),
-+			height() - in.top() - in.bottom());
++[[nodiscard]] LocalGiftCollection LocalGiftCollectionFromTitle(
++		QString title) {
++	title = title.trimmed();
++	auto slug = title;
++	slug.remove(QRegularExpression(u"[^A-Za-z0-9]"_q));
++	return slug.isEmpty()
++		? LocalGiftCollection()
++		: LocalGiftCollection{ std::move(title), std::move(slug) };
++}
 +
-+		p.setFont(st::semiboldFont);
-+		p.setPen(QColor(255, 255, 255, 225));
-+		p.drawText(
-+			QRect(content.x(), content.y(),
-+				content.width(), st::semiboldFont->height),
-+			Qt::AlignLeft | Qt::AlignVCenter,
-+			u"AMEX"_q);
-+		p.setFont(st::normalFont);
-+		p.setPen(QColor(255, 255, 255, 150));
-+		p.drawText(
-+			QRect(content.x(), content.y(),
-+				content.width(), st::normalFont->height),
-+			Qt::AlignRight | Qt::AlignVCenter,
-+			tr::ayu_LocalStarsCardDemo(tr::now));
-+
-+		const auto numberTop = content.y()
-+			+ st::semiboldFont->height
-+			+ st::localStarsCardPadding.top();
-+		p.setFont(st::boxTextFont);
-+		p.setPen(QColor(255, 255, 255, 242));
-+		p.drawText(
-+			QRect(content.x(), numberTop,
-+				content.width(), st::boxTextFont->height),
-+			Qt::AlignLeft | Qt::AlignVCenter,
-+			tr::ayu_LocalStarsCardNumber(tr::now));
-+
-+		const auto bottomTop = content.bottom()
-+			- st::normalFont->height * 2;
-+		p.setFont(st::normalFont);
-+		p.setPen(QColor(255, 255, 255, 175));
-+		p.drawText(
-+			QRect(content.x(), bottomTop,
-+				content.width() / 2, st::normalFont->height),
-+			Qt::AlignLeft | Qt::AlignVCenter,
-+			_holder.isEmpty()
-+				? u"LOCAL USER"_q
-+				: _holder.toUpper());
-+		p.drawText(
-+			QRect(content.x() + content.width() / 2, bottomTop,
-+				content.width() / 2, st::normalFont->height),
-+			Qt::AlignRight | Qt::AlignVCenter,
-+			tr::ayu_LocalStarsCardExpiry(tr::now));
++[[nodiscard]] std::vector<QString> LocalPinnedGiftReferences() {
++	auto result = std::vector<QString>();
++	const auto normalized = Ayu::NormalizeLocalProfileGifts(
++		AyuSettings::getInstance().localProfileGifts());
++	for (const auto &part : normalized.split(',', Qt::SkipEmptyParts)) {
++		const auto reference = part.trimmed();
++		if (!reference.isEmpty()) {
++			result.push_back(reference);
++		}
  	}
++	return result;
++}
  
 -	return image;
--}
--
++[[nodiscard]] QString SerializeLocalGiftReferences(
++		const std::vector<QString> &references) {
++	auto result = QStringList();
++	result.reserve(references.size());
++	for (const auto &reference : references) {
++		result.push_back(reference);
++	}
++	return result.join(u", "_q);
+ }
+ 
 -[[nodiscard]] not_null<Ui::SettingsButton*> AddDonate(
 -		not_null<Ui::SettingsButton*> button,
 -		const QString &name) {
@@ -9022,8 +9005,22 @@ index 929cf4609..082c88e95 100644
 -	btnContainer->resize(fullHeight, fullHeight);
 -
 -	return button;
--}
--
++[[nodiscard]] QString LocalGiftReferenceLabel(QString reference) {
++	reference = Ayu::NormalizeLocalProfileGift(std::move(reference));
++	static const auto Slug = QRegularExpression(u"^(.+)-([0-9]+)$"_q);
++	const auto match = Slug.match(reference);
++	if (match.hasMatch()) {
++		auto title = match.captured(1);
++		title.replace(
++			QRegularExpression(u"([a-z0-9])([A-Z])"_q),
++			u"\\1 \\2"_q);
++		return title + u" #"_q + match.captured(2);
++	}
++	return (reference.size() > 38)
++		? (reference.left(24) + u"..."_q + reference.right(8))
++		: reference;
+ }
+ 
 -void AddCryptoDonate(
 -		const QString &name,
 -		const QString &address,
@@ -9041,326 +9038,6 @@ index 929cf4609..082c88e95 100644
 -			getAsset(name).icon);
 -		Ui::show(std::move(box));
 -	});
--}
-+private:
-+	QString _holder;
-+};
- 
--void BuildDonations(SectionBuilder &builder) {
--	builder.add([](const BuildContext &ctx) {
--		v::match(ctx, [&](const WidgetContext &wctx) {
--			const auto container = wctx.container;
--
--			AddSubsectionTitle(container, tr::ayu_SupportHeader());
--			AddDonate(
--				AddButtonWithIcon(
--					container,
--					rpl::single(QString("Boosty")),
--					st::settingsButton),
--				"boosty"
--			)->setClickedCallback([=] {
--				QDesktopServices::openUrl(QString("https://boosty.to/alexeyzavar"));
-+void ShowLocalStarsBuyBox(
-+		not_null<Window::SessionController*> controller) {
-+	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
-+		box->setTitle(tr::ayu_LocalStarsBuyTitle());
-+		auto &settings = AyuSettings::getInstance();
-+		const auto card = box->addRow(
-+			object_ptr<LocalStarsCard>(box, settings.localStarsCardName()),
-+			st::boxRowPadding);
-+		const auto holder = box->addRow(
-+			object_ptr<Ui::InputField>(
-+				box,
-+				st::defaultInputField,
-+				tr::ayu_LocalStarsCardholder(),
-+				settings.localStarsCardName()),
-+			st::boxRowPadding);
-+		holder->setMaxLength(Ayu::kMaxLocalStarsCardNameLength);
-+		AddDividerText(
-+			box->verticalLayout(),
-+			tr::ayu_LocalStarsAmount());
-+		const auto group = std::make_shared<Ui::RadioenumGroup<int>>(50);
-+		for (const auto amount : { 50, 100, 250, 500, 1000 }) {
-+			box->addRow(
-+				object_ptr<Ui::Radioenum<int>>(
-+					box,
-+					group,
-+					amount,
-+					QString::number(amount)),
-+				st::boxRowPadding);
-+		}
-+		AddDividerText(
-+			box->verticalLayout(),
-+			tr::ayu_LocalStarsDescription());
-+		box->addButton(
-+			rpl::single(tr::ayu_LocalStarsPay(
-+				tr::now,
-+				lt_amount,
-+				QString::number(group->current()))),
-+			[=] {
-+				auto &mutableSettings = AyuSettings::getInstance();
-+				const auto amount = group->current();
-+				const auto name = holder->getLastText();
-+				mutableSettings.setLocalStarsCardName(name);
-+				card->setHolder(name);
-+				mutableSettings.setLocalStarsBalance(
-+					mutableSettings.localStarsBalance() + amount);
-+				AppendLocalStarsEntry({
-+					.date = 0,
-+					.gift = false,
-+					.amount = amount,
-+					.label = tr::ayu_LocalStarsPurchaseEntry(
-+						tr::now,
-+						lt_amount,
-+						QString::number(amount)),
-+				});
-+				controller->showToast(
-+					tr::ayu_LocalStarsPurchased(
-+						tr::now,
-+						lt_amount,
-+						QString::number(amount)));
-+				box->closeBox();
- 			});
--			AddCryptoDonate("TON", QString("UQA4i8U8vP3mYUZSV3KqDQEHPwmhninEqCkkKc7BITQ652de"), container);
--			AddCryptoDonate("Bitcoin", QString("bc1qdk6qq4mzq5yap3fpy0qau3246w3m3uwac9f0xd"), container);
--			AddCryptoDonate("Ethereum", QString("0x405589857C8DFAb45B2027c68ad1e58877FDa347"), container);
--			AddCryptoDonate("Solana", QString("8ZHQpPxpsdRjsWoBcF1dmvRM5dB6zEhJ3jMBFZjYfyHs"), container);
--			AddCryptoDonate("Tron", QString("TRpbajq38qU8joThgAfKJLyEPbNjzsdPJ1"), container);
--			AddSkip(container);
--
--			AddDividerText(container,
--				tr::ayu_SupportDescription2(
--					lt_item,
--					rpl::single(
--						Ui::Text::Link(tr::ayu_SupportDescription1(tr::now), QString("tg://support"))
--					),
--					tr::marked));
--		}, [&](const SearchContext &sctx) {
--			sctx.entries->push_back({
--				.id = u"ayu/donate"_q,
--				.title = tr::ayu_SupportHeader(tr::now),
--				.section = sctx.sectionId,
-+		box->addButton(tr::lng_cancel(), [=] {
-+			box->closeBox();
-+		});
-+	}));
-+}
-+
-+void ShowLocalStarsGiftBox(
-+		not_null<Window::SessionController*> controller) {
-+	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
-+		box->setTitle(tr::ayu_LocalStarsGiftTitle());
-+		const auto recipient = box->addRow(
-+			object_ptr<Ui::InputField>(
-+				box,
-+				st::defaultInputField,
-+				tr::ayu_LocalStarsGiftRecipient(),
-+				QString()),
-+			st::boxRowPadding);
-+		recipient->setMaxLength(Ayu::kMaxLocalProfileNameLength);
-+		const auto options = LocalStarsGiftOptions();
-+		const auto group = std::make_shared<Ui::RadioenumGroup<int>>(0);
-+		for (auto i = 0; i < int(options.size()); ++i) {
-+			const auto &option = options[i];
-+			box->addRow(
-+				object_ptr<Ui::Radioenum<int>>(
-+					box,
-+					group,
-+					i,
-+					option.name + u"  -  "_q
-+						+ tr::ayu_LocalStarsGiftCost(
-+							tr::now,
-+							lt_cost,
-+							QString::number(option.cost))),
-+				st::boxRowPadding);
-+		}
-+		AddDividerText(
-+			box->verticalLayout(),
-+			tr::ayu_LocalStarsDescription());
-+		box->addButton(
-+			tr::ayu_LocalStarsGiftChoose(),
-+			[=] {
-+				auto &settings = AyuSettings::getInstance();
-+				const auto index = group->current();
-+				if (index < 0 || index >= int(options.size())) {
-+					return;
-+				}
-+				const auto &option = options[index];
-+				const auto balance = settings.localStarsBalance();
-+				if (balance < option.cost) {
-+					controller->showToast(
-+						tr::ayu_LocalStarsGiftInsufficient(
-+							tr::now,
-+							lt_amount,
-+							QString::number(option.cost - balance)));
-+					return;
-+				}
-+				const auto typed = recipient->getLastText().trimmed();
-+				const auto target = typed.isEmpty()
-+					? tr::ayu_LocalStarsGiftAnonymous(tr::now)
-+					: typed;
-+				settings.setLocalStarsBalance(balance - option.cost);
-+				AppendLocalStarsEntry({
-+					.date = 0,
-+					.gift = true,
-+					.amount = option.cost,
-+					.label = tr::ayu_LocalStarsGiftEntry(
-+						tr::now,
-+						lt_gift,
-+						option.name,
-+						lt_recipient,
-+						target),
-+				});
-+				controller->showToast(
-+					tr::ayu_LocalStarsGiftSent(
-+						tr::now,
-+						lt_gift,
-+						option.name,
-+						lt_recipient,
-+						target));
-+				box->closeBox();
- 			});
-+		box->addButton(tr::lng_cancel(), [=] {
-+			box->closeBox();
- 		});
--	});
-+	}));
-+}
-+
-+void ShowLocalStarsActivityBox(
-+		not_null<Window::SessionController*> controller) {
-+	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
-+		box->setTitle(tr::ayu_LocalStarsActivityTitle());
-+		const auto entries = ParseLocalStarsActivity(
-+			AyuSettings::getInstance().localStarsActivity());
-+		if (entries.empty()) {
-+			box->addRow(
-+				object_ptr<Ui::FlatLabel>(
-+					box,
-+					tr::ayu_LocalStarsActivityEmpty(),
-+					st::boxLabel),
-+				st::boxRowPadding);
-+		} else {
-+			for (const auto &entry : entries) {
-+				const auto date = QDateTime::fromSecsSinceEpoch(entry.date)
-+					.toString(u"dd MMM hh:mm"_q);
-+				box->addRow(
-+					object_ptr<Ui::FlatLabel>(
-+						box,
-+						date + u"  "_q + entry.label,
-+						st::boxLabel),
-+					st::boxRowPadding);
-+			}
-+		}
-+		box->addButton(tr::ayu_LocalStarsActivityClear(), [=] {
-+			AyuSettings::getInstance().setLocalStarsActivity(QString());
-+			controller->showToast(
-+				tr::ayu_LocalStarsActivityCleared(tr::now));
-+			box->closeBox();
-+		});
-+		box->addButton(tr::lng_close(), [=] {
-+			box->closeBox();
-+		});
-+	}));
- }
- 
- void BuildCrashReporting(SectionBuilder &builder, AyuSectionBuilder &ayu) {
- #ifndef TDESKTOP_DISABLE_AUTOUPDATE
--	builder.addSkip();
--	builder.addSubsectionTitle(tr::ayu_CategoryOther());
-+	builder.addSubsectionTitle(tr::ayu_DiagnosticsHeader());
- 
- 	ayu.addSettingToggle({
- 		.id = u"ayu/crashReporting"_q,
-@@ -193,10 +435,1162 @@ void BuildCrashReporting(SectionBuilder &builder, AyuSectionBuilder &ayu) {
- #endif
- }
- 
-+enum class LocalGiftTarget {
-+	Featured,
-+	Pinned,
-+};
-+
-+struct LocalGiftCollection {
-+	QString title;
-+	QString slug;
-+};
-+
-+struct LocalGiftBrowserState {
-+	rpl::variable<Ui::GiftsDescriptor> gifts;
-+	std::vector<Info::PeerGifts::GiftDescriptor> items;
-+	std::vector<LocalGiftCollection> collections;
-+	std::unique_ptr<Api::PremiumGiftCodeOptions> catalog;
-+	rpl::lifetime catalogLifetime;
-+	int nextNumber = 1;
-+	bool loading = false;
-+	bool exhausted = false;
-+};
-+
-+constexpr auto kLocalGiftBrowserPageSize = 12;
-+
-+[[nodiscard]] std::vector<LocalGiftCollection> LocalGiftCollections() {
-+	return {
-+		{ u"Scared Cat"_q, u"ScaredCat"_q },
-+		{ u"Plush Pepe"_q, u"PlushPepe"_q },
-+		{ u"Toy Bear"_q, u"ToyBear"_q },
-+		{ u"Chill Flame"_q, u"ChillFlame"_q },
-+		{ u"Precious Peach"_q, u"PreciousPeach"_q },
-+		{ u"Heart Locket"_q, u"HeartLocket"_q },
-+		{ u"Diamond Ring"_q, u"DiamondRing"_q },
-+		{ u"Astral Shard"_q, u"AstralShard"_q },
-+	};
-+}
-+
-+[[nodiscard]] LocalGiftCollection LocalGiftCollectionFromTitle(
-+		QString title) {
-+	title = title.trimmed();
-+	auto slug = title;
-+	slug.remove(QRegularExpression(u"[^A-Za-z0-9]"_q));
-+	return slug.isEmpty()
-+		? LocalGiftCollection()
-+		: LocalGiftCollection{ std::move(title), std::move(slug) };
-+}
-+
-+[[nodiscard]] std::vector<QString> LocalPinnedGiftReferences() {
-+	auto result = std::vector<QString>();
-+	const auto normalized = Ayu::NormalizeLocalProfileGifts(
-+		AyuSettings::getInstance().localProfileGifts());
-+	for (const auto &part : normalized.split(',', Qt::SkipEmptyParts)) {
-+		const auto reference = part.trimmed();
-+		if (!reference.isEmpty()) {
-+			result.push_back(reference);
-+		}
-+	}
-+	return result;
-+}
-+
-+[[nodiscard]] QString SerializeLocalGiftReferences(
-+		const std::vector<QString> &references) {
-+	auto result = QStringList();
-+	result.reserve(references.size());
-+	for (const auto &reference : references) {
-+		result.push_back(reference);
-+	}
-+	return result.join(u", "_q);
-+}
-+
-+[[nodiscard]] QString LocalGiftReferenceLabel(QString reference) {
-+	reference = Ayu::NormalizeLocalProfileGift(std::move(reference));
-+	static const auto Slug = QRegularExpression(u"^(.+)-([0-9]+)$"_q);
-+	const auto match = Slug.match(reference);
-+	if (match.hasMatch()) {
-+		auto title = match.captured(1);
-+		title.replace(
-+			QRegularExpression(u"([a-z0-9])([A-Z])"_q),
-+			u"\\1 \\2"_q);
-+		return title + u" #"_q + match.captured(2);
-+	}
-+	return (reference.size() > 38)
-+		? (reference.left(24) + u"..."_q + reference.right(8))
-+		: reference;
-+}
-+
 +void ShowLocalGiftCollectionPicker(
 +	not_null<Window::SessionController*> controller,
 +	LocalGiftTarget target);
@@ -9458,8 +9135,22 @@ index 929cf4609..082c88e95 100644
 +			state->exhausted = (resolved == 0);
 +			state->gifts = Ui::GiftsDescriptor{ .list = state->items };
 +		});
-+}
-+
+ }
+ 
+-void BuildDonations(SectionBuilder &builder) {
+-	builder.add([](const BuildContext &ctx) {
+-		v::match(ctx, [&](const WidgetContext &wctx) {
+-			const auto container = wctx.container;
+-
+-			AddSubsectionTitle(container, tr::ayu_SupportHeader());
+-			AddDonate(
+-				AddButtonWithIcon(
+-					container,
+-					rpl::single(QString("Boosty")),
+-					st::settingsButton),
+-				"boosty"
+-			)->setClickedCallback([=] {
+-				QDesktopServices::openUrl(QString("https://boosty.to/alexeyzavar"));
 +void LoadLocalGiftCollectionFallback(
 +		not_null<Window::SessionController*> controller,
 +		QPointer<Ui::GenericBox> box,
@@ -9511,7 +9202,26 @@ index 929cf4609..082c88e95 100644
 +				return entry.slug.compare(
 +					collection.slug,
 +					Qt::CaseInsensitive) == 0;
-+			});
+ 			});
+-			AddCryptoDonate("TON", QString("UQA4i8U8vP3mYUZSV3KqDQEHPwmhninEqCkkKc7BITQ652de"), container);
+-			AddCryptoDonate("Bitcoin", QString("bc1qdk6qq4mzq5yap3fpy0qau3246w3m3uwac9f0xd"), container);
+-			AddCryptoDonate("Ethereum", QString("0x405589857C8DFAb45B2027c68ad1e58877FDa347"), container);
+-			AddCryptoDonate("Solana", QString("8ZHQpPxpsdRjsWoBcF1dmvRM5dB6zEhJ3jMBFZjYfyHs"), container);
+-			AddCryptoDonate("Tron", QString("TRpbajq38qU8joThgAfKJLyEPbNjzsdPJ1"), container);
+-			AddSkip(container);
+-
+-			AddDividerText(container,
+-				tr::ayu_SupportDescription2(
+-					lt_item,
+-					rpl::single(
+-						Ui::Text::Link(tr::ayu_SupportDescription1(tr::now), QString("tg://support"))
+-					),
+-					tr::marked));
+-		}, [&](const SearchContext &sctx) {
+-			sctx.entries->push_back({
+-				.id = u"ayu/donate"_q,
+-				.title = tr::ayu_SupportHeader(tr::now),
+-				.section = sctx.sectionId,
 +		if (duplicate) {
 +			continue;
 +		}
@@ -9828,15 +9538,18 @@ index 929cf4609..082c88e95 100644
 +			clear->setClickedCallback([=] {
 +				AyuSettings::getInstance().setLocalProfileGifts(QString());
 +				box->closeBox();
-+			});
+ 			});
 +		}
 +		AddDividerText(content, tr::ayu_LocalProfileGiftPickerLocalOnly());
 +		box->addButton(tr::lng_box_done(), [=] {
 +			box->closeBox();
-+		});
+ 		});
+-	});
 +	}));
-+}
-+
+ }
+ 
+-void BuildCrashReporting(SectionBuilder &builder, AyuSectionBuilder &ayu) {
+-#ifndef TDESKTOP_DISABLE_AUTOUPDATE
 +void ChooseLocalProfilePhoto(
 +		not_null<Window::SessionController*> controller) {
 +	const auto filter = u"Image files (*.png *.jpg *.jpeg *.webp *.heic);;"_q
@@ -10094,7 +9807,8 @@ index 929cf4609..082c88e95 100644
 +		},
 +	});
 +	builder.addDividerText(tr::ayu_LocalProfileCloneLocalOnly());
-+	builder.addSkip();
+ 	builder.addSkip();
+-	builder.addSubsectionTitle(tr::ayu_CategoryOther());
 +	builder.addSubsectionTitle(tr::ayu_LocalProfileIdentityHeader());
 +	builder.addButton({
 +		.id = u"ayu/localProfileBadges"_q,
@@ -10104,8 +9818,14 @@ index 929cf4609..082c88e95 100644
 +			ShowLocalProfileBadgesBox(controller);
 +		},
 +	});
-+
-+	ayu.addSettingToggle({
+ 
+ 	ayu.addSettingToggle({
+-		.id = u"ayu/crashReporting"_q,
+-		.altIds = { u"ayu/crashlytics"_q },
+-		.title = tr::ayu_CrashReporting(),
+-		.getter = &AyuSettings::crashReporting,
+-		.setter = &AyuSettings::setCrashReporting,
+-		.icon = { &st::menuIconReport },
 +		.id = u"ayu/localProfileNameEnabled"_q,
 +		.title = tr::ayu_LocalProfileNameEnabled(),
 +		.getter = &AyuSettings::localProfileNameEnabled,
@@ -10174,8 +9894,10 @@ index 929cf4609..082c88e95 100644
 +			.title = tr::ayu_LocalProfileId(tr::now),
 +			.icon = { &st::menuIconInfo },
 +		};
-+	});
-+	builder.addSkip();
+ 	});
+ 	builder.addSkip();
+-	builder.addDividerText(tr::ayu_CrashReportingDescription());
+-#endif
 +	builder.addDivider();
 +	builder.addSkip();
 +	builder.addSubsectionTitle(tr::ayu_LocalProfileContactHeader());
@@ -10422,8 +10144,8 @@ index 929cf4609..082c88e95 100644
 +	builder.addDividerText(tr::ayu_LocalProfileGiftDescription());
 +	// Local Stars moved to Telegram-native My Stars / Credits flow.
 +	builder.addDividerText(tr::ayu_LocalProfileCredit());
-+}
-+
+ }
+ 
  void BuildOtherThings(SectionBuilder &builder) {
  	const auto controller = builder.controller();
  
@@ -10435,7 +10157,7 @@ index 929cf4609..082c88e95 100644
  	builder.addButton({
  		.id = u"ayu/registerUrlScheme"_q,
  		.title = tr::ayu_RegisterURLScheme(),
-@@ -228,13 +1622,23 @@ void BuildOtherThings(SectionBuilder &builder) {
+@@ -228,13 +1263,23 @@ void BuildOtherThings(SectionBuilder &builder) {
  const auto kMeta = BuildHelper({
  	.id = AyuOther::Id(),
  	.parentId = AyuMain::Id(),
@@ -10462,7 +10184,7 @@ index 929cf4609..082c88e95 100644
  	BuildCrashReporting(builder, ayu);
  	BuildOtherThings(builder);
  });
-@@ -242,7 +1646,7 @@ const auto kMeta = BuildHelper({
+@@ -242,7 +1287,7 @@ const auto kMeta = BuildHelper({
  } // namespace
  
  rpl::producer<QString> AyuOther::title() {
@@ -10471,7 +10193,7 @@ index 929cf4609..082c88e95 100644
  }
  
  AyuOther::AyuOther(
-@@ -258,6 +1662,23 @@ void AyuOther::setupContent() {
+@@ -258,6 +1303,23 @@ void AyuOther::setupContent() {
  	Ui::ResizeFitChild(this, content);
  }
  
@@ -11964,10 +11686,10 @@ index 000000000..57e78a5ff
 +
 +} // namespace Settings
 diff --git a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
-index c9d247a20..d84ef5364 100644
+index c9d247a20..91147f9e8 100644
 --- a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
-@@ -6,15 +6,1197 @@
+@@ -6,15 +6,1386 @@
  // Copyright @Radolyn, 2026
  #include "ayu/ui/utils/ayu_profile_values.h"
  
@@ -12003,6 +11725,7 @@ index c9d247a20..d84ef5364 100644
 +#include <QtCore/QCoreApplication>
 +#include <QtCore/QDateTime>
 +#include <QtCore/QFileInfo>
++#include <QtCore/QJsonArray>
 +#include <QtCore/QJsonDocument>
 +#include <QtCore/QJsonObject>
 +#include <QtCore/QRegularExpression>
@@ -12542,6 +12265,194 @@ index c9d247a20..d84ef5364 100644
 +		joined.truncate(kMaxLocalProfileGiftsLength);
 +	}
 +	return joined;
++}
++
++std::vector<LocalGiftRecord> ParseLocalGifts(const QString &raw) {
++	auto result = std::vector<LocalGiftRecord>();
++	const auto document = QJsonDocument::fromJson(raw.toUtf8());
++	if (!document.isArray()) {
++		return result;
++	}
++	for (const auto &value : document.array()) {
++		if (!value.isObject()) {
++			continue;
++		}
++		const auto object = value.toObject();
++		const auto giftId = object.value(u"id"_q).toVariant().toULongLong();
++		const auto stars = object.value(u"stars"_q).toVariant().toLongLong();
++		if (!giftId || stars < 0) {
++			continue;
++		}
++		result.push_back({
++			.giftId = giftId,
++			.stars = stars,
++			.date = object.value(u"date"_q).toVariant().toLongLong(),
++			.message = object.value(u"msg"_q).toString().left(
++				kMaxLocalGiftMessageLength),
++			.anonymous = object.value(u"anon"_q).toBool(),
++		});
++		if (result.size() >= kMaxLocalGiftsCount) {
++			break;
++		}
++	}
++	return result;
++}
++
++QString SerializeLocalGifts(const std::vector<LocalGiftRecord> &records) {
++	auto array = QJsonArray();
++	for (const auto &record : records) {
++		if (!record.giftId) {
++			continue;
++		}
++		auto object = QJsonObject();
++		object.insert(u"id"_q, QJsonValue(qint64(record.giftId)));
++		object.insert(u"stars"_q, QJsonValue(qint64(record.stars)));
++		object.insert(u"date"_q, QJsonValue(qint64(record.date)));
++		if (!record.message.isEmpty()) {
++			object.insert(
++				u"msg"_q,
++				record.message.left(kMaxLocalGiftMessageLength));
++		}
++		if (record.anonymous) {
++			object.insert(u"anon"_q, true);
++		}
++		array.append(std::move(object));
++	}
++	return QString::fromUtf8(
++		QJsonDocument(array).toJson(QJsonDocument::Compact));
++}
++
++QString NormalizeLocalGifts(QString gifts) {
++	auto parsed = ParseLocalGifts(gifts);
++	auto serialized = SerializeLocalGifts(parsed);
++	while (serialized.size() > kMaxLocalGiftsLength && !parsed.empty()) {
++		parsed.erase(parsed.begin());
++		serialized = SerializeLocalGifts(parsed);
++	}
++	return serialized;
++}
++
++void AppendLocalGift(LocalGiftRecord record) {
++	if (!record.giftId) {
++		return;
++	}
++	auto records = ParseLocalGifts(
++		AyuSettings::getInstance().localGifts());
++	record.message = record.message.left(kMaxLocalGiftMessageLength);
++	records.push_back(std::move(record));
++	while (records.size() > kMaxLocalGiftsCount) {
++		records.erase(records.begin());
++	}
++	AyuSettings::getInstance().setLocalGifts(SerializeLocalGifts(records));
++}
++
++void RemoveLocalGift(uint64 giftId, int64 date, const QString &message) {
++	auto records = ParseLocalGifts(
++		AyuSettings::getInstance().localGifts());
++	const auto i = ranges::find_if(records, [&](const LocalGiftRecord &r) {
++		return r.giftId == giftId
++			&& r.date == date
++			&& r.message == message;
++	});
++	if (i == end(records)) {
++		return;
++	}
++	records.erase(i);
++	AyuSettings::getInstance().setLocalGifts(SerializeLocalGifts(records));
++}
++
++int64 LocalGiftConvertValue(int64 stars) {
++	return std::max(int64(stars) / 2, int64(0));
++}
++
++std::vector<LocalStarsEarning> ParseLocalStarsEarnings(const QString &raw) {
++	auto result = std::vector<LocalStarsEarning>();
++	const auto document = QJsonDocument::fromJson(raw.toUtf8());
++	if (!document.isArray()) {
++		return result;
++	}
++	for (const auto &value : document.array()) {
++		if (!value.isObject()) {
++			continue;
++		}
++		const auto object = value.toObject();
++		const auto amount = object.value(u"a"_q).toVariant().toLongLong();
++		if (amount <= 0) {
++			continue;
++		}
++		const auto source = object.value(u"s"_q).toVariant().toInt();
++		result.push_back({
++			.date = object.value(u"d"_q).toVariant().toLongLong(),
++			.amount = amount,
++			.source = (source == int(LocalStarsEarningSource::Convert))
++				? LocalStarsEarningSource::Convert
++				: LocalStarsEarningSource::MiniApps,
++		});
++		if (result.size() >= kMaxLocalStarsEarningsCount) {
++			break;
++		}
++	}
++	return result;
++}
++
++QString SerializeLocalStarsEarnings(
++		const std::vector<LocalStarsEarning> &earnings) {
++	auto array = QJsonArray();
++	for (const auto &earning : earnings) {
++		if (earning.amount <= 0) {
++			continue;
++		}
++		auto object = QJsonObject();
++		object.insert(u"d"_q, QJsonValue(qint64(earning.date)));
++		object.insert(u"a"_q, QJsonValue(qint64(earning.amount)));
++		object.insert(u"s"_q, QJsonValue(int(earning.source)));
++		array.append(std::move(object));
++	}
++	return QString::fromUtf8(
++		QJsonDocument(array).toJson(QJsonDocument::Compact));
++}
++
++QString NormalizeLocalStarsEarnings(QString earnings) {
++	auto parsed = ParseLocalStarsEarnings(earnings);
++	auto serialized = SerializeLocalStarsEarnings(parsed);
++	while (serialized.size() > kMaxLocalStarsEarningsLength
++		&& !parsed.empty()) {
++		parsed.erase(parsed.begin());
++		serialized = SerializeLocalStarsEarnings(parsed);
++	}
++	return serialized;
++}
++
++void AppendLocalStarsEarning(LocalStarsEarning earning) {
++	if (earning.amount <= 0) {
++		return;
++	}
++	auto earnings = ParseLocalStarsEarnings(
++		AyuSettings::getInstance().localStarsEarnings());
++	earnings.push_back(std::move(earning));
++	while (earnings.size() > kMaxLocalStarsEarningsCount) {
++		earnings.erase(earnings.begin());
++	}
++	AyuSettings::getInstance().setLocalStarsEarnings(
++		SerializeLocalStarsEarnings(earnings));
++}
++
++LocalStarsProceeds ComputeLocalStarsProceeds(int64 withdrawn, int64 now) {
++	auto result = LocalStarsProceeds();
++	const auto earnings = ParseLocalStarsEarnings(
++		AyuSettings::getInstance().localStarsEarnings());
++	for (const auto &earning : earnings) {
++		result.lifetime += earning.amount;
++		const auto matureAt = earning.date + kLocalStarsProceedsMaturitySecs;
++		if (matureAt <= now) {
++			result.available += earning.amount;
++		} else if (!result.nextMaturity || matureAt < result.nextMaturity) {
++			result.nextMaturity = matureAt;
++		}
++	}
++	result.total = std::max(result.lifetime - withdrawn, int64(0));
++	result.available = std::max(result.available - withdrawn, int64(0));
++	return result;
 +}
 +
 +bool LocalProfileNameActive(not_null<PeerData*> peer) {
@@ -13166,7 +13077,7 @@ index c9d247a20..d84ef5364 100644
  
  	const auto &settings = AyuSettings::getInstance();
  	if (settings.showPeerId() == PeerIdDisplay::BotApi) {
-@@ -33,8 +1215,12 @@ QString IDString(MsgId topicRootId) {
+@@ -33,8 +1404,12 @@ QString IDString(MsgId topicRootId) {
  }
  
  rpl::producer<TextWithEntities> IDValue(not_null<PeerData*> peer) {
@@ -13182,10 +13093,10 @@ index c9d247a20..d84ef5364 100644
  			? TextWithEntities()
  			: tr::marked(IDString(peer));
 diff --git a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h
-index 950f22d7e..1c46b0567 100644
+index 950f22d7e..1314b7408 100644
 --- a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h
 +++ b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h
-@@ -6,8 +6,124 @@
+@@ -6,8 +6,175 @@
  // Copyright @Radolyn, 2026
  #pragma once
  
@@ -13230,6 +13141,57 @@ index 950f22d7e..1c46b0567 100644
 +constexpr auto kMaxLocalStarsBalance = 1'000'000'000;
 +constexpr auto kMaxLocalStarsActivityLength = 6000;
 +constexpr auto kMaxLocalStarsCardNameLength = 64;
++constexpr auto kMaxLocalGiftsCount = 200;
++constexpr auto kMaxLocalGiftsLength = 65536;
++constexpr auto kMaxLocalGiftMessageLength = 128;
++constexpr auto kMaxLocalStarsEarningsCount = 1000;
++constexpr auto kMaxLocalStarsEarningsLength = 65536;
++constexpr auto kLocalStarsProceedsMaturitySecs = 21 * 86400;
++
++enum class LocalStarsEarningSource {
++	MiniApps = 0,
++	Convert = 1,
++};
++
++struct LocalStarsEarning {
++	int64 date = 0;
++	int64 amount = 0;
++	LocalStarsEarningSource source = LocalStarsEarningSource::MiniApps;
++};
++
++struct LocalStarsProceeds {
++	int64 lifetime = 0;
++	int64 total = 0;
++	int64 available = 0;
++	int64 nextMaturity = 0;
++};
++
++[[nodiscard]] std::vector<LocalStarsEarning> ParseLocalStarsEarnings(
++	const QString &raw);
++[[nodiscard]] QString SerializeLocalStarsEarnings(
++	const std::vector<LocalStarsEarning> &earnings);
++[[nodiscard]] QString NormalizeLocalStarsEarnings(QString earnings);
++void AppendLocalStarsEarning(LocalStarsEarning earning);
++[[nodiscard]] LocalStarsProceeds ComputeLocalStarsProceeds(
++	int64 withdrawn,
++	int64 now);
++[[nodiscard]] int64 LocalGiftConvertValue(int64 stars);
++void RemoveLocalGift(uint64 giftId, int64 date, const QString &message);
++
++struct LocalGiftRecord {
++	uint64 giftId = 0;
++	int64 stars = 0;
++	int64 date = 0;
++	QString message;
++	bool anonymous = false;
++};
++
++[[nodiscard]] std::vector<LocalGiftRecord> ParseLocalGifts(
++	const QString &raw);
++[[nodiscard]] QString SerializeLocalGifts(
++	const std::vector<LocalGiftRecord> &records);
++[[nodiscard]] QString NormalizeLocalGifts(QString gifts);
++void AppendLocalGift(LocalGiftRecord record);
 +
 +[[nodiscard]] QString NormalizeLocalProfileName(QString name);
 +[[nodiscard]] QString NormalizeLocalProfileId(QString id);
@@ -14196,6 +14158,24 @@ index 87e8bb4b8..157db3627 100644
  	}
  }
 -
+diff --git a/Telegram/SourceFiles/boxes/gift_credits_box.cpp b/Telegram/SourceFiles/boxes/gift_credits_box.cpp
+index 279c77e3a..afb77b54d 100644
+--- a/Telegram/SourceFiles/boxes/gift_credits_box.cpp
++++ b/Telegram/SourceFiles/boxes/gift_credits_box.cpp
+@@ -96,7 +96,12 @@ void GiftCreditsBox(
+ 		box->verticalLayout(),
+ 		peer,
+ 		CreditsAmount(),
+-		[=] { gifted(); box->uiShow()->hideLayer(); },
++		[=] {
++			if (const auto onstack = gifted) {
++				onstack();
++			}
++			box->uiShow()->hideLayer();
++		},
+ 		box->showFinishes(),
+ 		tr::lng_credits_summary_options_subtitle(),
+ 		{});
 diff --git a/Telegram/SourceFiles/boxes/gift_premium_box.cpp b/Telegram/SourceFiles/boxes/gift_premium_box.cpp
 index 88d437ae1..860f39e9a 100644
 --- a/Telegram/SourceFiles/boxes/gift_premium_box.cpp
@@ -14370,23 +14350,116 @@ index e2d4aa8a7..d4b4872cd 100644
  	const auto userpicPhoto = (userpicPhotoId
  		&& (userpicPhotoId != PeerData::kUnknownPhotoId)
 diff --git a/Telegram/SourceFiles/boxes/send_credits_box.cpp b/Telegram/SourceFiles/boxes/send_credits_box.cpp
-index b3b237c07..87143524a 100644
+index b3b237c07..300fe6132 100644
 --- a/Telegram/SourceFiles/boxes/send_credits_box.cpp
 +++ b/Telegram/SourceFiles/boxes/send_credits_box.cpp
-@@ -576,6 +576,13 @@ void SendStarsForm(
+@@ -576,6 +576,14 @@ void SendStarsForm(
  		not_null<Main::Session*> session,
  		std::shared_ptr<Payments::CreditsFormData> data,
  		Fn<void(std::optional<QString>)> done) {
 +	const auto isIntelGramLocalTopup =
 +		data
 +		&& data->invoice.product.startsWith(u"intelgram_stars_"_q);
-+	if (isIntelGramLocalTopup) {
++	const auto isIntelGramLocalStarGift = data && data->starGiftForm;
++	if (isIntelGramLocalTopup || isIntelGramLocalStarGift) {
 +		done(std::nullopt);
 +		return;
 +	}
  	session->api().request(MTPpayments_SendStarsForm(
  		MTP_long(data->formId),
  		data->inputInvoice
+diff --git a/Telegram/SourceFiles/boxes/star_gift_box.cpp b/Telegram/SourceFiles/boxes/star_gift_box.cpp
+index 6b404b99e..7c192d55e 100644
+--- a/Telegram/SourceFiles/boxes/star_gift_box.cpp
++++ b/Telegram/SourceFiles/boxes/star_gift_box.cpp
+@@ -14,6 +14,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "api/api_global_privacy.h"
+ #include "api/api_premium.h"
+ #include "api/api_text_entities.h"
++#include "ayu/ayu_settings.h"
++#include "ayu/ui/utils/ayu_profile_values.h"
+ #include "base/event_filter.h"
+ #include "base/qt_signal_producer.h"
+ #include "base/random.h"
+@@ -71,6 +73,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "lottie/lottie_single_player.h"
+ #include "main/main_app_config.h"
+ #include "main/main_session.h"
++#include "main/session/session_show.h"
+ #include "menu/gift_resale_filter.h"
+ #include "payments/payments_form.h"
+ #include "payments/payments_checkout_process.h"
+@@ -1227,6 +1230,52 @@ struct GiftPriceTabs {
+ 	return field;
+ }
+ 
++void SendLocalStarGift(
++		not_null<Window::SessionController*> window,
++		not_null<PeerData*> peer,
++		const GiftTypeStars &gift,
++		const GiftSendDetails &details,
++		Fn<void(Payments::CheckoutResult)> done) {
++	const auto cost = gift.info.stars
++		+ (details.upgraded ? gift.info.starsToUpgrade : 0);
++	const auto giftId = gift.info.id;
++	const auto stars = gift.info.stars;
++	const auto message = details.text.text;
++	const auto anonymous = details.anonymous;
++	const auto self = peer->isSelf();
++	const auto show = Main::MakeSessionShow(
++		window->uiShow(),
++		&window->session());
++	Settings::MaybeRequestLocalBalanceIncrease(
++		show,
++		uint64(cost),
++		Settings::SmallBalanceStarGift{ peer->id },
++		[=](Settings::SmallBalanceResult result) {
++			if (result == Settings::SmallBalanceResult::Cancelled
++				|| result == Settings::SmallBalanceResult::Blocked) {
++				if (const auto onstack = done) {
++					onstack(Payments::CheckoutResult::Cancelled);
++				}
++				return;
++			}
++			const auto settings = &AyuSettings::getInstance();
++			settings->setLocalStarsBalance(
++				settings->localStarsBalance() - int(cost));
++			if (self) {
++				Ayu::AppendLocalGift({
++					.giftId = giftId,
++					.stars = stars,
++					.date = base::unixtime::now(),
++					.message = message,
++					.anonymous = anonymous,
++				});
++			}
++			if (const auto onstack = done) {
++				onstack(Payments::CheckoutResult::Paid);
++			}
++		});
++}
++
+ void SendGift(
+ 		not_null<Window::SessionController*> window,
+ 		not_null<PeerData*> peer,
+@@ -1262,16 +1311,7 @@ void SendGift(
+ 			Payments::CheckoutProcess::Start(std::move(invoice), done);
+ 		}
+ 	}, [&](const GiftTypeStars &gift) {
+-		Payments::CheckoutProcess::Start(Payments::InvoiceStarGift{
+-			.giftId = gift.info.id,
+-			.randomId = details.randomId,
+-			.message = details.text,
+-			.recipient = peer,
+-			.limitedCount = gift.info.limitedCount,
+-			.perUserLimit = gift.info.perUserTotal,
+-			.anonymous = details.anonymous,
+-			.upgraded = details.upgraded,
+-		}, done, processNonPanelPaymentFormFactory);
++		SendLocalStarGift(window, peer, gift, details, done);
+ 	});
+ }
+ 
 diff --git a/Telegram/SourceFiles/core/local_url_handlers.cpp b/Telegram/SourceFiles/core/local_url_handlers.cpp
 index 7595146a2..82271563b 100644
 --- a/Telegram/SourceFiles/core/local_url_handlers.cpp
@@ -14628,6 +14701,18 @@ index 7a35b1599..cdbd6100d 100644
  	const auto source = SourceFromPeer(peer);
  	const auto size = photo->videoByteSize(PhotoSize::Large);
  	return photo->hasVideo()
+diff --git a/Telegram/SourceFiles/data/data_credits.h b/Telegram/SourceFiles/data/data_credits.h
+index b68e35d70..2cad151c6 100644
+--- a/Telegram/SourceFiles/data/data_credits.h
++++ b/Telegram/SourceFiles/data/data_credits.h
+@@ -123,6 +123,7 @@ struct CreditsHistoryEntry final {
+ 	bool giftPinned : 1 = false;
+ 	bool giftCrafted : 1 = false;
+ 	bool savedToProfile : 1 = false;
++	bool localGift : 1 = false;
+ 	bool fromGiftsList : 1 = false;
+ 	bool fromGiftSlug : 1 = false;
+ 	bool soldOutInfo : 1 = false;
 diff --git a/Telegram/SourceFiles/data/data_message_reactions.cpp b/Telegram/SourceFiles/data/data_message_reactions.cpp
 index 5caa80abc..5b74bea01 100644
 --- a/Telegram/SourceFiles/data/data_message_reactions.cpp
@@ -14824,6 +14909,63 @@ index 6533de425..00111087e 100644
  	return _userpicHasVideo != 0;
  }
  
+diff --git a/Telegram/SourceFiles/data/data_peer_values.cpp b/Telegram/SourceFiles/data/data_peer_values.cpp
+index 5d2952526..b5893e8cb 100644
+--- a/Telegram/SourceFiles/data/data_peer_values.cpp
++++ b/Telegram/SourceFiles/data/data_peer_values.cpp
+@@ -395,25 +395,34 @@ rpl::producer<bool> CanManageGroupCallValue(not_null<PeerData*> peer) {
+ }
+ 
+ rpl::producer<bool> PeerPremiumValue(not_null<PeerData*> peer) {
++	using namespace rpl::mappers;
++
+ 	const auto user = peer->asUser();
+ 	if (!user) {
+ 		return rpl::single(false);
+ 	}
+-	return user->flagsValue(
++	auto flags = user->flagsValue(
+ 	) | rpl::filter([=](UserData::Flags::Change change) {
+ 		return (change.diff & UserDataFlag::Premium);
+ 	}) | rpl::map([=] {
+ 		return user->isPremium();
+ 	});
++	if (!user->isSelf()) {
++		return flags;
++	}
++	return rpl::combine(
++		AyuSettings::getInstance().localPremiumValue(),
++		std::move(flags),
++		_1 || _2);
+ }
+ 
+ rpl::producer<bool> AmPremiumValue(not_null<Main::Session*> session) {
+-	const auto &settings = AyuSettings::getInstance();
+-	if (settings.localPremium()) {
+-		return rpl::single(true);
+-	}
++	using namespace rpl::mappers;
+ 
+-	return PeerPremiumValue(session->user());
++	return rpl::combine(
++		AyuSettings::getInstance().localPremiumValue(),
++		PeerPremiumValue(session->user()),
++		_1 || _2);
+ }
+ 
+ TimeId SortByOnlineValue(not_null<UserData*> user, TimeId now) {
+diff --git a/Telegram/SourceFiles/data/data_premium_subscription_option.h b/Telegram/SourceFiles/data/data_premium_subscription_option.h
+index 3dd9fc0a7..b8145fd8b 100644
+--- a/Telegram/SourceFiles/data/data_premium_subscription_option.h
++++ b/Telegram/SourceFiles/data/data_premium_subscription_option.h
+@@ -11,6 +11,7 @@ namespace Data {
+ 
+ struct PremiumSubscriptionOption {
+ 	int months = 0;
++	int64 amount = 0;
+ 	QString duration;
+ 	QString discount;
+ 	QString costPerMonth;
 diff --git a/Telegram/SourceFiles/data/data_session.cpp b/Telegram/SourceFiles/data/data_session.cpp
 index 2498bfc6d..c02427014 100644
 --- a/Telegram/SourceFiles/data/data_session.cpp
@@ -16428,6 +16570,355 @@ index 5984bcefa..a17fc4722 100644
  		return AttachSelectorResult::Skipped;
  	}
  
+diff --git a/Telegram/SourceFiles/info/bot/earn/info_bot_earn_list.cpp b/Telegram/SourceFiles/info/bot/earn/info_bot_earn_list.cpp
+index 0fb935609..dd27798e3 100644
+--- a/Telegram/SourceFiles/info/bot/earn/info_bot_earn_list.cpp
++++ b/Telegram/SourceFiles/info/bot/earn/info_bot_earn_list.cpp
+@@ -9,6 +9,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ 
+ #include "api/api_credits.h"
+ #include "api/api_filter_updates.h"
++#include "ayu/ayu_settings.h"
++#include "ayu/ui/utils/ayu_profile_values.h"
++#include "base/flat_map.h"
+ #include "base/unixtime.h"
+ #include "core/ui_integration.h"
+ #include "data/data_channel_earn.h"
+@@ -25,6 +28,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "info/statistics/info_statistics_list_controllers.h"
+ #include "lang/lang_keys.h"
+ #include "main/main_account.h"
++#include "main/main_app_config.h"
+ #include "main/main_session.h"
+ #include "settings/settings_credits_graphics.h"
+ #include "statistics/chart_widget.h"
+@@ -60,6 +64,85 @@ void AddHeader(
+ 	header->resizeToWidth(header->width());
+ }
+ 
++[[nodiscard]] Data::StatisticalChart LocalRevenueChart() {
++	const auto earnings = Ayu::ParseLocalStarsEarnings(
++		AyuSettings::getInstance().localStarsEarnings());
++	auto result = Data::StatisticalChart();
++	if (earnings.empty()) {
++		return result;
++	}
++	auto byDay = base::flat_map<int64, int64>();
++	auto firstDay = int64(0);
++	for (const auto &earning : earnings) {
++		const auto day = QDateTime(
++			QDateTime::fromSecsSinceEpoch(earning.date, Qt::LocalTime).date(),
++			QTime(0, 0),
++			Qt::LocalTime).toSecsSinceEpoch();
++		byDay[day] += earning.amount;
++		if (!firstDay || day < firstDay) {
++			firstDay = day;
++		}
++	}
++	auto line = Data::StatisticalChart::Line();
++	line.id = 1;
++	line.idString = u"revenue"_q;
++	line.name = tr::lng_bot_earn_chart_revenue(tr::now);
++	line.colorKey = u"GOLDEN"_q;
++	const auto last = QDate::currentDate();
++	for (auto date = QDateTime::fromSecsSinceEpoch(
++			firstDay,
++			Qt::LocalTime).date();
++			date <= last;
++			date = date.addDays(1)) {
++		const auto day = QDateTime(date, QTime(0, 0), Qt::LocalTime);
++		const auto start = day.toSecsSinceEpoch();
++		const auto i = byDay.find(start);
++		const auto value = (i != end(byDay)) ? i->second : int64(0);
++		result.x.push_back(float64(start) * 1000.);
++		line.y.push_back(Statistic::ChartValue(value));
++		if (value > line.maxValue) {
++			line.maxValue = Statistic::ChartValue(value);
++		}
++		if (value < line.minValue) {
++			line.minValue = Statistic::ChartValue(value);
++		}
++	}
++	result.lines.push_back(std::move(line));
++	result.currency = Data::StatisticalCurrency::Credits;
++	result.timeStep = 3600. * 24. * 1000.;
++	result.defaultZoomXIndex.min = 0;
++	result.defaultZoomXIndex.max = float64(result.x.size() - 1);
++	result.measure();
++	if (result.maxValue == result.minValue) {
++		if (result.minValue) {
++			result.minValue = 0;
++		} else {
++			result.maxValue = 1;
++		}
++	}
++	return result;
++}
++
++[[nodiscard]] Data::CreditsEarnStatistics LocalEarnStatistics(
++		not_null<Main::Session*> session) {
++	const auto now = base::unixtime::now();
++	const auto proceeds = Ayu::ComputeLocalStarsProceeds(
++		AyuSettings::getInstance().localStarsWithdrawn(),
++		now);
++	auto result = Data::CreditsEarnStatistics();
++	result.currentBalance = CreditsAmount(proceeds.total);
++	result.availableBalance = CreditsAmount(proceeds.available);
++	result.overallRevenue = CreditsAmount(proceeds.lifetime);
++	result.usdRate = session->appConfig().currencyWithdrawRate();
++	result.isWithdrawalEnabled = true;
++	if (!proceeds.available && proceeds.nextMaturity) {
++		result.nextWithdrawalAt = base::unixtime::parse(
++			TimeId(proceeds.nextMaturity));
++	}
++	result.revenueGraph.chart = LocalRevenueChart();
++	return result;
++}
++
+ } // namespace
+ 
+ InnerWidget::InnerWidget(QWidget *parent, not_null<Controller*> controller)
+@@ -91,6 +174,12 @@ void InnerWidget::load() {
+ 
+ 	_showFinished.events(
+ 	) | rpl::take(1) | rpl::on_next([=, this, peer = peer()] {
++		if (peer->isSelf()) {
++			_state = LocalEarnStatistics(&peer->session());
++			_loaded.fire(true);
++			fill();
++			return;
++		}
+ 		request([=](Data::CreditsEarnStatistics state) {
+ 			_state = state;
+ 			_loaded.fire(true);
+@@ -127,6 +216,13 @@ void InnerWidget::fill() {
+ 			return _state.availableBalance;
+ 		})
+ 	);
++	auto currentBalanceValue = rpl::single(
++		data.currentBalance
++	) | rpl::then(
++		_stateUpdated.events() | rpl::map([=] {
++			return _state.currentBalance;
++		})
++	);
+ 	auto overallBalanceValue = rpl::single(
+ 		data.overallRevenue
+ 	) | rpl::then(
+@@ -215,7 +311,7 @@ void InnerWidget::fill() {
+ 		Ui::AddSkip(container);
+ 		Ui::AddSkip(container);
+ 		addOverview(
+-			rpl::single(data.currentBalance),
++			rpl::duplicate(currentBalanceValue),
+ 			tr::lng_bot_earn_reward);
+ 		Ui::AddSkip(container);
+ 		Ui::AddSkip(container);
+@@ -237,6 +333,10 @@ void InnerWidget::fill() {
+ 				return _state.nextWithdrawalAt;
+ 			})
+ 		);
++		const auto refreshLocal = [=] {
++			_state = LocalEarnStatistics(&peer()->session());
++			_stateUpdated.fire({});
++		};
+ 		::Settings::AddWithdrawalWidget(
+ 			container,
+ 			_controller->parentController(),
+@@ -255,7 +355,8 @@ void InnerWidget::fill() {
+ 				availableBalanceValue
+ 			) | rpl::map([=](CreditsAmount v) {
+ 				return v ? ToUsd(v, multiplier, kMinorLength) : QString();
+-			}));
++			}),
++			peer()->isSelf() ? Fn<void()>(refreshLocal) : Fn<void()>());
+ 		container->resizeToWidth(container->width());
+ 	}
+ 	if (BotStarRef::Join::Allowed(peer()) && !peer()->isSelf()) {
+diff --git a/Telegram/SourceFiles/info/peer_gifts/info_peer_gifts_widget.cpp b/Telegram/SourceFiles/info/peer_gifts/info_peer_gifts_widget.cpp
+index a66e3d0c1..a6a3da379 100644
+--- a/Telegram/SourceFiles/info/peer_gifts/info_peer_gifts_widget.cpp
++++ b/Telegram/SourceFiles/info/peer_gifts/info_peer_gifts_widget.cpp
+@@ -11,6 +11,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "api/api_hash.h"
+ #include "api/api_premium.h"
+ #include "apiwrap.h"
++#include "ayu/ayu_settings.h"
++#include "ayu/ui/utils/ayu_profile_values.h"
+ #include "boxes/share_box.h"
+ #include "boxes/star_gift_box.h"
+ #include "core/ui_integration.h"
+@@ -204,6 +206,7 @@ private:
+ 	void loadCollections();
+ 	void loadMore();
+ 	void loaded(const MTPpayments_SavedStarGifts &result);
++	void mergeLocalGifts();
+ 	void markInCollection(const Data::SavedStarGift &gift);
+ 	void refreshButtons();
+ 	void validateButtons();
+@@ -268,6 +271,9 @@ private:
+ 	Fn<void()> _collectionsLoadedCallback;
+ 	QString _offset;
+ 	bool _collectionsLoaded = false;
++	bool _localGiftsMerged = false;
++	int _localGiftsCount = 0;
++	rpl::lifetime _localGiftsLifetime;
+ 
+ 	rpl::event_stream<Descriptor> _descriptorChanges;
+ 	rpl::event_stream<bool> _notifyEnabled;
+@@ -392,6 +398,31 @@ InnerWidget::InnerWidget(
+ 	) | rpl::on_next([=](Descriptor now) {
+ 		switchTo(now.collectionId);
+ 	}, lifetime());
++
++	if (_peer->isSelf() && !_addingToCollectionId) {
++		AyuSettings::getInstance().localGiftsChanges(
++		) | rpl::on_next([=] {
++			if (!_localGiftsMerged) {
++				return;
++			}
++			_all.list.erase(
++				ranges::remove_if(_all.list, [](const Entry &entry) {
++					return !entry.gift.manageId;
++				}),
++				end(_all.list));
++			_all.total = _all.allLoaded
++				? int(_all.list.size())
++				: std::max(_all.total - _localGiftsCount, 0);
++			_localGiftsMerged = false;
++			_localGiftsCount = 0;
++			_localGiftsLifetime.destroy();
++			if (!_descriptor.current().collectionId) {
++				refreshButtons();
++				refreshAbout();
++				mergeLocalGifts();
++			}
++		}, lifetime());
++	}
+ }
+ 
+ void InnerWidget::switchTo(int collectionId) {
+@@ -402,6 +433,7 @@ void InnerWidget::switchTo(int collectionId) {
+ 	refreshButtons();
+ 	refreshAbout();
+ 	loadMore();
++	mergeLocalGifts();
+ }
+ 
+ void InnerWidget::loadCollections() {
+@@ -697,6 +729,9 @@ void InnerWidget::loaded(const MTPpayments_SavedStarGifts &result) {
+ 	if (_entries->filter != filter) {
+ 		_entries->filter = filter;
+ 		_list->clear();
++		_localGiftsMerged = false;
++		_localGiftsCount = 0;
++		_localGiftsLifetime.destroy();
+ 	}
+ 	_list->reserve(_list->size() + data.vgifts().v.size());
+ 
+@@ -727,12 +762,83 @@ void InnerWidget::loaded(const MTPpayments_SavedStarGifts &result) {
+ 	}
+ 	refreshButtons();
+ 	refreshAbout();
++	mergeLocalGifts();
+ 
+ 	if (hasUnique) {
+ 		Ui::PreloadUniqueGiftResellPrices(&_peer->session());
+ 	}
+ }
+ 
++void InnerWidget::mergeLocalGifts() {
++	if (!_peer->isSelf()
++		|| _descriptor.current().collectionId
++		|| _addingToCollectionId
++		|| _localGiftsMerged) {
++		return;
++	}
++	const auto records = Ayu::ParseLocalGifts(
++		AyuSettings::getInstance().localGifts());
++	if (records.empty()) {
++		return;
++	}
++	_localGiftsMerged = true;
++	GiftsStars(
++		&_peer->session(),
++		_peer
++	) | rpl::take(1) | rpl::on_next([=](std::vector<GiftTypeStars> catalog) {
++		if (!_peer->isSelf()
++			|| _descriptor.current().collectionId
++			|| _addingToCollectionId) {
++			return;
++		}
++		const auto filter = _descriptor.current().filter;
++		auto entries = std::vector<Entry>();
++		for (auto i = records.rbegin(); i != records.rend(); ++i) {
++			const auto &record = *i;
++			const auto found = ranges::find_if(
++				catalog,
++				[&](const GiftTypeStars &gift) {
++					return !gift.resale && gift.info.id == record.giftId;
++				});
++			if (found == end(catalog)) {
++				continue;
++			}
++			const auto &info = found->info;
++			if ((filter.skipUnlimited && !info.limitedCount)
++				|| (filter.skipLimited && info.limitedCount)
++				|| (filter.skipUpgradable && info.upgradable)
++				|| filter.skipSaved) {
++				continue;
++			}
++			auto saved = Data::SavedStarGift();
++			saved.info = info;
++			saved.message = TextWithEntities{ record.message };
++			saved.fromId = _peer->id;
++			saved.date = TimeId(record.date);
++			saved.anonymous = record.anonymous;
++			saved.mine = true;
++			auto descriptor = DescriptorForGift(_peer, saved);
++			entries.push_back({
++				.gift = std::move(saved),
++				.descriptor = std::move(descriptor),
++			});
++		}
++		if (entries.empty()) {
++			return;
++		}
++		_localGiftsCount = int(entries.size());
++		_list->insert(
++			_list->begin(),
++			std::make_move_iterator(entries.begin()),
++			std::make_move_iterator(entries.end()));
++		_entries->total = _entries->allLoaded
++			? int(_list->size())
++			: _entries->total + _localGiftsCount;
++		refreshButtons();
++		refreshAbout();
++	}, _localGiftsLifetime);
++}
++
+ void InnerWidget::markInCollection(const Data::SavedStarGift &gift) {
+ 	if (const auto collectionId = _addingToCollectionId) {
+ 		const auto id = gift.manageId;
+@@ -1170,8 +1276,8 @@ void InnerWidget::showMenuFor(not_null<GiftButton*> button, QPoint point) {
+ 	const auto collectionId = _descriptor.current().collectionId;
+ 	entry.pinnedSavedGifts = collectionId > 0 ? nullptr : pinnedSavedGifts();
+ 	_menu = base::make_unique_q<Ui::PopupMenu>(this, st::popupMenuWithIcons);
+-	if (_peer->canManageGifts() && !_collections.empty()) {
+-		const auto &gift = (*_list)[index].gift;
++	const auto &gift = (*_list)[index].gift;
++	if (_peer->canManageGifts() && !_collections.empty() && gift.manageId) {
+ 		const auto addAction = Ui::Menu::CreateAddActionCallback(_menu);
+ 		addAction(Ui::Menu::MenuCallback::Args{
+ 			.text = tr::lng_gift_collection_add_to(tr::now),
+@@ -1189,7 +1295,6 @@ void InnerWidget::showMenuFor(not_null<GiftButton*> button, QPoint point) {
+ 		::Settings::SavedStarGiftMenuType::List);
+ 
+ 	if (collectionId > 0 && _peer->canManageGifts()) {
+-		const auto &gift = (*_list)[index].gift;
+ 		if (ranges::contains(gift.collectionIds, collectionId)) {
+ 			const auto addAction = Ui::Menu::CreateAddActionCallback(_menu);
+ 			addAction({
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_actions.cpp b/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
 index 594061dbb..4a27ea439 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
@@ -17272,6 +17763,25 @@ index d278e366b..36bbb3883 100644
  }
  
  rpl::producer<> Widget::showSettingsRequested() const {
+diff --git a/Telegram/SourceFiles/main/main_session.cpp b/Telegram/SourceFiles/main/main_session.cpp
+index 71d997ed9..6b1afeaca 100644
+--- a/Telegram/SourceFiles/main/main_session.cpp
++++ b/Telegram/SourceFiles/main/main_session.cpp
+@@ -408,10 +408,10 @@ rpl::producer<bool> Session::premiumPossibleValue() const {
+ 		return _user->isPremium();
+ 	});
+ 
+-	const auto &settings = AyuSettings::getInstance();
+-	if (settings.localPremium()) {
+-		premium = rpl::single(true);
+-	}
++	premium = rpl::combine(
++		AyuSettings::getInstance().localPremiumValue(),
++		std::move(premium),
++		_1 || _2);
+ 
+ 	return rpl::combine(
+ 		std::move(premium),
 diff --git a/Telegram/SourceFiles/media/view/media_view_overlay_widget.cpp b/Telegram/SourceFiles/media/view/media_view_overlay_widget.cpp
 index 1fb8ed681..1497e22e0 100644
 --- a/Telegram/SourceFiles/media/view/media_view_overlay_widget.cpp
@@ -17293,10 +17803,19 @@ index 1fb8ed681..1497e22e0 100644
  
  bool OverlayWidget::showCopyMediaRestriction(bool skipPRemiumCheck) {
 diff --git a/Telegram/SourceFiles/payments/payments_non_panel_process.cpp b/Telegram/SourceFiles/payments/payments_non_panel_process.cpp
-index fa517bf9c..13322a17a 100644
+index fa517bf9c..fdfb7902a 100644
 --- a/Telegram/SourceFiles/payments/payments_non_panel_process.cpp
 +++ b/Telegram/SourceFiles/payments/payments_non_panel_process.cpp
-@@ -46,6 +46,9 @@ void ProcessCreditsPayment(
+@@ -8,6 +8,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "payments/payments_non_panel_process.h"
+ 
+ #include "api/api_credits.h"
++#include "ayu/ayu_settings.h"
++#include "ayu/ui/utils/ayu_profile_values.h"
+ #include "base/unixtime.h"
+ #include "boxes/send_credits_box.h"
+ #include "data/components/credits.h"
+@@ -46,6 +48,9 @@ void ProcessCreditsPayment(
  		QPointer<QWidget> fireworks,
  		std::shared_ptr<CreditsFormData> form,
  		Fn<void(CheckoutResult)> maybeReturnToBot) {
@@ -17306,7 +17825,7 @@ index fa517bf9c..13322a17a 100644
  	const auto hasBadResult = [=](Settings::SmallBalanceResult result) {
  		if (result == Settings::SmallBalanceResult::Blocked) {
  			if (const auto onstack = maybeReturnToBot) {
-@@ -100,11 +103,17 @@ void ProcessCreditsPayment(
+@@ -100,11 +105,46 @@ void ProcessCreditsPayment(
  				onstack(CheckoutResult::Paid);
  			}
  		};
@@ -17321,7 +17840,36 @@ index fa517bf9c..13322a17a 100644
 -	if (form->starGiftForm || IsPremiumForStarsInvoice(form->id)) {
 +	if (isIntelGramLocalTopup) {
 +		done(SmallBalanceResult::Success);
-+	} else if (form->starGiftForm || IsPremiumForStarsInvoice(form->id)) {
++	} else if (form->starGiftForm) {
++		const auto credits = form->invoice.credits;
++		MaybeRequestLocalBalanceIncrease(
++			show,
++			credits,
++			source,
++			[=](SmallBalanceResult result) {
++				if (hasBadResult(result)) {
++					return;
++				}
++				const auto settings = &AyuSettings::getInstance();
++				settings->setLocalStarsBalance(
++					settings->localStarsBalance() - int(credits));
++				if (const auto gift
++						= std::get_if<InvoiceStarGift>(&form->id.value)) {
++					if (gift->recipient->isSelf()) {
++						Ayu::AppendLocalGift({
++							.giftId = gift->giftId,
++							.stars = int64(credits),
++							.date = base::unixtime::now(),
++							.message = gift->message.text,
++							.anonymous = gift->anonymous,
++						});
++					}
++				}
++				if (const auto onstack = maybeReturnToBot) {
++					onstack(CheckoutResult::Paid);
++				}
++			});
++	} else if (IsPremiumForStarsInvoice(form->id)) {
  		const auto credits = form->invoice.credits;
  		MaybeRequestBalanceIncrease(show, credits, source, done);
  	} else {
@@ -17772,7 +18320,7 @@ index 67d40e071..ce1d4c1bb 100644
  	if (type == PermissionType::Microphone) {
  		PermissionStatus result = PermissionStatus::Granted;
 diff --git a/Telegram/SourceFiles/settings/sections/settings_credits.cpp b/Telegram/SourceFiles/settings/sections/settings_credits.cpp
-index c2d1c009a..b0c54aa61 100644
+index c2d1c009a..ca8ab4c48 100644
 --- a/Telegram/SourceFiles/settings/sections/settings_credits.cpp
 +++ b/Telegram/SourceFiles/settings/sections/settings_credits.cpp
 @@ -10,6 +10,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -17807,7 +18355,45 @@ index c2d1c009a..b0c54aa61 100644
  			true,
  			content->heightValue() | rpl::map([=](int height) {
  				const auto ratio = float64(height - content->minimumHeight())
-@@ -1103,11 +1110,10 @@ Fn<void()> BuyStarsHandler::handler(
+@@ -943,10 +950,6 @@ void BuildCreditsButtons(
+ 	const auto self = session->user();
+ 
+ 	if (!isCurrency) {
+-		auto statsShown = session->credits().loadedValue(
+-		) | rpl::map([session] {
+-			return session->credits().statsEnabled();
+-		});
+ 		const auto stats = builder.addButton({
+ 			.id = u"stars/stats"_q,
+ 			.title = tr::lng_credits_stats_button(),
+@@ -957,7 +960,6 @@ void BuildCreditsButtons(
+ 					Info::BotEarn::Make(self));
+ 			},
+ 			.keywords = { u"statistics"_q },
+-			.shown = std::move(statsShown),
+ 		});
+ 		if (statsButton) {
+ 			*statsButton = stats;
+@@ -981,15 +983,14 @@ void BuildCreditsButtons(
+ 		}
+ 	}
+ 
+-	if (!isCurrency && Info::BotStarRef::Join::Allowed(self)) {
++	if (!isCurrency) {
+ 		const auto earn = builder.addButton({
+ 			.id = u"stars/earn"_q,
+ 			.title = tr::lng_credits_earn_button(),
+ 			.st = &st::settingsCreditsButton,
+ 			.icon = { &st::settingsButtonIconEarn },
+-			.onClick = [controller, self] {
+-				controller->parentController()->showSection(
+-					Info::BotStarRef::Join::Make(self));
++			.onClick = [controller] {
++				ShowLocalEarnStarsBox(controller->parentController());
+ 			},
+ 			.keywords = { u"affiliate"_q, u"referral"_q },
+ 		});
+@@ -1103,11 +1104,10 @@ Fn<void()> BuyStarsHandler::handler(
  		box->setTitle(tr::lng_credits_summary_options_subtitle());
  		const auto inner = box->verticalLayout();
  		const auto self = show->session().user();
@@ -17821,7 +18407,7 @@ index c2d1c009a..b0c54aa61 100644
  		FillCreditOptions(show, inner, self, amount, [=] {
  			if (const auto strong = weak.get()) {
  				strong->closeBox();
-@@ -1115,29 +1121,15 @@ Fn<void()> BuyStarsHandler::handler(
+@@ -1115,29 +1115,15 @@ Fn<void()> BuyStarsHandler::handler(
  			if (const auto onstack = paid) {
  				onstack();
  			}
@@ -18036,19 +18622,120 @@ index 224794a86..bc3609e6a 100644
  		p.drawText(rectForName.left(), rectForName.top() + st::msgNameFont->ascent, notifyTitle);
  
  		st::notifyClose.icon.paint(p, w - st::notifyClosePos.x() - st::notifyClose.width + st::notifyClose.iconPosition.x(), st::notifyClosePos.y() + st::notifyClose.iconPosition.y(), w);
+diff --git a/Telegram/SourceFiles/settings/sections/settings_premium.cpp b/Telegram/SourceFiles/settings/sections/settings_premium.cpp
+index fb973bb39..eecdb705c 100644
+--- a/Telegram/SourceFiles/settings/sections/settings_premium.cpp
++++ b/Telegram/SourceFiles/settings/sections/settings_premium.cpp
+@@ -32,6 +32,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "settings/sections/settings_main.h"
+ #include "settings/settings_builder.h"
+ #include "settings/settings_common_session.h"
++#include "settings/settings_credits_graphics.h"
+ #include "ui/abstract_button.h"
+ #include "ui/basic_click_handlers.h"
+ #include "ui/effects/gradient.h"
+@@ -532,13 +533,6 @@ void SendScreenShow(
+ 		data);
+ }
+ 
+-void SendScreenAccept(not_null<Window::SessionController*> controller) {
+-	SendAppLog(
+-		&controller->session(),
+-		"premium.promo_screen_accept",
+-		MTP_jsonNull());
+-}
+-
+ class EmojiStatusTopBar final {
+ public:
+ 	EmojiStatusTopBar(
+@@ -1860,28 +1854,6 @@ void ShowPremiumGiftPremium(
+ 	}));
+ }
+ 
+-void StartPremiumPayment(
+-		not_null<Window::SessionController*> controller,
+-		const QString &ref) {
+-	const auto session = &controller->session();
+-	const auto username = session->appConfig().get<QString>(
+-		u"premium_bot_username"_q,
+-		QString());
+-	const auto slug = session->appConfig().get<QString>(
+-		u"premium_invoice_slug"_q,
+-		QString());
+-	if (!username.isEmpty()) {
+-		controller->showPeerByLink(Window::PeerByLinkInfo{
+-			.usernameOrId = username,
+-			.resolveType = Window::ResolveType::BotStart,
+-			.startToken = ref,
+-			.startAutoSubmit = true,
+-		});
+-	} else if (!slug.isEmpty()) {
+-		UrlClickHandler::Open("https://t.me/$" + slug);
+-	}
+-}
+-
+ QString LookupPremiumRef(PremiumFeature section) {
+ 	for (const auto &[ref, entry] : EntryMap()) {
+ 		if (entry.section == section) {
+@@ -2038,22 +2010,13 @@ not_null<Ui::GradientButton*> CreateSubscribeButton(
+ 			Settings::ShowPremium(window, computeRef());
+ 			return;
+ 		}
+-		const auto url = computeBotUrl ? computeBotUrl() : QString();
+-		if (!url.isEmpty()) {
+-			const auto local = Core::TryConvertUrlToLocal(url);
+-			if (local.isEmpty()) {
+-				return;
+-			}
+-			UrlClickHandler::Open(
+-				local,
+-				QVariant::fromValue(ClickHandlerContext{
+-					.sessionWindow = base::make_weak(window),
+-					.botStartAutoSubmit = true,
+-				}));
+-		} else {
+-			SendScreenAccept(window);
+-			StartPremiumPayment(window, computeRef());
+-		}
++		// Local-only: the purchase is simulated on this device instead
++		// of opening PremiumBot, so no message is sent and no real
++		// payment happens.
++		StartLocalPremiumPurchase(
++			show,
++			window,
++			computeBotUrl ? computeBotUrl() : QString());
+ 	});
+ 
+ 	const auto &st = st::premiumPreviewBox.button;
+diff --git a/Telegram/SourceFiles/settings/sections/settings_premium.h b/Telegram/SourceFiles/settings/sections/settings_premium.h
+index 894e07c35..0e511ff30 100644
+--- a/Telegram/SourceFiles/settings/sections/settings_premium.h
++++ b/Telegram/SourceFiles/settings/sections/settings_premium.h
+@@ -61,10 +61,6 @@ void ShowPremiumGiftPremium(
+ 	not_null<Window::SessionController*> controller,
+ 	const Data::StarGift &gift);
+ 
+-void StartPremiumPayment(
+-	not_null<Window::SessionController*> controller,
+-	const QString &ref);
+-
+ [[nodiscard]] QString LookupPremiumRef(PremiumFeature section);
+ 
+ void ShowPremiumPromoToast(
 diff --git a/Telegram/SourceFiles/settings/settings_credits_graphics.cpp b/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
-index 9ac4584e4..af7b814b5 100644
+index 9ac4584e4..47e9d6245 100644
 --- a/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
 +++ b/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
-@@ -12,6 +12,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -12,6 +12,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "api/api_earn.h"
  #include "api/api_premium.h"
  #include "apiwrap.h"
 +#include "ayu/ayu_settings.h"
++#include "ayu/ui/utils/ayu_profile_values.h"
  #include "base/random.h"
  #include "base/timer_rpl.h"
  #include "base/unixtime.h"
-@@ -26,6 +27,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -26,6 +28,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "core/application.h"
  #include "core/click_handler_types.h"
  #include "core/click_handler_types.h" // UrlClickHandler
@@ -18056,7 +18743,11 @@ index 9ac4584e4..af7b814b5 100644
  #include "core/ui_integration.h"
  #include "data/components/credits.h"
  #include "data/components/recent_shared_media_gifts.h"
-@@ -62,9 +64,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -59,12 +62,18 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "lottie/lottie_single_player.h"
+ #include "main/main_app_config.h"
+ #include "main/main_session.h"
++#include "main/session/session_show.h"
  #include "payments/payments_checkout_process.h"
  #include "payments/payments_form.h"
  #include "payments/payments_non_panel_process.h"
@@ -18071,7 +18762,7 @@ index 9ac4584e4..af7b814b5 100644
  #include "ui/boxes/confirm_box.h"
  #include "ui/controls/button_labels.h"
  #include "ui/controls/ton_common.h"
-@@ -97,6 +104,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -97,6 +106,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "ui/wrap/slide_wrap.h"
  #include "ui/wrap/vertical_layout.h"
  #include "ui/ui_utility.h"
@@ -18080,7 +18771,62 @@ index 9ac4584e4..af7b814b5 100644
  #include "window/window_session_controller.h"
  #include "styles/style_calls.h"
  #include "styles/style_channel_earn.h"
-@@ -379,6 +388,283 @@ void AddViewMediaHandler(
+@@ -107,14 +118,20 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "styles/style_layers.h"
+ #include "styles/style_media_view.h"
+ #include "styles/style_menu_icons.h"
++#include "styles/style_payments.h" // paymentsThumbnailSize.
+ #include "styles/style_premium.h"
+ #include "styles/style_settings.h"
+ #include "styles/style_statistics.h"
+ 
+ #include <xxhash.h> // XXH64.
+ 
++#include <cmath>
++
+ #include <QtSvg/QSvgRenderer>
+ 
++#include <QtGui/QLinearGradient>
++#include <QtGui/QPainterPath>
++
+ namespace Settings {
+ namespace {
+ 
+@@ -280,6 +297,33 @@ void ConvertStarGift(
+ 	}).send();
+ }
+ 
++void ConvertLocalStarGift(
++		std::shared_ptr<ChatHelpers::Show> show,
++		const Data::CreditsHistoryEntry &e,
++		int stars,
++		Fn<void(bool)> done) {
++	const auto settings = &AyuSettings::getInstance();
++	settings->setLocalStarsBalance(settings->localStarsBalance() + stars);
++	Ayu::AppendLocalStarsEarning({
++		.date = base::unixtime::now(),
++		.amount = stars,
++		.source = Ayu::LocalStarsEarningSource::Convert,
++	});
++	Ayu::RemoveLocalGift(
++		e.stargiftId,
++		base::unixtime::serialize(e.date),
++		e.description.text);
++	if (const auto window = show->resolveWindow()) {
++		window->showSettings(Settings::CreditsId());
++	}
++	show->showToast(tr::lng_gift_got_stars(
++		tr::now,
++		lt_count,
++		stars,
++		tr::rich));
++	done(true);
++}
++
+ void AddViewMediaHandler(
+ 		not_null<Ui::RpWidget*> thumb,
+ 		std::shared_ptr<ChatHelpers::Show> show,
+@@ -379,6 +423,684 @@ void AddViewMediaHandler(
  	}, thumb->lifetime());
  }
  
@@ -18093,6 +18839,115 @@ index 9ac4584e4..af7b814b5 100644
 +
 +class LocalStarsCheckout;
 +LocalStarsCheckout *ActiveLocalStarsCheckout = nullptr;
++
++[[nodiscard]] QPainterPath SparklePath(QPointF center, float64 radius) {
++	const auto waist = radius * 0.16;
++	auto path = QPainterPath();
++	path.moveTo(center.x(), center.y() - radius);
++	path.quadTo(
++		center.x() + waist,
++		center.y() - waist,
++		center.x() + radius,
++		center.y());
++	path.quadTo(
++		center.x() + waist,
++		center.y() + waist,
++		center.x(),
++		center.y() + radius);
++	path.quadTo(
++		center.x() - waist,
++		center.y() + waist,
++		center.x() - radius,
++		center.y());
++	path.quadTo(
++		center.x() - waist,
++		center.y() - waist,
++		center.x(),
++		center.y() - radius);
++	return path;
++}
++
++[[nodiscard]] QImage LocalStarsCheckoutThumbnail() {
++	const auto ratio = style::DevicePixelRatio();
++	auto result = QImage(
++		st::paymentsThumbnailSize * ratio,
++		QImage::Format_ARGB32_Premultiplied);
++	result.fill(Qt::transparent);
++	{
++		auto p = QPainter(&result);
++		p.setRenderHint(QPainter::Antialiasing);
++		p.scale(ratio, ratio);
++		const auto size = st::paymentsThumbnailSize;
++		const auto rect = QRectF(0, 0, size.width(), size.height());
++		auto background = QLinearGradient(rect.topLeft(), rect.bottomRight());
++		background.setColorAt(0, QColor(0x1D, 0x2E, 0x45));
++		background.setColorAt(1, QColor(0x0C, 0x14, 0x21));
++		p.fillRect(rect, background);
++		p.setPen(Qt::NoPen);
++		p.setBrush(QColor(0xFF, 0xFF, 0xFF, 0x66));
++		p.drawPath(SparklePath(QPointF(14, 16), 4));
++		p.drawPath(SparklePath(QPointF(64, 12), 3));
++		p.drawPath(SparklePath(QPointF(68, 60), 4.5));
++		p.drawPath(SparklePath(QPointF(12, 62), 3));
++		const auto center = QPointF(size.width() / 2., size.height() / 2.);
++		auto gold = QLinearGradient(
++			QPointF(center.x(), center.y() - 24),
++			QPointF(center.x(), center.y() + 24));
++		gold.setColorAt(0, QColor(0xFF, 0xD9, 0x55));
++		gold.setColorAt(1, QColor(0xF5, 0x9E, 0x0B));
++		p.setBrush(gold);
++		p.drawPath(SparklePath(center, 24));
++	}
++	result = Images::Round(std::move(result), ImageRoundRadius::Large);
++	result.setDevicePixelRatio(ratio);
++	return result;
++}
++
++void FillLocalCheckoutMethod(Payments::Ui::PaymentMethodDetails &method) {
++	method.native.supported = true;
++	method.native.canSaveInformation = true;
++	method.savedMethods = {
++		Payments::Ui::PaymentMethodSaved{
++			u"intelgram-local-card"_q,
++			LocalStarsSavedCardTitle(),
++		},
++	};
++	method.savedMethodIndex = 0;
++	method.canSaveInformation = true;
++}
++
++void SaveLocalCheckoutCard(
++		Payments::Ui::PaymentMethodDetails &method,
++		const Payments::Ui::UncheckedCardDetails &data) {
++	auto digits = QString();
++	for (const auto ch : data.number) {
++		if (ch.isDigit()) {
++			digits.append(ch);
++		}
++	}
++	const auto brand = digits.startsWith(u"4"_q)
++		? u"Visa"_q
++		: digits.startsWith(u"5"_q)
++		? u"Mastercard"_q
++		: digits.startsWith(u"3"_q)
++		? u"AMEX"_q
++		: digits.startsWith(u"6"_q)
++		? u"Discover"_q
++		: u"Card"_q;
++	method.savedMethods = {
++		Payments::Ui::PaymentMethodSaved{
++			u"intelgram-local-card"_q,
++			brand
++				+ u" •••• "_q
++				+ (digits.size() > 4 ? digits.right(4) : digits),
++		},
++	};
++	method.savedMethodIndex = 0;
++	if (!data.cardholderName.isEmpty()) {
++		AyuSettings::getInstance().setLocalStarsCardName(
++			data.cardholderName);
++	}
++}
 +
 +// Local-only Stars checkout.
 +//
@@ -18152,19 +19007,11 @@ index 9ac4584e4..af7b814b5 100644
 +		_invoice.cover.title = u"Telegram Stars Top-Up"_q;
 +		_invoice.cover.description = TextWithEntities{ label };
 +		_invoice.cover.seller = u"Premium Bot"_q;
++		_invoice.cover.thumbnail = LocalStarsCheckoutThumbnail();
 +		_invoice.prices = {
 +			Payments::Ui::LabeledPrice{ label, int64(_option.amount) },
 +		};
-+		_method.native.supported = true;
-+		_method.native.canSaveInformation = true;
-+		_method.savedMethods = {
-+			Payments::Ui::PaymentMethodSaved{
-+				u"intelgram-local-card"_q,
-+				LocalStarsSavedCardTitle(),
-+			},
-+		};
-+		_method.savedMethodIndex = 0;
-+		_method.canSaveInformation = true;
++		FillLocalCheckoutMethod(_method);
 +	}
 +
 +	void show() {
@@ -18296,34 +19143,7 @@ index 9ac4584e4..af7b814b5 100644
 +		bool) override {
 +		// A card entered here is kept only on this device, as the saved
 +		// local method for the next top-up.
-+		auto digits = QString();
-+		for (const auto ch : data.number) {
-+			if (ch.isDigit()) {
-+				digits.append(ch);
-+			}
-+		}
-+		const auto brand = digits.startsWith(u"4"_q)
-+			? u"Visa"_q
-+			: digits.startsWith(u"5"_q)
-+			? u"Mastercard"_q
-+			: digits.startsWith(u"3"_q)
-+			? u"AMEX"_q
-+			: digits.startsWith(u"6"_q)
-+			? u"Discover"_q
-+			: u"Card"_q;
-+		_method.savedMethods = {
-+			Payments::Ui::PaymentMethodSaved{
-+				u"intelgram-local-card"_q,
-+				brand
-+					+ u" •••• "_q
-+					+ (digits.size() > 4 ? digits.right(4) : digits),
-+			},
-+		};
-+		_method.savedMethodIndex = 0;
-+		if (!data.cardholderName.isEmpty()) {
-+			AyuSettings::getInstance().setLocalStarsCardName(
-+				data.cardholderName);
-+		}
++		SaveLocalCheckoutCard(_method, data);
 +		showForm();
 +	}
 +
@@ -18361,10 +19181,337 @@ index 9ac4584e4..af7b814b5 100644
 +
 +};
 +
++[[nodiscard]] QPainterPath StarPath(QPointF center, float64 radius) {
++	const auto inner = radius * 0.42;
++	auto path = QPainterPath();
++	for (auto i = 0; i < 10; ++i) {
++		const auto r = (i % 2 == 0) ? radius : inner;
++		const auto angle = -M_PI / 2 + i * M_PI / 5;
++		const auto point = QPointF(
++			center.x() + r * std::cos(angle),
++			center.y() + r * std::sin(angle));
++		if (i == 0) {
++			path.moveTo(point);
++		} else {
++			path.lineTo(point);
++		}
++	}
++	path.closeSubpath();
++	return path;
++}
++
++[[nodiscard]] QImage LocalPremiumCheckoutThumbnail() {
++	const auto ratio = style::DevicePixelRatio();
++	auto result = QImage(
++		st::paymentsThumbnailSize * ratio,
++		QImage::Format_ARGB32_Premultiplied);
++	result.fill(Qt::transparent);
++	{
++		auto p = QPainter(&result);
++		p.setRenderHint(QPainter::Antialiasing);
++		p.scale(ratio, ratio);
++		const auto size = st::paymentsThumbnailSize;
++		const auto rect = QRectF(0, 0, size.width(), size.height());
++		auto background = QLinearGradient(rect.topLeft(), rect.bottomRight());
++		background.setColorAt(0, QColor(0x1E, 0x2A, 0x4A));
++		background.setColorAt(1, QColor(0x0E, 0x13, 0x2B));
++		p.fillRect(rect, background);
++		p.setPen(Qt::NoPen);
++		p.setBrush(QColor(0xFF, 0xFF, 0xFF, 0x66));
++		p.drawPath(SparklePath(QPointF(14, 16), 4));
++		p.drawPath(SparklePath(QPointF(64, 12), 3));
++		p.drawPath(SparklePath(QPointF(68, 60), 4.5));
++		p.drawPath(SparklePath(QPointF(12, 62), 3));
++		const auto center = QPointF(size.width() / 2., size.height() / 2.);
++		auto violet = QLinearGradient(
++			QPointF(center.x(), center.y() - 26),
++			QPointF(center.x(), center.y() + 26));
++		violet.setColorAt(0, QColor(0xC4, 0xB5, 0xFD));
++		violet.setColorAt(0.5, QColor(0x8B, 0x5C, 0xF6));
++		violet.setColorAt(1, QColor(0x63, 0x66, 0xF1));
++		p.setBrush(violet);
++		p.drawPath(StarPath(center, 26));
++	}
++
++	result = Images::Round(std::move(result), ImageRoundRadius::Large);
++
++	result.setDevicePixelRatio(ratio);
++	return result;
++}
++
++[[nodiscard]] QString LocalPremiumPlanTitle(int months) {
++	switch (months) {
++	case 1: return u"Monthly Premium Subscription"_q;
++	case 6: return u"6-Month Premium Subscription"_q;
++	case 12: return u"Annual Premium Subscription"_q;
++	case 24: return u"2-Year Premium Subscription"_q;
++	}
++	return u"Telegram Premium"_q;
++}
++
++class LocalPremiumCheckout;
++LocalPremiumCheckout *ActiveLocalPremiumCheckout = nullptr;
++
++// Local-only Premium checkout.
++//
++// Same shape as LocalStarsCheckout: Telegram's native payments panel
++// driven with a locally built Premium invoice and the pre-saved demo card.
++// Paying flips the persisted localPremium flag, which the client's own
++// premium checks already honor, so the account looks and behaves like a
++// Premium account on this device. No server request is made, no message
++// is sent to PremiumBot, and no real money moves.
++//
++// Self-owned: created by Start(), destroyed by finish() from the next
++// event-loop turn, once the panel is done with it.
++class LocalPremiumCheckout final : public Payments::Ui::PanelDelegate {
++public:
++	static void Start(
++		std::shared_ptr<Main::SessionShow> show,
++		Data::PremiumSubscriptionOption option,
++		QPointer<QWidget> fireworks) {
++		if (const auto active = ActiveLocalPremiumCheckout) {
++			active->finish(Payments::CheckoutResult::Cancelled);
++		}
++		const auto checkout = new LocalPremiumCheckout(
++			std::move(show),
++			std::move(option),
++			fireworks);
++		ActiveLocalPremiumCheckout = checkout;
++		checkout->show();
++	}
++
++private:
++	LocalPremiumCheckout(
++		std::shared_ptr<Main::SessionShow> show,
++		Data::PremiumSubscriptionOption option,
++		QPointer<QWidget> fireworks)
++	: _show(std::move(show))
++	, _session(&_show->session())
++	, _option(std::move(option))
++	, _fireworks(fireworks)
++	, _panel(std::make_unique<Payments::Ui::Panel>(this)) {
++		buildInvoiceAndMethod();
++		_panel->savedMethodChosen(
++		) | rpl::on_next([this](QString id) {
++			chooseSavedMethod(id);
++		}, _panel->lifetime());
++		_panel->backRequests(
++		) | rpl::on_next([this] {
++			panelCancelEdit();
++		}, _panel->lifetime());
++	}
++
++	void buildInvoiceAndMethod() {
++		_invoice.currency = _option.currency.isEmpty()
++			? u"USD"_q
++			: _option.currency;
++		_invoice.cover.title = LocalPremiumPlanTitle(_option.months);
++		_invoice.cover.description = TextWithEntities{
++			u"Go beyond the limits and get access to exclusive features."_q
++		};
++		_invoice.cover.seller = u"PremiumBot"_q;
++		_invoice.cover.thumbnail = LocalPremiumCheckoutThumbnail();
++		_invoice.prices = {
++			Payments::Ui::LabeledPrice{
++				_option.duration.isEmpty()
++					? u"1 month"_q
++					: _option.duration,
++				_option.amount,
++			},
++		};
++		FillLocalCheckoutMethod(_method);
++	}
++
++	void show() {
++		showForm();
++		_panel->requestActivate();
++	}
++
++	void showForm() {
++		_panel->showForm(
++			_invoice,
++			Payments::Ui::RequestedInformation(),
++			_method,
++			Payments::Ui::ShippingOptions());
++	}
++
++	void chooseSavedMethod(const QString &id) {
++		const auto &list = _method.savedMethods;
++		const auto i = ranges::find(
++			list,
++			id,
++			&Payments::Ui::PaymentMethodSaved::id);
++		if (i != end(list)) {
++			_method.savedMethodIndex = int(i - begin(list));
++		}
++		showForm();
++	}
++
++	void finish(Payments::CheckoutResult result) {
++		if (_finished) {
++			return;
++		}
++		_finished = true;
++		// Finish from the next event-loop turn: this runs inside panel
++		// callbacks, so destroying the panel right away would tear the
++		// widget down underneath its own event handler.
++		crl::on_main([this, result] {
++			if (result == Payments::CheckoutResult::Paid) {
++				AyuSettings::getInstance().setLocalPremium(true);
++			}
++			if (ActiveLocalPremiumCheckout == this) {
++				ActiveLocalPremiumCheckout = nullptr;
++			}
++			delete this;
++		});
++	}
++
++	void panelRequestClose() override {
++		finish(Payments::CheckoutResult::Cancelled);
++	}
++
++	void panelCloseSure() override {
++		finish(Payments::CheckoutResult::Cancelled);
++	}
++
++	void panelSubmit() override {
++		if (_finished) {
++			return;
++		}
++		if (const auto widget = _fireworks.data()) {
++			Ui::StartFireworks(widget);
++		}
++		finish(Payments::CheckoutResult::Paid);
++	}
++
++	void panelTrustAndSubmit() override {
++		panelSubmit();
++	}
++
++	void panelAcceptTermsAndSubmit() override {
++		panelSubmit();
++	}
++
++	void panelWebviewMessage(const QJsonDocument &, bool) override {
++	}
++
++	bool panelWebviewNavigationAttempt(const QString &) override {
++		return true;
++	}
++
++	void panelSetPassword() override {
++	}
++
++	void panelOpenUrl(const QString &url) override {
++		File::OpenUrl(url);
++	}
++
++	void panelCancelEdit() override {
++		showForm();
++	}
++
++	void panelEditPaymentMethod() override {
++		_panel->choosePaymentMethod(_method);
++	}
++
++	void panelEditShippingInformation() override {
++	}
++
++	void panelEditName() override {
++	}
++
++	void panelEditEmail() override {
++	}
++
++	void panelEditPhone() override {
++	}
++
++	void panelChooseShippingOption() override {
++	}
++
++	void panelChangeShippingOption(const QString &) override {
++	}
++
++	void panelChooseTips() override {
++	}
++
++	void panelChangeTips(int64) override {
++	}
++
++	void panelValidateInformation(
++		Payments::Ui::RequestedInformation) override {
++	}
++
++	void panelValidateCard(
++		Payments::Ui::UncheckedCardDetails data,
++		bool) override {
++		// A card entered here is kept only on this device, as the saved
++		// local method for the next checkout.
++		SaveLocalCheckoutCard(_method, data);
++		showForm();
++	}
++
++	void panelShowBox(object_ptr<Ui::BoxContent> box) override {
++		_panel->showBox(std::move(box));
++	}
++
++	QVariant panelClickHandlerContext() override {
++		return QVariant::fromValue(ClickHandlerContext{
++			.show = _panel->uiShow(),
++		});
++	}
++
++	Webview::StorageId panelWebviewStorageId() override {
++		return _session->local().resolveStorageIdOther();
++	}
++
++	Webview::ThemeParams panelWebviewThemeParams() override {
++		return Window::Theme::WebViewParams();
++	}
++
++	std::optional<QDate> panelOverrideExpireDateThreshold() override {
++		return std::nullopt;
++	}
++
++	std::shared_ptr<Main::SessionShow> _show;
++	const not_null<Main::Session*> _session;
++	Data::PremiumSubscriptionOption _option;
++	QPointer<QWidget> _fireworks;
++	const std::unique_ptr<Payments::Ui::Panel> _panel;
++	Payments::Ui::Invoice _invoice;
++	Payments::Ui::PaymentMethodDetails _method;
++	bool _finished = false;
++
++};
++
++[[nodiscard]] Data::PremiumSubscriptionOption LocalPremiumOptionForBotUrl(
++		not_null<Main::Session*> session,
++		const QString &botUrl) {
++	const auto &options = session->api().premium().subscriptionOptions();
++	if (!botUrl.isEmpty()) {
++		for (const auto &option : options) {
++			if (option.botUrl == botUrl && option.amount > 0) {
++				return option;
++			}
++		}
++	}
++	for (const auto &option : options) {
++		if (option.amount > 0) {
++			return option;
++		}
++	}
++	return {
++		.months = 1,
++		.amount = 499,
++		.duration = u"1 month"_q,
++		.currency = u"USD"_q,
++	};
++}
++
  } // namespace
  
  void AddMiniStars(
-@@ -463,6 +749,29 @@ void FillCreditOptions(
+@@ -463,6 +1185,29 @@ void FillCreditOptions(
  		std::vector<Data::CreditTopupOption> preloadedTopupOptions,
  		bool dark,
  		PeerId spendPurposePeerId) {
@@ -18394,12 +19541,54 @@ index 9ac4584e4..af7b814b5 100644
  	const auto options = container->add(
  		object_ptr<Ui::SlideWrap<Ui::VerticalLayout>>(
  			container,
-@@ -647,6 +956,22 @@ void FillCreditOptions(
+@@ -647,6 +1392,64 @@ void FillCreditOptions(
  					buttonHeight);
  			}, button->lifetime());
  			button->setClickedCallback([=] {
 +				if (localIntelGramTopup) {
 +					const auto weak = base::make_weak(button);
++					if (!peer->isSelf()) {
++						MaybeRequestLocalBalanceIncrease(
++							show,
++							uint64(option.credits),
++							SmallBalanceStarGift{ peer->id },
++							[=](SmallBalanceResult result) {
++								if (result == SmallBalanceResult::Cancelled
++									|| result == SmallBalanceResult::Blocked) {
++									return;
++								}
++								const auto settings
++									= &AyuSettings::getInstance();
++								settings->setLocalStarsBalance(
++									settings->localStarsBalance()
++										- int(option.credits));
++								if (const auto window
++										= show->resolveWindow()) {
++									window->showToast({
++										.title = tr::lng_gift_sent_title(
++											tr::now),
++										.text = tr::lng_gift_sent_about(
++											tr::now,
++											lt_count,
++											option.credits,
++											tr::rich),
++									});
++								} else {
++									show->showToast(
++										tr::lng_gift_sent_about(
++											tr::now,
++											lt_count,
++											option.credits));
++								}
++								if (const auto strong = weak.get()) {
++									strong->window()->setFocus();
++								}
++								if (const auto onstack = paid) {
++									onstack();
++								}
++							});
++						return;
++					}
 +					LocalStarsCheckout::Start(
 +						show,
 +						option,
@@ -18417,7 +19606,7 @@ index 9ac4584e4..af7b814b5 100644
  				const auto invoice = Payments::InvoiceCredits{
  					.session = &show->session(),
  					.randomId = UniqueIdFromOption(option),
-@@ -701,7 +1026,9 @@ void FillCreditOptions(
+@@ -701,7 +1504,9 @@ void FillCreditOptions(
  	using ApiOptions = Api::CreditsTopupOptions;
  	const auto apiCredits = content->lifetime().make_state<ApiOptions>(peer);
  
@@ -18428,7 +19617,7 @@ index 9ac4584e4..af7b814b5 100644
  		if (preloadedTopupOptions.empty()) {
  			fillLoading();
  			std::move(showFinishes) | rpl::on_next([=] {
-@@ -721,12 +1048,14 @@ void FillCreditOptions(
+@@ -721,12 +1526,14 @@ void FillCreditOptions(
  		}
  	}
  
@@ -18449,7 +19638,43 @@ index 9ac4584e4..af7b814b5 100644
  }
  
  [[nodiscard]] object_ptr<Ui::FlatLabel> CreateCreditsTermsLabel(
-@@ -2722,7 +3051,11 @@ void GlobalStarGiftBox(
+@@ -2023,8 +2830,12 @@ void GenericCreditsEntryBody(
+ 	const auto canToggle = starGiftCanManage
+ 		&& !e.giftTransferred
+ 		&& !e.giftRefunded
+-		&& !e.converted;
++		&& !e.converted
++		&& !e.localGift;
+ 	const auto toggleVisibility = [=, weak = base::make_weak(box)](bool save) {
++		if (e.localGift) {
++			return;
++		}
+ 		const auto showSection = !e.fromGiftsList;
+ 		const auto savedId = EntryToSavedStarGiftId(&show->session(), e);
+ 		const auto done = [=](bool ok) {
+@@ -2123,7 +2934,7 @@ void GenericCreditsEntryBody(
+ 					e);
+ 				if (stars) {
+ 					const auto done = [=](bool ok) {
+-						if (ok) {
++						if (ok && !e.localGift) {
+ 							using GiftAction = Data::GiftUpdate::Action;
+ 							show->session().data().notifyGiftUpdate({
+ 								.id = savedId,
+@@ -2138,7 +2949,11 @@ void GenericCreditsEntryBody(
+ 							}
+ 						}
+ 					};
+-					ConvertStarGift(show, savedId, stars, done);
++					if (e.localGift) {
++						ConvertLocalStarGift(show, e, stars, done);
++					} else {
++						ConvertStarGift(show, savedId, stars, done);
++					}
+ 				}
+ 			});
+ 		};
+@@ -2722,7 +3537,11 @@ void GlobalStarGiftBox(
  		CreditsEntryBoxStyleOverrides st) {
  	const auto selfId = show->session().userPeerId();
  	const auto ownerId = data.unique ? data.unique->ownerId.value : 0;
@@ -18462,11 +19687,341 @@ index 9ac4584e4..af7b814b5 100644
  	Settings::GenericCreditsEntryBox(
  		box,
  		show,
+@@ -2778,8 +3597,10 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
+ 		.peerType = Data::CreditsHistoryEntry::PeerType::Peer,
+ 		.limitedCount = data.info.limitedCount,
+ 		.limitedLeft = data.info.limitedLeft,
+-		.starsConverted = int(data.starsConverted),
+-		.starsToUpgrade = int(data.info.starsToUpgrade),
++		.starsConverted = data.manageId
++			? int(data.starsConverted)
++			: int(Ayu::LocalGiftConvertValue(data.info.stars)),
++		.starsToUpgrade = data.manageId ? int(data.info.starsToUpgrade) : 0,
+ 		.starsUpgradedBySender = int(data.starsUpgradedBySender),
+ 		.starsForDetailsRemove = int(data.starsForDetailsRemove),
+ 		.giftNumber = data.giftNum,
+@@ -2790,6 +3611,7 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
+ 		.giftPinned = data.pinned,
+ 		.savedToProfile = !data.hidden,
+ 		.fromGiftsList = true,
++		.localGift = !data.manageId,
+ 		.canUpgradeGift = data.upgradable,
+ 		.in = data.mine,
+ 		.gift = true,
+@@ -3063,7 +3885,8 @@ void SmallBalanceBox(
+ 		std::shared_ptr<Main::SessionShow> show,
+ 		uint64 wholeCredits,
+ 		SmallBalanceSource source,
+-		Fn<void()> paid) {
++		Fn<void()> paid,
++		bool useLocalBalance) {
+ 	Expects(show->session().credits().loaded());
+ 
+ 	auto credits = CreditsAmount(wholeCredits);
+@@ -3075,6 +3898,18 @@ void SmallBalanceBox(
+ 		paid();
+ 	};
+ 
++	const auto balanceValue = [=]() -> rpl::producer<CreditsAmount> {
++		return useLocalBalance
++			? AyuSettings::getInstance().localStarsBalanceValue(
++			) | rpl::map([](int value) {
++				return CreditsAmount(value);
++			})
++			: show->session().credits().balanceValue();
++	};
++	const auto currentBalance = useLocalBalance
++		? CreditsAmount(AyuSettings::getInstance().localStarsBalance())
++		: show->session().credits().balance();
++
+ 	auto dark = false;
+ 	const auto owner = &show->session().data();
+ 	const auto name = v::match(source, [&](SmallBalanceBot value) {
+@@ -3106,7 +3941,7 @@ void SmallBalanceBox(
+ 		return QString();
+ 	});
+ 
+-	auto needed = show->session().credits().balanceValue(
++	auto needed = balanceValue(
+ 	) | rpl::map([=](CreditsAmount balance) {
+ 		return (balance < credits) ? (credits - balance) : CreditsAmount();
+ 	});
+@@ -3217,7 +4052,7 @@ void SmallBalanceBox(
+ 		show,
+ 		box->verticalLayout(),
+ 		show->session().user(),
+-		credits - show->session().credits().balance(),
++		credits - currentBalance,
+ 		[=] { show->session().credits().load(true); },
+ 		box->showFinishes(),
+ 		tr::lng_credits_summary_options_subtitle(),
+@@ -3243,7 +4078,7 @@ void SmallBalanceBox(
+ 		const auto balance = AddBalanceWidget(
+ 			content,
+ 			&show->session(),
+-			show->session().credits().balanceValue(),
++			balanceValue(),
+ 			true,
+ 			nullptr,
+ 			dark);
+@@ -3275,7 +4110,8 @@ void AddWithdrawalWidget(
+ 		rpl::producer<CreditsAmount> availableBalanceValue,
+ 		rpl::producer<QDateTime> dateValue,
+ 		bool withdrawalEnabled,
+-		rpl::producer<QString> usdValue) {
++		rpl::producer<QString> usdValue,
++		Fn<void()> localWithdrawn) {
+ 	Ui::AddSkip(container);
+ 
+ 	const auto labels = container->add(
+@@ -3563,38 +4399,70 @@ void AddWithdrawalWidget(
+ 		}, state->dateUpdateLifetime);
+ 	}, lockedLabel->lifetime());
+ 
+-	Api::HandleWithdrawalButton(
+-		Api::RewardReceiver{
+-			.creditsReceiver = peer,
+-			.creditsAmount = [=, show = controller->uiShow()] {
+-				const auto amount = input->getLastText().toULongLong();
+-				const auto min = float64(WithdrawalMin(session));
+-				if (amount < min) {
+-					auto text = tr::lng_bot_earn_credits_out_minimal(
++	const auto creditsAmount = [=, show = controller->uiShow()] {
++		const auto amount = input->getLastText().toULongLong();
++		const auto min = float64(WithdrawalMin(session));
++		if (amount < min) {
++			auto text = tr::lng_bot_earn_credits_out_minimal(
++				tr::now,
++				lt_link,
++				tr::link(
++					tr::lng_bot_earn_credits_out_minimal_link(
+ 						tr::now,
+-						lt_link,
+-						tr::link(
+-							tr::lng_bot_earn_credits_out_minimal_link(
+-								tr::now,
+-								lt_count,
+-								min),
+-							u"internal:"_q),
+-						tr::rich);
+-					show->showToast(Ui::Toast::Config{
+-						.text = std::move(text),
+-						.filter = [=](const auto ...) {
+-							input->setText(QString::number(min));
+-							processInputChange();
+-							return true;
+-						},
+-					});
+-					return 0ULL;
+-				}
+-				return amount;
++						lt_count,
++						min),
++					u"internal:"_q),
++				tr::rich);
++			show->showToast(Ui::Toast::Config{
++				.text = std::move(text),
++				.filter = [=](const auto ...) {
++					input->setText(QString::number(min));
++					processInputChange();
++					return true;
++				},
++			});
++			return 0ULL;
++		}
++		return amount;
++	};
++	if (localWithdrawn) {
++		button->setClickedCallback([=] {
++			const auto amount = creditsAmount();
++			if (!amount) {
++				return;
++			}
++			controller->uiShow()->show(Ui::MakeConfirmBox({
++				.text = tr::ayu_LocalStarsWithdrawConfirm(
++					tr::now,
++					lt_count,
++					amount * 1.),
++				.confirmed = [=](Fn<void()> close) {
++					close();
++					const auto settings = &AyuSettings::getInstance();
++					settings->setLocalStarsWithdrawn(
++						settings->localStarsWithdrawn() + int(amount));
++					controller->uiShow()->showToast(
++						tr::ayu_LocalStarsWithdrawn(
++							tr::now,
++							lt_count,
++							amount * 1.,
++							tr::rich));
++					localWithdrawn();
++				},
++				.confirmText = tr::lng_bot_earn_balance_button_locked(
++					tr::now),
++				.title = tr::lng_bot_earn_title(tr::now),
++			}));
++		});
++	} else {
++		Api::HandleWithdrawalButton(
++			Api::RewardReceiver{
++				.creditsReceiver = peer,
++				.creditsAmount = creditsAmount,
+ 			},
+-		},
+-		button,
+-		controller->uiShow());
++			button,
++			controller->uiShow());
++	}
+ 	Ui::ToggleChildrenVisibility(button, true);
+ 
+ 	Ui::AddSkip(container);
+@@ -3680,6 +4548,131 @@ void MaybeRequestBalanceIncrease(
+ 	}, state->lifetime);
+ }
+ 
++void MaybeRequestLocalBalanceIncrease(
++		std::shared_ptr<Main::SessionShow> show,
++		uint64 credits,
++		SmallBalanceSource source,
++		Fn<void(SmallBalanceResult)> done) {
++	struct State {
++		rpl::lifetime lifetime;
++		bool success = false;
++	};
++	const auto state = std::make_shared<State>();
++
++	const auto session = &show->session();
++	session->credits().load();
++	session->credits().loadedValue(
++	) | rpl::filter(rpl::mappers::_1) | rpl::on_next([=] {
++		state->lifetime.destroy();
++
++		const auto balance = CreditsAmount(
++			AyuSettings::getInstance().localStarsBalance());
++		if (CreditsAmount(credits) <= balance) {
++			if (const auto onstack = done) {
++				onstack(SmallBalanceResult::Already);
++			}
++		} else {
++			const auto success = [=] {
++				state->success = true;
++				if (const auto onstack = done) {
++					onstack(SmallBalanceResult::Success);
++				}
++			};
++			const auto box = show->show(Box(
++				Settings::SmallBalanceBox,
++				show,
++				credits,
++				source,
++				success,
++				true));
++			box->boxClosing() | rpl::on_next([=] {
++				crl::on_main([=] {
++					if (!state->success) {
++						if (const auto onstack = done) {
++							onstack(SmallBalanceResult::Cancelled);
++						}
++					}
++				});
++			}, box->lifetime());
++		}
++	}, state->lifetime);
++}
++
++void LocalEarnStarsBox(not_null<Ui::GenericBox*> box) {
++	box->setWidth(st::boxWideWidth);
++	box->setTitle(tr::lng_credits_earn_button());
++	box->addButton(tr::lng_close(), [=] { box->closeBox(); });
++	const auto content = box->verticalLayout();
++	Ui::AddSkip(content);
++	content->add(
++		object_ptr<Ui::FlatLabel>(
++			content,
++			tr::ayu_LocalEarnAbout(),
++			st::creditsBoxAbout),
++		st::boxRowPadding);
++	Ui::AddSkip(content);
++	const auto buttons = content->add(
++		object_ptr<Ui::VerticalLayout>(content));
++	const auto options = std::vector<std::pair<QString, int>>{
++		{ tr::ayu_LocalEarnQuest(tr::now), 50 },
++		{ tr::ayu_LocalEarnGame(tr::now), 25 },
++		{ tr::ayu_LocalEarnAd(tr::now), 10 },
++	};
++	for (const auto &[title, stars] : options) {
++		const auto button = buttons->add(
++			object_ptr<Ui::SettingsButton>(
++				buttons,
++				rpl::single(title),
++				st::creditsTopupButton));
++		const auto reward = Ui::CreateChild<Ui::FlatLabel>(
++			button,
++			u"+%1 Stars"_q.arg(stars),
++			st::creditsTopupPrice);
++		button->widthValue() | rpl::on_next([=](int width) {
++			reward->moveToRight(
++				st::creditsTopupButton.padding.right(),
++				st::creditsTopupButton.padding.top());
++		}, button->lifetime());
++		Ui::ToggleChildrenVisibility(button, true);
++		button->setClickedCallback([=] {
++			const auto settings = &AyuSettings::getInstance();
++			settings->setLocalStarsBalance(
++				settings->localStarsBalance() + stars);
++			Ayu::AppendLocalStarsEarning({
++				.date = base::unixtime::now(),
++				.amount = stars,
++				.source = Ayu::LocalStarsEarningSource::MiniApps,
++			});
++			box->uiShow()->showToast(tr::lng_gift_got_stars(
++				tr::now,
++				lt_count,
++				stars,
++				tr::rich));
++		});
++	}
++	Ui::AddSkip(content);
++}
++
++void ShowLocalEarnStarsBox(not_null<Window::SessionController*> window) {
++	const auto show = Main::MakeSessionShow(
++		window->uiShow(),
++		&window->session());
++	show->show(Box(LocalEarnStarsBox));
++}
++
++void StartLocalPremiumPurchase(
++		std::shared_ptr<Main::SessionShow> show,
++		not_null<Window::SessionController*> window,
++		const QString &botUrl) {
++	const auto option = LocalPremiumOptionForBotUrl(
++		&show->session(),
++		botUrl);
++	LocalPremiumCheckout::Start(
++		std::move(show),
++		option,
++		window->widget().get());
++}
++
+ void AddUniqueCloseMoreButton(
+ 		not_null<Ui::GenericBox*> box,
+ 		Settings::CreditsEntryBoxStyleOverrides st,
 diff --git a/Telegram/SourceFiles/settings/settings_credits_graphics.h b/Telegram/SourceFiles/settings/settings_credits_graphics.h
-index f517eb4c8..6723023b2 100644
+index f517eb4c8..a57e329b1 100644
 --- a/Telegram/SourceFiles/settings/settings_credits_graphics.h
 +++ b/Telegram/SourceFiles/settings/settings_credits_graphics.h
-@@ -193,6 +193,7 @@ void CreditsPrizeBox(
+@@ -98,7 +98,8 @@ void AddWithdrawalWidget(
+ 	rpl::producer<CreditsAmount> availableBalanceValue,
+ 	rpl::producer<QDateTime> dateValue,
+ 	bool withdrawalEnabled,
+-	rpl::producer<QString> usdValue);
++	rpl::producer<QString> usdValue,
++	Fn<void()> localWithdrawn = nullptr);
+ 
+ struct GiftWearBoxStyleOverride {
+ 	const style::Box *box = nullptr;
+@@ -193,6 +194,7 @@ void CreditsPrizeBox(
  
  struct StarGiftResaleInfo {
  	PeerId recipientId;
@@ -18474,6 +20029,36 @@ index f517eb4c8..6723023b2 100644
  	bool forceTon = false;
  };
  void GlobalStarGiftBox(
+@@ -301,7 +303,8 @@ void SmallBalanceBox(
+ 	std::shared_ptr<::Main::SessionShow> show,
+ 	uint64 wholeCredits,
+ 	SmallBalanceSource source,
+-	Fn<void()> paid);
++	Fn<void()> paid,
++	bool useLocalBalance = false);
+ 
+ enum class SmallBalanceResult {
+ 	Already,
+@@ -316,6 +319,19 @@ void MaybeRequestBalanceIncrease(
+ 	SmallBalanceSource source,
+ 	Fn<void(SmallBalanceResult)> done);
+ 
++void MaybeRequestLocalBalanceIncrease(
++	std::shared_ptr<::Main::SessionShow> show,
++	uint64 credits,
++	SmallBalanceSource source,
++	Fn<void(SmallBalanceResult)> done);
++
++void ShowLocalEarnStarsBox(not_null<Window::SessionController*> window);
++
++void StartLocalPremiumPurchase(
++	std::shared_ptr<::Main::SessionShow> show,
++	not_null<Window::SessionController*> window,
++	const QString &botUrl);
++
+ void AddMiniStars(
+ 	not_null<Ui::VerticalLayout*> content,
+ 	not_null<Ui::RpWidget*> widget,
 diff --git a/Telegram/SourceFiles/tray.cpp b/Telegram/SourceFiles/tray.cpp
 index 76f96fb25..cb48cfefc 100644
 --- a/Telegram/SourceFiles/tray.cpp

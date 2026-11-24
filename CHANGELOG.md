@@ -8,6 +8,7 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 
 | Version | Published | Update |
 | --- | --- | --- |
+| v22 | 2026-11-23 | Local Gifts, Premium & Business |
 | v21 | 2026-11-23 | Local Stars & Gifts |
 | v20 | 2026-11-22 | Local Stars & Gifts |
 | v19 | 2026-08-03 | Exact Telegram Disguise Identity |
@@ -29,6 +30,37 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 | v3 | 2026-07-14 | Multiplatform Launch |
 | v2 | 2026-07-13 | Local Profile Build Refresh |
 | v1 | 2026-07-13 | Initial Local Profile |
+
+## IntelGram v22 Local Gifts, Premium & Business - 2026-11-23
+
+### Added
+
+- Gift Stars to friends from the local balance, with Telegram's native gift flow, sent confirmation, and insufficient-balance state.
+- Buy and send gifts with local Stars at Telegram's native star prices, including the optional upgrade fee; gifts bought for yourself go into the local inventory.
+- A local gift inventory that matches Telegram's profile Gifts tab: the native grid, detail popups, and All Gifts / Collectibles filtering, with up to 200 locally owned gifts.
+- A Stars Balance and proceeds screen fed by local activity, with available, total, and lifetime proceeds, the 21-day maturity rule, and a local Fragment-style withdrawal flow.
+- View Statistics for local Stars earnings, with the revenue chart fed by on-device activity.
+- Earn Stars from Mini Apps as a local sandbox: Demo Quest, Demo Game, and Demo Ad credit the local balance with 50, 25, and 10 Stars.
+- A cover thumbnail on the Stars checkout invoice, so the native payment panel now matches Telegram's real checkout layout.
+- A local Telegram Premium purchase: every Subscribe button runs the native plan picker (monthly or annual) and the native checkout panel with the demo American Express card. After paying, the Premium badge, subscribed state, and Premium features appear as if the account owns Premium.
+- A local Telegram Business subscription through the same flow; the Business section and its feature screens open once subscribed.
+
+### Changed
+
+- The dead local gift dialogs left over from the earlier Local Profile Stars section were removed now that gifts run through Telegram's native flows.
+
+### Limits
+
+- The purchase flow goes straight to Telegram's native invoice panel; there is no simulated bot chat, because opening the real Premium bot could send a real message.
+- Editing Business settings still calls Telegram's server APIs, so saves are rejected without a real subscription; the Business screens open and display, but changes do not stick.
+- The Premium section still shows AyuGram's notice that local Premium grants no server benefits, under the subscribed title.
+- Converting a local gift back to Stars returns 50% of its star price, an estimate: Telegram's real conversion formula is server-side.
+- Gifting Premium to other people is untouched and still uses Telegram's real flow.
+
+### Privacy
+
+- Every gift, proceeds, Premium, and Business action completes locally. No real payment is made, no payment provider is contacted, and no Telegram gift-transfer, payment, or subscription API is invoked.
+- Stars, gifts, earnings, and the Premium/Business owned state exist only inside this client's settings file.
 
 ## IntelGram v21 Local Stars & Gifts - 2026-11-23
 

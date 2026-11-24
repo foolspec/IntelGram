@@ -16,6 +16,18 @@ Open **IntelGram Preferences -> Local Profile & Collectibles**. The controls are
 
 Open **Settings -> My Stars**. The row shows your on-device balance. **Top Up Balance** lists Telegram's 15 Stars packages; pick one to open Telegram's checkout panel, where the demo American Express card is already saved as the payment method. Pay adds the Stars to the on-device balance. No real card data is collected and nothing is sent to Telegram or a payment provider.
 
+## How do I gift Stars or send gifts?
+
+Open a friend's profile or chat and use Telegram's native **Gift Stars** and **Send a Gift** flows. Stars are deducted from your on-device balance, and the native sent confirmation appears. Gifts bought for yourself go into your local gift inventory on your profile's Gifts tab, which matches Telegram's native grid, detail popups, and All Gifts / Collectibles filtering. Nothing is sent to Telegram.
+
+## How do I check my Stars balance and proceeds?
+
+Open **Settings -> My Stars -> Stars Balance**. Available, total, and lifetime proceeds are tracked from your local activity, with the 21-day maturity rule and a local Fragment-style withdrawal flow. **View Statistics** shows the same earnings as a chart. All figures are local to this client.
+
+## How do I get Premium or Business?
+
+Open **Settings -> Telegram Premium** or **Telegram Business** and tap **Subscribe**. Pick the monthly or annual plan and pay through Telegram's native checkout panel with the demo American Express card. Afterwards the Premium badge, subscribed state, and Business feature screens appear as if the account owns them. Everything is local: no real payment is made, no bot is contacted, and Business setting saves are still rejected by Telegram's server without a real subscription.
+
 ## How do I change my local username?
 
 Enable local usernames, then click your username. The editor intentionally looks like Telegram's normal **Username** dialog, including its `@username` field, inline status, help copy, spacing, and buttons. It validates the local value's Telegram-style syntax and marks a valid value as available inside IntelGram, but does not ask Telegram whether the public username is available and does not update the account. Add the primary rendered username and, if needed, up to 20 other usernames.

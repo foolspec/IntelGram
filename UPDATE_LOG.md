@@ -1,13 +1,27 @@
 # IntelGram Update Log
 
-## Current Update: IntelGram v21
+## Current Update: IntelGram v22
 
 - Base source: official AyuGram Desktop `v6.7.8` at `b25513a06ff88be0b3f4c928252b56c3da39cec7` with required submodules.
-- Product versioning: IntelGram releases advance sequentially from v1; the current product release is v21, while `v6.7.8` identifies only the upstream AyuGram source.
+- Product versioning: IntelGram releases advance sequentially from v1; the current product release is v22, while `v6.7.8` identifies only the upstream AyuGram source.
 - Product identity: IntelGram on macOS, Windows, and Linux with separate application identifiers.
 - Source delivery: one complete IntelGram patch plus deterministic branding and validation scripts.
 - Build delivery: GitHub Actions packages macOS Apple Silicon, Windows x64, and Linux x64.
 - Build reliability: macOS and Windows dependency preparation uses bounded cache stages, platform cache creation is serialized, installed Qt source trees are pruned, macOS can resume directly from a completed Qt stage, and Windows-only runs carry every dependency stage through to the packaged application.
+- Gift Stars to friends: the native gift flow deducts from the on-device balance, with the native sent confirmation and insufficient-balance state.
+- Buy and send gifts: gifts are bought with local Stars at Telegram's native star prices, including the optional upgrade fee; self-purchases land in the local inventory.
+- Local gift inventory: the profile Gifts tab shows locally owned gifts in Telegram's native grid, detail popups, and All Gifts / Collectibles filtering, up to 200 gifts.
+- Stars Balance and proceeds: available, total, and lifetime proceeds are fed by local activity, with the 21-day maturity rule and a local Fragment-style withdrawal flow.
+- View Statistics: the revenue chart and statistics view are fed by on-device Stars earnings.
+- Earn Stars from Mini Apps: Demo Quest, Demo Game, and Demo Ad credit 50, 25, and 10 Stars to the local balance.
+- Checkout thumbnail: the Stars checkout invoice now carries a cover thumbnail, matching Telegram's real checkout layout.
+- Local Premium purchase: every Subscribe button runs the native plan picker and checkout panel with the demo American Express card; after paying, the Premium badge, subscribed state, and Premium features appear as if the account owns Premium.
+- Local Business subscription: the same flow unlocks the Business section and its feature screens.
+- Honest limits: there is no simulated bot chat; Business setting saves are still rejected by Telegram's server without a real subscription; converting a local gift returns an estimated 50% of its star price; gifting Premium to others is untouched.
+- Payment boundary: no real card details are collected, no payment provider is contacted, and no Telegram payment, gift-transfer, or subscription API is invoked.
+
+## IntelGram v21 Local Stars & Gifts
+
 - Native My Stars: Stars balance and top-up now live in Telegram's own My Stars screen; Settings shows the local balance on the My Stars row.
 - Real Stars packages: Top Up Balance lists Telegram's 15 Stars packages and prices, from 100 to 150,000 Stars.
 - Native checkout: tapping a package opens Telegram's checkout panel with the demo American Express card already saved as the payment method; Pay adds the Stars to the on-device balance.
