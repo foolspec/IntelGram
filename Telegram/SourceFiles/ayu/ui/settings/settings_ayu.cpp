@@ -665,15 +665,15 @@ void BuildOther(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 	builder.addSubsectionTitle(tr::ayu_MessageSavingOtherHeader());
 
 	const auto controller = builder.controller();
-	auto &stars = AyuSettings::localStars(&controller->session());
+	auto *stars = &AyuSettings::localStars(&controller->session());
 	ayu.addToggle({
 		.id = u"ayu/localPremium"_q,
 		.title = tr::ayu_LocalPremium(),
 		.getter = [stars] {
-			return stars.localPremium();
+			return stars->localPremium();
 		},
 		.setter = [stars](bool enabled) {
-			stars.setLocalPremium(enabled);
+			stars->setLocalPremium(enabled);
 		},
 	});
 	ayu.addSettingToggle({

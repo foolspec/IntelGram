@@ -882,7 +882,7 @@ void ShowLocalProfileChannelBox(
 
 void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 	const auto controller = builder.controller();
-	auto &profile = AyuSettings::localProfile(&controller->session());
+	auto *profile = &AyuSettings::localProfile(&controller->session());
 
 	builder.addSkip();
 	builder.addSubsectionTitle(tr::ayu_LocalProfileHeader());
@@ -899,7 +899,7 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		.title = tr::ayu_LocalProfileCloneClear(),
 		.icon = { &st::menuIconDelete },
 		.onClick = [=] {
-			profile.setLocalProfileCloneId(QString());
+			profile->setLocalProfileCloneId(QString());
 			Ayu::RefreshLocalProfilePresentation(&controller->session());
 			controller->showToast(tr::lng_box_done(tr::now));
 		},
@@ -920,24 +920,24 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		.id = u"ayu/localProfileNameEnabled"_q,
 		.title = tr::ayu_LocalProfileNameEnabled(),
 		.getter = [profile] {
-			return profile.localProfileNameEnabled();
+			return profile->localProfileNameEnabled();
 		},
 		.setter = [profile](bool enabled) {
-			profile.setLocalProfileNameEnabled(enabled);
+			profile->setLocalProfileNameEnabled(enabled);
 		},
 		.icon = { &st::menuIconProfile },
 	});
-	builder.add([](const WidgetContext &wctx) {
+	builder.add([profile](const WidgetContext &wctx) {
 		auto field = object_ptr<Ui::InputField>(
 			wctx.container,
 			st::settingsDeviceName,
 			tr::ayu_LocalProfileName(),
-			profile.localProfileName());
+			profile->localProfileName());
 		const auto raw = field.data();
 		raw->setMaxLength(Ayu::kMaxLocalProfileNameLength);
 		raw->changes(
 		) | rpl::on_next([=] {
-			profile.setLocalProfileName(
+			profile->setLocalProfileName(
 				raw->getLastText());
 		}, raw->lifetime());
 		return SectionBuilder::WidgetToAdd{
@@ -959,24 +959,24 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		.id = u"ayu/localProfileIdEnabled"_q,
 		.title = tr::ayu_LocalProfileIdEnabled(),
 		.getter = [profile] {
-			return profile.localProfileIdEnabled();
+			return profile->localProfileIdEnabled();
 		},
 		.setter = [profile](bool enabled) {
-			profile.setLocalProfileIdEnabled(enabled);
+			profile->setLocalProfileIdEnabled(enabled);
 		},
 		.icon = { &st::menuIconInfo },
 	});
-	builder.add([](const WidgetContext &wctx) {
+	builder.add([profile](const WidgetContext &wctx) {
 		auto field = object_ptr<Ui::InputField>(
 			wctx.container,
 			st::settingsDeviceName,
 			tr::ayu_LocalProfileId(),
-			profile.localProfileId());
+			profile->localProfileId());
 		const auto raw = field.data();
 		raw->setMaxLength(Ayu::kMaxLocalProfileIdLength);
 		raw->changes(
 		) | rpl::on_next([=] {
-			profile.setLocalProfileId(
+			profile->setLocalProfileId(
 				raw->getLastText());
 		}, raw->lifetime());
 		return SectionBuilder::WidgetToAdd{
@@ -1002,24 +1002,24 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		.id = u"ayu/localProfileUsernameEnabled"_q,
 		.title = tr::ayu_LocalProfileUsernameEnabled(),
 		.getter = [profile] {
-			return profile.localProfileUsernameEnabled();
+			return profile->localProfileUsernameEnabled();
 		},
 		.setter = [profile](bool enabled) {
-			profile.setLocalProfileUsernameEnabled(enabled);
+			profile->setLocalProfileUsernameEnabled(enabled);
 		},
 		.icon = { &st::menuIconLink },
 	});
-	builder.add([](const WidgetContext &wctx) {
+	builder.add([profile](const WidgetContext &wctx) {
 		auto field = object_ptr<Ui::InputField>(
 			wctx.container,
 			st::settingsDeviceName,
 			tr::ayu_LocalProfileUsername(),
-			profile.localProfileUsername());
+			profile->localProfileUsername());
 		const auto raw = field.data();
 		raw->setMaxLength(Ayu::kMaxLocalProfileUsernameLength);
 		raw->changes(
 		) | rpl::on_next([=] {
-			profile.setLocalProfileUsername(
+			profile->setLocalProfileUsername(
 				raw->getLastText());
 		}, raw->lifetime());
 		return SectionBuilder::WidgetToAdd{
@@ -1037,17 +1037,17 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 			.icon = { &st::menuIconLink },
 		};
 	});
-	builder.add([](const WidgetContext &wctx) {
+	builder.add([profile](const WidgetContext &wctx) {
 		auto field = object_ptr<Ui::InputField>(
 			wctx.container,
 			st::settingsDeviceName,
 			tr::ayu_LocalProfileUsernames(),
-			profile.localProfileUsernames());
+			profile->localProfileUsernames());
 		const auto raw = field.data();
 		raw->setMaxLength(Ayu::kMaxLocalProfileUsernamesLength);
 		raw->changes(
 		) | rpl::on_next([=] {
-			profile.setLocalProfileUsernames(
+			profile->setLocalProfileUsernames(
 				raw->getLastText());
 		}, raw->lifetime());
 		return SectionBuilder::WidgetToAdd{
@@ -1069,24 +1069,24 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		.id = u"ayu/localProfilePhoneEnabled"_q,
 		.title = tr::ayu_LocalProfilePhoneEnabled(),
 		.getter = [profile] {
-			return profile.localProfilePhoneEnabled();
+			return profile->localProfilePhoneEnabled();
 		},
 		.setter = [profile](bool enabled) {
-			profile.setLocalProfilePhoneEnabled(enabled);
+			profile->setLocalProfilePhoneEnabled(enabled);
 		},
 		.icon = { &st::menuIconPhone },
 	});
-	builder.add([](const WidgetContext &wctx) {
+	builder.add([profile](const WidgetContext &wctx) {
 		auto field = object_ptr<Ui::InputField>(
 			wctx.container,
 			st::settingsDeviceName,
 			tr::ayu_LocalProfilePhone(),
-			profile.localProfilePhone());
+			profile->localProfilePhone());
 		const auto raw = field.data();
 		raw->setMaxLength(Ayu::kMaxLocalProfilePhoneLength);
 		raw->changes(
 		) | rpl::on_next([=] {
-			profile.setLocalProfilePhone(
+			profile->setLocalProfilePhone(
 				raw->getLastText());
 		}, raw->lifetime());
 		return SectionBuilder::WidgetToAdd{
@@ -1108,24 +1108,24 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		.id = u"ayu/localProfileAboutEnabled"_q,
 		.title = tr::ayu_LocalProfileAboutEnabled(),
 		.getter = [profile] {
-			return profile.localProfileAboutEnabled();
+			return profile->localProfileAboutEnabled();
 		},
 		.setter = [profile](bool enabled) {
-			profile.setLocalProfileAboutEnabled(enabled);
+			profile->setLocalProfileAboutEnabled(enabled);
 		},
 		.icon = { &st::menuIconInfo },
 	});
-	builder.add([](const WidgetContext &wctx) {
+	builder.add([profile](const WidgetContext &wctx) {
 		auto field = object_ptr<Ui::InputField>(
 			wctx.container,
 			st::settingsDeviceName,
 			tr::ayu_LocalProfileAbout(),
-			profile.localProfileAbout());
+			profile->localProfileAbout());
 		const auto raw = field.data();
 		raw->setMaxLength(Ayu::kMaxLocalProfileAboutLength);
 		raw->changes(
 		) | rpl::on_next([=] {
-			profile.setLocalProfileAbout(
+			profile->setLocalProfileAbout(
 				raw->getLastText());
 		}, raw->lifetime());
 		return SectionBuilder::WidgetToAdd{
@@ -1160,7 +1160,7 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		.title = tr::ayu_LocalProfilePhotoClear(),
 		.icon = { &st::menuIconDelete },
 		.onClick = [=] {
-			profile.setLocalProfilePhoto(QString());
+			profile->setLocalProfilePhoto(QString());
 			Ayu::RefreshLocalProfilePresentation(&controller->session());
 			controller->showToast(tr::lng_box_done(tr::now));
 		},
@@ -1174,10 +1174,10 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		.id = u"ayu/localProfileChannelEnabled"_q,
 		.title = tr::ayu_LocalProfileChannelEnabled(),
 		.getter = [profile] {
-			return profile.localProfileChannelEnabled();
+			return profile->localProfileChannelEnabled();
 		},
 		.setter = [profile](bool enabled) {
-			profile.setLocalProfileChannelEnabled(enabled);
+			profile->setLocalProfileChannelEnabled(enabled);
 		},
 		.icon = { &st::menuIconChannel },
 	});
@@ -1185,7 +1185,7 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		.id = u"ayu/localProfileChannel"_q,
 		.title = tr::ayu_LocalProfileChannelChoose(),
 		.icon = { &st::menuIconChannel },
-		.label = profile.localProfileChannelValue(
+		.label = profile->localProfileChannelValue(
 		) | rpl::map([](const QString &username) {
 			return username.isEmpty()
 				? tr::ayu_LocalProfileChannelNone(tr::now)
@@ -1208,9 +1208,9 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		.title = tr::ayu_LocalProfileChannelClear(),
 		.icon = { &st::menuIconDelete },
 		.onClick = [=] {
-			auto &settings = profile;
-			settings.setLocalProfileChannelEnabled(false);
-			settings.setLocalProfileChannel(QString());
+			auto *settings = profile;
+			settings->setLocalProfileChannelEnabled(false);
+			settings->setLocalProfileChannel(QString());
 			Ayu::RefreshLocalProfilePresentation(&controller->session());
 			controller->showToast(tr::lng_box_done(tr::now));
 		},
@@ -1224,10 +1224,10 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		.id = u"ayu/localProfileGiftEnabled"_q,
 		.title = tr::ayu_LocalProfileGiftEnabled(),
 		.getter = [profile] {
-			return profile.localProfileGiftEnabled();
+			return profile->localProfileGiftEnabled();
 		},
 		.setter = [profile](bool enabled) {
-			profile.setLocalProfileGiftEnabled(enabled);
+			profile->setLocalProfileGiftEnabled(enabled);
 		},
 		.icon = { &st::menuIconGiftPremium },
 	});
@@ -1254,7 +1254,7 @@ void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 		.title = tr::ayu_LocalProfileGiftPickerClearFeatured(),
 		.icon = { &st::menuIconDelete },
 		.onClick = [=] {
-			profile.setLocalProfileGift(QString());
+			profile->setLocalProfileGift(QString());
 			controller->showToast(tr::lng_box_done(tr::now));
 		},
 	});

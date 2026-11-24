@@ -2008,7 +2008,7 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
 
 object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 		not_null<UserData*> user) {
-	auto &profile = AyuSettings::localProfile(&user->session());
+	auto *profile = &AyuSettings::localProfile(&user->session());
 	auto result = object_ptr<Ui::SlideWrap<Ui::VerticalLayout>>(
 		_wrap,
 		object_ptr<Ui::VerticalLayout>(_wrap));
@@ -2030,9 +2030,9 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 			tr::lng_info_personal_channel_label(tr::marked),
 			tr::ayu_LocalProfileChannelProfileLabel(tr::marked),
 			std::move(c),
-			profile.localProfileChannelEnabledValue(),
-			profile.localProfileChannelValue(),
-			profile.localProfileCloneIdValue()
+			profile->localProfileChannelEnabledValue(),
+			profile->localProfileChannelValue(),
+			profile->localProfileCloneIdValue()
 		) | rpl::map([=](
 				TextWithEntities &&personal,
 				TextWithEntities &&showcase,
@@ -2079,8 +2079,8 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 					state->menu->addAction(
 						tr::ayu_LocalProfileChannelClear(tr::now),
 						[=] {
-							profile.setLocalProfileChannelEnabled(false);
-							profile.setLocalProfileChannel(QString());
+							profile->setLocalProfileChannelEnabled(false);
+							profile->setLocalProfileChannel(QString());
 							Ayu::RefreshLocalProfilePresentation(
 								&user->session());
 						});
@@ -2112,7 +2112,7 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
 
 		auto text = rpl::combine(
 			rpl::duplicate(channel),
-			profile.localProfileChannelWorkspaceValue()
+			profile->localProfileChannelWorkspaceValue()
 		) | rpl::map([=](
 				ChannelData *channel,
 				const QString &) {

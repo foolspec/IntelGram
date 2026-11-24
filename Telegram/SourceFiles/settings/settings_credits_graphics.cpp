@@ -64,6 +64,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "main/main_app_config.h"
 #include "main/main_session.h"
 #include "main/session/session_show.h"
+#include "mainwindow.h"
 #include "payments/payments_checkout_process.h"
 #include "payments/payments_form.h"
 #include "payments/payments_non_panel_process.h"
