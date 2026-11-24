@@ -228,6 +228,16 @@ jobs:
           $content = $content.Replace($needle, $replacement)
           [System.IO.File]::WriteAllText($path, $content, [System.Text.UTF8Encoding]::new($false))
 
+            - name: Drop unavailable MSYS2 diffutils package
+        shell: pwsh
+        run: |
+          $path = "tdesktop\Telegram\build\prepare\prepare.py"
+          $content = [System.IO.File]::ReadAllText($path)
+          $pattern = "(?m)^\s*mingw-w64-x86_64-diffutils \^\r?\n"
+          if (-not ($content -match $pattern)) { throw "Could not locate the diffutils package line in $path" }
+          $content = $content -replace $pattern, ""
+          [System.IO.File]::WriteAllText($path, $content, [System.Text.UTF8Encoding]::new($false))
+
       - name: Prepare dependency stage
         shell: cmd
         timeout-minutes: ${{ inputs.stage_timeout_minutes }}
