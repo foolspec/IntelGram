@@ -9140,7 +9140,7 @@ index a4b1e7ad4..9e4d787a7 100644
  	builder.addSkip();
  }
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-index 929cf4609..f065587e1 100644
+index 929cf4609..d424c0e2e 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 @@ -6,33 +6,51 @@
@@ -9830,7 +9830,7 @@ index 929cf4609..f065587e1 100644
 +		not_null<Window::SessionController*> controller) {
 +	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
 +		box->setTitle(tr::ayu_LocalProfileGiftPickerManagePinned());
-+		auto &settings = AyuSettings::localProfile(&controller->session());
++		auto *settings = &AyuSettings::localProfile(&controller->session());
 +		const auto content = box->verticalLayout();
 +		const auto add = AddButtonWithIcon(
 +			content,
@@ -9876,7 +9876,7 @@ index 929cf4609..f065587e1 100644
 +							kept.push_back(entry);
 +						}
 +					}
-+					settings.setLocalProfileGifts(
++					settings->setLocalProfileGifts(
 +						SerializeLocalGiftReferences(kept));
 +					button->hide();
 +				});
@@ -9896,7 +9896,7 @@ index 929cf4609..f065587e1 100644
 +				st::settingsButton,
 +				{ &st::menuIconDelete });
 +			clear->setClickedCallback([=] {
-+				settings.setLocalProfileGifts(QString());
++				settings->setLocalProfileGifts(QString());
 +				box->closeBox();
  			});
 +		}
