@@ -228,7 +228,7 @@ jobs:
           $content = $content.Replace($needle, $replacement)
           [System.IO.File]::WriteAllText($path, $content, [System.Text.UTF8Encoding]::new($false))
 
-            - name: Drop unavailable MSYS2 diffutils package
+      - name: Drop unavailable MSYS2 diffutils package
         shell: pwsh
         run: |
           $path = "tdesktop\Telegram\build\prepare\prepare.py"
