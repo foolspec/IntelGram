@@ -172,7 +172,6 @@ jobs:
           if (-not (Test-Path $executable)) { throw "MSYS2 Yasm executable was not installed" }
           $probeSource = Join-Path $directory "intelgram-yasm-probe.asm"
           $probeObject = Join-Path $directory "intelgram-yasm-probe.obj"
-          
           @(
             "section .text"
             "global intelgram_yasm_probe"
