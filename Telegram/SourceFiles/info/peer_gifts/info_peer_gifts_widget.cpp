@@ -11,6 +11,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "api/api_hash.h"
 #include "api/api_premium.h"
 #include "apiwrap.h"
+#include "ayu/ayu_settings.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "boxes/share_box.h"
 #include "boxes/star_gift_box.h"
 #include "core/ui_integration.h"
@@ -204,6 +206,7 @@ private:
 	void loadCollections();
 	void loadMore();
 	void loaded(const MTPpayments_SavedStarGifts &result);
+	void mergeLocalGifts();
 	void markInCollection(const Data::SavedStarGift &gift);
 	void refreshButtons();
 	void validateButtons();
@@ -268,6 +271,9 @@ private:
 	Fn<void()> _collectionsLoadedCallback;
 	QString _offset;
 	bool _collectionsLoaded = false;
+	bool _localGiftsMerged = false;
+	int _localGiftsCount = 0;
+	rpl::lifetime _localGiftsLifetime;
 
 	rpl::event_stream<Descriptor> _descriptorChanges;
 	rpl::event_stream<bool> _notifyEnabled;
@@ -392,6 +398,31 @@ InnerWidget::InnerWidget(
 	) | rpl::on_next([=](Descriptor now) {
 		switchTo(now.collectionId);
 	}, lifetime());
+
+	if (_peer->isSelf() && !_addingToCollectionId) {
+		AyuSettings::getInstance().localGiftsChanges(
+		) | rpl::on_next([=] {
+			if (!_localGiftsMerged) {
+				return;
+			}
+			_all.list.erase(
+				ranges::remove_if(_all.list, [](const Entry &entry) {
+					return !entry.gift.manageId;
+				}),
+				end(_all.list));
+			_all.total = _all.allLoaded
+				? int(_all.list.size())
+				: std::max(_all.total - _localGiftsCount, 0);
+			_localGiftsMerged = false;
+			_localGiftsCount = 0;
+			_localGiftsLifetime.destroy();
+			if (!_descriptor.current().collectionId) {
+				refreshButtons();
+				refreshAbout();
+				mergeLocalGifts();
+			}
+		}, lifetime());
+	}
 }
 
 void InnerWidget::switchTo(int collectionId) {
@@ -402,6 +433,7 @@ void InnerWidget::switchTo(int collectionId) {
 	refreshButtons();
 	refreshAbout();
 	loadMore();
+	mergeLocalGifts();
 }
 
 void InnerWidget::loadCollections() {
@@ -697,6 +729,9 @@ void InnerWidget::loaded(const MTPpayments_SavedStarGifts &result) {
 	if (_entries->filter != filter) {
 		_entries->filter = filter;
 		_list->clear();
+		_localGiftsMerged = false;
+		_localGiftsCount = 0;
+		_localGiftsLifetime.destroy();
 	}
 	_list->reserve(_list->size() + data.vgifts().v.size());
 
@@ -727,10 +762,81 @@ void InnerWidget::loaded(const MTPpayments_SavedStarGifts &result) {
 	}
 	refreshButtons();
 	refreshAbout();
+	mergeLocalGifts();
 
 	if (hasUnique) {
 		Ui::PreloadUniqueGiftResellPrices(&_peer->session());
 	}
+}
+
+void InnerWidget::mergeLocalGifts() {
+	if (!_peer->isSelf()
+		|| _descriptor.current().collectionId
+		|| _addingToCollectionId
+		|| _localGiftsMerged) {
+		return;
+	}
+	const auto records = Ayu::ParseLocalGifts(
+		AyuSettings::getInstance().localGifts());
+	if (records.empty()) {
+		return;
+	}
+	_localGiftsMerged = true;
+	GiftsStars(
+		&_peer->session(),
+		_peer
+	) | rpl::take(1) | rpl::on_next([=](std::vector<GiftTypeStars> catalog) {
+		if (!_peer->isSelf()
+			|| _descriptor.current().collectionId
+			|| _addingToCollectionId) {
+			return;
+		}
+		const auto filter = _descriptor.current().filter;
+		auto entries = std::vector<Entry>();
+		for (auto i = records.rbegin(); i != records.rend(); ++i) {
+			const auto &record = *i;
+			const auto found = ranges::find_if(
+				catalog,
+				[&](const GiftTypeStars &gift) {
+					return !gift.resale && gift.info.id == record.giftId;
+				});
+			if (found == end(catalog)) {
+				continue;
+			}
+			const auto &info = found->info;
+			if ((filter.skipUnlimited && !info.limitedCount)
+				|| (filter.skipLimited && info.limitedCount)
+				|| (filter.skipUpgradable && info.upgradable)
+				|| filter.skipSaved) {
+				continue;
+			}
+			auto saved = Data::SavedStarGift();
+			saved.info = info;
+			saved.message = TextWithEntities{ record.message };
+			saved.fromId = _peer->id;
+			saved.date = TimeId(record.date);
+			saved.anonymous = record.anonymous;
+			saved.mine = true;
+			auto descriptor = DescriptorForGift(_peer, saved);
+			entries.push_back({
+				.gift = std::move(saved),
+				.descriptor = std::move(descriptor),
+			});
+		}
+		if (entries.empty()) {
+			return;
+		}
+		_localGiftsCount = int(entries.size());
+		_list->insert(
+			_list->begin(),
+			std::make_move_iterator(entries.begin()),
+			std::make_move_iterator(entries.end()));
+		_entries->total = _entries->allLoaded
+			? int(_list->size())
+			: _entries->total + _localGiftsCount;
+		refreshButtons();
+		refreshAbout();
+	}, _localGiftsLifetime);
 }
 
 void InnerWidget::markInCollection(const Data::SavedStarGift &gift) {
@@ -1170,8 +1276,8 @@ void InnerWidget::showMenuFor(not_null<GiftButton*> button, QPoint point) {
 	const auto collectionId = _descriptor.current().collectionId;
 	entry.pinnedSavedGifts = collectionId > 0 ? nullptr : pinnedSavedGifts();
 	_menu = base::make_unique_q<Ui::PopupMenu>(this, st::popupMenuWithIcons);
-	if (_peer->canManageGifts() && !_collections.empty()) {
-		const auto &gift = (*_list)[index].gift;
+	const auto &gift = (*_list)[index].gift;
+	if (_peer->canManageGifts() && !_collections.empty() && gift.manageId) {
 		const auto addAction = Ui::Menu::CreateAddActionCallback(_menu);
 		addAction(Ui::Menu::MenuCallback::Args{
 			.text = tr::lng_gift_collection_add_to(tr::now),
@@ -1189,7 +1295,6 @@ void InnerWidget::showMenuFor(not_null<GiftButton*> button, QPoint point) {
 		::Settings::SavedStarGiftMenuType::List);
 
 	if (collectionId > 0 && _peer->canManageGifts()) {
-		const auto &gift = (*_list)[index].gift;
 		if (ranges::contains(gift.collectionIds, collectionId)) {
 			const auto addAction = Ui::Menu::CreateAddActionCallback(_menu);
 			addAction({

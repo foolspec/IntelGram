@@ -968,6 +968,27 @@ void AyuSettings::setLocalStarsCardName(const QString &val) {
 	save();
 }
 
+void AyuSettings::setLocalGifts(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalGifts(val);
+	if (_localGifts.current() == normalized) return;
+	_localGifts = normalized;
+	save();
+}
+
+void AyuSettings::setLocalStarsEarnings(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalStarsEarnings(val);
+	if (_localStarsEarnings.current() == normalized) return;
+	_localStarsEarnings = normalized;
+	save();
+}
+
+void AyuSettings::setLocalStarsWithdrawn(int val) {
+	const auto bounded = std::clamp(val, 0, Ayu::kMaxLocalStarsBalance);
+	if (_localStarsWithdrawn.current() == bounded) return;
+	_localStarsWithdrawn = bounded;
+	save();
+}
+
 void AyuSettings::setShowChannelReactions(bool val) {
 	if (_showChannelReactions.current() == val) return;
 	_showChannelReactions = val;
@@ -1418,6 +1439,9 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
 		{"localStarsBalance", s._localStarsBalance.current()},
 		{"localStarsActivity", s._localStarsActivity.current()},
 		{"localStarsCardName", s._localStarsCardName.current()},
+		{"localGifts", s._localGifts.current()},
+		{"localStarsEarnings", s._localStarsEarnings.current()},
+		{"localStarsWithdrawn", s._localStarsWithdrawn.current()},
 		{"showChannelReactions", s._showChannelReactions.current()},
 		{"showGroupReactions", s._showGroupReactions.current()},
 		{"showPrivateChatReactions", s._showPrivateChatReactions.current()},
@@ -1617,6 +1641,16 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
 		"localStarsCardName",
 		defaults._localStarsCardName.current()).trimmed().left(
 			Ayu::kMaxLocalStarsCardNameLength);
+	s._localGifts = Ayu::NormalizeLocalGifts(j.value(
+		"localGifts",
+		defaults._localGifts.current()));
+	s._localStarsEarnings = Ayu::NormalizeLocalStarsEarnings(j.value(
+		"localStarsEarnings",
+		defaults._localStarsEarnings.current()));
+	s._localStarsWithdrawn = std::clamp(
+		j.value("localStarsWithdrawn", defaults._localStarsWithdrawn.current()),
+		0,
+		Ayu::kMaxLocalStarsBalance);
 	s._showChannelReactions = j.value("showChannelReactions", defaults._showChannelReactions.current());
 	s._showGroupReactions = j.value("showGroupReactions", defaults._showGroupReactions.current());
 	s._showPrivateChatReactions = j.value("showPrivateChatReactions", defaults._showPrivateChatReactions.current());

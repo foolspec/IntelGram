@@ -61,10 +61,6 @@ void ShowPremiumGiftPremium(
 	not_null<Window::SessionController*> controller,
 	const Data::StarGift &gift);
 
-void StartPremiumPayment(
-	not_null<Window::SessionController*> controller,
-	const QString &ref);
-
 [[nodiscard]] QString LookupPremiumRef(PremiumFeature section);
 
 void ShowPremiumPromoToast(

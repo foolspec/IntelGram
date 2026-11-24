@@ -38,6 +38,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
+#include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QRegularExpression>
@@ -577,6 +578,194 @@ QString NormalizeLocalProfileGifts(QString gifts) {
 		joined.truncate(kMaxLocalProfileGiftsLength);
 	}
 	return joined;
+}
+
+std::vector<LocalGiftRecord> ParseLocalGifts(const QString &raw) {
+	auto result = std::vector<LocalGiftRecord>();
+	const auto document = QJsonDocument::fromJson(raw.toUtf8());
+	if (!document.isArray()) {
+		return result;
+	}
+	for (const auto &value : document.array()) {
+		if (!value.isObject()) {
+			continue;
+		}
+		const auto object = value.toObject();
+		const auto giftId = object.value(u"id"_q).toVariant().toULongLong();
+		const auto stars = object.value(u"stars"_q).toVariant().toLongLong();
+		if (!giftId || stars < 0) {
+			continue;
+		}
+		result.push_back({
+			.giftId = giftId,
+			.stars = stars,
+			.date = object.value(u"date"_q).toVariant().toLongLong(),
+			.message = object.value(u"msg"_q).toString().left(
+				kMaxLocalGiftMessageLength),
+			.anonymous = object.value(u"anon"_q).toBool(),
+		});
+		if (result.size() >= kMaxLocalGiftsCount) {
+			break;
+		}
+	}
+	return result;
+}
+
+QString SerializeLocalGifts(const std::vector<LocalGiftRecord> &records) {
+	auto array = QJsonArray();
+	for (const auto &record : records) {
+		if (!record.giftId) {
+			continue;
+		}
+		auto object = QJsonObject();
+		object.insert(u"id"_q, QJsonValue(qint64(record.giftId)));
+		object.insert(u"stars"_q, QJsonValue(qint64(record.stars)));
+		object.insert(u"date"_q, QJsonValue(qint64(record.date)));
+		if (!record.message.isEmpty()) {
+			object.insert(
+				u"msg"_q,
+				record.message.left(kMaxLocalGiftMessageLength));
+		}
+		if (record.anonymous) {
+			object.insert(u"anon"_q, true);
+		}
+		array.append(std::move(object));
+	}
+	return QString::fromUtf8(
+		QJsonDocument(array).toJson(QJsonDocument::Compact));
+}
+
+QString NormalizeLocalGifts(QString gifts) {
+	auto parsed = ParseLocalGifts(gifts);
+	auto serialized = SerializeLocalGifts(parsed);
+	while (serialized.size() > kMaxLocalGiftsLength && !parsed.empty()) {
+		parsed.erase(parsed.begin());
+		serialized = SerializeLocalGifts(parsed);
+	}
+	return serialized;
+}
+
+void AppendLocalGift(LocalGiftRecord record) {
+	if (!record.giftId) {
+		return;
+	}
+	auto records = ParseLocalGifts(
+		AyuSettings::getInstance().localGifts());
+	record.message = record.message.left(kMaxLocalGiftMessageLength);
+	records.push_back(std::move(record));
+	while (records.size() > kMaxLocalGiftsCount) {
+		records.erase(records.begin());
+	}
+	AyuSettings::getInstance().setLocalGifts(SerializeLocalGifts(records));
+}
+
+void RemoveLocalGift(uint64 giftId, int64 date, const QString &message) {
+	auto records = ParseLocalGifts(
+		AyuSettings::getInstance().localGifts());
+	const auto i = ranges::find_if(records, [&](const LocalGiftRecord &r) {
+		return r.giftId == giftId
+			&& r.date == date
+			&& r.message == message;
+	});
+	if (i == end(records)) {
+		return;
+	}
+	records.erase(i);
+	AyuSettings::getInstance().setLocalGifts(SerializeLocalGifts(records));
+}
+
+int64 LocalGiftConvertValue(int64 stars) {
+	return std::max(int64(stars) / 2, int64(0));
+}
+
+std::vector<LocalStarsEarning> ParseLocalStarsEarnings(const QString &raw) {
+	auto result = std::vector<LocalStarsEarning>();
+	const auto document = QJsonDocument::fromJson(raw.toUtf8());
+	if (!document.isArray()) {
+		return result;
+	}
+	for (const auto &value : document.array()) {
+		if (!value.isObject()) {
+			continue;
+		}
+		const auto object = value.toObject();
+		const auto amount = object.value(u"a"_q).toVariant().toLongLong();
+		if (amount <= 0) {
+			continue;
+		}
+		const auto source = object.value(u"s"_q).toVariant().toInt();
+		result.push_back({
+			.date = object.value(u"d"_q).toVariant().toLongLong(),
+			.amount = amount,
+			.source = (source == int(LocalStarsEarningSource::Convert))
+				? LocalStarsEarningSource::Convert
+				: LocalStarsEarningSource::MiniApps,
+		});
+		if (result.size() >= kMaxLocalStarsEarningsCount) {
+			break;
+		}
+	}
+	return result;
+}
+
+QString SerializeLocalStarsEarnings(
+		const std::vector<LocalStarsEarning> &earnings) {
+	auto array = QJsonArray();
+	for (const auto &earning : earnings) {
+		if (earning.amount <= 0) {
+			continue;
+		}
+		auto object = QJsonObject();
+		object.insert(u"d"_q, QJsonValue(qint64(earning.date)));
+		object.insert(u"a"_q, QJsonValue(qint64(earning.amount)));
+		object.insert(u"s"_q, QJsonValue(int(earning.source)));
+		array.append(std::move(object));
+	}
+	return QString::fromUtf8(
+		QJsonDocument(array).toJson(QJsonDocument::Compact));
+}
+
+QString NormalizeLocalStarsEarnings(QString earnings) {
+	auto parsed = ParseLocalStarsEarnings(earnings);
+	auto serialized = SerializeLocalStarsEarnings(parsed);
+	while (serialized.size() > kMaxLocalStarsEarningsLength
+		&& !parsed.empty()) {
+		parsed.erase(parsed.begin());
+		serialized = SerializeLocalStarsEarnings(parsed);
+	}
+	return serialized;
+}
+
+void AppendLocalStarsEarning(LocalStarsEarning earning) {
+	if (earning.amount <= 0) {
+		return;
+	}
+	auto earnings = ParseLocalStarsEarnings(
+		AyuSettings::getInstance().localStarsEarnings());
+	earnings.push_back(std::move(earning));
+	while (earnings.size() > kMaxLocalStarsEarningsCount) {
+		earnings.erase(earnings.begin());
+	}
+	AyuSettings::getInstance().setLocalStarsEarnings(
+		SerializeLocalStarsEarnings(earnings));
+}
+
+LocalStarsProceeds ComputeLocalStarsProceeds(int64 withdrawn, int64 now) {
+	auto result = LocalStarsProceeds();
+	const auto earnings = ParseLocalStarsEarnings(
+		AyuSettings::getInstance().localStarsEarnings());
+	for (const auto &earning : earnings) {
+		result.lifetime += earning.amount;
+		const auto matureAt = earning.date + kLocalStarsProceedsMaturitySecs;
+		if (matureAt <= now) {
+			result.available += earning.amount;
+		} else if (!result.nextMaturity || matureAt < result.nextMaturity) {
+			result.nextMaturity = matureAt;
+		}
+	}
+	result.total = std::max(result.lifetime - withdrawn, int64(0));
+	result.available = std::max(result.available - withdrawn, int64(0));
+	return result;
 }
 
 bool LocalProfileNameActive(not_null<PeerData*> peer) {

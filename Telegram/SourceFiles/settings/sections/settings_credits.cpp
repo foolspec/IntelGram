@@ -950,10 +950,6 @@ void BuildCreditsButtons(
 	const auto self = session->user();
 
 	if (!isCurrency) {
-		auto statsShown = session->credits().loadedValue(
-		) | rpl::map([session] {
-			return session->credits().statsEnabled();
-		});
 		const auto stats = builder.addButton({
 			.id = u"stars/stats"_q,
 			.title = tr::lng_credits_stats_button(),
@@ -964,7 +960,6 @@ void BuildCreditsButtons(
 					Info::BotEarn::Make(self));
 			},
 			.keywords = { u"statistics"_q },
-			.shown = std::move(statsShown),
 		});
 		if (statsButton) {
 			*statsButton = stats;
@@ -988,15 +983,14 @@ void BuildCreditsButtons(
 		}
 	}
 
-	if (!isCurrency && Info::BotStarRef::Join::Allowed(self)) {
+	if (!isCurrency) {
 		const auto earn = builder.addButton({
 			.id = u"stars/earn"_q,
 			.title = tr::lng_credits_earn_button(),
 			.st = &st::settingsCreditsButton,
 			.icon = { &st::settingsButtonIconEarn },
-			.onClick = [controller, self] {
-				controller->parentController()->showSection(
-					Info::BotStarRef::Join::Make(self));
+			.onClick = [controller] {
+				ShowLocalEarnStarsBox(controller->parentController());
 			},
 			.keywords = { u"affiliate"_q, u"referral"_q },
 		});

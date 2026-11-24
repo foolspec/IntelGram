@@ -28,6 +28,7 @@ Data::PremiumSubscriptionOption CreateSubscriptionOption(
 	const auto hasDiscount = (discount > 0);
 	return {
 		.months = months,
+		.amount = amount,
 		.duration = Ui::FormatTTL(months * 86400 * 31),
 		.discount = hasDiscount
 			? QString::fromUtf8("\xe2\x88\x92%1%").arg(discount)
@@ -43,6 +44,7 @@ Data::PremiumSubscriptionOption CreateSubscriptionOption(
 		.costPerYear = Ui::FillAmountAndCurrency(
 			int64(base::SafeRound(amount / float64(months / 12.))),
 			currency),
+		.currency = currency,
 		.botUrl = botUrl,
 	};
 }

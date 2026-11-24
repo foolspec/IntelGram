@@ -9,6 +9,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 #include "api/api_credits.h"
 #include "api/api_filter_updates.h"
+#include "ayu/ayu_settings.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
+#include "base/flat_map.h"
 #include "base/unixtime.h"
 #include "core/ui_integration.h"
 #include "data/data_channel_earn.h"
@@ -25,6 +28,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "info/statistics/info_statistics_list_controllers.h"
 #include "lang/lang_keys.h"
 #include "main/main_account.h"
+#include "main/main_app_config.h"
 #include "main/main_session.h"
 #include "settings/settings_credits_graphics.h"
 #include "statistics/chart_widget.h"
@@ -60,6 +64,85 @@ void AddHeader(
 	header->resizeToWidth(header->width());
 }
 
+[[nodiscard]] Data::StatisticalChart LocalRevenueChart() {
+	const auto earnings = Ayu::ParseLocalStarsEarnings(
+		AyuSettings::getInstance().localStarsEarnings());
+	auto result = Data::StatisticalChart();
+	if (earnings.empty()) {
+		return result;
+	}
+	auto byDay = base::flat_map<int64, int64>();
+	auto firstDay = int64(0);
+	for (const auto &earning : earnings) {
+		const auto day = QDateTime(
+			QDateTime::fromSecsSinceEpoch(earning.date, Qt::LocalTime).date(),
+			QTime(0, 0),
+			Qt::LocalTime).toSecsSinceEpoch();
+		byDay[day] += earning.amount;
+		if (!firstDay || day < firstDay) {
+			firstDay = day;
+		}
+	}
+	auto line = Data::StatisticalChart::Line();
+	line.id = 1;
+	line.idString = u"revenue"_q;
+	line.name = tr::lng_bot_earn_chart_revenue(tr::now);
+	line.colorKey = u"GOLDEN"_q;
+	const auto last = QDate::currentDate();
+	for (auto date = QDateTime::fromSecsSinceEpoch(
+			firstDay,
+			Qt::LocalTime).date();
+			date <= last;
+			date = date.addDays(1)) {
+		const auto day = QDateTime(date, QTime(0, 0), Qt::LocalTime);
+		const auto start = day.toSecsSinceEpoch();
+		const auto i = byDay.find(start);
+		const auto value = (i != end(byDay)) ? i->second : int64(0);
+		result.x.push_back(float64(start) * 1000.);
+		line.y.push_back(Statistic::ChartValue(value));
+		if (value > line.maxValue) {
+			line.maxValue = Statistic::ChartValue(value);
+		}
+		if (value < line.minValue) {
+			line.minValue = Statistic::ChartValue(value);
+		}
+	}
+	result.lines.push_back(std::move(line));
+	result.currency = Data::StatisticalCurrency::Credits;
+	result.timeStep = 3600. * 24. * 1000.;
+	result.defaultZoomXIndex.min = 0;
+	result.defaultZoomXIndex.max = float64(result.x.size() - 1);
+	result.measure();
+	if (result.maxValue == result.minValue) {
+		if (result.minValue) {
+			result.minValue = 0;
+		} else {
+			result.maxValue = 1;
+		}
+	}
+	return result;
+}
+
+[[nodiscard]] Data::CreditsEarnStatistics LocalEarnStatistics(
+		not_null<Main::Session*> session) {
+	const auto now = base::unixtime::now();
+	const auto proceeds = Ayu::ComputeLocalStarsProceeds(
+		AyuSettings::getInstance().localStarsWithdrawn(),
+		now);
+	auto result = Data::CreditsEarnStatistics();
+	result.currentBalance = CreditsAmount(proceeds.total);
+	result.availableBalance = CreditsAmount(proceeds.available);
+	result.overallRevenue = CreditsAmount(proceeds.lifetime);
+	result.usdRate = session->appConfig().currencyWithdrawRate();
+	result.isWithdrawalEnabled = true;
+	if (!proceeds.available && proceeds.nextMaturity) {
+		result.nextWithdrawalAt = base::unixtime::parse(
+			TimeId(proceeds.nextMaturity));
+	}
+	result.revenueGraph.chart = LocalRevenueChart();
+	return result;
+}
+
 } // namespace
 
 InnerWidget::InnerWidget(QWidget *parent, not_null<Controller*> controller)
@@ -91,6 +174,12 @@ void InnerWidget::load() {
 
 	_showFinished.events(
 	) | rpl::take(1) | rpl::on_next([=, this, peer = peer()] {
+		if (peer->isSelf()) {
+			_state = LocalEarnStatistics(&peer->session());
+			_loaded.fire(true);
+			fill();
+			return;
+		}
 		request([=](Data::CreditsEarnStatistics state) {
 			_state = state;
 			_loaded.fire(true);
@@ -125,6 +214,13 @@ void InnerWidget::fill() {
 	) | rpl::then(
 		_stateUpdated.events() | rpl::map([=] {
 			return _state.availableBalance;
+		})
+	);
+	auto currentBalanceValue = rpl::single(
+		data.currentBalance
+	) | rpl::then(
+		_stateUpdated.events() | rpl::map([=] {
+			return _state.currentBalance;
 		})
 	);
 	auto overallBalanceValue = rpl::single(
@@ -215,7 +311,7 @@ void InnerWidget::fill() {
 		Ui::AddSkip(container);
 		Ui::AddSkip(container);
 		addOverview(
-			rpl::single(data.currentBalance),
+			rpl::duplicate(currentBalanceValue),
 			tr::lng_bot_earn_reward);
 		Ui::AddSkip(container);
 		Ui::AddSkip(container);
@@ -237,6 +333,10 @@ void InnerWidget::fill() {
 				return _state.nextWithdrawalAt;
 			})
 		);
+		const auto refreshLocal = [=] {
+			_state = LocalEarnStatistics(&peer()->session());
+			_stateUpdated.fire({});
+		};
 		::Settings::AddWithdrawalWidget(
 			container,
 			_controller->parentController(),
@@ -255,7 +355,8 @@ void InnerWidget::fill() {
 				availableBalanceValue
 			) | rpl::map([=](CreditsAmount v) {
 				return v ? ToUsd(v, multiplier, kMinorLength) : QString();
-			}));
+			}),
+			peer()->isSelf() ? Fn<void()>(refreshLocal) : Fn<void()>());
 		container->resizeToWidth(container->width());
 	}
 	if (BotStarRef::Join::Allowed(peer()) && !peer()->isSelf()) {

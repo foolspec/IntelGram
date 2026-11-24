@@ -32,6 +32,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "settings/sections/settings_main.h"
 #include "settings/settings_builder.h"
 #include "settings/settings_common_session.h"
+#include "settings/settings_credits_graphics.h"
 #include "ui/abstract_button.h"
 #include "ui/basic_click_handlers.h"
 #include "ui/effects/gradient.h"
@@ -530,13 +531,6 @@ void SendScreenShow(
 		&controller->session(),
 		"premium.promo_screen_show",
 		data);
-}
-
-void SendScreenAccept(not_null<Window::SessionController*> controller) {
-	SendAppLog(
-		&controller->session(),
-		"premium.promo_screen_accept",
-		MTP_jsonNull());
 }
 
 class EmojiStatusTopBar final {
@@ -1860,28 +1854,6 @@ void ShowPremiumGiftPremium(
 	}));
 }
 
-void StartPremiumPayment(
-		not_null<Window::SessionController*> controller,
-		const QString &ref) {
-	const auto session = &controller->session();
-	const auto username = session->appConfig().get<QString>(
-		u"premium_bot_username"_q,
-		QString());
-	const auto slug = session->appConfig().get<QString>(
-		u"premium_invoice_slug"_q,
-		QString());
-	if (!username.isEmpty()) {
-		controller->showPeerByLink(Window::PeerByLinkInfo{
-			.usernameOrId = username,
-			.resolveType = Window::ResolveType::BotStart,
-			.startToken = ref,
-			.startAutoSubmit = true,
-		});
-	} else if (!slug.isEmpty()) {
-		UrlClickHandler::Open("https://t.me/$" + slug);
-	}
-}
-
 QString LookupPremiumRef(PremiumFeature section) {
 	for (const auto &[ref, entry] : EntryMap()) {
 		if (entry.section == section) {
@@ -2038,22 +2010,13 @@ not_null<Ui::GradientButton*> CreateSubscribeButton(
 			Settings::ShowPremium(window, computeRef());
 			return;
 		}
-		const auto url = computeBotUrl ? computeBotUrl() : QString();
-		if (!url.isEmpty()) {
-			const auto local = Core::TryConvertUrlToLocal(url);
-			if (local.isEmpty()) {
-				return;
-			}
-			UrlClickHandler::Open(
-				local,
-				QVariant::fromValue(ClickHandlerContext{
-					.sessionWindow = base::make_weak(window),
-					.botStartAutoSubmit = true,
-				}));
-		} else {
-			SendScreenAccept(window);
-			StartPremiumPayment(window, computeRef());
-		}
+		// Local-only: the purchase is simulated on this device instead
+		// of opening PremiumBot, so no message is sent and no real
+		// payment happens.
+		StartLocalPremiumPurchase(
+			show,
+			window,
+			computeBotUrl ? computeBotUrl() : QString());
 	});
 
 	const auto &st = st::premiumPreviewBox.button;

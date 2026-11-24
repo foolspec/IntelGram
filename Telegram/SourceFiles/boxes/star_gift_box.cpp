@@ -14,6 +14,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "api/api_global_privacy.h"
 #include "api/api_premium.h"
 #include "api/api_text_entities.h"
+#include "ayu/ayu_settings.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "base/event_filter.h"
 #include "base/qt_signal_producer.h"
 #include "base/random.h"
@@ -71,6 +73,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "lottie/lottie_single_player.h"
 #include "main/main_app_config.h"
 #include "main/main_session.h"
+#include "main/session/session_show.h"
 #include "menu/gift_resale_filter.h"
 #include "payments/payments_form.h"
 #include "payments/payments_checkout_process.h"
@@ -1227,6 +1230,52 @@ struct GiftPriceTabs {
 	return field;
 }
 
+void SendLocalStarGift(
+		not_null<Window::SessionController*> window,
+		not_null<PeerData*> peer,
+		const GiftTypeStars &gift,
+		const GiftSendDetails &details,
+		Fn<void(Payments::CheckoutResult)> done) {
+	const auto cost = gift.info.stars
+		+ (details.upgraded ? gift.info.starsToUpgrade : 0);
+	const auto giftId = gift.info.id;
+	const auto stars = gift.info.stars;
+	const auto message = details.text.text;
+	const auto anonymous = details.anonymous;
+	const auto self = peer->isSelf();
+	const auto show = Main::MakeSessionShow(
+		window->uiShow(),
+		&window->session());
+	Settings::MaybeRequestLocalBalanceIncrease(
+		show,
+		uint64(cost),
+		Settings::SmallBalanceStarGift{ peer->id },
+		[=](Settings::SmallBalanceResult result) {
+			if (result == Settings::SmallBalanceResult::Cancelled
+				|| result == Settings::SmallBalanceResult::Blocked) {
+				if (const auto onstack = done) {
+					onstack(Payments::CheckoutResult::Cancelled);
+				}
+				return;
+			}
+			const auto settings = &AyuSettings::getInstance();
+			settings->setLocalStarsBalance(
+				settings->localStarsBalance() - int(cost));
+			if (self) {
+				Ayu::AppendLocalGift({
+					.giftId = giftId,
+					.stars = stars,
+					.date = base::unixtime::now(),
+					.message = message,
+					.anonymous = anonymous,
+				});
+			}
+			if (const auto onstack = done) {
+				onstack(Payments::CheckoutResult::Paid);
+			}
+		});
+}
+
 void SendGift(
 		not_null<Window::SessionController*> window,
 		not_null<PeerData*> peer,
@@ -1262,16 +1311,7 @@ void SendGift(
 			Payments::CheckoutProcess::Start(std::move(invoice), done);
 		}
 	}, [&](const GiftTypeStars &gift) {
-		Payments::CheckoutProcess::Start(Payments::InvoiceStarGift{
-			.giftId = gift.info.id,
-			.randomId = details.randomId,
-			.message = details.text,
-			.recipient = peer,
-			.limitedCount = gift.info.limitedCount,
-			.perUserLimit = gift.info.perUserTotal,
-			.anonymous = details.anonymous,
-			.upgraded = details.upgraded,
-		}, done, processNonPanelPaymentFormFactory);
+		SendLocalStarGift(window, peer, gift, details, done);
 	});
 }
 

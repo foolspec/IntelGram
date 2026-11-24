@@ -47,6 +47,57 @@ constexpr auto kMaxLocalProfileGiftsLength = 4096;
 constexpr auto kMaxLocalStarsBalance = 1'000'000'000;
 constexpr auto kMaxLocalStarsActivityLength = 6000;
 constexpr auto kMaxLocalStarsCardNameLength = 64;
+constexpr auto kMaxLocalGiftsCount = 200;
+constexpr auto kMaxLocalGiftsLength = 65536;
+constexpr auto kMaxLocalGiftMessageLength = 128;
+constexpr auto kMaxLocalStarsEarningsCount = 1000;
+constexpr auto kMaxLocalStarsEarningsLength = 65536;
+constexpr auto kLocalStarsProceedsMaturitySecs = 21 * 86400;
+
+enum class LocalStarsEarningSource {
+	MiniApps = 0,
+	Convert = 1,
+};
+
+struct LocalStarsEarning {
+	int64 date = 0;
+	int64 amount = 0;
+	LocalStarsEarningSource source = LocalStarsEarningSource::MiniApps;
+};
+
+struct LocalStarsProceeds {
+	int64 lifetime = 0;
+	int64 total = 0;
+	int64 available = 0;
+	int64 nextMaturity = 0;
+};
+
+[[nodiscard]] std::vector<LocalStarsEarning> ParseLocalStarsEarnings(
+	const QString &raw);
+[[nodiscard]] QString SerializeLocalStarsEarnings(
+	const std::vector<LocalStarsEarning> &earnings);
+[[nodiscard]] QString NormalizeLocalStarsEarnings(QString earnings);
+void AppendLocalStarsEarning(LocalStarsEarning earning);
+[[nodiscard]] LocalStarsProceeds ComputeLocalStarsProceeds(
+	int64 withdrawn,
+	int64 now);
+[[nodiscard]] int64 LocalGiftConvertValue(int64 stars);
+void RemoveLocalGift(uint64 giftId, int64 date, const QString &message);
+
+struct LocalGiftRecord {
+	uint64 giftId = 0;
+	int64 stars = 0;
+	int64 date = 0;
+	QString message;
+	bool anonymous = false;
+};
+
+[[nodiscard]] std::vector<LocalGiftRecord> ParseLocalGifts(
+	const QString &raw);
+[[nodiscard]] QString SerializeLocalGifts(
+	const std::vector<LocalGiftRecord> &records);
+[[nodiscard]] QString NormalizeLocalGifts(QString gifts);
+void AppendLocalGift(LocalGiftRecord record);
 
 [[nodiscard]] QString NormalizeLocalProfileName(QString name);
 [[nodiscard]] QString NormalizeLocalProfileId(QString id);

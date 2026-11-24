@@ -11,6 +11,7 @@ namespace Data {
 
 struct PremiumSubscriptionOption {
 	int months = 0;
+	int64 amount = 0;
 	QString duration;
 	QString discount;
 	QString costPerMonth;

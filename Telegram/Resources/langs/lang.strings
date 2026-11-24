@@ -8301,6 +8301,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 "ayu_LocalStarsResetDone" = "Local Stars reset.";
 "ayu_LocalStarsPurchaseEntry" = "Added {amount} Stars via demo Amex";
 "ayu_LocalStarsGiftEntry" = "Sent {gift} to {recipient}";
+"ayu_LocalEarnAbout" = "Simulated mini-app rewards. Stars you earn here are added to your local balance only.";
+"ayu_LocalEarnQuest" = "Demo Quest";
+"ayu_LocalEarnGame" = "Demo Game";
+"ayu_LocalEarnAd" = "Demo Ad";
+"ayu_LocalStarsWithdrawConfirm#one" = "Withdraw {count} Star from your available balance? This is a local simulation — no real withdrawal takes place.";
+"ayu_LocalStarsWithdrawConfirm#other" = "Withdraw {count} Stars from your available balance? This is a local simulation — no real withdrawal takes place.";
+"ayu_LocalStarsWithdrawn#one" = "{count} Star withdrawn.";
+"ayu_LocalStarsWithdrawn#other" = "{count} Stars withdrawn.";
 "ayu_LocalProfileCredit" = "IntelGram local profile tools by fool.";
 "ayu_ResetSettings" = "Reset Settings";
 "ayu_ResetSettingsConfirmation" = "Are you sure you want to reset **all** IntelGram preferences to their defaults?";

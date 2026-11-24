@@ -98,7 +98,8 @@ void AddWithdrawalWidget(
 	rpl::producer<CreditsAmount> availableBalanceValue,
 	rpl::producer<QDateTime> dateValue,
 	bool withdrawalEnabled,
-	rpl::producer<QString> usdValue);
+	rpl::producer<QString> usdValue,
+	Fn<void()> localWithdrawn = nullptr);
 
 struct GiftWearBoxStyleOverride {
 	const style::Box *box = nullptr;
@@ -302,7 +303,8 @@ void SmallBalanceBox(
 	std::shared_ptr<::Main::SessionShow> show,
 	uint64 wholeCredits,
 	SmallBalanceSource source,
-	Fn<void()> paid);
+	Fn<void()> paid,
+	bool useLocalBalance = false);
 
 enum class SmallBalanceResult {
 	Already,
@@ -316,6 +318,19 @@ void MaybeRequestBalanceIncrease(
 	uint64 credits,
 	SmallBalanceSource source,
 	Fn<void(SmallBalanceResult)> done);
+
+void MaybeRequestLocalBalanceIncrease(
+	std::shared_ptr<::Main::SessionShow> show,
+	uint64 credits,
+	SmallBalanceSource source,
+	Fn<void(SmallBalanceResult)> done);
+
+void ShowLocalEarnStarsBox(not_null<Window::SessionController*> window);
+
+void StartLocalPremiumPurchase(
+	std::shared_ptr<::Main::SessionShow> show,
+	not_null<Window::SessionController*> window,
+	const QString &botUrl);
 
 void AddMiniStars(
 	not_null<Ui::VerticalLayout*> content,

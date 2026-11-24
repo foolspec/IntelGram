@@ -579,7 +579,8 @@ void SendStarsForm(
 	const auto isIntelGramLocalTopup =
 		data
 		&& data->invoice.product.startsWith(u"intelgram_stars_"_q);
-	if (isIntelGramLocalTopup) {
+	const auto isIntelGramLocalStarGift = data && data->starGiftForm;
+	if (isIntelGramLocalTopup || isIntelGramLocalStarGift) {
 		done(std::nullopt);
 		return;
 	}

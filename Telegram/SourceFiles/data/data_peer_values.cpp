@@ -395,25 +395,34 @@ rpl::producer<bool> CanManageGroupCallValue(not_null<PeerData*> peer) {
 }
 
 rpl::producer<bool> PeerPremiumValue(not_null<PeerData*> peer) {
+	using namespace rpl::mappers;
+
 	const auto user = peer->asUser();
 	if (!user) {
 		return rpl::single(false);
 	}
-	return user->flagsValue(
+	auto flags = user->flagsValue(
 	) | rpl::filter([=](UserData::Flags::Change change) {
 		return (change.diff & UserDataFlag::Premium);
 	}) | rpl::map([=] {
 		return user->isPremium();
 	});
+	if (!user->isSelf()) {
+		return flags;
+	}
+	return rpl::combine(
+		AyuSettings::getInstance().localPremiumValue(),
+		std::move(flags),
+		_1 || _2);
 }
 
 rpl::producer<bool> AmPremiumValue(not_null<Main::Session*> session) {
-	const auto &settings = AyuSettings::getInstance();
-	if (settings.localPremium()) {
-		return rpl::single(true);
-	}
+	using namespace rpl::mappers;
 
-	return PeerPremiumValue(session->user());
+	return rpl::combine(
+		AyuSettings::getInstance().localPremiumValue(),
+		PeerPremiumValue(session->user()),
+		_1 || _2);
 }
 
 TimeId SortByOnlineValue(not_null<UserData*> user, TimeId now) {

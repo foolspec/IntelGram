@@ -13,6 +13,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "api/api_premium.h"
 #include "apiwrap.h"
 #include "ayu/ayu_settings.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "base/random.h"
 #include "base/timer_rpl.h"
 #include "base/unixtime.h"
@@ -61,6 +62,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "lottie/lottie_single_player.h"
 #include "main/main_app_config.h"
 #include "main/main_session.h"
+#include "main/session/session_show.h"
 #include "payments/payments_checkout_process.h"
 #include "payments/payments_form.h"
 #include "payments/payments_non_panel_process.h"
@@ -116,13 +118,19 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "styles/style_layers.h"
 #include "styles/style_media_view.h"
 #include "styles/style_menu_icons.h"
+#include "styles/style_payments.h" // paymentsThumbnailSize.
 #include "styles/style_premium.h"
 #include "styles/style_settings.h"
 #include "styles/style_statistics.h"
 
 #include <xxhash.h> // XXH64.
 
+#include <cmath>
+
 #include <QtSvg/QSvgRenderer>
+
+#include <QtGui/QLinearGradient>
+#include <QtGui/QPainterPath>
 
 namespace Settings {
 namespace {
@@ -289,6 +297,33 @@ void ConvertStarGift(
 	}).send();
 }
 
+void ConvertLocalStarGift(
+		std::shared_ptr<ChatHelpers::Show> show,
+		const Data::CreditsHistoryEntry &e,
+		int stars,
+		Fn<void(bool)> done) {
+	const auto settings = &AyuSettings::getInstance();
+	settings->setLocalStarsBalance(settings->localStarsBalance() + stars);
+	Ayu::AppendLocalStarsEarning({
+		.date = base::unixtime::now(),
+		.amount = stars,
+		.source = Ayu::LocalStarsEarningSource::Convert,
+	});
+	Ayu::RemoveLocalGift(
+		e.stargiftId,
+		base::unixtime::serialize(e.date),
+		e.description.text);
+	if (const auto window = show->resolveWindow()) {
+		window->showSettings(Settings::CreditsId());
+	}
+	show->showToast(tr::lng_gift_got_stars(
+		tr::now,
+		lt_count,
+		stars,
+		tr::rich));
+	done(true);
+}
+
 void AddViewMediaHandler(
 		not_null<Ui::RpWidget*> thumb,
 		std::shared_ptr<ChatHelpers::Show> show,
@@ -398,6 +433,115 @@ void AddViewMediaHandler(
 class LocalStarsCheckout;
 LocalStarsCheckout *ActiveLocalStarsCheckout = nullptr;
 
+[[nodiscard]] QPainterPath SparklePath(QPointF center, float64 radius) {
+	const auto waist = radius * 0.16;
+	auto path = QPainterPath();
+	path.moveTo(center.x(), center.y() - radius);
+	path.quadTo(
+		center.x() + waist,
+		center.y() - waist,
+		center.x() + radius,
+		center.y());
+	path.quadTo(
+		center.x() + waist,
+		center.y() + waist,
+		center.x(),
+		center.y() + radius);
+	path.quadTo(
+		center.x() - waist,
+		center.y() + waist,
+		center.x() - radius,
+		center.y());
+	path.quadTo(
+		center.x() - waist,
+		center.y() - waist,
+		center.x(),
+		center.y() - radius);
+	return path;
+}
+
+[[nodiscard]] QImage LocalStarsCheckoutThumbnail() {
+	const auto ratio = style::DevicePixelRatio();
+	auto result = QImage(
+		st::paymentsThumbnailSize * ratio,
+		QImage::Format_ARGB32_Premultiplied);
+	result.fill(Qt::transparent);
+	{
+		auto p = QPainter(&result);
+		p.setRenderHint(QPainter::Antialiasing);
+		p.scale(ratio, ratio);
+		const auto size = st::paymentsThumbnailSize;
+		const auto rect = QRectF(0, 0, size.width(), size.height());
+		auto background = QLinearGradient(rect.topLeft(), rect.bottomRight());
+		background.setColorAt(0, QColor(0x1D, 0x2E, 0x45));
+		background.setColorAt(1, QColor(0x0C, 0x14, 0x21));
+		p.fillRect(rect, background);
+		p.setPen(Qt::NoPen);
+		p.setBrush(QColor(0xFF, 0xFF, 0xFF, 0x66));
+		p.drawPath(SparklePath(QPointF(14, 16), 4));
+		p.drawPath(SparklePath(QPointF(64, 12), 3));
+		p.drawPath(SparklePath(QPointF(68, 60), 4.5));
+		p.drawPath(SparklePath(QPointF(12, 62), 3));
+		const auto center = QPointF(size.width() / 2., size.height() / 2.);
+		auto gold = QLinearGradient(
+			QPointF(center.x(), center.y() - 24),
+			QPointF(center.x(), center.y() + 24));
+		gold.setColorAt(0, QColor(0xFF, 0xD9, 0x55));
+		gold.setColorAt(1, QColor(0xF5, 0x9E, 0x0B));
+		p.setBrush(gold);
+		p.drawPath(SparklePath(center, 24));
+	}
+	result = Images::Round(std::move(result), ImageRoundRadius::Large);
+	result.setDevicePixelRatio(ratio);
+	return result;
+}
+
+void FillLocalCheckoutMethod(Payments::Ui::PaymentMethodDetails &method) {
+	method.native.supported = true;
+	method.native.canSaveInformation = true;
+	method.savedMethods = {
+		Payments::Ui::PaymentMethodSaved{
+			u"intelgram-local-card"_q,
+			LocalStarsSavedCardTitle(),
+		},
+	};
+	method.savedMethodIndex = 0;
+	method.canSaveInformation = true;
+}
+
+void SaveLocalCheckoutCard(
+		Payments::Ui::PaymentMethodDetails &method,
+		const Payments::Ui::UncheckedCardDetails &data) {
+	auto digits = QString();
+	for (const auto ch : data.number) {
+		if (ch.isDigit()) {
+			digits.append(ch);
+		}
+	}
+	const auto brand = digits.startsWith(u"4"_q)
+		? u"Visa"_q
+		: digits.startsWith(u"5"_q)
+		? u"Mastercard"_q
+		: digits.startsWith(u"3"_q)
+		? u"AMEX"_q
+		: digits.startsWith(u"6"_q)
+		? u"Discover"_q
+		: u"Card"_q;
+	method.savedMethods = {
+		Payments::Ui::PaymentMethodSaved{
+			u"intelgram-local-card"_q,
+			brand
+				+ u" •••• "_q
+				+ (digits.size() > 4 ? digits.right(4) : digits),
+		},
+	};
+	method.savedMethodIndex = 0;
+	if (!data.cardholderName.isEmpty()) {
+		AyuSettings::getInstance().setLocalStarsCardName(
+			data.cardholderName);
+	}
+}
+
 // Local-only Stars checkout.
 //
 // Drives Telegram's native payments panel (Payments::Ui::Panel) with a
@@ -456,19 +600,11 @@ private:
 		_invoice.cover.title = u"Telegram Stars Top-Up"_q;
 		_invoice.cover.description = TextWithEntities{ label };
 		_invoice.cover.seller = u"Premium Bot"_q;
+		_invoice.cover.thumbnail = LocalStarsCheckoutThumbnail();
 		_invoice.prices = {
 			Payments::Ui::LabeledPrice{ label, int64(_option.amount) },
 		};
-		_method.native.supported = true;
-		_method.native.canSaveInformation = true;
-		_method.savedMethods = {
-			Payments::Ui::PaymentMethodSaved{
-				u"intelgram-local-card"_q,
-				LocalStarsSavedCardTitle(),
-			},
-		};
-		_method.savedMethodIndex = 0;
-		_method.canSaveInformation = true;
+		FillLocalCheckoutMethod(_method);
 	}
 
 	void show() {
@@ -600,34 +736,7 @@ private:
 		bool) override {
 		// A card entered here is kept only on this device, as the saved
 		// local method for the next top-up.
-		auto digits = QString();
-		for (const auto ch : data.number) {
-			if (ch.isDigit()) {
-				digits.append(ch);
-			}
-		}
-		const auto brand = digits.startsWith(u"4"_q)
-			? u"Visa"_q
-			: digits.startsWith(u"5"_q)
-			? u"Mastercard"_q
-			: digits.startsWith(u"3"_q)
-			? u"AMEX"_q
-			: digits.startsWith(u"6"_q)
-			? u"Discover"_q
-			: u"Card"_q;
-		_method.savedMethods = {
-			Payments::Ui::PaymentMethodSaved{
-				u"intelgram-local-card"_q,
-				brand
-					+ u" •••• "_q
-					+ (digits.size() > 4 ? digits.right(4) : digits),
-			},
-		};
-		_method.savedMethodIndex = 0;
-		if (!data.cardholderName.isEmpty()) {
-			AyuSettings::getInstance().setLocalStarsCardName(
-				data.cardholderName);
-		}
+		SaveLocalCheckoutCard(_method, data);
 		showForm();
 	}
 
@@ -664,6 +773,333 @@ private:
 	bool _finished = false;
 
 };
+
+[[nodiscard]] QPainterPath StarPath(QPointF center, float64 radius) {
+	const auto inner = radius * 0.42;
+	auto path = QPainterPath();
+	for (auto i = 0; i < 10; ++i) {
+		const auto r = (i % 2 == 0) ? radius : inner;
+		const auto angle = -M_PI / 2 + i * M_PI / 5;
+		const auto point = QPointF(
+			center.x() + r * std::cos(angle),
+			center.y() + r * std::sin(angle));
+		if (i == 0) {
+			path.moveTo(point);
+		} else {
+			path.lineTo(point);
+		}
+	}
+	path.closeSubpath();
+	return path;
+}
+
+[[nodiscard]] QImage LocalPremiumCheckoutThumbnail() {
+	const auto ratio = style::DevicePixelRatio();
+	auto result = QImage(
+		st::paymentsThumbnailSize * ratio,
+		QImage::Format_ARGB32_Premultiplied);
+	result.fill(Qt::transparent);
+	{
+		auto p = QPainter(&result);
+		p.setRenderHint(QPainter::Antialiasing);
+		p.scale(ratio, ratio);
+		const auto size = st::paymentsThumbnailSize;
+		const auto rect = QRectF(0, 0, size.width(), size.height());
+		auto background = QLinearGradient(rect.topLeft(), rect.bottomRight());
+		background.setColorAt(0, QColor(0x1E, 0x2A, 0x4A));
+		background.setColorAt(1, QColor(0x0E, 0x13, 0x2B));
+		p.fillRect(rect, background);
+		p.setPen(Qt::NoPen);
+		p.setBrush(QColor(0xFF, 0xFF, 0xFF, 0x66));
+		p.drawPath(SparklePath(QPointF(14, 16), 4));
+		p.drawPath(SparklePath(QPointF(64, 12), 3));
+		p.drawPath(SparklePath(QPointF(68, 60), 4.5));
+		p.drawPath(SparklePath(QPointF(12, 62), 3));
+		const auto center = QPointF(size.width() / 2., size.height() / 2.);
+		auto violet = QLinearGradient(
+			QPointF(center.x(), center.y() - 26),
+			QPointF(center.x(), center.y() + 26));
+		violet.setColorAt(0, QColor(0xC4, 0xB5, 0xFD));
+		violet.setColorAt(0.5, QColor(0x8B, 0x5C, 0xF6));
+		violet.setColorAt(1, QColor(0x63, 0x66, 0xF1));
+		p.setBrush(violet);
+		p.drawPath(StarPath(center, 26));
+	}
+
+	result = Images::Round(std::move(result), ImageRoundRadius::Large);
+
+	result.setDevicePixelRatio(ratio);
+	return result;
+}
+
+[[nodiscard]] QString LocalPremiumPlanTitle(int months) {
+	switch (months) {
+	case 1: return u"Monthly Premium Subscription"_q;
+	case 6: return u"6-Month Premium Subscription"_q;
+	case 12: return u"Annual Premium Subscription"_q;
+	case 24: return u"2-Year Premium Subscription"_q;
+	}
+	return u"Telegram Premium"_q;
+}
+
+class LocalPremiumCheckout;
+LocalPremiumCheckout *ActiveLocalPremiumCheckout = nullptr;
+
+// Local-only Premium checkout.
+//
+// Same shape as LocalStarsCheckout: Telegram's native payments panel
+// driven with a locally built Premium invoice and the pre-saved demo card.
+// Paying flips the persisted localPremium flag, which the client's own
+// premium checks already honor, so the account looks and behaves like a
+// Premium account on this device. No server request is made, no message
+// is sent to PremiumBot, and no real money moves.
+//
+// Self-owned: created by Start(), destroyed by finish() from the next
+// event-loop turn, once the panel is done with it.
+class LocalPremiumCheckout final : public Payments::Ui::PanelDelegate {
+public:
+	static void Start(
+		std::shared_ptr<Main::SessionShow> show,
+		Data::PremiumSubscriptionOption option,
+		QPointer<QWidget> fireworks) {
+		if (const auto active = ActiveLocalPremiumCheckout) {
+			active->finish(Payments::CheckoutResult::Cancelled);
+		}
+		const auto checkout = new LocalPremiumCheckout(
+			std::move(show),
+			std::move(option),
+			fireworks);
+		ActiveLocalPremiumCheckout = checkout;
+		checkout->show();
+	}
+
+private:
+	LocalPremiumCheckout(
+		std::shared_ptr<Main::SessionShow> show,
+		Data::PremiumSubscriptionOption option,
+		QPointer<QWidget> fireworks)
+	: _show(std::move(show))
+	, _session(&_show->session())
+	, _option(std::move(option))
+	, _fireworks(fireworks)
+	, _panel(std::make_unique<Payments::Ui::Panel>(this)) {
+		buildInvoiceAndMethod();
+		_panel->savedMethodChosen(
+		) | rpl::on_next([this](QString id) {
+			chooseSavedMethod(id);
+		}, _panel->lifetime());
+		_panel->backRequests(
+		) | rpl::on_next([this] {
+			panelCancelEdit();
+		}, _panel->lifetime());
+	}
+
+	void buildInvoiceAndMethod() {
+		_invoice.currency = _option.currency.isEmpty()
+			? u"USD"_q
+			: _option.currency;
+		_invoice.cover.title = LocalPremiumPlanTitle(_option.months);
+		_invoice.cover.description = TextWithEntities{
+			u"Go beyond the limits and get access to exclusive features."_q
+		};
+		_invoice.cover.seller = u"PremiumBot"_q;
+		_invoice.cover.thumbnail = LocalPremiumCheckoutThumbnail();
+		_invoice.prices = {
+			Payments::Ui::LabeledPrice{
+				_option.duration.isEmpty()
+					? u"1 month"_q
+					: _option.duration,
+				_option.amount,
+			},
+		};
+		FillLocalCheckoutMethod(_method);
+	}
+
+	void show() {
+		showForm();
+		_panel->requestActivate();
+	}
+
+	void showForm() {
+		_panel->showForm(
+			_invoice,
+			Payments::Ui::RequestedInformation(),
+			_method,
+			Payments::Ui::ShippingOptions());
+	}
+
+	void chooseSavedMethod(const QString &id) {
+		const auto &list = _method.savedMethods;
+		const auto i = ranges::find(
+			list,
+			id,
+			&Payments::Ui::PaymentMethodSaved::id);
+		if (i != end(list)) {
+			_method.savedMethodIndex = int(i - begin(list));
+		}
+		showForm();
+	}
+
+	void finish(Payments::CheckoutResult result) {
+		if (_finished) {
+			return;
+		}
+		_finished = true;
+		// Finish from the next event-loop turn: this runs inside panel
+		// callbacks, so destroying the panel right away would tear the
+		// widget down underneath its own event handler.
+		crl::on_main([this, result] {
+			if (result == Payments::CheckoutResult::Paid) {
+				AyuSettings::getInstance().setLocalPremium(true);
+			}
+			if (ActiveLocalPremiumCheckout == this) {
+				ActiveLocalPremiumCheckout = nullptr;
+			}
+			delete this;
+		});
+	}
+
+	void panelRequestClose() override {
+		finish(Payments::CheckoutResult::Cancelled);
+	}
+
+	void panelCloseSure() override {
+		finish(Payments::CheckoutResult::Cancelled);
+	}
+
+	void panelSubmit() override {
+		if (_finished) {
+			return;
+		}
+		if (const auto widget = _fireworks.data()) {
+			Ui::StartFireworks(widget);
+		}
+		finish(Payments::CheckoutResult::Paid);
+	}
+
+	void panelTrustAndSubmit() override {
+		panelSubmit();
+	}
+
+	void panelAcceptTermsAndSubmit() override {
+		panelSubmit();
+	}
+
+	void panelWebviewMessage(const QJsonDocument &, bool) override {
+	}
+
+	bool panelWebviewNavigationAttempt(const QString &) override {
+		return true;
+	}
+
+	void panelSetPassword() override {
+	}
+
+	void panelOpenUrl(const QString &url) override {
+		File::OpenUrl(url);
+	}
+
+	void panelCancelEdit() override {
+		showForm();
+	}
+
+	void panelEditPaymentMethod() override {
+		_panel->choosePaymentMethod(_method);
+	}
+
+	void panelEditShippingInformation() override {
+	}
+
+	void panelEditName() override {
+	}
+
+	void panelEditEmail() override {
+	}
+
+	void panelEditPhone() override {
+	}
+
+	void panelChooseShippingOption() override {
+	}
+
+	void panelChangeShippingOption(const QString &) override {
+	}
+
+	void panelChooseTips() override {
+	}
+
+	void panelChangeTips(int64) override {
+	}
+
+	void panelValidateInformation(
+		Payments::Ui::RequestedInformation) override {
+	}
+
+	void panelValidateCard(
+		Payments::Ui::UncheckedCardDetails data,
+		bool) override {
+		// A card entered here is kept only on this device, as the saved
+		// local method for the next checkout.
+		SaveLocalCheckoutCard(_method, data);
+		showForm();
+	}
+
+	void panelShowBox(object_ptr<Ui::BoxContent> box) override {
+		_panel->showBox(std::move(box));
+	}
+
+	QVariant panelClickHandlerContext() override {
+		return QVariant::fromValue(ClickHandlerContext{
+			.show = _panel->uiShow(),
+		});
+	}
+
+	Webview::StorageId panelWebviewStorageId() override {
+		return _session->local().resolveStorageIdOther();
+	}
+
+	Webview::ThemeParams panelWebviewThemeParams() override {
+		return Window::Theme::WebViewParams();
+	}
+
+	std::optional<QDate> panelOverrideExpireDateThreshold() override {
+		return std::nullopt;
+	}
+
+	std::shared_ptr<Main::SessionShow> _show;
+	const not_null<Main::Session*> _session;
+	Data::PremiumSubscriptionOption _option;
+	QPointer<QWidget> _fireworks;
+	const std::unique_ptr<Payments::Ui::Panel> _panel;
+	Payments::Ui::Invoice _invoice;
+	Payments::Ui::PaymentMethodDetails _method;
+	bool _finished = false;
+
+};
+
+[[nodiscard]] Data::PremiumSubscriptionOption LocalPremiumOptionForBotUrl(
+		not_null<Main::Session*> session,
+		const QString &botUrl) {
+	const auto &options = session->api().premium().subscriptionOptions();
+	if (!botUrl.isEmpty()) {
+		for (const auto &option : options) {
+			if (option.botUrl == botUrl && option.amount > 0) {
+				return option;
+			}
+		}
+	}
+	for (const auto &option : options) {
+		if (option.amount > 0) {
+			return option;
+		}
+	}
+	return {
+		.months = 1,
+		.amount = 499,
+		.duration = u"1 month"_q,
+		.currency = u"USD"_q,
+	};
+}
 
 } // namespace
 
@@ -958,6 +1394,48 @@ void FillCreditOptions(
 			button->setClickedCallback([=] {
 				if (localIntelGramTopup) {
 					const auto weak = base::make_weak(button);
+					if (!peer->isSelf()) {
+						MaybeRequestLocalBalanceIncrease(
+							show,
+							uint64(option.credits),
+							SmallBalanceStarGift{ peer->id },
+							[=](SmallBalanceResult result) {
+								if (result == SmallBalanceResult::Cancelled
+									|| result == SmallBalanceResult::Blocked) {
+									return;
+								}
+								const auto settings
+									= &AyuSettings::getInstance();
+								settings->setLocalStarsBalance(
+									settings->localStarsBalance()
+										- int(option.credits));
+								if (const auto window
+										= show->resolveWindow()) {
+									window->showToast({
+										.title = tr::lng_gift_sent_title(
+											tr::now),
+										.text = tr::lng_gift_sent_about(
+											tr::now,
+											lt_count,
+											option.credits,
+											tr::rich),
+									});
+								} else {
+									show->showToast(
+										tr::lng_gift_sent_about(
+											tr::now,
+											lt_count,
+											option.credits));
+								}
+								if (const auto strong = weak.get()) {
+									strong->window()->setFocus();
+								}
+								if (const auto onstack = paid) {
+									onstack();
+								}
+							});
+						return;
+					}
 					LocalStarsCheckout::Start(
 						show,
 						option,
@@ -2352,8 +2830,12 @@ void GenericCreditsEntryBody(
 	const auto canToggle = starGiftCanManage
 		&& !e.giftTransferred
 		&& !e.giftRefunded
-		&& !e.converted;
+		&& !e.converted
+		&& !e.localGift;
 	const auto toggleVisibility = [=, weak = base::make_weak(box)](bool save) {
+		if (e.localGift) {
+			return;
+		}
 		const auto showSection = !e.fromGiftsList;
 		const auto savedId = EntryToSavedStarGiftId(&show->session(), e);
 		const auto done = [=](bool ok) {
@@ -2452,7 +2934,7 @@ void GenericCreditsEntryBody(
 					e);
 				if (stars) {
 					const auto done = [=](bool ok) {
-						if (ok) {
+						if (ok && !e.localGift) {
 							using GiftAction = Data::GiftUpdate::Action;
 							show->session().data().notifyGiftUpdate({
 								.id = savedId,
@@ -2467,7 +2949,11 @@ void GenericCreditsEntryBody(
 							}
 						}
 					};
-					ConvertStarGift(show, savedId, stars, done);
+					if (e.localGift) {
+						ConvertLocalStarGift(show, e, stars, done);
+					} else {
+						ConvertStarGift(show, savedId, stars, done);
+					}
 				}
 			});
 		};
@@ -3111,8 +3597,10 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
 		.peerType = Data::CreditsHistoryEntry::PeerType::Peer,
 		.limitedCount = data.info.limitedCount,
 		.limitedLeft = data.info.limitedLeft,
-		.starsConverted = int(data.starsConverted),
-		.starsToUpgrade = int(data.info.starsToUpgrade),
+		.starsConverted = data.manageId
+			? int(data.starsConverted)
+			: int(Ayu::LocalGiftConvertValue(data.info.stars)),
+		.starsToUpgrade = data.manageId ? int(data.info.starsToUpgrade) : 0,
 		.starsUpgradedBySender = int(data.starsUpgradedBySender),
 		.starsForDetailsRemove = int(data.starsForDetailsRemove),
 		.giftNumber = data.giftNum,
@@ -3123,6 +3611,7 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
 		.giftPinned = data.pinned,
 		.savedToProfile = !data.hidden,
 		.fromGiftsList = true,
+		.localGift = !data.manageId,
 		.canUpgradeGift = data.upgradable,
 		.in = data.mine,
 		.gift = true,
@@ -3396,7 +3885,8 @@ void SmallBalanceBox(
 		std::shared_ptr<Main::SessionShow> show,
 		uint64 wholeCredits,
 		SmallBalanceSource source,
-		Fn<void()> paid) {
+		Fn<void()> paid,
+		bool useLocalBalance) {
 	Expects(show->session().credits().loaded());
 
 	auto credits = CreditsAmount(wholeCredits);
@@ -3407,6 +3897,18 @@ void SmallBalanceBox(
 		box->closeBox();
 		paid();
 	};
+
+	const auto balanceValue = [=]() -> rpl::producer<CreditsAmount> {
+		return useLocalBalance
+			? AyuSettings::getInstance().localStarsBalanceValue(
+			) | rpl::map([](int value) {
+				return CreditsAmount(value);
+			})
+			: show->session().credits().balanceValue();
+	};
+	const auto currentBalance = useLocalBalance
+		? CreditsAmount(AyuSettings::getInstance().localStarsBalance())
+		: show->session().credits().balance();
 
 	auto dark = false;
 	const auto owner = &show->session().data();
@@ -3439,7 +3941,7 @@ void SmallBalanceBox(
 		return QString();
 	});
 
-	auto needed = show->session().credits().balanceValue(
+	auto needed = balanceValue(
 	) | rpl::map([=](CreditsAmount balance) {
 		return (balance < credits) ? (credits - balance) : CreditsAmount();
 	});
@@ -3550,7 +4052,7 @@ void SmallBalanceBox(
 		show,
 		box->verticalLayout(),
 		show->session().user(),
-		credits - show->session().credits().balance(),
+		credits - currentBalance,
 		[=] { show->session().credits().load(true); },
 		box->showFinishes(),
 		tr::lng_credits_summary_options_subtitle(),
@@ -3576,7 +4078,7 @@ void SmallBalanceBox(
 		const auto balance = AddBalanceWidget(
 			content,
 			&show->session(),
-			show->session().credits().balanceValue(),
+			balanceValue(),
 			true,
 			nullptr,
 			dark);
@@ -3608,7 +4110,8 @@ void AddWithdrawalWidget(
 		rpl::producer<CreditsAmount> availableBalanceValue,
 		rpl::producer<QDateTime> dateValue,
 		bool withdrawalEnabled,
-		rpl::producer<QString> usdValue) {
+		rpl::producer<QString> usdValue,
+		Fn<void()> localWithdrawn) {
 	Ui::AddSkip(container);
 
 	const auto labels = container->add(
@@ -3896,38 +4399,70 @@ void AddWithdrawalWidget(
 		}, state->dateUpdateLifetime);
 	}, lockedLabel->lifetime());
 
-	Api::HandleWithdrawalButton(
-		Api::RewardReceiver{
-			.creditsReceiver = peer,
-			.creditsAmount = [=, show = controller->uiShow()] {
-				const auto amount = input->getLastText().toULongLong();
-				const auto min = float64(WithdrawalMin(session));
-				if (amount < min) {
-					auto text = tr::lng_bot_earn_credits_out_minimal(
+	const auto creditsAmount = [=, show = controller->uiShow()] {
+		const auto amount = input->getLastText().toULongLong();
+		const auto min = float64(WithdrawalMin(session));
+		if (amount < min) {
+			auto text = tr::lng_bot_earn_credits_out_minimal(
+				tr::now,
+				lt_link,
+				tr::link(
+					tr::lng_bot_earn_credits_out_minimal_link(
 						tr::now,
-						lt_link,
-						tr::link(
-							tr::lng_bot_earn_credits_out_minimal_link(
-								tr::now,
-								lt_count,
-								min),
-							u"internal:"_q),
-						tr::rich);
-					show->showToast(Ui::Toast::Config{
-						.text = std::move(text),
-						.filter = [=](const auto ...) {
-							input->setText(QString::number(min));
-							processInputChange();
-							return true;
-						},
-					});
-					return 0ULL;
-				}
-				return amount;
+						lt_count,
+						min),
+					u"internal:"_q),
+				tr::rich);
+			show->showToast(Ui::Toast::Config{
+				.text = std::move(text),
+				.filter = [=](const auto ...) {
+					input->setText(QString::number(min));
+					processInputChange();
+					return true;
+				},
+			});
+			return 0ULL;
+		}
+		return amount;
+	};
+	if (localWithdrawn) {
+		button->setClickedCallback([=] {
+			const auto amount = creditsAmount();
+			if (!amount) {
+				return;
+			}
+			controller->uiShow()->show(Ui::MakeConfirmBox({
+				.text = tr::ayu_LocalStarsWithdrawConfirm(
+					tr::now,
+					lt_count,
+					amount * 1.),
+				.confirmed = [=](Fn<void()> close) {
+					close();
+					const auto settings = &AyuSettings::getInstance();
+					settings->setLocalStarsWithdrawn(
+						settings->localStarsWithdrawn() + int(amount));
+					controller->uiShow()->showToast(
+						tr::ayu_LocalStarsWithdrawn(
+							tr::now,
+							lt_count,
+							amount * 1.,
+							tr::rich));
+					localWithdrawn();
+				},
+				.confirmText = tr::lng_bot_earn_balance_button_locked(
+					tr::now),
+				.title = tr::lng_bot_earn_title(tr::now),
+			}));
+		});
+	} else {
+		Api::HandleWithdrawalButton(
+			Api::RewardReceiver{
+				.creditsReceiver = peer,
+				.creditsAmount = creditsAmount,
 			},
-		},
-		button,
-		controller->uiShow());
+			button,
+			controller->uiShow());
+	}
 	Ui::ToggleChildrenVisibility(button, true);
 
 	Ui::AddSkip(container);
@@ -4011,6 +4546,131 @@ void MaybeRequestBalanceIncrease(
 			}
 		}
 	}, state->lifetime);
+}
+
+void MaybeRequestLocalBalanceIncrease(
+		std::shared_ptr<Main::SessionShow> show,
+		uint64 credits,
+		SmallBalanceSource source,
+		Fn<void(SmallBalanceResult)> done) {
+	struct State {
+		rpl::lifetime lifetime;
+		bool success = false;
+	};
+	const auto state = std::make_shared<State>();
+
+	const auto session = &show->session();
+	session->credits().load();
+	session->credits().loadedValue(
+	) | rpl::filter(rpl::mappers::_1) | rpl::on_next([=] {
+		state->lifetime.destroy();
+
+		const auto balance = CreditsAmount(
+			AyuSettings::getInstance().localStarsBalance());
+		if (CreditsAmount(credits) <= balance) {
+			if (const auto onstack = done) {
+				onstack(SmallBalanceResult::Already);
+			}
+		} else {
+			const auto success = [=] {
+				state->success = true;
+				if (const auto onstack = done) {
+					onstack(SmallBalanceResult::Success);
+				}
+			};
+			const auto box = show->show(Box(
+				Settings::SmallBalanceBox,
+				show,
+				credits,
+				source,
+				success,
+				true));
+			box->boxClosing() | rpl::on_next([=] {
+				crl::on_main([=] {
+					if (!state->success) {
+						if (const auto onstack = done) {
+							onstack(SmallBalanceResult::Cancelled);
+						}
+					}
+				});
+			}, box->lifetime());
+		}
+	}, state->lifetime);
+}
+
+void LocalEarnStarsBox(not_null<Ui::GenericBox*> box) {
+	box->setWidth(st::boxWideWidth);
+	box->setTitle(tr::lng_credits_earn_button());
+	box->addButton(tr::lng_close(), [=] { box->closeBox(); });
+	const auto content = box->verticalLayout();
+	Ui::AddSkip(content);
+	content->add(
+		object_ptr<Ui::FlatLabel>(
+			content,
+			tr::ayu_LocalEarnAbout(),
+			st::creditsBoxAbout),
+		st::boxRowPadding);
+	Ui::AddSkip(content);
+	const auto buttons = content->add(
+		object_ptr<Ui::VerticalLayout>(content));
+	const auto options = std::vector<std::pair<QString, int>>{
+		{ tr::ayu_LocalEarnQuest(tr::now), 50 },
+		{ tr::ayu_LocalEarnGame(tr::now), 25 },
+		{ tr::ayu_LocalEarnAd(tr::now), 10 },
+	};
+	for (const auto &[title, stars] : options) {
+		const auto button = buttons->add(
+			object_ptr<Ui::SettingsButton>(
+				buttons,
+				rpl::single(title),
+				st::creditsTopupButton));
+		const auto reward = Ui::CreateChild<Ui::FlatLabel>(
+			button,
+			u"+%1 Stars"_q.arg(stars),
+			st::creditsTopupPrice);
+		button->widthValue() | rpl::on_next([=](int width) {
+			reward->moveToRight(
+				st::creditsTopupButton.padding.right(),
+				st::creditsTopupButton.padding.top());
+		}, button->lifetime());
+		Ui::ToggleChildrenVisibility(button, true);
+		button->setClickedCallback([=] {
+			const auto settings = &AyuSettings::getInstance();
+			settings->setLocalStarsBalance(
+				settings->localStarsBalance() + stars);
+			Ayu::AppendLocalStarsEarning({
+				.date = base::unixtime::now(),
+				.amount = stars,
+				.source = Ayu::LocalStarsEarningSource::MiniApps,
+			});
+			box->uiShow()->showToast(tr::lng_gift_got_stars(
+				tr::now,
+				lt_count,
+				stars,
+				tr::rich));
+		});
+	}
+	Ui::AddSkip(content);
+}
+
+void ShowLocalEarnStarsBox(not_null<Window::SessionController*> window) {
+	const auto show = Main::MakeSessionShow(
+		window->uiShow(),
+		&window->session());
+	show->show(Box(LocalEarnStarsBox));
+}
+
+void StartLocalPremiumPurchase(
+		std::shared_ptr<Main::SessionShow> show,
+		not_null<Window::SessionController*> window,
+		const QString &botUrl) {
+	const auto option = LocalPremiumOptionForBotUrl(
+		&show->session(),
+		botUrl);
+	LocalPremiumCheckout::Start(
+		std::move(show),
+		option,
+		window->widget().get());
 }
 
 void AddUniqueCloseMoreButton(

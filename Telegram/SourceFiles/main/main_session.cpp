@@ -408,10 +408,10 @@ rpl::producer<bool> Session::premiumPossibleValue() const {
 		return _user->isPremium();
 	});
 
-	const auto &settings = AyuSettings::getInstance();
-	if (settings.localPremium()) {
-		premium = rpl::single(true);
-	}
+	premium = rpl::combine(
+		AyuSettings::getInstance().localPremiumValue(),
+		std::move(premium),
+		_1 || _2);
 
 	return rpl::combine(
 		std::move(premium),

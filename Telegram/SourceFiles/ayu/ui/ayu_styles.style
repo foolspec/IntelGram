@@ -35,11 +35,6 @@ stickerRoundingSize: 5px;
 
 messageShotPadding: 4px;
 
-localStarsCardWidth: 320px;
-localStarsCardHeight: 200px;
-localStarsCardRounding: 16px;
-localStarsCardPadding: margins(22px, 20px, 22px, 20px);
-
 topBarAdmins: IconButton {
 	width: 40px;
 	height: topBarHeight;

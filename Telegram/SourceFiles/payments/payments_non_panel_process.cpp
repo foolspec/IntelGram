@@ -8,6 +8,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "payments/payments_non_panel_process.h"
 
 #include "api/api_credits.h"
+#include "ayu/ayu_settings.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "base/unixtime.h"
 #include "boxes/send_credits_box.h"
 #include "data/components/credits.h"
@@ -113,7 +115,36 @@ void ProcessCreditsPayment(
 	auto source = Ui::SmallBalanceSourceFromForm(form);
 	if (isIntelGramLocalTopup) {
 		done(SmallBalanceResult::Success);
-	} else if (form->starGiftForm || IsPremiumForStarsInvoice(form->id)) {
+	} else if (form->starGiftForm) {
+		const auto credits = form->invoice.credits;
+		MaybeRequestLocalBalanceIncrease(
+			show,
+			credits,
+			source,
+			[=](SmallBalanceResult result) {
+				if (hasBadResult(result)) {
+					return;
+				}
+				const auto settings = &AyuSettings::getInstance();
+				settings->setLocalStarsBalance(
+					settings->localStarsBalance() - int(credits));
+				if (const auto gift
+						= std::get_if<InvoiceStarGift>(&form->id.value)) {
+					if (gift->recipient->isSelf()) {
+						Ayu::AppendLocalGift({
+							.giftId = gift->giftId,
+							.stars = int64(credits),
+							.date = base::unixtime::now(),
+							.message = gift->message.text,
+							.anonymous = gift->anonymous,
+						});
+					}
+				}
+				if (const auto onstack = maybeReturnToBot) {
+					onstack(CheckoutResult::Paid);
+				}
+			});
+	} else if (IsPremiumForStarsInvoice(form->id)) {
 		const auto credits = form->invoice.credits;
 		MaybeRequestBalanceIncrease(show, credits, source, done);
 	} else {
