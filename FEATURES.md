@@ -68,6 +68,7 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - Clears each cloned badge, status, and personal-channel element locally when the source profile does not have it, instead of falling back to the real self profile.
 - Applies the mirror only to your own local profile rendering.
 - Can be stopped at any time to return to the individual local fields.
+- Each signed-in account keeps its own clone and collectible showcase; switching accounts restores that account's clone and collections, and an account with no clone shows its real profile.
 - Does not fetch a hidden profile, bypass privacy, alter either account, or impersonate the user to anyone else.
 
 ## Local Profile Badges
@@ -123,6 +124,7 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - Tracks local Stars proceeds with available, total, and lifetime balances, the 21-day maturity rule, a local Fragment-style withdrawal flow, and a statistics view.
 - Offers local Earn Stars options from Mini Apps: Demo Quest, Demo Game, and Demo Ad credit 50, 25, and 10 Stars.
 - Simulates Telegram Premium and Business purchases end to end: the native plan picker and checkout panel, and afterwards the Premium badge, subscribed state, and Business feature screens appear as if the account owns them.
+- Keeps each signed-in account's Stars balance, gift inventory, earnings, and Premium state separate; switching accounts restores that account's data.
 - Never contacts a payment provider or Telegram's payment, gift-transfer, or subscription APIs.
 
 ## Universal Message Vault

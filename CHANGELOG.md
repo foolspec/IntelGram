@@ -44,6 +44,13 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 - A cover thumbnail on the Stars checkout invoice, so the native payment panel now matches Telegram's real checkout layout.
 - A local Telegram Premium purchase: every Subscribe button runs the native plan picker (monthly or annual) and the native checkout panel with the demo American Express card. After paying, the Premium badge, subscribed state, and Premium features appear as if the account owns Premium.
 - A local Telegram Business subscription through the same flow; the Business section and its feature screens open once subscribed.
+- Per-account profile clones and NFT collections: each signed-in account keeps its own local profile clone and collectible showcase. Switching accounts restores that account's clone and collections, and an account with no clone shows its real profile. Your existing clone carries over to the account you are using when you first open this version.
+- Per-account Stars, gifts, earnings, and Premium: each signed-in account keeps its own local Stars balance, gift inventory, earnings ledger, and Premium state. Switching accounts restores that account's data, and Premium bought on one account no longer appears on the others. Your existing balance, gifts, earnings, and Premium carry over to the account you are using when you first open this version.
+
+### Fixed
+
+- The Stars panel, gifts tab, and dialogs suggestion code called Telegram APIs that do not exist in the pinned AyuGram v6.7.8 source, which failed the first v22 build on macOS and Linux. Those calls now match the pinned source.
+- The Windows dependency setup no longer installs the MSYS2 diffutils package that MSYS2 removed from its repository, which failed the first v22 build's Windows dependency stage.
 
 ### Changed
 

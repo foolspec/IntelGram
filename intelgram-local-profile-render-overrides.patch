@@ -1752,7 +1752,7 @@ index 2fa8a2a3f..2c0ecb5a4 100644
  	initWorker();
  	initRCManager();
 diff --git a/Telegram/SourceFiles/ayu/ayu_settings.cpp b/Telegram/SourceFiles/ayu/ayu_settings.cpp
-index 2280020ce..0722b2a7e 100644
+index 2280020ce..06630e956 100644
 --- a/Telegram/SourceFiles/ayu/ayu_settings.cpp
 +++ b/Telegram/SourceFiles/ayu/ayu_settings.cpp
 @@ -11,6 +11,7 @@
@@ -1781,7 +1781,482 @@ index 2280020ce..0722b2a7e 100644
  std::string getSettingsPath() {
  	return (cWorkingDir() + u"tdata/ayu_settings.json"_q).toStdString();
  }
-@@ -663,6 +668,118 @@ void AyuSettings::setMaterialSwitches(bool val) {
+@@ -353,6 +358,308 @@ void from_json(const nlohmann::json &j, MessageShotSettings &s) {
+ 	s._cloudThemeAccountId = j.value("cloudThemeAccountId", uint64(0));
+ }
+ 
++bool LocalProfileAccountSettings::hasLocalProfile() const {
++	const auto current = nlohmann::json(*this);
++	const auto defaults = nlohmann::json(LocalProfileAccountSettings());
++	return current != defaults;
++}
++
++void LocalProfileAccountSettings::setLocalProfileNameEnabled(bool val) {
++	if (_localProfileNameEnabled.current() == val) return;
++	_localProfileNameEnabled = val;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileName(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfileName(val);
++	if (_localProfileName.current() == normalized) return;
++	_localProfileName = normalized;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileIdEnabled(bool val) {
++	if (_localProfileIdEnabled.current() == val) return;
++	_localProfileIdEnabled = val;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileId(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfileId(val);
++	if (_localProfileId.current() == normalized) return;
++	_localProfileId = normalized;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileUsernameEnabled(bool val) {
++	if (_localProfileUsernameEnabled.current() == val) return;
++	_localProfileUsernameEnabled = val;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileUsername(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfileUsername(val);
++	if (_localProfileUsername.current() == normalized) return;
++	_localProfileUsername = normalized;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileUsernames(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfileUsernames(val);
++	if (_localProfileUsernames.current() == normalized) return;
++	_localProfileUsernames = normalized;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfilePhoneEnabled(bool val) {
++	if (_localProfilePhoneEnabled.current() == val) return;
++	_localProfilePhoneEnabled = val;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfilePhone(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfilePhone(val);
++	if (_localProfilePhone.current() == normalized) return;
++	_localProfilePhone = normalized;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileAboutEnabled(bool val) {
++	if (_localProfileAboutEnabled.current() == val) return;
++	_localProfileAboutEnabled = val;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileAbout(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfileAbout(val);
++	if (_localProfileAbout.current() == normalized) return;
++	_localProfileAbout = normalized;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfilePhoto(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfilePhoto(val);
++	if (_localProfilePhoto.current() == normalized) return;
++	_localProfilePhoto = normalized;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileCloneId(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfileCloneId(val);
++	if (_localProfileCloneId.current() == normalized) return;
++	_localProfileCloneId = normalized;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileBadgeStyle(LocalProfileBadgeStyle val) {
++	if (_localProfileBadgeStyle.current() == val) return;
++	_localProfileBadgeStyle = val;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileEmojiStatusId(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfileId(val);
++	if (_localProfileEmojiStatusId.current() == normalized) return;
++	_localProfileEmojiStatusId = normalized;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileBotVerificationId(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfileId(val);
++	if (_localProfileBotVerificationId.current() == normalized) return;
++	_localProfileBotVerificationId = normalized;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileChannelEnabled(bool val) {
++	if (_localProfileChannelEnabled.current() == val) return;
++	_localProfileChannelEnabled = val;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileChannel(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfileUsername(val);
++	if (_localProfileChannel.current() == normalized) return;
++	_localProfileChannel = normalized;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileChannelWorkspace(const QString &val) {
++	const auto normalized = val.left(kMaxLocalProfileChannelWorkspaceLength);
++	if (_localProfileChannelWorkspace.current() == normalized) return;
++	_localProfileChannelWorkspace = normalized;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileGiftEnabled(bool val) {
++	if (_localProfileGiftEnabled.current() == val) return;
++	_localProfileGiftEnabled = val;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileGift(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfileGift(val);
++	if (_localProfileGift.current() == normalized) return;
++	_localProfileGift = normalized;
++	AyuSettings::save();
++}
++
++void LocalProfileAccountSettings::setLocalProfileGifts(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalProfileGifts(val);
++	if (_localProfileGifts.current() == normalized) return;
++	_localProfileGifts = normalized;
++	AyuSettings::save();
++}
++
++void to_json(nlohmann::json &j, const LocalProfileAccountSettings &s) {
++	j = nlohmann::json{
++		{"localProfileNameEnabled", s._localProfileNameEnabled.current()},
++		{"localProfileName", s._localProfileName.current()},
++		{"localProfileIdEnabled", s._localProfileIdEnabled.current()},
++		{"localProfileId", s._localProfileId.current()},
++		{"localProfileUsernameEnabled", s._localProfileUsernameEnabled.current()},
++		{"localProfileUsername", s._localProfileUsername.current()},
++		{"localProfileUsernames", s._localProfileUsernames.current()},
++		{"localProfilePhoneEnabled", s._localProfilePhoneEnabled.current()},
++		{"localProfilePhone", s._localProfilePhone.current()},
++		{"localProfileAboutEnabled", s._localProfileAboutEnabled.current()},
++		{"localProfileAbout", s._localProfileAbout.current()},
++		{"localProfilePhoto", s._localProfilePhoto.current()},
++		{"localProfileCloneId", s._localProfileCloneId.current()},
++		{"localProfileBadgeStyle", s._localProfileBadgeStyle.current()},
++		{"localProfileEmojiStatusId", s._localProfileEmojiStatusId.current()},
++		{"localProfileBotVerificationId", s._localProfileBotVerificationId.current()},
++		{"localProfileChannelEnabled", s._localProfileChannelEnabled.current()},
++		{"localProfileChannel", s._localProfileChannel.current()},
++		{"localProfileChannelWorkspace", s._localProfileChannelWorkspace.current()},
++		{"localProfileGiftEnabled", s._localProfileGiftEnabled.current()},
++		{"localProfileGift", s._localProfileGift.current()},
++		{"localProfileGifts", s._localProfileGifts.current()},
++	};
++}
++
++void from_json(const nlohmann::json &j, LocalProfileAccountSettings &s) {
++	LocalProfileAccountSettings defaults;
++	s._localProfileNameEnabled = j.value("localProfileNameEnabled", defaults._localProfileNameEnabled.current());
++	s._localProfileName = Ayu::NormalizeLocalProfileName(j.value("localProfileName", defaults._localProfileName.current()));
++	s._localProfileIdEnabled = j.value("localProfileIdEnabled", defaults._localProfileIdEnabled.current());
++	s._localProfileId = Ayu::NormalizeLocalProfileId(j.value("localProfileId", defaults._localProfileId.current()));
++	s._localProfileUsernameEnabled = j.value("localProfileUsernameEnabled", defaults._localProfileUsernameEnabled.current());
++	s._localProfileUsername = Ayu::NormalizeLocalProfileUsername(j.value("localProfileUsername", defaults._localProfileUsername.current()));
++	s._localProfileUsernames = Ayu::NormalizeLocalProfileUsernames(j.value("localProfileUsernames", defaults._localProfileUsernames.current()));
++	s._localProfilePhoneEnabled = j.value("localProfilePhoneEnabled", defaults._localProfilePhoneEnabled.current());
++	s._localProfilePhone = Ayu::NormalizeLocalProfilePhone(j.value("localProfilePhone", defaults._localProfilePhone.current()));
++	s._localProfileAboutEnabled = j.value("localProfileAboutEnabled", defaults._localProfileAboutEnabled.current());
++	s._localProfileAbout = Ayu::NormalizeLocalProfileAbout(j.value("localProfileAbout", defaults._localProfileAbout.current()));
++	s._localProfilePhoto = Ayu::NormalizeLocalProfilePhoto(j.value("localProfilePhoto", defaults._localProfilePhoto.current()));
++	s._localProfileCloneId = Ayu::NormalizeLocalProfileCloneId(j.value("localProfileCloneId", defaults._localProfileCloneId.current()));
++	s._localProfileBadgeStyle = j.value(
++		"localProfileBadgeStyle",
++		defaults._localProfileBadgeStyle.current());
++	s._localProfileEmojiStatusId = Ayu::NormalizeLocalProfileId(j.value(
++		"localProfileEmojiStatusId",
++		defaults._localProfileEmojiStatusId.current()));
++	s._localProfileBotVerificationId = Ayu::NormalizeLocalProfileId(j.value(
++		"localProfileBotVerificationId",
++		defaults._localProfileBotVerificationId.current()));
++	s._localProfileChannelEnabled = j.value(
++		"localProfileChannelEnabled",
++		defaults._localProfileChannelEnabled.current());
++	s._localProfileChannel = Ayu::NormalizeLocalProfileUsername(j.value(
++		"localProfileChannel",
++		defaults._localProfileChannel.current()));
++	s._localProfileChannelWorkspace = j.value(
++		"localProfileChannelWorkspace",
++		defaults._localProfileChannelWorkspace.current()).left(
++			kMaxLocalProfileChannelWorkspaceLength);
++	s._localProfileGiftEnabled = j.value("localProfileGiftEnabled", defaults._localProfileGiftEnabled.current());
++	s._localProfileGift = Ayu::NormalizeLocalProfileGift(j.value("localProfileGift", defaults._localProfileGift.current()));
++	s._localProfileGifts = Ayu::NormalizeLocalProfileGifts(j.value("localProfileGifts", defaults._localProfileGifts.current()));
++}
++
++bool LocalStarsAccountSettings::hasLocalStars() const {
++	const auto current = nlohmann::json(*this);
++	const auto defaults = nlohmann::json(LocalStarsAccountSettings());
++	return current != defaults;
++}
++
++void LocalStarsAccountSettings::setLocalPremium(bool val) {
++	if (_localPremium.current() == val) return;
++	_localPremium = val;
++	AyuSettings::save();
++}
++
++void LocalStarsAccountSettings::setLocalStarsBalance(int val) {
++	const auto bounded = std::clamp(
++		val,
++		0,
++		Ayu::kMaxLocalStarsBalance);
++	if (_localStarsBalance.current() == bounded) return;
++	_localStarsBalance = bounded;
++	AyuSettings::save();
++}
++
++void LocalStarsAccountSettings::setLocalStarsActivity(const QString &val) {
++	const auto normalized = val.left(Ayu::kMaxLocalStarsActivityLength);
++	if (_localStarsActivity.current() == normalized) return;
++	_localStarsActivity = normalized;
++	AyuSettings::save();
++}
++
++void LocalStarsAccountSettings::setLocalGifts(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalGifts(val);
++	if (_localGifts.current() == normalized) return;
++	_localGifts = normalized;
++	AyuSettings::save();
++}
++
++void LocalStarsAccountSettings::setLocalStarsEarnings(const QString &val) {
++	const auto normalized = Ayu::NormalizeLocalStarsEarnings(val);
++	if (_localStarsEarnings.current() == normalized) return;
++	_localStarsEarnings = normalized;
++	AyuSettings::save();
++}
++
++void LocalStarsAccountSettings::setLocalStarsWithdrawn(int val) {
++	const auto bounded = std::clamp(val, 0, Ayu::kMaxLocalStarsBalance);
++	if (_localStarsWithdrawn.current() == bounded) return;
++	_localStarsWithdrawn = bounded;
++	AyuSettings::save();
++}
++
++void to_json(nlohmann::json &j, const LocalStarsAccountSettings &s) {
++	j = nlohmann::json{
++		{"localPremium", s._localPremium.current()},
++		{"localStarsBalance", s._localStarsBalance.current()},
++		{"localStarsActivity", s._localStarsActivity.current()},
++		{"localGifts", s._localGifts.current()},
++		{"localStarsEarnings", s._localStarsEarnings.current()},
++		{"localStarsWithdrawn", s._localStarsWithdrawn.current()},
++	};
++}
++
++void from_json(const nlohmann::json &j, LocalStarsAccountSettings &s) {
++	LocalStarsAccountSettings defaults;
++	s._localPremium = j.value("localPremium", defaults._localPremium.current());
++	s._localStarsBalance = std::clamp(
++		j.value("localStarsBalance", defaults._localStarsBalance.current()),
++		0,
++		Ayu::kMaxLocalStarsBalance);
++	s._localStarsActivity = j.value(
++		"localStarsActivity",
++		defaults._localStarsActivity.current()).left(
++			Ayu::kMaxLocalStarsActivityLength);
++	s._localGifts = Ayu::NormalizeLocalGifts(j.value(
++		"localGifts",
++		defaults._localGifts.current()));
++	s._localStarsEarnings = Ayu::NormalizeLocalStarsEarnings(j.value(
++		"localStarsEarnings",
++		defaults._localStarsEarnings.current()));
++	s._localStarsWithdrawn = std::clamp(
++		j.value("localStarsWithdrawn", defaults._localStarsWithdrawn.current()),
++		0,
++		Ayu::kMaxLocalStarsBalance);
++}
++
+ AyuSettings::AyuSettings()
+ : _appIcon(AyuAssets::DEFAULT_ICON)
+ , _editedMark(Core::IsAppLaunched() ? tr::lng_edited(tr::now) : QString("edited")) {
+@@ -394,6 +701,66 @@ void AyuSettings::load() {
+ 			LOG(("AyuGramSettings: migrated ghost mode settings to per-account format"));
+ 		}
+ 
++		if (!p.contains("localProfileSettings")) {
++			const auto legacyKeys = {
++				"localProfileNameEnabled",
++				"localProfileName",
++				"localProfileIdEnabled",
++				"localProfileId",
++				"localProfileUsernameEnabled",
++				"localProfileUsername",
++				"localProfileUsernames",
++				"localProfilePhoneEnabled",
++				"localProfilePhone",
++				"localProfileAboutEnabled",
++				"localProfileAbout",
++				"localProfilePhoto",
++				"localProfileCloneId",
++				"localProfileBadgeStyle",
++				"localProfileEmojiStatusId",
++				"localProfileBotVerificationId",
++				"localProfileChannelEnabled",
++				"localProfileChannel",
++				"localProfileChannelWorkspace",
++				"localProfileGiftEnabled",
++				"localProfileGift",
++				"localProfileGifts",
++			};
++			auto legacy = nlohmann::json::object();
++			for (const auto &key : legacyKeys) {
++				if (p.contains(key)) {
++					legacy[key] = p[key];
++				}
++			}
++			p["localProfileSettings"] = nlohmann::json::object({
++				{"0", std::move(legacy)}
++			});
++
++			LOG(("AyuGramSettings: migrated local profile settings to per-account format"));
++		}
++
++		if (!p.contains("localStarsSettings")) {
++			const auto legacyKeys = {
++				"localPremium",
++				"localStarsBalance",
++				"localStarsActivity",
++				"localGifts",
++				"localStarsEarnings",
++				"localStarsWithdrawn",
++			};
++			auto legacy = nlohmann::json::object();
++			for (const auto &key : legacyKeys) {
++				if (p.contains(key)) {
++					legacy[key] = p[key];
++				}
++			}
++			p["localStarsSettings"] = nlohmann::json::object({
++				{"0", std::move(legacy)}
++			});
++
++			LOG(("AyuGramSettings: migrated local stars settings to per-account format"));
++		}
++
+ 		try {
+ 			from_json(p, settings);
+ 		} catch (...) {
+@@ -456,6 +823,98 @@ GhostModeAccountSettings &AyuSettings::ghost() {
+ 	return ghost(0);
+ }
+ 
++LocalProfileAccountSettings &AyuSettings::localProfile(not_null<Main::Session*> session) {
++	return localProfile(session->userId().bare);
++}
++
++LocalProfileAccountSettings &AyuSettings::localProfile(uint64 userId) {
++	auto &settings = getInstance();
++
++	auto it = settings._localProfileAccounts.find(userId);
++	if (it == settings._localProfileAccounts.end()) {
++		if (userId != 0) {
++			const auto legacy = settings._localProfileAccounts.find(0);
++			if (legacy != settings._localProfileAccounts.end()
++				&& legacy->second->hasLocalProfile()) {
++				auto account = std::move(legacy->second);
++				settings._localProfileAccounts.erase(legacy);
++				it = settings._localProfileAccounts.emplace(
++					userId,
++					std::move(account)).first;
++				save();
++				return *it->second;
++			}
++		}
++		auto account = std::make_unique<LocalProfileAccountSettings>();
++		it = settings._localProfileAccounts.emplace(
++			userId,
++			std::move(account)).first;
++	}
++
++	return *it->second;
++}
++
++LocalProfileAccountSettings &AyuSettings::localProfile() {
++	if (const auto window = Core::App().activeWindow()) {
++		if (const auto session = window->maybeSession()) {
++			return localProfile(session);
++		}
++	}
++	return localProfile(0);
++}
++
++LocalStarsAccountSettings &AyuSettings::localStars(not_null<Main::Session*> session) {
++	return localStars(session->userId().bare);
++}
++
++LocalStarsAccountSettings &AyuSettings::localStars(uint64 userId) {
++	auto &settings = getInstance();
++
++	auto it = settings._localStarsAccounts.find(userId);
++	if (it == settings._localStarsAccounts.end()) {
++		auto account = std::make_unique<LocalStarsAccountSettings>();
++		it = settings._localStarsAccounts.emplace(
++			userId,
++			std::move(account)).first;
++	}
++	if (userId == 0) {
++		return *it->second;
++	}
++	const auto legacy = settings._localStarsAccounts.find(0);
++	if (legacy == settings._localStarsAccounts.end()
++		|| !legacy->second->hasLocalStars()
++		|| it->second->hasLocalStars()) {
++		return *it->second;
++	}
++	const auto window = Core::App().activeWindow();
++	if (!window) {
++		return *it->second;
++	}
++	const auto session = window->maybeSession();
++	if (!session || session->userId().bare != userId) {
++		return *it->second;
++	}
++	it->second->_localPremium = legacy->second->_localPremium.current();
++	it->second->_localStarsBalance = legacy->second->_localStarsBalance.current();
++	it->second->_localStarsActivity = legacy->second->_localStarsActivity.current();
++	it->second->_localGifts = legacy->second->_localGifts.current();
++	it->second->_localStarsEarnings = legacy->second->_localStarsEarnings.current();
++	it->second->_localStarsWithdrawn = legacy->second->_localStarsWithdrawn.current();
++	settings._localStarsAccounts.erase(legacy);
++	save();
++
++	return *it->second;
++}
++
++LocalStarsAccountSettings &AyuSettings::localStars() {
++	if (const auto window = Core::App().activeWindow()) {
++		if (const auto session = window->maybeSession()) {
++			return localStars(session);
++		}
++	}
++	return localStars(0);
++}
++
+ void AyuSettings::setUseGlobalGhostMode(bool val) {
+ 	if (_useGlobalGhostMode.current() == val) return;
+ 	_useGlobalGhostMode = val;
+@@ -663,6 +1122,118 @@ void AyuSettings::setMaterialSwitches(bool val) {
  	save();
  }
  
@@ -1900,205 +2375,21 @@ index 2280020ce..0722b2a7e 100644
  void AyuSettings::setRemoveMessageTail(bool val) {
  	if (_removeMessageTail.current() == val) return;
  	_removeMessageTail = val;
-@@ -681,6 +798,197 @@ void AyuSettings::setLocalPremium(bool val) {
+@@ -675,9 +1246,10 @@ void AyuSettings::setDisableNotificationsDelay(bool val) {
  	save();
  }
  
-+void AyuSettings::setLocalProfileNameEnabled(bool val) {
-+	if (_localProfileNameEnabled.current() == val) return;
-+	_localProfileNameEnabled = val;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileName(const QString &val) {
-+	const auto normalized = Ayu::NormalizeLocalProfileName(val);
-+	if (_localProfileName.current() == normalized) return;
-+	_localProfileName = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileIdEnabled(bool val) {
-+	if (_localProfileIdEnabled.current() == val) return;
-+	_localProfileIdEnabled = val;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileId(const QString &val) {
-+	const auto normalized = Ayu::NormalizeLocalProfileId(val);
-+	if (_localProfileId.current() == normalized) return;
-+	_localProfileId = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileUsernameEnabled(bool val) {
-+	if (_localProfileUsernameEnabled.current() == val) return;
-+	_localProfileUsernameEnabled = val;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileUsername(const QString &val) {
-+	const auto normalized = Ayu::NormalizeLocalProfileUsername(val);
-+	if (_localProfileUsername.current() == normalized) return;
-+	_localProfileUsername = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileUsernames(const QString &val) {
-+	const auto normalized = Ayu::NormalizeLocalProfileUsernames(val);
-+	if (_localProfileUsernames.current() == normalized) return;
-+	_localProfileUsernames = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfilePhoneEnabled(bool val) {
-+	if (_localProfilePhoneEnabled.current() == val) return;
-+	_localProfilePhoneEnabled = val;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfilePhone(const QString &val) {
-+	const auto normalized = Ayu::NormalizeLocalProfilePhone(val);
-+	if (_localProfilePhone.current() == normalized) return;
-+	_localProfilePhone = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileAboutEnabled(bool val) {
-+	if (_localProfileAboutEnabled.current() == val) return;
-+	_localProfileAboutEnabled = val;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileAbout(const QString &val) {
-+	const auto normalized = Ayu::NormalizeLocalProfileAbout(val);
-+	if (_localProfileAbout.current() == normalized) return;
-+	_localProfileAbout = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfilePhoto(const QString &val) {
-+	const auto normalized = Ayu::NormalizeLocalProfilePhoto(val);
-+	if (_localProfilePhoto.current() == normalized) return;
-+	_localProfilePhoto = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileCloneId(const QString &val) {
-+	const auto normalized = Ayu::NormalizeLocalProfileCloneId(val);
-+	if (_localProfileCloneId.current() == normalized) return;
-+	_localProfileCloneId = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileBadgeStyle(LocalProfileBadgeStyle val) {
-+	if (_localProfileBadgeStyle.current() == val) return;
-+	_localProfileBadgeStyle = val;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileEmojiStatusId(const QString &val) {
-+	const auto normalized = Ayu::NormalizeLocalProfileId(val);
-+	if (_localProfileEmojiStatusId.current() == normalized) return;
-+	_localProfileEmojiStatusId = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileBotVerificationId(const QString &val) {
-+	const auto normalized = Ayu::NormalizeLocalProfileId(val);
-+	if (_localProfileBotVerificationId.current() == normalized) return;
-+	_localProfileBotVerificationId = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileChannelEnabled(bool val) {
-+	if (_localProfileChannelEnabled.current() == val) return;
-+	_localProfileChannelEnabled = val;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileChannel(const QString &val) {
-+	const auto normalized = Ayu::NormalizeLocalProfileUsername(val);
-+	if (_localProfileChannel.current() == normalized) return;
-+	_localProfileChannel = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileChannelWorkspace(const QString &val) {
-+	const auto normalized = val.left(kMaxLocalProfileChannelWorkspaceLength);
-+	if (_localProfileChannelWorkspace.current() == normalized) return;
-+	_localProfileChannelWorkspace = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileGiftEnabled(bool val) {
-+	if (_localProfileGiftEnabled.current() == val) return;
-+	_localProfileGiftEnabled = val;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileGift(const QString &val) {
-+	const auto normalized = Ayu::NormalizeLocalProfileGift(val);
-+	if (_localProfileGift.current() == normalized) return;
-+	_localProfileGift = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalProfileGifts(const QString &val) {
-+	const auto normalized = Ayu::NormalizeLocalProfileGifts(val);
-+	if (_localProfileGifts.current() == normalized) return;
-+	_localProfileGifts = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalStarsBalance(int val) {
-+	const auto bounded = std::clamp(
-+		val,
-+		0,
-+		Ayu::kMaxLocalStarsBalance);
-+	if (_localStarsBalance.current() == bounded) return;
-+	_localStarsBalance = bounded;
-+	save();
-+}
-+
-+void AyuSettings::setLocalStarsActivity(const QString &val) {
-+	const auto normalized = val.left(Ayu::kMaxLocalStarsActivityLength);
-+	if (_localStarsActivity.current() == normalized) return;
-+	_localStarsActivity = normalized;
-+	save();
-+}
-+
+-void AyuSettings::setLocalPremium(bool val) {
+-	if (_localPremium.current() == val) return;
+-	_localPremium = val;
 +void AyuSettings::setLocalStarsCardName(const QString &val) {
 +	const auto normalized = val.trimmed().left(Ayu::kMaxLocalStarsCardNameLength);
 +	if (_localStarsCardName.current() == normalized) return;
 +	_localStarsCardName = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalGifts(const QString &val) {
-+	const auto normalized = Ayu::NormalizeLocalGifts(val);
-+	if (_localGifts.current() == normalized) return;
-+	_localGifts = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalStarsEarnings(const QString &val) {
-+	const auto normalized = Ayu::NormalizeLocalStarsEarnings(val);
-+	if (_localStarsEarnings.current() == normalized) return;
-+	_localStarsEarnings = normalized;
-+	save();
-+}
-+
-+void AyuSettings::setLocalStarsWithdrawn(int val) {
-+	const auto bounded = std::clamp(val, 0, Ayu::kMaxLocalStarsBalance);
-+	if (_localStarsWithdrawn.current() == bounded) return;
-+	_localStarsWithdrawn = bounded;
-+	save();
-+}
-+
- void AyuSettings::setShowChannelReactions(bool val) {
- 	if (_showChannelReactions.current() == val) return;
- 	_showChannelReactions = val;
-@@ -699,6 +1007,12 @@ void AyuSettings::setShowPrivateChatReactions(bool val) {
+ 	save();
+ }
+ 
+@@ -699,6 +1271,12 @@ void AyuSettings::setShowPrivateChatReactions(bool val) {
  	save();
  }
  
@@ -2111,7 +2402,28 @@ index 2280020ce..0722b2a7e 100644
  void AyuSettings::setAppIcon(const QString &val) {
  	if (_appIcon.current() == val) return;
  	_appIcon = val;
-@@ -1080,12 +1394,58 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
+@@ -1056,8 +1634,20 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
+ 		ghostAccounts[std::to_string(key)] = *value;
+ 	}
+ 
++	auto localProfileAccounts = nlohmann::json::object();
++	for (const auto &[key, value] : s._localProfileAccounts) {
++		localProfileAccounts[std::to_string(key)] = *value;
++	}
++
++	auto localStarsAccounts = nlohmann::json::object();
++	for (const auto &[key, value] : s._localStarsAccounts) {
++		localStarsAccounts[std::to_string(key)] = *value;
++	}
++
+ 	j = nlohmann::json{
+ 		{"ghostModeSettings", ghostAccounts},
++		{"localProfileSettings", localProfileAccounts},
++		{"localStarsSettings", localStarsAccounts},
+ 		{"useGlobalGhostMode", s._useGlobalGhostMode.current()},
+ 		{"saveDeletedMessages", s._saveDeletedMessages.current()},
+ 		{"saveMessagesHistory", s._saveMessagesHistory.current()},
+@@ -1080,12 +1670,30 @@ void to_json(nlohmann::json &j, const AyuSettings &s) {
  		{"increaseWebviewHeight", s._increaseWebviewHeight.current()},
  		{"increaseWebviewWidth", s._increaseWebviewWidth.current()},
  		{"materialSwitches", s._materialSwitches.current()},
@@ -2134,35 +2446,8 @@ index 2280020ce..0722b2a7e 100644
 +		{"animateWindowOpening", s._animateWindowOpening.current()},
  		{"removeMessageTail", s._removeMessageTail.current()},
  		{"disableNotificationsDelay", s._disableNotificationsDelay.current()},
- 		{"localPremium", s._localPremium.current()},
-+		{"localProfileNameEnabled", s._localProfileNameEnabled.current()},
-+		{"localProfileName", s._localProfileName.current()},
-+		{"localProfileIdEnabled", s._localProfileIdEnabled.current()},
-+		{"localProfileId", s._localProfileId.current()},
-+		{"localProfileUsernameEnabled", s._localProfileUsernameEnabled.current()},
-+		{"localProfileUsername", s._localProfileUsername.current()},
-+		{"localProfileUsernames", s._localProfileUsernames.current()},
-+		{"localProfilePhoneEnabled", s._localProfilePhoneEnabled.current()},
-+		{"localProfilePhone", s._localProfilePhone.current()},
-+		{"localProfileAboutEnabled", s._localProfileAboutEnabled.current()},
-+		{"localProfileAbout", s._localProfileAbout.current()},
-+		{"localProfilePhoto", s._localProfilePhoto.current()},
-+		{"localProfileCloneId", s._localProfileCloneId.current()},
-+		{"localProfileBadgeStyle", s._localProfileBadgeStyle.current()},
-+		{"localProfileEmojiStatusId", s._localProfileEmojiStatusId.current()},
-+		{"localProfileBotVerificationId", s._localProfileBotVerificationId.current()},
-+		{"localProfileChannelEnabled", s._localProfileChannelEnabled.current()},
-+		{"localProfileChannel", s._localProfileChannel.current()},
-+		{"localProfileChannelWorkspace", s._localProfileChannelWorkspace.current()},
-+		{"localProfileGiftEnabled", s._localProfileGiftEnabled.current()},
-+		{"localProfileGift", s._localProfileGift.current()},
-+		{"localProfileGifts", s._localProfileGifts.current()},
-+		{"localStarsBalance", s._localStarsBalance.current()},
-+		{"localStarsActivity", s._localStarsActivity.current()},
+-		{"localPremium", s._localPremium.current()},
 +		{"localStarsCardName", s._localStarsCardName.current()},
-+		{"localGifts", s._localGifts.current()},
-+		{"localStarsEarnings", s._localStarsEarnings.current()},
-+		{"localStarsWithdrawn", s._localStarsWithdrawn.current()},
  		{"showChannelReactions", s._showChannelReactions.current()},
  		{"showGroupReactions", s._showGroupReactions.current()},
  		{"showPrivateChatReactions", s._showPrivateChatReactions.current()},
@@ -2170,7 +2455,32 @@ index 2280020ce..0722b2a7e 100644
  		{"appIcon", s._appIcon.current()},
  		{"simpleQuotesAndReplies", s._simpleQuotesAndReplies.current()},
  		{"hideFastShare", s._hideFastShare.current()},
-@@ -1180,12 +1540,121 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
+@@ -1158,6 +1766,24 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
+ 		}
+ 	}
+ 
++	if (j.contains("localProfileSettings") && j["localProfileSettings"].is_object()) {
++		s._localProfileAccounts.clear();
++		for (auto &[key, value] : j["localProfileSettings"].items()) {
++			auto account = std::make_unique<LocalProfileAccountSettings>();
++			value.get_to(*account);
++			s._localProfileAccounts[std::stoull(key)] = std::move(account);
++		}
++	}
++
++	if (j.contains("localStarsSettings") && j["localStarsSettings"].is_object()) {
++		s._localStarsAccounts.clear();
++		for (auto &[key, value] : j["localStarsSettings"].items()) {
++			auto account = std::make_unique<LocalStarsAccountSettings>();
++			value.get_to(*account);
++			s._localStarsAccounts[std::stoull(key)] = std::move(account);
++		}
++	}
++
+ 	s._useGlobalGhostMode = j.value("useGlobalGhostMode", defaults._useGlobalGhostMode.current());
+ 	s._saveDeletedMessages = j.value("saveDeletedMessages", defaults._saveDeletedMessages.current());
+ 	s._saveMessagesHistory = j.value("saveMessagesHistory", defaults._saveMessagesHistory.current());
+@@ -1180,12 +1806,67 @@ void from_json(const nlohmann::json &j, AyuSettings &s) {
  	s._increaseWebviewHeight = j.value("increaseWebviewHeight", defaults._increaseWebviewHeight.current());
  	s._increaseWebviewWidth = j.value("increaseWebviewWidth", defaults._increaseWebviewWidth.current());
  	s._materialSwitches = j.value("materialSwitches", defaults._materialSwitches.current());
@@ -2227,64 +2537,11 @@ index 2280020ce..0722b2a7e 100644
 +		defaults._animateWindowOpening.current());
  	s._removeMessageTail = j.value("removeMessageTail", defaults._removeMessageTail.current());
  	s._disableNotificationsDelay = j.value("disableNotificationsDelay", defaults._disableNotificationsDelay.current());
- 	s._localPremium = j.value("localPremium", defaults._localPremium.current());
-+	s._localProfileNameEnabled = j.value("localProfileNameEnabled", defaults._localProfileNameEnabled.current());
-+	s._localProfileName = Ayu::NormalizeLocalProfileName(j.value("localProfileName", defaults._localProfileName.current()));
-+	s._localProfileIdEnabled = j.value("localProfileIdEnabled", defaults._localProfileIdEnabled.current());
-+	s._localProfileId = Ayu::NormalizeLocalProfileId(j.value("localProfileId", defaults._localProfileId.current()));
-+	s._localProfileUsernameEnabled = j.value("localProfileUsernameEnabled", defaults._localProfileUsernameEnabled.current());
-+	s._localProfileUsername = Ayu::NormalizeLocalProfileUsername(j.value("localProfileUsername", defaults._localProfileUsername.current()));
-+	s._localProfileUsernames = Ayu::NormalizeLocalProfileUsernames(j.value("localProfileUsernames", defaults._localProfileUsernames.current()));
-+	s._localProfilePhoneEnabled = j.value("localProfilePhoneEnabled", defaults._localProfilePhoneEnabled.current());
-+	s._localProfilePhone = Ayu::NormalizeLocalProfilePhone(j.value("localProfilePhone", defaults._localProfilePhone.current()));
-+	s._localProfileAboutEnabled = j.value("localProfileAboutEnabled", defaults._localProfileAboutEnabled.current());
-+	s._localProfileAbout = Ayu::NormalizeLocalProfileAbout(j.value("localProfileAbout", defaults._localProfileAbout.current()));
-+	s._localProfilePhoto = Ayu::NormalizeLocalProfilePhoto(j.value("localProfilePhoto", defaults._localProfilePhoto.current()));
-+	s._localProfileCloneId = Ayu::NormalizeLocalProfileCloneId(j.value("localProfileCloneId", defaults._localProfileCloneId.current()));
-+	s._localProfileBadgeStyle = j.value(
-+		"localProfileBadgeStyle",
-+		defaults._localProfileBadgeStyle.current());
-+	s._localProfileEmojiStatusId = Ayu::NormalizeLocalProfileId(j.value(
-+		"localProfileEmojiStatusId",
-+		defaults._localProfileEmojiStatusId.current()));
-+	s._localProfileBotVerificationId = Ayu::NormalizeLocalProfileId(j.value(
-+		"localProfileBotVerificationId",
-+		defaults._localProfileBotVerificationId.current()));
-+	s._localProfileChannelEnabled = j.value(
-+		"localProfileChannelEnabled",
-+		defaults._localProfileChannelEnabled.current());
-+	s._localProfileChannel = Ayu::NormalizeLocalProfileUsername(j.value(
-+		"localProfileChannel",
-+		defaults._localProfileChannel.current()));
-+	s._localProfileChannelWorkspace = j.value(
-+		"localProfileChannelWorkspace",
-+		defaults._localProfileChannelWorkspace.current()).left(
-+			kMaxLocalProfileChannelWorkspaceLength);
-+	s._localProfileGiftEnabled = j.value("localProfileGiftEnabled", defaults._localProfileGiftEnabled.current());
-+	s._localProfileGift = Ayu::NormalizeLocalProfileGift(j.value("localProfileGift", defaults._localProfileGift.current()));
-+	s._localProfileGifts = Ayu::NormalizeLocalProfileGifts(j.value("localProfileGifts", defaults._localProfileGifts.current()));
-+	s._localStarsBalance = std::clamp(
-+		j.value("localStarsBalance", defaults._localStarsBalance.current()),
-+		0,
-+		Ayu::kMaxLocalStarsBalance);
-+	s._localStarsActivity = j.value(
-+		"localStarsActivity",
-+		defaults._localStarsActivity.current()).left(
-+			Ayu::kMaxLocalStarsActivityLength);
+-	s._localPremium = j.value("localPremium", defaults._localPremium.current());
 +	s._localStarsCardName = j.value(
 +		"localStarsCardName",
 +		defaults._localStarsCardName.current()).trimmed().left(
 +			Ayu::kMaxLocalStarsCardNameLength);
-+	s._localGifts = Ayu::NormalizeLocalGifts(j.value(
-+		"localGifts",
-+		defaults._localGifts.current()));
-+	s._localStarsEarnings = Ayu::NormalizeLocalStarsEarnings(j.value(
-+		"localStarsEarnings",
-+		defaults._localStarsEarnings.current()));
-+	s._localStarsWithdrawn = std::clamp(
-+		j.value("localStarsWithdrawn", defaults._localStarsWithdrawn.current()),
-+		0,
-+		Ayu::kMaxLocalStarsBalance);
  	s._showChannelReactions = j.value("showChannelReactions", defaults._showChannelReactions.current());
  	s._showGroupReactions = j.value("showGroupReactions", defaults._showGroupReactions.current());
  	s._showPrivateChatReactions = j.value("showPrivateChatReactions", defaults._showPrivateChatReactions.current());
@@ -2293,7 +2550,7 @@ index 2280020ce..0722b2a7e 100644
  	s._simpleQuotesAndReplies = j.value("simpleQuotesAndReplies", defaults._simpleQuotesAndReplies.current());
  	s._hideFastShare = j.value("hideFastShare", defaults._hideFastShare.current());
 diff --git a/Telegram/SourceFiles/ayu/ayu_settings.h b/Telegram/SourceFiles/ayu/ayu_settings.h
-index 97a043921..c5ec23572 100644
+index 97a043921..f51e16df3 100644
 --- a/Telegram/SourceFiles/ayu/ayu_settings.h
 +++ b/Telegram/SourceFiles/ayu/ayu_settings.h
 @@ -51,6 +51,24 @@ enum class SendWithoutSoundOption {
@@ -2346,30 +2603,14 @@ index 97a043921..c5ec23572 100644
  class GhostModeAccountSettings {
  public:
  	GhostModeAccountSettings();
-@@ -288,12 +324,58 @@ public:
- 	[[nodiscard]] bool increaseWebviewHeight() const { return _increaseWebviewHeight.current(); }
- 	[[nodiscard]] bool increaseWebviewWidth() const { return _increaseWebviewWidth.current(); }
- 	[[nodiscard]] bool materialSwitches() const { return _materialSwitches.current(); }
-+	[[nodiscard]] bool transparentMode() const { return _transparentMode.current(); }
-+	[[nodiscard]] bool transparentBlur() const { return _transparentBlur.current(); }
-+	[[nodiscard]] bool transparentSidebar() const { return _transparentSidebar.current(); }
-+	[[nodiscard]] bool transparentChat() const { return _transparentChat.current(); }
-+	[[nodiscard]] bool transparentPanels() const { return _transparentPanels.current(); }
-+	[[nodiscard]] int transparentOpacity() const { return _transparentOpacity.current(); }
-+	[[nodiscard]] bool transparentAdaptiveMaterial() const { return _transparentAdaptiveMaterial.current(); }
-+	[[nodiscard]] bool transparentDynamicHighlights() const { return _transparentDynamicHighlights.current(); }
-+	[[nodiscard]] bool transparentRefraction() const { return _transparentRefraction.current(); }
-+	[[nodiscard]] int transparentMaterialIntensity() const { return _transparentMaterialIntensity.current(); }
-+	[[nodiscard]] const QString &transparentTint() const { return _transparentTint.current(); }
-+	[[nodiscard]] const QString &transparentBackgroundPath() const { return _transparentBackgroundPath.current(); }
-+	[[nodiscard]] int transparentBackgroundOpacity() const { return _transparentBackgroundOpacity.current(); }
-+	[[nodiscard]] int transparentBackgroundBlur() const { return _transparentBackgroundBlur.current(); }
-+	[[nodiscard]] bool enhancedAnimations() const { return _enhancedAnimations.current(); }
-+	[[nodiscard]] IntelGramMotionStyle motionStyle() const { return _motionStyle.current(); }
-+	[[nodiscard]] bool animateWindowOpening() const { return _animateWindowOpening.current(); }
- 	[[nodiscard]] bool removeMessageTail() const { return _removeMessageTail.current(); }
- 	[[nodiscard]] bool disableNotificationsDelay() const { return _disableNotificationsDelay.current(); }
- 	[[nodiscard]] bool localPremium() const { return _localPremium.current(); }
+@@ -237,6 +273,183 @@ private:
+ void to_json(nlohmann::json &j, const MessageShotSettings &s);
+ void from_json(const nlohmann::json &j, MessageShotSettings &s);
+ 
++class LocalProfileAccountSettings {
++public:
++	[[nodiscard]] bool hasLocalProfile() const;
++
 +	[[nodiscard]] bool localProfileNameEnabled() const { return _localProfileNameEnabled.current(); }
 +	[[nodiscard]] const QString &localProfileName() const { return _localProfileName.current(); }
 +	[[nodiscard]] bool localProfileIdEnabled() const { return _localProfileIdEnabled.current(); }
@@ -2392,43 +2633,7 @@ index 97a043921..c5ec23572 100644
 +	[[nodiscard]] bool localProfileGiftEnabled() const { return _localProfileGiftEnabled.current(); }
 +	[[nodiscard]] const QString &localProfileGift() const { return _localProfileGift.current(); }
 +	[[nodiscard]] const QString &localProfileGifts() const { return _localProfileGifts.current(); }
-+	[[nodiscard]] int localStarsBalance() const { return _localStarsBalance.current(); }
-+	[[nodiscard]] const QString &localStarsActivity() const { return _localStarsActivity.current(); }
-+	[[nodiscard]] const QString &localStarsCardName() const { return _localStarsCardName.current(); }
-+	[[nodiscard]] const QString &localGifts() const { return _localGifts.current(); }
-+	[[nodiscard]] const QString &localStarsEarnings() const { return _localStarsEarnings.current(); }
-+	[[nodiscard]] int localStarsWithdrawn() const { return _localStarsWithdrawn.current(); }
- 	[[nodiscard]] bool showChannelReactions() const { return _showChannelReactions.current(); }
- 	[[nodiscard]] bool showGroupReactions() const { return _showGroupReactions.current(); }
- 	[[nodiscard]] bool showPrivateChatReactions() const { return _showPrivateChatReactions.current(); }
-+	[[nodiscard]] bool discreetMode() const { return _discreetMode.current(); }
- 	[[nodiscard]] const QString &appIcon() const { return _appIcon.current(); }
- 	[[nodiscard]] bool simpleQuotesAndReplies() const { return _simpleQuotesAndReplies.current(); }
- 	[[nodiscard]] bool hideFastShare() const { return _hideFastShare.current(); }
-@@ -372,12 +454,58 @@ public:
- 	void setIncreaseWebviewHeight(bool val);
- 	void setIncreaseWebviewWidth(bool val);
- 	void setMaterialSwitches(bool val);
-+	void setTransparentMode(bool val);
-+	void setTransparentBlur(bool val);
-+	void setTransparentSidebar(bool val);
-+	void setTransparentChat(bool val);
-+	void setTransparentPanels(bool val);
-+	void setTransparentOpacity(int val);
-+	void setTransparentAdaptiveMaterial(bool val);
-+	void setTransparentDynamicHighlights(bool val);
-+	void setTransparentRefraction(bool val);
-+	void setTransparentMaterialIntensity(int val);
-+	void setTransparentTint(const QString &val);
-+	void setTransparentBackgroundPath(const QString &val);
-+	void setTransparentBackgroundOpacity(int val);
-+	void setTransparentBackgroundBlur(int val);
-+	void setEnhancedAnimations(bool val);
-+	void setMotionStyle(IntelGramMotionStyle val);
-+	void setAnimateWindowOpening(bool val);
- 	void setRemoveMessageTail(bool val);
- 	void setDisableNotificationsDelay(bool val);
- 	void setLocalPremium(bool val);
++
 +	void setLocalProfileNameEnabled(bool val);
 +	void setLocalProfileName(const QString &val);
 +	void setLocalProfileIdEnabled(bool val);
@@ -2451,63 +2656,7 @@ index 97a043921..c5ec23572 100644
 +	void setLocalProfileGiftEnabled(bool val);
 +	void setLocalProfileGift(const QString &val);
 +	void setLocalProfileGifts(const QString &val);
-+	void setLocalStarsBalance(int val);
-+	void setLocalStarsActivity(const QString &val);
-+	void setLocalStarsCardName(const QString &val);
-+	void setLocalGifts(const QString &val);
-+	void setLocalStarsEarnings(const QString &val);
-+	void setLocalStarsWithdrawn(int val);
- 	void setShowChannelReactions(bool val);
- 	void setShowGroupReactions(bool val);
- 	void setShowPrivateChatReactions(bool val);
-+	void setDiscreetMode(bool val);
- 	void setAppIcon(const QString &val);
- 	void setSimpleQuotesAndReplies(bool val);
- 	void setHideFastShare(bool val);
-@@ -479,18 +607,109 @@ public:
- 	[[nodiscard]] rpl::producer<bool> increaseWebviewWidthChanges() const { return _increaseWebviewWidth.changes(); }
- 	[[nodiscard]] rpl::producer<bool> materialSwitchesValue() const { return _materialSwitches.value(); }
- 	[[nodiscard]] rpl::producer<bool> materialSwitchesChanges() const { return _materialSwitches.changes(); }
-+	[[nodiscard]] rpl::producer<bool> transparentModeValue() const { return _transparentMode.value(); }
-+	[[nodiscard]] rpl::producer<bool> transparentModeChanges() const { return _transparentMode.changes(); }
-+	[[nodiscard]] rpl::producer<bool> transparentBlurValue() const { return _transparentBlur.value(); }
-+	[[nodiscard]] rpl::producer<bool> transparentBlurChanges() const { return _transparentBlur.changes(); }
-+	[[nodiscard]] rpl::producer<bool> transparentSidebarValue() const { return _transparentSidebar.value(); }
-+	[[nodiscard]] rpl::producer<bool> transparentSidebarChanges() const { return _transparentSidebar.changes(); }
-+	[[nodiscard]] rpl::producer<bool> transparentChatValue() const { return _transparentChat.value(); }
-+	[[nodiscard]] rpl::producer<bool> transparentChatChanges() const { return _transparentChat.changes(); }
-+	[[nodiscard]] rpl::producer<bool> transparentPanelsValue() const { return _transparentPanels.value(); }
-+	[[nodiscard]] rpl::producer<bool> transparentPanelsChanges() const { return _transparentPanels.changes(); }
-+	[[nodiscard]] rpl::producer<int> transparentOpacityValue() const { return _transparentOpacity.value(); }
-+	[[nodiscard]] rpl::producer<int> transparentOpacityChanges() const { return _transparentOpacity.changes(); }
-+	[[nodiscard]] rpl::producer<bool> transparentAdaptiveMaterialValue() const { return _transparentAdaptiveMaterial.value(); }
-+	[[nodiscard]] rpl::producer<bool> transparentAdaptiveMaterialChanges() const { return _transparentAdaptiveMaterial.changes(); }
-+	[[nodiscard]] rpl::producer<bool> transparentDynamicHighlightsValue() const { return _transparentDynamicHighlights.value(); }
-+	[[nodiscard]] rpl::producer<bool> transparentDynamicHighlightsChanges() const { return _transparentDynamicHighlights.changes(); }
-+	[[nodiscard]] rpl::producer<bool> transparentRefractionValue() const { return _transparentRefraction.value(); }
-+	[[nodiscard]] rpl::producer<bool> transparentRefractionChanges() const { return _transparentRefraction.changes(); }
-+	[[nodiscard]] rpl::producer<int> transparentMaterialIntensityValue() const { return _transparentMaterialIntensity.value(); }
-+	[[nodiscard]] rpl::producer<int> transparentMaterialIntensityChanges() const { return _transparentMaterialIntensity.changes(); }
-+	[[nodiscard]] rpl::producer<QString> transparentTintValue() const { return _transparentTint.value(); }
-+	[[nodiscard]] rpl::producer<QString> transparentTintChanges() const { return _transparentTint.changes(); }
-+	[[nodiscard]] rpl::producer<QString> transparentBackgroundPathValue() const { return _transparentBackgroundPath.value(); }
-+	[[nodiscard]] rpl::producer<QString> transparentBackgroundPathChanges() const { return _transparentBackgroundPath.changes(); }
-+	[[nodiscard]] rpl::producer<int> transparentBackgroundOpacityValue() const { return _transparentBackgroundOpacity.value(); }
-+	[[nodiscard]] rpl::producer<int> transparentBackgroundOpacityChanges() const { return _transparentBackgroundOpacity.changes(); }
-+	[[nodiscard]] rpl::producer<int> transparentBackgroundBlurValue() const { return _transparentBackgroundBlur.value(); }
-+	[[nodiscard]] rpl::producer<int> transparentBackgroundBlurChanges() const { return _transparentBackgroundBlur.changes(); }
-+	[[nodiscard]] rpl::producer<bool> enhancedAnimationsValue() const { return _enhancedAnimations.value(); }
-+	[[nodiscard]] rpl::producer<bool> enhancedAnimationsChanges() const { return _enhancedAnimations.changes(); }
-+	[[nodiscard]] rpl::producer<IntelGramMotionStyle> motionStyleValue() const { return _motionStyle.value(); }
-+	[[nodiscard]] rpl::producer<IntelGramMotionStyle> motionStyleChanges() const { return _motionStyle.changes(); }
-+	[[nodiscard]] rpl::producer<bool> animateWindowOpeningValue() const { return _animateWindowOpening.value(); }
-+	[[nodiscard]] rpl::producer<bool> animateWindowOpeningChanges() const { return _animateWindowOpening.changes(); }
- 	[[nodiscard]] rpl::producer<bool> removeMessageTailValue() const { return _removeMessageTail.value(); }
- 	[[nodiscard]] rpl::producer<bool> removeMessageTailChanges() const { return _removeMessageTail.changes(); }
- 	[[nodiscard]] rpl::producer<bool> disableNotificationsDelayValue() const { return _disableNotificationsDelay.value(); }
- 	[[nodiscard]] rpl::producer<bool> disableNotificationsDelayChanges() const { return _disableNotificationsDelay.changes(); }
- 	[[nodiscard]] rpl::producer<bool> localPremiumValue() const { return _localPremium.value(); }
- 	[[nodiscard]] rpl::producer<bool> localPremiumChanges() const { return _localPremium.changes(); }
++
 +	[[nodiscard]] rpl::producer<bool> localProfileNameEnabledValue() const { return _localProfileNameEnabled.value(); }
 +	[[nodiscard]] rpl::producer<bool> localProfileNameEnabledChanges() const { return _localProfileNameEnabled.changes(); }
 +	[[nodiscard]] rpl::producer<QString> localProfileNameValue() const { return _localProfileName.value(); }
@@ -2551,53 +2700,13 @@ index 97a043921..c5ec23572 100644
 +	[[nodiscard]] rpl::producer<QString> localProfileGiftChanges() const { return _localProfileGift.changes(); }
 +	[[nodiscard]] rpl::producer<QString> localProfileGiftsValue() const { return _localProfileGifts.value(); }
 +	[[nodiscard]] rpl::producer<QString> localProfileGiftsChanges() const { return _localProfileGifts.changes(); }
-+	[[nodiscard]] rpl::producer<int> localStarsBalanceValue() const { return _localStarsBalance.value(); }
-+	[[nodiscard]] rpl::producer<int> localStarsBalanceChanges() const { return _localStarsBalance.changes(); }
-+	[[nodiscard]] rpl::producer<QString> localStarsActivityValue() const { return _localStarsActivity.value(); }
-+	[[nodiscard]] rpl::producer<QString> localStarsActivityChanges() const { return _localStarsActivity.changes(); }
-+	[[nodiscard]] rpl::producer<QString> localStarsCardNameValue() const { return _localStarsCardName.value(); }
-+	[[nodiscard]] rpl::producer<QString> localStarsCardNameChanges() const { return _localStarsCardName.changes(); }
-+	[[nodiscard]] rpl::producer<QString> localGiftsValue() const { return _localGifts.value(); }
-+	[[nodiscard]] rpl::producer<QString> localGiftsChanges() const { return _localGifts.changes(); }
-+	[[nodiscard]] rpl::producer<QString> localStarsEarningsValue() const { return _localStarsEarnings.value(); }
-+	[[nodiscard]] rpl::producer<QString> localStarsEarningsChanges() const { return _localStarsEarnings.changes(); }
-+	[[nodiscard]] rpl::producer<int> localStarsWithdrawnValue() const { return _localStarsWithdrawn.value(); }
-+	[[nodiscard]] rpl::producer<int> localStarsWithdrawnChanges() const { return _localStarsWithdrawn.changes(); }
- 	[[nodiscard]] rpl::producer<bool> showChannelReactionsValue() const { return _showChannelReactions.value(); }
- 	[[nodiscard]] rpl::producer<bool> showChannelReactionsChanges() const { return _showChannelReactions.changes(); }
- 	[[nodiscard]] rpl::producer<bool> showGroupReactionsValue() const { return _showGroupReactions.value(); }
- 	[[nodiscard]] rpl::producer<bool> showGroupReactionsChanges() const { return _showGroupReactions.changes(); }
- 	[[nodiscard]] rpl::producer<bool> showPrivateChatReactionsValue() const { return _showPrivateChatReactions.value(); }
- 	[[nodiscard]] rpl::producer<bool> showPrivateChatReactionsChanges() const { return _showPrivateChatReactions.changes(); }
-+	[[nodiscard]] rpl::producer<bool> discreetModeValue() const { return _discreetMode.value(); }
-+	[[nodiscard]] rpl::producer<bool> discreetModeChanges() const { return _discreetMode.changes(); }
- 	[[nodiscard]] rpl::producer<QString> appIconValue() const { return _appIcon.value(); }
- 	[[nodiscard]] rpl::producer<QString> appIconChanges() const { return _appIcon.changes(); }
- 	[[nodiscard]] rpl::producer<bool> simpleQuotesAndRepliesValue() const { return _simpleQuotesAndReplies.value(); }
-@@ -633,12 +852,58 @@ private:
- 	rpl::variable<bool> _increaseWebviewHeight = false;
- 	rpl::variable<bool> _increaseWebviewWidth = false;
- 	rpl::variable<bool> _materialSwitches = true;
-+	rpl::variable<bool> _transparentMode = false;
-+	rpl::variable<bool> _transparentBlur = true;
-+	rpl::variable<bool> _transparentSidebar = true;
-+	rpl::variable<bool> _transparentChat = true;
-+	rpl::variable<bool> _transparentPanels = true;
-+	rpl::variable<int> _transparentOpacity = 78;
-+	rpl::variable<bool> _transparentAdaptiveMaterial = true;
-+	rpl::variable<bool> _transparentDynamicHighlights = true;
-+	rpl::variable<bool> _transparentRefraction = true;
-+	rpl::variable<int> _transparentMaterialIntensity = 72;
-+	rpl::variable<QString> _transparentTint = QString::fromLatin1("#161922");
-+	rpl::variable<QString> _transparentBackgroundPath;
-+	rpl::variable<int> _transparentBackgroundOpacity = 72;
-+	rpl::variable<int> _transparentBackgroundBlur = 8;
-+	rpl::variable<bool> _enhancedAnimations = false;
-+	rpl::variable<IntelGramMotionStyle> _motionStyle = IntelGramMotionStyle::Smooth;
-+	rpl::variable<bool> _animateWindowOpening = true;
- 	rpl::variable<bool> _removeMessageTail = false;
- 	rpl::variable<bool> _disableNotificationsDelay = false;
- 	rpl::variable<bool> _localPremium = false;
++
++	friend void to_json(nlohmann::json &j, const LocalProfileAccountSettings &s);
++	friend void from_json(const nlohmann::json &j, LocalProfileAccountSettings &s);
++
++private:
++	friend class AyuSettings;
++
 +	rpl::variable<bool> _localProfileNameEnabled = false;
 +	rpl::variable<QString> _localProfileName;
 +	rpl::variable<bool> _localProfileIdEnabled = false;
@@ -2620,12 +2729,225 @@ index 97a043921..c5ec23572 100644
 +	rpl::variable<bool> _localProfileGiftEnabled = false;
 +	rpl::variable<QString> _localProfileGift;
 +	rpl::variable<QString> _localProfileGifts;
++
++};
++
++void to_json(nlohmann::json &j, const LocalProfileAccountSettings &s);
++void from_json(const nlohmann::json &j, LocalProfileAccountSettings &s);
++
++class LocalStarsAccountSettings {
++public:
++	[[nodiscard]] bool hasLocalStars() const;
++
++	[[nodiscard]] bool localPremium() const { return _localPremium.current(); }
++	[[nodiscard]] int localStarsBalance() const { return _localStarsBalance.current(); }
++	[[nodiscard]] const QString &localStarsActivity() const { return _localStarsActivity.current(); }
++	[[nodiscard]] const QString &localGifts() const { return _localGifts.current(); }
++	[[nodiscard]] const QString &localStarsEarnings() const { return _localStarsEarnings.current(); }
++	[[nodiscard]] int localStarsWithdrawn() const { return _localStarsWithdrawn.current(); }
++
++	void setLocalPremium(bool val);
++	void setLocalStarsBalance(int val);
++	void setLocalStarsActivity(const QString &val);
++	void setLocalGifts(const QString &val);
++	void setLocalStarsEarnings(const QString &val);
++	void setLocalStarsWithdrawn(int val);
++
++	[[nodiscard]] rpl::producer<bool> localPremiumValue() const { return _localPremium.value(); }
++	[[nodiscard]] rpl::producer<bool> localPremiumChanges() const { return _localPremium.changes(); }
++	[[nodiscard]] rpl::producer<int> localStarsBalanceValue() const { return _localStarsBalance.value(); }
++	[[nodiscard]] rpl::producer<int> localStarsBalanceChanges() const { return _localStarsBalance.changes(); }
++	[[nodiscard]] rpl::producer<QString> localStarsActivityValue() const { return _localStarsActivity.value(); }
++	[[nodiscard]] rpl::producer<QString> localStarsActivityChanges() const { return _localStarsActivity.changes(); }
++	[[nodiscard]] rpl::producer<QString> localGiftsValue() const { return _localGifts.value(); }
++	[[nodiscard]] rpl::producer<QString> localGiftsChanges() const { return _localGifts.changes(); }
++	[[nodiscard]] rpl::producer<QString> localStarsEarningsValue() const { return _localStarsEarnings.value(); }
++	[[nodiscard]] rpl::producer<QString> localStarsEarningsChanges() const { return _localStarsEarnings.changes(); }
++	[[nodiscard]] rpl::producer<int> localStarsWithdrawnValue() const { return _localStarsWithdrawn.value(); }
++	[[nodiscard]] rpl::producer<int> localStarsWithdrawnChanges() const { return _localStarsWithdrawn.changes(); }
++
++	friend void to_json(nlohmann::json &j, const LocalStarsAccountSettings &s);
++	friend void from_json(const nlohmann::json &j, LocalStarsAccountSettings &s);
++
++private:
++	friend class AyuSettings;
++
++	rpl::variable<bool> _localPremium = false;
 +	rpl::variable<int> _localStarsBalance = 0;
 +	rpl::variable<QString> _localStarsActivity;
-+	rpl::variable<QString> _localStarsCardName;
 +	rpl::variable<QString> _localGifts;
 +	rpl::variable<QString> _localStarsEarnings;
 +	rpl::variable<int> _localStarsWithdrawn = 0;
++
++};
++
++void to_json(nlohmann::json &j, const LocalStarsAccountSettings &s);
++void from_json(const nlohmann::json &j, LocalStarsAccountSettings &s);
++
+ class AyuSettings {
+ public:
+ 	AyuSettings(const AyuSettings &) = delete;
+@@ -254,6 +467,14 @@ public:
+ 	[[nodiscard]] static GhostModeAccountSettings &ghost(uint64 userId);
+ 	[[nodiscard]] static GhostModeAccountSettings &ghost();
+ 
++	[[nodiscard]] static LocalProfileAccountSettings &localProfile(not_null<Main::Session*> session);
++	[[nodiscard]] static LocalProfileAccountSettings &localProfile(uint64 userId);
++	[[nodiscard]] static LocalProfileAccountSettings &localProfile();
++
++	[[nodiscard]] static LocalStarsAccountSettings &localStars(not_null<Main::Session*> session);
++	[[nodiscard]] static LocalStarsAccountSettings &localStars(uint64 userId);
++	[[nodiscard]] static LocalStarsAccountSettings &localStars();
++
+ 	[[nodiscard]] bool useGlobalGhostMode() const { return _useGlobalGhostMode.current(); }
+ 	void setUseGlobalGhostMode(bool val);
+ 
+@@ -288,12 +509,30 @@ public:
+ 	[[nodiscard]] bool increaseWebviewHeight() const { return _increaseWebviewHeight.current(); }
+ 	[[nodiscard]] bool increaseWebviewWidth() const { return _increaseWebviewWidth.current(); }
+ 	[[nodiscard]] bool materialSwitches() const { return _materialSwitches.current(); }
++	[[nodiscard]] bool transparentMode() const { return _transparentMode.current(); }
++	[[nodiscard]] bool transparentBlur() const { return _transparentBlur.current(); }
++	[[nodiscard]] bool transparentSidebar() const { return _transparentSidebar.current(); }
++	[[nodiscard]] bool transparentChat() const { return _transparentChat.current(); }
++	[[nodiscard]] bool transparentPanels() const { return _transparentPanels.current(); }
++	[[nodiscard]] int transparentOpacity() const { return _transparentOpacity.current(); }
++	[[nodiscard]] bool transparentAdaptiveMaterial() const { return _transparentAdaptiveMaterial.current(); }
++	[[nodiscard]] bool transparentDynamicHighlights() const { return _transparentDynamicHighlights.current(); }
++	[[nodiscard]] bool transparentRefraction() const { return _transparentRefraction.current(); }
++	[[nodiscard]] int transparentMaterialIntensity() const { return _transparentMaterialIntensity.current(); }
++	[[nodiscard]] const QString &transparentTint() const { return _transparentTint.current(); }
++	[[nodiscard]] const QString &transparentBackgroundPath() const { return _transparentBackgroundPath.current(); }
++	[[nodiscard]] int transparentBackgroundOpacity() const { return _transparentBackgroundOpacity.current(); }
++	[[nodiscard]] int transparentBackgroundBlur() const { return _transparentBackgroundBlur.current(); }
++	[[nodiscard]] bool enhancedAnimations() const { return _enhancedAnimations.current(); }
++	[[nodiscard]] IntelGramMotionStyle motionStyle() const { return _motionStyle.current(); }
++	[[nodiscard]] bool animateWindowOpening() const { return _animateWindowOpening.current(); }
+ 	[[nodiscard]] bool removeMessageTail() const { return _removeMessageTail.current(); }
+ 	[[nodiscard]] bool disableNotificationsDelay() const { return _disableNotificationsDelay.current(); }
+-	[[nodiscard]] bool localPremium() const { return _localPremium.current(); }
++	[[nodiscard]] const QString &localStarsCardName() const { return _localStarsCardName.current(); }
+ 	[[nodiscard]] bool showChannelReactions() const { return _showChannelReactions.current(); }
+ 	[[nodiscard]] bool showGroupReactions() const { return _showGroupReactions.current(); }
+ 	[[nodiscard]] bool showPrivateChatReactions() const { return _showPrivateChatReactions.current(); }
++	[[nodiscard]] bool discreetMode() const { return _discreetMode.current(); }
+ 	[[nodiscard]] const QString &appIcon() const { return _appIcon.current(); }
+ 	[[nodiscard]] bool simpleQuotesAndReplies() const { return _simpleQuotesAndReplies.current(); }
+ 	[[nodiscard]] bool hideFastShare() const { return _hideFastShare.current(); }
+@@ -372,12 +611,30 @@ public:
+ 	void setIncreaseWebviewHeight(bool val);
+ 	void setIncreaseWebviewWidth(bool val);
+ 	void setMaterialSwitches(bool val);
++	void setTransparentMode(bool val);
++	void setTransparentBlur(bool val);
++	void setTransparentSidebar(bool val);
++	void setTransparentChat(bool val);
++	void setTransparentPanels(bool val);
++	void setTransparentOpacity(int val);
++	void setTransparentAdaptiveMaterial(bool val);
++	void setTransparentDynamicHighlights(bool val);
++	void setTransparentRefraction(bool val);
++	void setTransparentMaterialIntensity(int val);
++	void setTransparentTint(const QString &val);
++	void setTransparentBackgroundPath(const QString &val);
++	void setTransparentBackgroundOpacity(int val);
++	void setTransparentBackgroundBlur(int val);
++	void setEnhancedAnimations(bool val);
++	void setMotionStyle(IntelGramMotionStyle val);
++	void setAnimateWindowOpening(bool val);
+ 	void setRemoveMessageTail(bool val);
+ 	void setDisableNotificationsDelay(bool val);
+-	void setLocalPremium(bool val);
++	void setLocalStarsCardName(const QString &val);
+ 	void setShowChannelReactions(bool val);
+ 	void setShowGroupReactions(bool val);
+ 	void setShowPrivateChatReactions(bool val);
++	void setDiscreetMode(bool val);
+ 	void setAppIcon(const QString &val);
+ 	void setSimpleQuotesAndReplies(bool val);
+ 	void setHideFastShare(bool val);
+@@ -479,18 +736,54 @@ public:
+ 	[[nodiscard]] rpl::producer<bool> increaseWebviewWidthChanges() const { return _increaseWebviewWidth.changes(); }
+ 	[[nodiscard]] rpl::producer<bool> materialSwitchesValue() const { return _materialSwitches.value(); }
+ 	[[nodiscard]] rpl::producer<bool> materialSwitchesChanges() const { return _materialSwitches.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentModeValue() const { return _transparentMode.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentModeChanges() const { return _transparentMode.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentBlurValue() const { return _transparentBlur.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentBlurChanges() const { return _transparentBlur.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentSidebarValue() const { return _transparentSidebar.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentSidebarChanges() const { return _transparentSidebar.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentChatValue() const { return _transparentChat.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentChatChanges() const { return _transparentChat.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentPanelsValue() const { return _transparentPanels.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentPanelsChanges() const { return _transparentPanels.changes(); }
++	[[nodiscard]] rpl::producer<int> transparentOpacityValue() const { return _transparentOpacity.value(); }
++	[[nodiscard]] rpl::producer<int> transparentOpacityChanges() const { return _transparentOpacity.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentAdaptiveMaterialValue() const { return _transparentAdaptiveMaterial.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentAdaptiveMaterialChanges() const { return _transparentAdaptiveMaterial.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentDynamicHighlightsValue() const { return _transparentDynamicHighlights.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentDynamicHighlightsChanges() const { return _transparentDynamicHighlights.changes(); }
++	[[nodiscard]] rpl::producer<bool> transparentRefractionValue() const { return _transparentRefraction.value(); }
++	[[nodiscard]] rpl::producer<bool> transparentRefractionChanges() const { return _transparentRefraction.changes(); }
++	[[nodiscard]] rpl::producer<int> transparentMaterialIntensityValue() const { return _transparentMaterialIntensity.value(); }
++	[[nodiscard]] rpl::producer<int> transparentMaterialIntensityChanges() const { return _transparentMaterialIntensity.changes(); }
++	[[nodiscard]] rpl::producer<QString> transparentTintValue() const { return _transparentTint.value(); }
++	[[nodiscard]] rpl::producer<QString> transparentTintChanges() const { return _transparentTint.changes(); }
++	[[nodiscard]] rpl::producer<QString> transparentBackgroundPathValue() const { return _transparentBackgroundPath.value(); }
++	[[nodiscard]] rpl::producer<QString> transparentBackgroundPathChanges() const { return _transparentBackgroundPath.changes(); }
++	[[nodiscard]] rpl::producer<int> transparentBackgroundOpacityValue() const { return _transparentBackgroundOpacity.value(); }
++	[[nodiscard]] rpl::producer<int> transparentBackgroundOpacityChanges() const { return _transparentBackgroundOpacity.changes(); }
++	[[nodiscard]] rpl::producer<int> transparentBackgroundBlurValue() const { return _transparentBackgroundBlur.value(); }
++	[[nodiscard]] rpl::producer<int> transparentBackgroundBlurChanges() const { return _transparentBackgroundBlur.changes(); }
++	[[nodiscard]] rpl::producer<bool> enhancedAnimationsValue() const { return _enhancedAnimations.value(); }
++	[[nodiscard]] rpl::producer<bool> enhancedAnimationsChanges() const { return _enhancedAnimations.changes(); }
++	[[nodiscard]] rpl::producer<IntelGramMotionStyle> motionStyleValue() const { return _motionStyle.value(); }
++	[[nodiscard]] rpl::producer<IntelGramMotionStyle> motionStyleChanges() const { return _motionStyle.changes(); }
++	[[nodiscard]] rpl::producer<bool> animateWindowOpeningValue() const { return _animateWindowOpening.value(); }
++	[[nodiscard]] rpl::producer<bool> animateWindowOpeningChanges() const { return _animateWindowOpening.changes(); }
+ 	[[nodiscard]] rpl::producer<bool> removeMessageTailValue() const { return _removeMessageTail.value(); }
+ 	[[nodiscard]] rpl::producer<bool> removeMessageTailChanges() const { return _removeMessageTail.changes(); }
+ 	[[nodiscard]] rpl::producer<bool> disableNotificationsDelayValue() const { return _disableNotificationsDelay.value(); }
+ 	[[nodiscard]] rpl::producer<bool> disableNotificationsDelayChanges() const { return _disableNotificationsDelay.changes(); }
+-	[[nodiscard]] rpl::producer<bool> localPremiumValue() const { return _localPremium.value(); }
+-	[[nodiscard]] rpl::producer<bool> localPremiumChanges() const { return _localPremium.changes(); }
++	[[nodiscard]] rpl::producer<QString> localStarsCardNameValue() const { return _localStarsCardName.value(); }
++	[[nodiscard]] rpl::producer<QString> localStarsCardNameChanges() const { return _localStarsCardName.changes(); }
+ 	[[nodiscard]] rpl::producer<bool> showChannelReactionsValue() const { return _showChannelReactions.value(); }
+ 	[[nodiscard]] rpl::producer<bool> showChannelReactionsChanges() const { return _showChannelReactions.changes(); }
+ 	[[nodiscard]] rpl::producer<bool> showGroupReactionsValue() const { return _showGroupReactions.value(); }
+ 	[[nodiscard]] rpl::producer<bool> showGroupReactionsChanges() const { return _showGroupReactions.changes(); }
+ 	[[nodiscard]] rpl::producer<bool> showPrivateChatReactionsValue() const { return _showPrivateChatReactions.value(); }
+ 	[[nodiscard]] rpl::producer<bool> showPrivateChatReactionsChanges() const { return _showPrivateChatReactions.changes(); }
++	[[nodiscard]] rpl::producer<bool> discreetModeValue() const { return _discreetMode.value(); }
++	[[nodiscard]] rpl::producer<bool> discreetModeChanges() const { return _discreetMode.changes(); }
+ 	[[nodiscard]] rpl::producer<QString> appIconValue() const { return _appIcon.value(); }
+ 	[[nodiscard]] rpl::producer<QString> appIconChanges() const { return _appIcon.changes(); }
+ 	[[nodiscard]] rpl::producer<bool> simpleQuotesAndRepliesValue() const { return _simpleQuotesAndReplies.value(); }
+@@ -633,12 +926,30 @@ private:
+ 	rpl::variable<bool> _increaseWebviewHeight = false;
+ 	rpl::variable<bool> _increaseWebviewWidth = false;
+ 	rpl::variable<bool> _materialSwitches = true;
++	rpl::variable<bool> _transparentMode = false;
++	rpl::variable<bool> _transparentBlur = true;
++	rpl::variable<bool> _transparentSidebar = true;
++	rpl::variable<bool> _transparentChat = true;
++	rpl::variable<bool> _transparentPanels = true;
++	rpl::variable<int> _transparentOpacity = 78;
++	rpl::variable<bool> _transparentAdaptiveMaterial = true;
++	rpl::variable<bool> _transparentDynamicHighlights = true;
++	rpl::variable<bool> _transparentRefraction = true;
++	rpl::variable<int> _transparentMaterialIntensity = 72;
++	rpl::variable<QString> _transparentTint = QString::fromLatin1("#161922");
++	rpl::variable<QString> _transparentBackgroundPath;
++	rpl::variable<int> _transparentBackgroundOpacity = 72;
++	rpl::variable<int> _transparentBackgroundBlur = 8;
++	rpl::variable<bool> _enhancedAnimations = false;
++	rpl::variable<IntelGramMotionStyle> _motionStyle = IntelGramMotionStyle::Smooth;
++	rpl::variable<bool> _animateWindowOpening = true;
+ 	rpl::variable<bool> _removeMessageTail = false;
+ 	rpl::variable<bool> _disableNotificationsDelay = false;
+-	rpl::variable<bool> _localPremium = false;
++	rpl::variable<QString> _localStarsCardName;
  	rpl::variable<bool> _showChannelReactions = true;
  	rpl::variable<bool> _showGroupReactions = true;
  	rpl::variable<bool> _showPrivateChatReactions = true;
@@ -2633,6 +2955,15 @@ index 97a043921..c5ec23572 100644
  	rpl::variable<QString> _appIcon;
  	rpl::variable<bool> _simpleQuotesAndReplies = false;
  	rpl::variable<bool> _hideFastShare = false;
+@@ -699,6 +1010,8 @@ private:
+ 
+ 	rpl::variable<bool> _useGlobalGhostMode = true;
+ 	std::map<uint64, std::unique_ptr<GhostModeAccountSettings>> _ghostAccounts;
++	std::map<uint64, std::unique_ptr<LocalProfileAccountSettings>> _localProfileAccounts;
++	std::map<uint64, std::unique_ptr<LocalStarsAccountSettings>> _localStarsAccounts;
+ 
+ 	MessageShotSettings _messageShotSettings;
+ };
 diff --git a/Telegram/SourceFiles/ayu/data/intelgram_export.cpp b/Telegram/SourceFiles/ayu/data/intelgram_export.cpp
 new file mode 100644
 index 000000000..590f9db0b
@@ -7432,7 +7763,7 @@ index 000000000..f8c9e4a04
 +} // namespace Ayu
 diff --git a/Telegram/SourceFiles/ayu/ui/local_channel_workspace.cpp b/Telegram/SourceFiles/ayu/ui/local_channel_workspace.cpp
 new file mode 100644
-index 000000000..f707cf887
+index 000000000..fffd86f82
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/local_channel_workspace.cpp
 @@ -0,0 +1,777 @@
@@ -7517,11 +7848,11 @@ index 000000000..f707cf887
 +
 +[[nodiscard]] QString CurrentChannelUsername() {
 +	return NormalizeLocalProfileUsername(
-+		AyuSettings::getInstance().localProfileChannel());
++		AyuSettings::localProfile().localProfileChannel());
 +}
 +
 +[[nodiscard]] QJsonObject ReadWorkspaceRoot() {
-+	const auto encoded = AyuSettings::getInstance(
++	const auto encoded = AyuSettings::localProfile(
 +		).localProfileChannelWorkspace().toUtf8();
 +	if (encoded.isEmpty()) {
 +		return {};
@@ -7661,7 +7992,7 @@ index 000000000..f707cf887
 +		encoded = QString::fromUtf8(
 +			QJsonDocument(root).toJson(QJsonDocument::Compact));
 +	}
-+	AyuSettings::getInstance().setLocalProfileChannelWorkspace(encoded);
++	AyuSettings::localProfile().setLocalProfileChannelWorkspace(encoded);
 +}
 +
 +[[nodiscard]] QString ChannelTitle(
@@ -8417,6 +8748,31 @@ index 869861bba..7395a80ec 100644
  };
  
  [[nodiscard]] Type AyuAppearanceId();
+diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_ayu.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_ayu.cpp
+index 657677d61..a215ed4fc 100644
+--- a/Telegram/SourceFiles/ayu/ui/settings/settings_ayu.cpp
++++ b/Telegram/SourceFiles/ayu/ui/settings/settings_ayu.cpp
+@@ -664,11 +664,17 @@ void BuildSpyEssentials(SectionBuilder &builder, AyuSectionBuilder &ayu) {
+ void BuildOther(SectionBuilder &builder, AyuSectionBuilder &ayu) {
+ 	builder.addSubsectionTitle(tr::ayu_MessageSavingOtherHeader());
+ 
+-	ayu.addSettingToggle({
++	const auto controller = builder.controller();
++	auto &stars = AyuSettings::localStars(&controller->session());
++	ayu.addToggle({
+ 		.id = u"ayu/localPremium"_q,
+ 		.title = tr::ayu_LocalPremium(),
+-		.getter = &AyuSettings::localPremium,
+-		.setter = &AyuSettings::setLocalPremium,
++		.getter = [stars] {
++			return stars.localPremium();
++		},
++		.setter = [stars](bool enabled) {
++			stars.setLocalPremium(enabled);
++		},
+ 	});
+ 	ayu.addSettingToggle({
+ 		.id = u"ayu/disableAds"_q,
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
 index a4b1e7ad4..9e4d787a7 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp
@@ -8784,7 +9140,7 @@ index a4b1e7ad4..9e4d787a7 100644
  	builder.addSkip();
  }
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-index 929cf4609..473f76287 100644
+index 929cf4609..8d65024c2 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 @@ -6,33 +6,51 @@
@@ -8851,7 +9207,7 @@ index 929cf4609..473f76287 100644
  
  namespace Settings {
  
-@@ -41,162 +59,1179 @@ using namespace AyuBuilder;
+@@ -41,162 +59,1218 @@ using namespace AyuBuilder;
  
  namespace {
  
@@ -8878,11 +9234,6 @@ index 929cf4609..473f76287 100644
 +enum class LocalGiftTarget {
 +	Featured,
 +	Pinned,
-+};
-+
-+struct LocalGiftCollection {
-+	QString title;
-+	QString slug;
  };
  
 -Asset getAsset(const QString &name) {
@@ -8890,6 +9241,11 @@ index 929cf4609..473f76287 100644
 -	const auto normalized = name.toLower();
 -	QString icon = QString(":/gui/icons/ayu/donates/%1.svg").arg(normalized);
 -	QColor background = isNightMode ? QColor(0xEEEEEE) : QColor(0x242B2C);
++struct LocalGiftCollection {
++	QString title;
++	QString slug;
++};
++
 +struct LocalGiftBrowserState {
 +	rpl::variable<Ui::GiftsDescriptor> gifts;
 +	std::vector<Info::PeerGifts::GiftDescriptor> items;
@@ -8949,10 +9305,11 @@ index 929cf4609..473f76287 100644
 +		: LocalGiftCollection{ std::move(title), std::move(slug) };
 +}
 +
-+[[nodiscard]] std::vector<QString> LocalPinnedGiftReferences() {
++[[nodiscard]] std::vector<QString> LocalPinnedGiftReferences(
++		not_null<Main::Session*> session) {
 +	auto result = std::vector<QString>();
 +	const auto normalized = Ayu::NormalizeLocalProfileGifts(
-+		AyuSettings::getInstance().localProfileGifts());
++		AyuSettings::localProfile(session).localProfileGifts());
 +	for (const auto &part : normalized.split(',', Qt::SkipEmptyParts)) {
 +		const auto reference = part.trimmed();
 +		if (!reference.isEmpty()) {
@@ -9051,12 +9408,12 @@ index 929cf4609..473f76287 100644
 +			tr::ayu_LocalProfileGiftPickerInvalid(tr::now));
 +		return false;
 +	}
-+	auto &settings = AyuSettings::getInstance();
++	auto &settings = AyuSettings::localProfile(&controller->session());
 +	const auto slug = gift.unique->slug;
 +	if (target == LocalGiftTarget::Featured) {
 +		settings.setLocalProfileGift(slug);
 +	} else {
-+		auto references = LocalPinnedGiftReferences();
++		auto references = LocalPinnedGiftReferences(&controller->session());
 +		const auto duplicate = ranges::any_of(
 +			references,
 +			[&](const auto &entry) {
@@ -9135,22 +9492,8 @@ index 929cf4609..473f76287 100644
 +			state->exhausted = (resolved == 0);
 +			state->gifts = Ui::GiftsDescriptor{ .list = state->items };
 +		});
- }
- 
--void BuildDonations(SectionBuilder &builder) {
--	builder.add([](const BuildContext &ctx) {
--		v::match(ctx, [&](const WidgetContext &wctx) {
--			const auto container = wctx.container;
--
--			AddSubsectionTitle(container, tr::ayu_SupportHeader());
--			AddDonate(
--				AddButtonWithIcon(
--					container,
--					rpl::single(QString("Boosty")),
--					st::settingsButton),
--				"boosty"
--			)->setClickedCallback([=] {
--				QDesktopServices::openUrl(QString("https://boosty.to/alexeyzavar"));
++}
++
 +void LoadLocalGiftCollectionFallback(
 +		not_null<Window::SessionController*> controller,
 +		QPointer<Ui::GenericBox> box,
@@ -9180,8 +9523,22 @@ index 929cf4609..473f76287 100644
 +			}
 +			state->gifts = Ui::GiftsDescriptor{ .list = state->items };
 +		});
-+}
-+
+ }
+ 
+-void BuildDonations(SectionBuilder &builder) {
+-	builder.add([](const BuildContext &ctx) {
+-		v::match(ctx, [&](const WidgetContext &wctx) {
+-			const auto container = wctx.container;
+-
+-			AddSubsectionTitle(container, tr::ayu_SupportHeader());
+-			AddDonate(
+-				AddButtonWithIcon(
+-					container,
+-					rpl::single(QString("Boosty")),
+-					st::settingsButton),
+-				"boosty"
+-			)->setClickedCallback([=] {
+-				QDesktopServices::openUrl(QString("https://boosty.to/alexeyzavar"));
 +[[nodiscard]] bool ApplyLocalGiftCatalog(
 +		QPointer<Ui::GenericBox> box,
 +		not_null<LocalGiftBrowserState*> state) {
@@ -9473,6 +9830,7 @@ index 929cf4609..473f76287 100644
 +		not_null<Window::SessionController*> controller) {
 +	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
 +		box->setTitle(tr::ayu_LocalProfileGiftPickerManagePinned());
++		auto &settings = AyuSettings::localProfile(&controller->session());
 +		const auto content = box->verticalLayout();
 +		const auto add = AddButtonWithIcon(
 +			content,
@@ -9484,7 +9842,8 @@ index 929cf4609..473f76287 100644
 +			box->closeBox();
 +		});
 +
-+		const auto references = LocalPinnedGiftReferences();
++		const auto references = LocalPinnedGiftReferences(
++			&controller->session());
 +		if (references.empty()) {
 +			AddDividerText(
 +				content,
@@ -9509,14 +9868,15 @@ index 929cf4609..473f76287 100644
 +					{ &st::menuIconDelete });
 +				button->setClickedCallback([=] {
 +					auto kept = std::vector<QString>();
-+					for (const auto &entry : LocalPinnedGiftReferences()) {
++					for (const auto &entry : LocalPinnedGiftReferences(
++							&controller->session())) {
 +						if (entry.compare(
 +								reference,
 +								Qt::CaseInsensitive) != 0) {
 +							kept.push_back(entry);
 +						}
 +					}
-+					AyuSettings::getInstance().setLocalProfileGifts(
++					settings.setLocalProfileGifts(
 +						SerializeLocalGiftReferences(kept));
 +					button->hide();
 +				});
@@ -9536,7 +9896,7 @@ index 929cf4609..473f76287 100644
 +				st::settingsButton,
 +				{ &st::menuIconDelete });
 +			clear->setClickedCallback([=] {
-+				AyuSettings::getInstance().setLocalProfileGifts(QString());
++				settings.setLocalProfileGifts(QString());
 +				box->closeBox();
  			});
 +		}
@@ -9569,7 +9929,8 @@ index 929cf4609..473f76287 100644
 +					tr::ayu_LocalProfilePhotoInvalid(tr::now));
 +				return;
 +			}
-+			AyuSettings::getInstance().setLocalProfilePhoto(path);
++			AyuSettings::localProfile(&controller->session()
++				).setLocalProfilePhoto(path);
 +			Ayu::RefreshLocalProfilePresentation(&controller->session());
 +			controller->showToast(
 +				tr::ayu_LocalProfilePhotoSaved(tr::now));
@@ -9585,7 +9946,8 @@ index 929cf4609..473f76287 100644
 +				box,
 +				st::defaultInputField,
 +				tr::ayu_LocalProfileCloneId(),
-+				AyuSettings::getInstance().localProfileCloneId()),
++				AyuSettings::localProfile(&controller->session()
++					).localProfileCloneId()),
 +			st::boxRowPadding);
 +		field->setMaxLength(Ayu::kMaxLocalProfileIdLength);
 +		box->setFocusCallback([=] {
@@ -9607,7 +9969,8 @@ index 929cf4609..473f76287 100644
 +					tr::ayu_LocalProfileCloneNotFound(tr::now));
 +				return;
 +			}
-+			AyuSettings::getInstance().setLocalProfileCloneId(id);
++			AyuSettings::localProfile(&controller->session()
++				).setLocalProfileCloneId(id);
 +			controller->session().api().requestFullPeer(user);
 +			Ayu::RefreshLocalProfilePresentation(&controller->session());
 +			controller->showToast(tr::ayu_LocalProfileCloneSaved(
@@ -9631,7 +9994,7 @@ index 929cf4609..473f76287 100644
 +		using Style = LocalProfileBadgeStyle;
 +
 +		box->setTitle(tr::ayu_LocalProfileBadgesTitle());
-+		auto &settings = AyuSettings::getInstance();
++		auto &settings = AyuSettings::localProfile(&controller->session());
 +		const auto group = std::make_shared<Ui::RadioenumGroup<Style>>(
 +			settings.localProfileBadgeStyle());
 +		const auto addOption = [&](Style style, const QString &label) {
@@ -9680,7 +10043,8 @@ index 929cf4609..473f76287 100644
 +			tr::ayu_LocalProfileBadgesDescription());
 +
 +		const auto save = [=] {
-+			auto &mutableSettings = AyuSettings::getInstance();
++			auto &mutableSettings = AyuSettings::localProfile(
++				&controller->session());
 +			mutableSettings.setLocalProfileBadgeStyle(group->current());
 +			mutableSettings.setLocalProfileEmojiStatusId(
 +				emojiStatus->getLastText());
@@ -9707,7 +10071,8 @@ index 929cf4609..473f76287 100644
 +				box,
 +				st::defaultInputField,
 +				tr::ayu_LocalProfileChannelPlaceholder(),
-+				AyuSettings::getInstance().localProfileChannel()),
++				AyuSettings::localProfile(&controller->session()
++					).localProfileChannel()),
 +			st::boxRowPadding);
 +		field->setMaxLength(Ayu::kMaxLocalProfileUsernameLength);
 +		box->setFocusCallback([=] {
@@ -9729,7 +10094,8 @@ index 929cf4609..473f76287 100644
 +			}
 +			const auto username = Ayu::NormalizeLocalProfileUsername(
 +				field->getLastText());
-+			auto &settings = AyuSettings::getInstance();
++			auto &settings = AyuSettings::localProfile(
++				&controller->session());
 +			settings.setLocalProfileChannel(username);
 +			settings.setLocalProfileChannelEnabled(true);
 +			controller->session().api().requestFullPeer(channel);
@@ -9785,8 +10151,10 @@ index 929cf4609..473f76287 100644
 +
 +void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 +	const auto controller = builder.controller();
++	auto &profile = AyuSettings::localProfile(&controller->session());
 +
-+	builder.addSkip();
+ 	builder.addSkip();
+-	builder.addSubsectionTitle(tr::ayu_CategoryOther());
 +	builder.addSubsectionTitle(tr::ayu_LocalProfileHeader());
 +	builder.addButton({
 +		.id = u"ayu/localProfileClone"_q,
@@ -9801,14 +10169,13 @@ index 929cf4609..473f76287 100644
 +		.title = tr::ayu_LocalProfileCloneClear(),
 +		.icon = { &st::menuIconDelete },
 +		.onClick = [=] {
-+			AyuSettings::getInstance().setLocalProfileCloneId(QString());
++			profile.setLocalProfileCloneId(QString());
 +			Ayu::RefreshLocalProfilePresentation(&controller->session());
 +			controller->showToast(tr::lng_box_done(tr::now));
 +		},
 +	});
 +	builder.addDividerText(tr::ayu_LocalProfileCloneLocalOnly());
- 	builder.addSkip();
--	builder.addSubsectionTitle(tr::ayu_CategoryOther());
++	builder.addSkip();
 +	builder.addSubsectionTitle(tr::ayu_LocalProfileIdentityHeader());
 +	builder.addButton({
 +		.id = u"ayu/localProfileBadges"_q,
@@ -9819,17 +10186,22 @@ index 929cf4609..473f76287 100644
 +		},
 +	});
  
- 	ayu.addSettingToggle({
+-	ayu.addSettingToggle({
 -		.id = u"ayu/crashReporting"_q,
 -		.altIds = { u"ayu/crashlytics"_q },
 -		.title = tr::ayu_CrashReporting(),
 -		.getter = &AyuSettings::crashReporting,
 -		.setter = &AyuSettings::setCrashReporting,
 -		.icon = { &st::menuIconReport },
++	ayu.addToggle({
 +		.id = u"ayu/localProfileNameEnabled"_q,
 +		.title = tr::ayu_LocalProfileNameEnabled(),
-+		.getter = &AyuSettings::localProfileNameEnabled,
-+		.setter = &AyuSettings::setLocalProfileNameEnabled,
++		.getter = [profile] {
++			return profile.localProfileNameEnabled();
++		},
++		.setter = [profile](bool enabled) {
++			profile.setLocalProfileNameEnabled(enabled);
++		},
 +		.icon = { &st::menuIconProfile },
 +	});
 +	builder.add([](const WidgetContext &wctx) {
@@ -9837,12 +10209,12 @@ index 929cf4609..473f76287 100644
 +			wctx.container,
 +			st::settingsDeviceName,
 +			tr::ayu_LocalProfileName(),
-+			AyuSettings::getInstance().localProfileName());
++			profile.localProfileName());
 +		const auto raw = field.data();
 +		raw->setMaxLength(Ayu::kMaxLocalProfileNameLength);
 +		raw->changes(
 +		) | rpl::on_next([=] {
-+			AyuSettings::getInstance().setLocalProfileName(
++			profile.setLocalProfileName(
 +				raw->getLastText());
 +		}, raw->lifetime());
 +		return SectionBuilder::WidgetToAdd{
@@ -9860,11 +10232,15 @@ index 929cf4609..473f76287 100644
 +			.icon = { &st::menuIconProfile },
 +		};
 +	});
-+	ayu.addSettingToggle({
++	ayu.addToggle({
 +		.id = u"ayu/localProfileIdEnabled"_q,
 +		.title = tr::ayu_LocalProfileIdEnabled(),
-+		.getter = &AyuSettings::localProfileIdEnabled,
-+		.setter = &AyuSettings::setLocalProfileIdEnabled,
++		.getter = [profile] {
++			return profile.localProfileIdEnabled();
++		},
++		.setter = [profile](bool enabled) {
++			profile.setLocalProfileIdEnabled(enabled);
++		},
 +		.icon = { &st::menuIconInfo },
 +	});
 +	builder.add([](const WidgetContext &wctx) {
@@ -9872,12 +10248,12 @@ index 929cf4609..473f76287 100644
 +			wctx.container,
 +			st::settingsDeviceName,
 +			tr::ayu_LocalProfileId(),
-+			AyuSettings::getInstance().localProfileId());
++			profile.localProfileId());
 +		const auto raw = field.data();
 +		raw->setMaxLength(Ayu::kMaxLocalProfileIdLength);
 +		raw->changes(
 +		) | rpl::on_next([=] {
-+			AyuSettings::getInstance().setLocalProfileId(
++			profile.setLocalProfileId(
 +				raw->getLastText());
 +		}, raw->lifetime());
 +		return SectionBuilder::WidgetToAdd{
@@ -9901,11 +10277,15 @@ index 929cf4609..473f76287 100644
 +	builder.addDivider();
 +	builder.addSkip();
 +	builder.addSubsectionTitle(tr::ayu_LocalProfileContactHeader());
-+	ayu.addSettingToggle({
++	ayu.addToggle({
 +		.id = u"ayu/localProfileUsernameEnabled"_q,
 +		.title = tr::ayu_LocalProfileUsernameEnabled(),
-+		.getter = &AyuSettings::localProfileUsernameEnabled,
-+		.setter = &AyuSettings::setLocalProfileUsernameEnabled,
++		.getter = [profile] {
++			return profile.localProfileUsernameEnabled();
++		},
++		.setter = [profile](bool enabled) {
++			profile.setLocalProfileUsernameEnabled(enabled);
++		},
 +		.icon = { &st::menuIconLink },
 +	});
 +	builder.add([](const WidgetContext &wctx) {
@@ -9913,12 +10293,12 @@ index 929cf4609..473f76287 100644
 +			wctx.container,
 +			st::settingsDeviceName,
 +			tr::ayu_LocalProfileUsername(),
-+			AyuSettings::getInstance().localProfileUsername());
++			profile.localProfileUsername());
 +		const auto raw = field.data();
 +		raw->setMaxLength(Ayu::kMaxLocalProfileUsernameLength);
 +		raw->changes(
 +		) | rpl::on_next([=] {
-+			AyuSettings::getInstance().setLocalProfileUsername(
++			profile.setLocalProfileUsername(
 +				raw->getLastText());
 +		}, raw->lifetime());
 +		return SectionBuilder::WidgetToAdd{
@@ -9941,12 +10321,12 @@ index 929cf4609..473f76287 100644
 +			wctx.container,
 +			st::settingsDeviceName,
 +			tr::ayu_LocalProfileUsernames(),
-+			AyuSettings::getInstance().localProfileUsernames());
++			profile.localProfileUsernames());
 +		const auto raw = field.data();
 +		raw->setMaxLength(Ayu::kMaxLocalProfileUsernamesLength);
 +		raw->changes(
 +		) | rpl::on_next([=] {
-+			AyuSettings::getInstance().setLocalProfileUsernames(
++			profile.setLocalProfileUsernames(
 +				raw->getLastText());
 +		}, raw->lifetime());
 +		return SectionBuilder::WidgetToAdd{
@@ -9964,11 +10344,15 @@ index 929cf4609..473f76287 100644
 +			.icon = { &st::menuIconLink },
 +		};
 +	});
-+	ayu.addSettingToggle({
++	ayu.addToggle({
 +		.id = u"ayu/localProfilePhoneEnabled"_q,
 +		.title = tr::ayu_LocalProfilePhoneEnabled(),
-+		.getter = &AyuSettings::localProfilePhoneEnabled,
-+		.setter = &AyuSettings::setLocalProfilePhoneEnabled,
++		.getter = [profile] {
++			return profile.localProfilePhoneEnabled();
++		},
++		.setter = [profile](bool enabled) {
++			profile.setLocalProfilePhoneEnabled(enabled);
++		},
 +		.icon = { &st::menuIconPhone },
 +	});
 +	builder.add([](const WidgetContext &wctx) {
@@ -9976,12 +10360,12 @@ index 929cf4609..473f76287 100644
 +			wctx.container,
 +			st::settingsDeviceName,
 +			tr::ayu_LocalProfilePhone(),
-+			AyuSettings::getInstance().localProfilePhone());
++			profile.localProfilePhone());
 +		const auto raw = field.data();
 +		raw->setMaxLength(Ayu::kMaxLocalProfilePhoneLength);
 +		raw->changes(
 +		) | rpl::on_next([=] {
-+			AyuSettings::getInstance().setLocalProfilePhone(
++			profile.setLocalProfilePhone(
 +				raw->getLastText());
 +		}, raw->lifetime());
 +		return SectionBuilder::WidgetToAdd{
@@ -9999,11 +10383,15 @@ index 929cf4609..473f76287 100644
 +			.icon = { &st::menuIconPhone },
 +		};
 +	});
-+	ayu.addSettingToggle({
++	ayu.addToggle({
 +		.id = u"ayu/localProfileAboutEnabled"_q,
 +		.title = tr::ayu_LocalProfileAboutEnabled(),
-+		.getter = &AyuSettings::localProfileAboutEnabled,
-+		.setter = &AyuSettings::setLocalProfileAboutEnabled,
++		.getter = [profile] {
++			return profile.localProfileAboutEnabled();
++		},
++		.setter = [profile](bool enabled) {
++			profile.setLocalProfileAboutEnabled(enabled);
++		},
 +		.icon = { &st::menuIconInfo },
 +	});
 +	builder.add([](const WidgetContext &wctx) {
@@ -10011,12 +10399,12 @@ index 929cf4609..473f76287 100644
 +			wctx.container,
 +			st::settingsDeviceName,
 +			tr::ayu_LocalProfileAbout(),
-+			AyuSettings::getInstance().localProfileAbout());
++			profile.localProfileAbout());
 +		const auto raw = field.data();
 +		raw->setMaxLength(Ayu::kMaxLocalProfileAboutLength);
 +		raw->changes(
 +		) | rpl::on_next([=] {
-+			AyuSettings::getInstance().setLocalProfileAbout(
++			profile.setLocalProfileAbout(
 +				raw->getLastText());
 +		}, raw->lifetime());
 +		return SectionBuilder::WidgetToAdd{
@@ -10051,7 +10439,7 @@ index 929cf4609..473f76287 100644
 +		.title = tr::ayu_LocalProfilePhotoClear(),
 +		.icon = { &st::menuIconDelete },
 +		.onClick = [=] {
-+			AyuSettings::getInstance().setLocalProfilePhoto(QString());
++			profile.setLocalProfilePhoto(QString());
 +			Ayu::RefreshLocalProfilePresentation(&controller->session());
 +			controller->showToast(tr::lng_box_done(tr::now));
 +		},
@@ -10061,18 +10449,22 @@ index 929cf4609..473f76287 100644
 +	builder.addDivider();
 +	builder.addSkip();
 +	builder.addSubsectionTitle(tr::ayu_LocalProfileChannelHeader());
-+	ayu.addSettingToggle({
++	ayu.addToggle({
 +		.id = u"ayu/localProfileChannelEnabled"_q,
 +		.title = tr::ayu_LocalProfileChannelEnabled(),
-+		.getter = &AyuSettings::localProfileChannelEnabled,
-+		.setter = &AyuSettings::setLocalProfileChannelEnabled,
++		.getter = [profile] {
++			return profile.localProfileChannelEnabled();
++		},
++		.setter = [profile](bool enabled) {
++			profile.setLocalProfileChannelEnabled(enabled);
++		},
 +		.icon = { &st::menuIconChannel },
 +	});
 +	builder.addButton({
 +		.id = u"ayu/localProfileChannel"_q,
 +		.title = tr::ayu_LocalProfileChannelChoose(),
 +		.icon = { &st::menuIconChannel },
-+		.label = AyuSettings::getInstance().localProfileChannelValue(
++		.label = profile.localProfileChannelValue(
 +		) | rpl::map([](const QString &username) {
 +			return username.isEmpty()
 +				? tr::ayu_LocalProfileChannelNone(tr::now)
@@ -10095,7 +10487,7 @@ index 929cf4609..473f76287 100644
 +		.title = tr::ayu_LocalProfileChannelClear(),
 +		.icon = { &st::menuIconDelete },
 +		.onClick = [=] {
-+			auto &settings = AyuSettings::getInstance();
++			auto &settings = profile;
 +			settings.setLocalProfileChannelEnabled(false);
 +			settings.setLocalProfileChannel(QString());
 +			Ayu::RefreshLocalProfilePresentation(&controller->session());
@@ -10107,11 +10499,15 @@ index 929cf4609..473f76287 100644
 +	builder.addDivider();
 +	builder.addSkip();
 +	builder.addSubsectionTitle(tr::ayu_LocalProfileCollectiblesHeader());
-+	ayu.addSettingToggle({
++	ayu.addToggle({
 +		.id = u"ayu/localProfileGiftEnabled"_q,
 +		.title = tr::ayu_LocalProfileGiftEnabled(),
-+		.getter = &AyuSettings::localProfileGiftEnabled,
-+		.setter = &AyuSettings::setLocalProfileGiftEnabled,
++		.getter = [profile] {
++			return profile.localProfileGiftEnabled();
++		},
++		.setter = [profile](bool enabled) {
++			profile.setLocalProfileGiftEnabled(enabled);
++		},
 +		.icon = { &st::menuIconGiftPremium },
 +	});
 +	builder.addButton({
@@ -10137,7 +10533,7 @@ index 929cf4609..473f76287 100644
 +		.title = tr::ayu_LocalProfileGiftPickerClearFeatured(),
 +		.icon = { &st::menuIconDelete },
 +		.onClick = [=] {
-+			AyuSettings::getInstance().setLocalProfileGift(QString());
++			profile.setLocalProfileGift(QString());
 +			controller->showToast(tr::lng_box_done(tr::now));
 +		},
 +	});
@@ -10157,7 +10553,7 @@ index 929cf4609..473f76287 100644
  	builder.addButton({
  		.id = u"ayu/registerUrlScheme"_q,
  		.title = tr::ayu_RegisterURLScheme(),
-@@ -228,13 +1263,23 @@ void BuildOtherThings(SectionBuilder &builder) {
+@@ -228,13 +1302,23 @@ void BuildOtherThings(SectionBuilder &builder) {
  const auto kMeta = BuildHelper({
  	.id = AyuOther::Id(),
  	.parentId = AyuMain::Id(),
@@ -10184,7 +10580,7 @@ index 929cf4609..473f76287 100644
  	BuildCrashReporting(builder, ayu);
  	BuildOtherThings(builder);
  });
-@@ -242,7 +1287,7 @@ const auto kMeta = BuildHelper({
+@@ -242,7 +1326,7 @@ const auto kMeta = BuildHelper({
  } // namespace
  
  rpl::producer<QString> AyuOther::title() {
@@ -10193,7 +10589,7 @@ index 929cf4609..473f76287 100644
  }
  
  AyuOther::AyuOther(
-@@ -258,6 +1303,23 @@ void AyuOther::setupContent() {
+@@ -258,6 +1342,23 @@ void AyuOther::setupContent() {
  	Ui::ResizeFitChild(this, content);
  }
  
@@ -11686,10 +12082,10 @@ index 000000000..57e78a5ff
 +
 +} // namespace Settings
 diff --git a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
-index c9d247a20..91147f9e8 100644
+index c9d247a20..79034a423 100644
 --- a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.cpp
-@@ -6,15 +6,1386 @@
+@@ -6,15 +6,1402 @@
  // Copyright @Radolyn, 2026
  #include "ayu/ui/utils/ayu_profile_values.h"
  
@@ -11756,13 +12152,18 @@ index c9d247a20..91147f9e8 100644
 +	std::shared_ptr<QImage> image;
 +};
 +
++[[nodiscard]] LocalProfileAccountSettings &LocalProfileSettings(
++		not_null<PeerData*> peer) {
++	return AyuSettings::localProfile(&peer->session());
++}
++
 +[[nodiscard]] UserData *ResolveLocalProfileCloneUser(
 +		not_null<PeerData*> peer) {
 +	if (!peer->isSelf()) {
 +		return nullptr;
 +	}
 +	const auto id = NormalizeLocalProfileCloneId(
-+		AyuSettings::getInstance().localProfileCloneId());
++		LocalProfileSettings(peer).localProfileCloneId());
 +	if (id.isEmpty()) {
 +		return nullptr;
 +	}
@@ -12332,23 +12733,30 @@ index c9d247a20..91147f9e8 100644
 +	return serialized;
 +}
 +
-+void AppendLocalGift(LocalGiftRecord record) {
++void AppendLocalGift(
++		not_null<Main::Session*> session,
++		LocalGiftRecord record) {
 +	if (!record.giftId) {
 +		return;
 +	}
 +	auto records = ParseLocalGifts(
-+		AyuSettings::getInstance().localGifts());
++		AyuSettings::localStars(session).localGifts());
 +	record.message = record.message.left(kMaxLocalGiftMessageLength);
 +	records.push_back(std::move(record));
 +	while (records.size() > kMaxLocalGiftsCount) {
 +		records.erase(records.begin());
 +	}
-+	AyuSettings::getInstance().setLocalGifts(SerializeLocalGifts(records));
++	AyuSettings::localStars(session).setLocalGifts(
++		SerializeLocalGifts(records));
 +}
 +
-+void RemoveLocalGift(uint64 giftId, int64 date, const QString &message) {
++void RemoveLocalGift(
++		not_null<Main::Session*> session,
++		uint64 giftId,
++		int64 date,
++		const QString &message) {
 +	auto records = ParseLocalGifts(
-+		AyuSettings::getInstance().localGifts());
++		AyuSettings::localStars(session).localGifts());
 +	const auto i = ranges::find_if(records, [&](const LocalGiftRecord &r) {
 +		return r.giftId == giftId
 +			&& r.date == date
@@ -12358,7 +12766,8 @@ index c9d247a20..91147f9e8 100644
 +		return;
 +	}
 +	records.erase(i);
-+	AyuSettings::getInstance().setLocalGifts(SerializeLocalGifts(records));
++	AyuSettings::localStars(session).setLocalGifts(
++		SerializeLocalGifts(records));
 +}
 +
 +int64 LocalGiftConvertValue(int64 stars) {
@@ -12423,24 +12832,29 @@ index c9d247a20..91147f9e8 100644
 +	return serialized;
 +}
 +
-+void AppendLocalStarsEarning(LocalStarsEarning earning) {
++void AppendLocalStarsEarning(
++		not_null<Main::Session*> session,
++		LocalStarsEarning earning) {
 +	if (earning.amount <= 0) {
 +		return;
 +	}
 +	auto earnings = ParseLocalStarsEarnings(
-+		AyuSettings::getInstance().localStarsEarnings());
++		AyuSettings::localStars(session).localStarsEarnings());
 +	earnings.push_back(std::move(earning));
 +	while (earnings.size() > kMaxLocalStarsEarningsCount) {
 +		earnings.erase(earnings.begin());
 +	}
-+	AyuSettings::getInstance().setLocalStarsEarnings(
++	AyuSettings::localStars(session).setLocalStarsEarnings(
 +		SerializeLocalStarsEarnings(earnings));
 +}
 +
-+LocalStarsProceeds ComputeLocalStarsProceeds(int64 withdrawn, int64 now) {
++LocalStarsProceeds ComputeLocalStarsProceeds(
++		not_null<Main::Session*> session,
++		int64 withdrawn,
++		int64 now) {
 +	auto result = LocalStarsProceeds();
 +	const auto earnings = ParseLocalStarsEarnings(
-+		AyuSettings::getInstance().localStarsEarnings());
++		AyuSettings::localStars(session).localStarsEarnings());
 +	for (const auto &earning : earnings) {
 +		result.lifetime += earning.amount;
 +		const auto matureAt = earning.date + kLocalStarsProceedsMaturitySecs;
@@ -12462,7 +12876,7 @@ index c9d247a20..91147f9e8 100644
 +	if (ResolveLocalProfileCloneUser(peer)) {
 +		return true;
 +	}
-+	const auto &settings = AyuSettings::getInstance();
++	const auto &settings = LocalProfileSettings(peer);
 +	return settings.localProfileNameEnabled()
 +		&& !NormalizeLocalProfileName(settings.localProfileName()).isEmpty();
 +}
@@ -12474,7 +12888,7 @@ index c9d247a20..91147f9e8 100644
 +	if (ResolveLocalProfileCloneUser(peer)) {
 +		return true;
 +	}
-+	const auto &settings = AyuSettings::getInstance();
++	const auto &settings = LocalProfileSettings(peer);
 +	return settings.localProfileIdEnabled()
 +		&& !NormalizeLocalProfileId(settings.localProfileId()).isEmpty();
 +}
@@ -12486,7 +12900,7 @@ index c9d247a20..91147f9e8 100644
 +	if (const auto clone = ResolveLocalProfileCloneUser(peer)) {
 +		return !clone->usernames().empty() || !clone->username().isEmpty();
 +	}
-+	const auto &settings = AyuSettings::getInstance();
++	const auto &settings = LocalProfileSettings(peer);
 +	return settings.localProfileUsernameEnabled()
 +		&& !ParseLocalProfileUsernames(
 +			settings.localProfileUsername(),
@@ -12500,7 +12914,7 @@ index c9d247a20..91147f9e8 100644
 +	if (const auto clone = ResolveLocalProfileCloneUser(user)) {
 +		return !clone->phone().isEmpty();
 +	}
-+	const auto &settings = AyuSettings::getInstance();
++	const auto &settings = LocalProfileSettings(user);
 +	return settings.localProfilePhoneEnabled()
 +		&& !NormalizeLocalProfilePhone(settings.localProfilePhone()).isEmpty();
 +}
@@ -12512,7 +12926,7 @@ index c9d247a20..91147f9e8 100644
 +	if (ResolveLocalProfileCloneUser(peer)) {
 +		return true;
 +	}
-+	const auto &settings = AyuSettings::getInstance();
++	const auto &settings = LocalProfileSettings(peer);
 +	return settings.localProfileAboutEnabled()
 +		&& !NormalizeLocalProfileAbout(settings.localProfileAbout()).isEmpty();
 +}
@@ -12525,7 +12939,7 @@ index c9d247a20..91147f9e8 100644
 +	if (!user->isSelf() || ResolveLocalProfileCloneUser(user)) {
 +		return false;
 +	}
-+	const auto &settings = AyuSettings::getInstance();
++	const auto &settings = LocalProfileSettings(user);
 +	return settings.localProfileChannelEnabled()
 +		&& !NormalizeLocalProfileUsername(
 +			settings.localProfileChannel()).isEmpty();
@@ -12534,7 +12948,7 @@ index c9d247a20..91147f9e8 100644
 +ChannelData *LocalProfilePersonalChannel(not_null<UserData*> user) {
 +	if (LocalProfileChannelShowcaseActive(user)) {
 +		const auto username = NormalizeLocalProfileUsername(
-+			AyuSettings::getInstance().localProfileChannel());
++			LocalProfileSettings(user).localProfileChannel());
 +		const auto peer = user->owner().peerByUsername(username);
 +		return peer ? peer->asChannel() : nullptr;
 +	}
@@ -12559,7 +12973,7 @@ index c9d247a20..91147f9e8 100644
 +		return nullptr;
 +	}
 +	const auto path = NormalizeLocalProfilePhoto(
-+		AyuSettings::getInstance().localProfilePhoto());
++		LocalProfileSettings(peer).localProfilePhoto());
 +	const auto info = QFileInfo(path);
 +	if (path.isEmpty() || !info.isFile()) {
 +		return nullptr;
@@ -12607,7 +13021,7 @@ index c9d247a20..91147f9e8 100644
 +}
 +
 +QString LocalProfileName(not_null<PeerData*> peer) {
-+	const auto &settings = AyuSettings::getInstance();
++	const auto &settings = LocalProfileSettings(peer);
 +	return ResolveLocalProfileName(
 +		peer,
 +		peer->name(),
@@ -12623,11 +13037,11 @@ index c9d247a20..91147f9e8 100644
 +		return QString::number(getBareID(peer));
 +	}
 +	return NormalizeLocalProfileId(
-+		AyuSettings::getInstance().localProfileId());
++		LocalProfileSettings(peer).localProfileId());
 +}
 +
 +QString LocalProfileUsername(not_null<PeerData*> peer) {
-+	const auto &settings = AyuSettings::getInstance();
++	const auto &settings = LocalProfileSettings(peer);
 +	return ResolveLocalProfileUsername(
 +		peer,
 +		peer->username(),
@@ -12637,7 +13051,7 @@ index c9d247a20..91147f9e8 100644
 +}
 +
 +std::vector<QString> LocalProfileUsernames(not_null<PeerData*> peer) {
-+	const auto &settings = AyuSettings::getInstance();
++	const auto &settings = LocalProfileSettings(peer);
 +	return ResolveLocalProfileUsernames(
 +		peer,
 +		RealProfileUsernames(peer),
@@ -12647,7 +13061,7 @@ index c9d247a20..91147f9e8 100644
 +}
 +
 +QString LocalProfilePhone(not_null<UserData*> user) {
-+	const auto &settings = AyuSettings::getInstance();
++	const auto &settings = LocalProfileSettings(user);
 +	return ResolveLocalProfilePhone(
 +		user,
 +		user->phone(),
@@ -12656,7 +13070,7 @@ index c9d247a20..91147f9e8 100644
 +}
 +
 +QString LocalProfileAbout(not_null<PeerData*> peer) {
-+	const auto &settings = AyuSettings::getInstance();
++	const auto &settings = LocalProfileSettings(peer);
 +	return ResolveLocalProfileAbout(
 +		peer,
 +		peer->about(),
@@ -12667,15 +13081,14 @@ index c9d247a20..91147f9e8 100644
 +LocalProfileBadgeStyle LocalProfileBadgeStyleFor(
 +		not_null<PeerData*> peer) {
 +	return peer->isSelf()
-+		? AyuSettings::getInstance().localProfileBadgeStyle()
++		? LocalProfileSettings(peer).localProfileBadgeStyle()
 +		: LocalProfileBadgeStyle::Automatic;
 +}
 +
 +EmojiStatusId LocalProfileEmojiStatusId(not_null<PeerData*> peer) {
 +	const auto style = LocalProfileBadgeStyleFor(peer);
 +	if (style != LocalProfileBadgeStyle::Automatic) {
-+		const auto id = AyuSettings::getInstance(
-+			).localProfileEmojiStatusId().toULongLong();
++		const auto id = LocalProfileSettings(peer).localProfileEmojiStatusId().toULongLong();
 +		return EmojiStatusId{ DocumentId(id) };
 +	}
 +	if (const auto clone = ResolveLocalProfileCloneUser(peer)) {
@@ -12689,8 +13102,7 @@ index c9d247a20..91147f9e8 100644
 +	auto source = peer.get();
 +	const auto style = LocalProfileBadgeStyleFor(peer);
 +	if (style != LocalProfileBadgeStyle::Automatic) {
-+		const auto id = AyuSettings::getInstance(
-+			).localProfileBotVerificationId().toULongLong();
++		const auto id = LocalProfileSettings(peer).localProfileBotVerificationId().toULongLong();
 +		return { .iconId = DocumentId(id) };
 +	} else if (const auto clone = ResolveLocalProfileCloneUser(peer)) {
 +		source = clone;
@@ -12709,7 +13121,7 @@ index c9d247a20..91147f9e8 100644
 +			? std::vector<QString>{ status.collectible->slug }
 +			: std::vector<QString>();
 +	}
-+	const auto &settings = AyuSettings::getInstance();
++	const auto &settings = LocalProfileSettings(peer);
 +	return settings.localProfileGiftEnabled()
 +		? ParseLocalProfileGifts(
 +			settings.localProfileGift(),
@@ -12727,7 +13139,7 @@ index c9d247a20..91147f9e8 100644
 +	if (!peer->isSelf()) {
 +		return name;
 +	}
-+	auto &settings = AyuSettings::getInstance();
++	auto &settings = LocalProfileSettings(peer);
 +	return rpl::combine(
 +		std::move(name),
 +		settings.localProfileNameEnabledValue(),
@@ -12750,7 +13162,7 @@ index c9d247a20..91147f9e8 100644
 +	if (!peer->isSelf()) {
 +		return rpl::single(LocalProfileId(peer));
 +	}
-+	auto &settings = AyuSettings::getInstance();
++	auto &settings = LocalProfileSettings(peer);
 +	return rpl::combine(
 +		settings.localProfileIdEnabledValue(),
 +		settings.localProfileIdValue(),
@@ -12770,7 +13182,7 @@ index c9d247a20..91147f9e8 100644
 +	if (!peer->isSelf()) {
 +		return username;
 +	}
-+	auto &settings = AyuSettings::getInstance();
++	auto &settings = LocalProfileSettings(peer);
 +	return rpl::combine(
 +		std::move(username),
 +		settings.localProfileUsernameEnabledValue(),
@@ -12803,7 +13215,7 @@ index c9d247a20..91147f9e8 100644
 +	if (!peer->isSelf()) {
 +		return usernames;
 +	}
-+	auto &settings = AyuSettings::getInstance();
++	auto &settings = LocalProfileSettings(peer);
 +	return rpl::combine(
 +		std::move(usernames),
 +		settings.localProfileUsernameEnabledValue(),
@@ -12835,7 +13247,7 @@ index c9d247a20..91147f9e8 100644
 +	if (!user->isSelf()) {
 +		return phone;
 +	}
-+	auto &settings = AyuSettings::getInstance();
++	auto &settings = LocalProfileSettings(user);
 +	return rpl::combine(
 +		std::move(phone),
 +		settings.localProfilePhoneEnabledValue(),
@@ -12864,7 +13276,7 @@ index c9d247a20..91147f9e8 100644
 +	if (!peer->isSelf()) {
 +		return about;
 +	}
-+	auto &settings = AyuSettings::getInstance();
++	auto &settings = LocalProfileSettings(peer);
 +	return rpl::combine(
 +		std::move(about),
 +		settings.localProfileAboutEnabledValue(),
@@ -12886,7 +13298,7 @@ index c9d247a20..91147f9e8 100644
 +rpl::producer<QString> LocalProfileCloneIdValue(
 +		not_null<PeerData*> peer) {
 +	return peer->isSelf()
-+		? AyuSettings::getInstance().localProfileCloneIdValue()
++		? LocalProfileSettings(peer).localProfileCloneIdValue()
 +		: rpl::single(QString());
 +}
 +
@@ -12908,7 +13320,7 @@ index c9d247a20..91147f9e8 100644
 +				: nullptr;
 +		});
 +	};
-+	auto &settings = AyuSettings::getInstance();
++	auto &settings = LocalProfileSettings(user);
 +	return rpl::combine(
 +		LocalProfileCloneIdValue(user),
 +		settings.localProfileChannelEnabledValue(),
@@ -12923,7 +13335,7 @@ index c9d247a20..91147f9e8 100644
 +	if (!peer->isSelf()) {
 +		return rpl::single(std::vector<QString>());
 +	}
-+	auto &settings = AyuSettings::getInstance();
++	auto &settings = LocalProfileSettings(peer);
 +	return rpl::combine(
 +		settings.localProfileGiftEnabledValue(),
 +		settings.localProfileGiftValue(),
@@ -12982,7 +13394,7 @@ index c9d247a20..91147f9e8 100644
 +		const auto editor = box->addRow(
 +			object_ptr<LocalUsernameEditor>(
 +				box,
-+				AyuSettings::getInstance().localProfileUsername()),
++				AyuSettings::localProfile(&controller->session()).localProfileUsername()),
 +			style::margins());
 +		const auto field = editor->field();
 +		field->setMaxLength(kMaxLocalProfileUsernameLength);
@@ -13040,7 +13452,7 @@ index c9d247a20..91147f9e8 100644
 +			st::defaultBoxDividerLabelPadding));
 +
 +		const auto save = [=] {
-+			auto &settings = AyuSettings::getInstance();
++			auto &settings = AyuSettings::localProfile(&controller->session());
 +			settings.setLocalProfileUsername(field->getLastText());
 +			settings.setLocalProfileUsernameEnabled(true);
 +			box->closeBox();
@@ -13077,26 +13489,27 @@ index c9d247a20..91147f9e8 100644
  
  	const auto &settings = AyuSettings::getInstance();
  	if (settings.showPeerId() == PeerIdDisplay::BotApi) {
-@@ -33,8 +1404,12 @@ QString IDString(MsgId topicRootId) {
+@@ -33,8 +1420,13 @@ QString IDString(MsgId topicRootId) {
  }
  
  rpl::producer<TextWithEntities> IDValue(not_null<PeerData*> peer) {
 -	return AyuSettings::getInstance().showPeerIdValue(
 -	) | rpl::map([=](PeerIdDisplay display) {
 +	auto &settings = AyuSettings::getInstance();
++	auto &profile = AyuSettings::localProfile(&peer->session());
 +	return rpl::combine(
 +		settings.showPeerIdValue(),
-+		settings.localProfileIdEnabledValue(),
-+		settings.localProfileIdValue()
++		profile.localProfileIdEnabledValue(),
++		profile.localProfileIdValue()
 +	) | rpl::map([=](PeerIdDisplay display, bool, const QString &) {
  		return (display == PeerIdDisplay::Hidden)
  			? TextWithEntities()
  			: tr::marked(IDString(peer));
 diff --git a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h
-index 950f22d7e..1314b7408 100644
+index 950f22d7e..c68c98b92 100644
 --- a/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h
 +++ b/Telegram/SourceFiles/ayu/ui/utils/ayu_profile_values.h
-@@ -6,8 +6,175 @@
+@@ -6,8 +6,184 @@
  // Copyright @Radolyn, 2026
  #pragma once
  
@@ -13171,12 +13584,19 @@ index 950f22d7e..1314b7408 100644
 +[[nodiscard]] QString SerializeLocalStarsEarnings(
 +	const std::vector<LocalStarsEarning> &earnings);
 +[[nodiscard]] QString NormalizeLocalStarsEarnings(QString earnings);
-+void AppendLocalStarsEarning(LocalStarsEarning earning);
++void AppendLocalStarsEarning(
++	not_null<Main::Session*> session,
++	LocalStarsEarning earning);
 +[[nodiscard]] LocalStarsProceeds ComputeLocalStarsProceeds(
++	not_null<Main::Session*> session,
 +	int64 withdrawn,
 +	int64 now);
 +[[nodiscard]] int64 LocalGiftConvertValue(int64 stars);
-+void RemoveLocalGift(uint64 giftId, int64 date, const QString &message);
++void RemoveLocalGift(
++	not_null<Main::Session*> session,
++	uint64 giftId,
++	int64 date,
++	const QString &message);
 +
 +struct LocalGiftRecord {
 +	uint64 giftId = 0;
@@ -13191,7 +13611,9 @@ index 950f22d7e..1314b7408 100644
 +[[nodiscard]] QString SerializeLocalGifts(
 +	const std::vector<LocalGiftRecord> &records);
 +[[nodiscard]] QString NormalizeLocalGifts(QString gifts);
-+void AppendLocalGift(LocalGiftRecord record);
++void AppendLocalGift(
++	not_null<Main::Session*> session,
++	LocalGiftRecord record);
 +
 +[[nodiscard]] QString NormalizeLocalProfileName(QString name);
 +[[nodiscard]] QString NormalizeLocalProfileId(QString id);
@@ -14369,7 +14791,7 @@ index b3b237c07..300fe6132 100644
  		MTP_long(data->formId),
  		data->inputInvoice
 diff --git a/Telegram/SourceFiles/boxes/star_gift_box.cpp b/Telegram/SourceFiles/boxes/star_gift_box.cpp
-index 6b404b99e..7c192d55e 100644
+index 6b404b99e..8c8652a55 100644
 --- a/Telegram/SourceFiles/boxes/star_gift_box.cpp
 +++ b/Telegram/SourceFiles/boxes/star_gift_box.cpp
 @@ -14,6 +14,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -14421,11 +14843,11 @@ index 6b404b99e..7c192d55e 100644
 +				}
 +				return;
 +			}
-+			const auto settings = &AyuSettings::getInstance();
++			const auto settings = &AyuSettings::localStars(&window->session());
 +			settings->setLocalStarsBalance(
 +				settings->localStarsBalance() - int(cost));
 +			if (self) {
-+				Ayu::AppendLocalGift({
++				Ayu::AppendLocalGift(&window->session(), {
 +					.giftId = giftId,
 +					.stars = stars,
 +					.date = base::unixtime::now(),
@@ -14910,7 +15332,7 @@ index 6533de425..00111087e 100644
  }
  
 diff --git a/Telegram/SourceFiles/data/data_peer_values.cpp b/Telegram/SourceFiles/data/data_peer_values.cpp
-index 5d2952526..b5893e8cb 100644
+index 5d2952526..d8e79696a 100644
 --- a/Telegram/SourceFiles/data/data_peer_values.cpp
 +++ b/Telegram/SourceFiles/data/data_peer_values.cpp
 @@ -395,25 +395,34 @@ rpl::producer<bool> CanManageGroupCallValue(not_null<PeerData*> peer) {
@@ -14934,7 +15356,7 @@ index 5d2952526..b5893e8cb 100644
 +		return flags;
 +	}
 +	return rpl::combine(
-+		AyuSettings::getInstance().localPremiumValue(),
++		AyuSettings::localStars(&user->session()).localPremiumValue(),
 +		std::move(flags),
 +		_1 || _2);
  }
@@ -14948,7 +15370,7 @@ index 5d2952526..b5893e8cb 100644
  
 -	return PeerPremiumValue(session->user());
 +	return rpl::combine(
-+		AyuSettings::getInstance().localPremiumValue(),
++		AyuSettings::localStars(session).localPremiumValue(),
 +		PeerPremiumValue(session->user()),
 +		_1 || _2);
  }
@@ -15018,6 +15440,22 @@ index 2498bfc6d..c02427014 100644
  	if (type == NewMessageType::Unread) {
  		CheckForSwitchInlineButton(result);
  	}
+diff --git a/Telegram/SourceFiles/data/data_user.cpp b/Telegram/SourceFiles/data/data_user.cpp
+index 20924d2a0..25b13a279 100644
+--- a/Telegram/SourceFiles/data/data_user.cpp
++++ b/Telegram/SourceFiles/data/data_user.cpp
+@@ -618,9 +618,8 @@ bool UserData::isFake() const {
+ 
+ bool UserData::isPremium() const {
+ 	if (id) {
+-		const auto &settings = AyuSettings::getInstance();
+-		if (settings.localPremium()) {
+-			if (getSession(id.value)) {
++		if (const auto session = getSession(id.value)) {
++			if (AyuSettings::localStars(session).localPremium()) {
+ 				return true;
+ 			}
+ 		}
 diff --git a/Telegram/SourceFiles/dialogs/dialogs_inner_widget.cpp b/Telegram/SourceFiles/dialogs/dialogs_inner_widget.cpp
 index 9e940482f..6a3a4a17d 100644
 --- a/Telegram/SourceFiles/dialogs/dialogs_inner_widget.cpp
@@ -15100,6 +15538,20 @@ index 3bcfab953..2fa76d855 100644
  			Ui::NameTextOptions());
  	}
  	return _name;
+diff --git a/Telegram/SourceFiles/dialogs/dialogs_top_bar_suggestion.cpp b/Telegram/SourceFiles/dialogs/dialogs_top_bar_suggestion.cpp
+index 3d9d83c44..a1e6a7672 100644
+--- a/Telegram/SourceFiles/dialogs/dialogs_top_bar_suggestion.cpp
++++ b/Telegram/SourceFiles/dialogs/dialogs_top_bar_suggestion.cpp
+@@ -383,7 +383,8 @@ rpl::producer<Ui::SlideWrap<Ui::RpWidget>*> TopBarSuggestionValue(
+ 							[=] {
+ 								promo->dismiss(kSugLowCreditsSubs.utf8());
+ 								repeat(repeat);
+-							}));
++							},
++							false));
+ 					});
+ 					content->setHideCallback([=] {
+ 						promo->dismiss(kSugLowCreditsSubs.utf8());
 diff --git a/Telegram/SourceFiles/dialogs/dialogs_widget.cpp b/Telegram/SourceFiles/dialogs/dialogs_widget.cpp
 index 3061b9d6b..9e3d0b7b9 100644
 --- a/Telegram/SourceFiles/dialogs/dialogs_widget.cpp
@@ -16571,7 +17023,7 @@ index 5984bcefa..a17fc4722 100644
  	}
  
 diff --git a/Telegram/SourceFiles/info/bot/earn/info_bot_earn_list.cpp b/Telegram/SourceFiles/info/bot/earn/info_bot_earn_list.cpp
-index 0fb935609..dd27798e3 100644
+index 0fb935609..59f03eebe 100644
 --- a/Telegram/SourceFiles/info/bot/earn/info_bot_earn_list.cpp
 +++ b/Telegram/SourceFiles/info/bot/earn/info_bot_earn_list.cpp
 @@ -9,6 +9,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -16592,13 +17044,14 @@ index 0fb935609..dd27798e3 100644
  #include "main/main_session.h"
  #include "settings/settings_credits_graphics.h"
  #include "statistics/chart_widget.h"
-@@ -60,6 +64,85 @@ void AddHeader(
+@@ -60,6 +64,87 @@ void AddHeader(
  	header->resizeToWidth(header->width());
  }
  
-+[[nodiscard]] Data::StatisticalChart LocalRevenueChart() {
++[[nodiscard]] Data::StatisticalChart LocalRevenueChart(
++		not_null<Main::Session*> session) {
 +	const auto earnings = Ayu::ParseLocalStarsEarnings(
-+		AyuSettings::getInstance().localStarsEarnings());
++		AyuSettings::localStars(session).localStarsEarnings());
 +	auto result = Data::StatisticalChart();
 +	if (earnings.empty()) {
 +		return result;
@@ -16659,7 +17112,8 @@ index 0fb935609..dd27798e3 100644
 +		not_null<Main::Session*> session) {
 +	const auto now = base::unixtime::now();
 +	const auto proceeds = Ayu::ComputeLocalStarsProceeds(
-+		AyuSettings::getInstance().localStarsWithdrawn(),
++		session,
++		AyuSettings::localStars(session).localStarsWithdrawn(),
 +		now);
 +	auto result = Data::CreditsEarnStatistics();
 +	result.currentBalance = CreditsAmount(proceeds.total);
@@ -16671,14 +17125,14 @@ index 0fb935609..dd27798e3 100644
 +		result.nextWithdrawalAt = base::unixtime::parse(
 +			TimeId(proceeds.nextMaturity));
 +	}
-+	result.revenueGraph.chart = LocalRevenueChart();
++	result.revenueGraph.chart = LocalRevenueChart(session);
 +	return result;
 +}
 +
  } // namespace
  
  InnerWidget::InnerWidget(QWidget *parent, not_null<Controller*> controller)
-@@ -91,6 +174,12 @@ void InnerWidget::load() {
+@@ -91,6 +176,12 @@ void InnerWidget::load() {
  
  	_showFinished.events(
  	) | rpl::take(1) | rpl::on_next([=, this, peer = peer()] {
@@ -16691,7 +17145,7 @@ index 0fb935609..dd27798e3 100644
  		request([=](Data::CreditsEarnStatistics state) {
  			_state = state;
  			_loaded.fire(true);
-@@ -127,6 +216,13 @@ void InnerWidget::fill() {
+@@ -127,6 +218,13 @@ void InnerWidget::fill() {
  			return _state.availableBalance;
  		})
  	);
@@ -16705,7 +17159,7 @@ index 0fb935609..dd27798e3 100644
  	auto overallBalanceValue = rpl::single(
  		data.overallRevenue
  	) | rpl::then(
-@@ -215,7 +311,7 @@ void InnerWidget::fill() {
+@@ -215,7 +313,7 @@ void InnerWidget::fill() {
  		Ui::AddSkip(container);
  		Ui::AddSkip(container);
  		addOverview(
@@ -16714,7 +17168,7 @@ index 0fb935609..dd27798e3 100644
  			tr::lng_bot_earn_reward);
  		Ui::AddSkip(container);
  		Ui::AddSkip(container);
-@@ -237,6 +333,10 @@ void InnerWidget::fill() {
+@@ -237,6 +335,10 @@ void InnerWidget::fill() {
  				return _state.nextWithdrawalAt;
  			})
  		);
@@ -16725,7 +17179,7 @@ index 0fb935609..dd27798e3 100644
  		::Settings::AddWithdrawalWidget(
  			container,
  			_controller->parentController(),
-@@ -255,7 +355,8 @@ void InnerWidget::fill() {
+@@ -255,7 +357,8 @@ void InnerWidget::fill() {
  				availableBalanceValue
  			) | rpl::map([=](CreditsAmount v) {
  				return v ? ToUsd(v, multiplier, kMinorLength) : QString();
@@ -16736,7 +17190,7 @@ index 0fb935609..dd27798e3 100644
  	}
  	if (BotStarRef::Join::Allowed(peer()) && !peer()->isSelf()) {
 diff --git a/Telegram/SourceFiles/info/peer_gifts/info_peer_gifts_widget.cpp b/Telegram/SourceFiles/info/peer_gifts/info_peer_gifts_widget.cpp
-index a66e3d0c1..a6a3da379 100644
+index a66e3d0c1..af051fcdb 100644
 --- a/Telegram/SourceFiles/info/peer_gifts/info_peer_gifts_widget.cpp
 +++ b/Telegram/SourceFiles/info/peer_gifts/info_peer_gifts_widget.cpp
 @@ -11,6 +11,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -16772,7 +17226,7 @@ index a66e3d0c1..a6a3da379 100644
  	}, lifetime());
 +
 +	if (_peer->isSelf() && !_addingToCollectionId) {
-+		AyuSettings::getInstance().localGiftsChanges(
++		AyuSettings::localStars(&_peer->session()).localGiftsChanges(
 +		) | rpl::on_next([=] {
 +			if (!_localGiftsMerged) {
 +				return;
@@ -16816,7 +17270,7 @@ index a66e3d0c1..a6a3da379 100644
  	}
  	_list->reserve(_list->size() + data.vgifts().v.size());
  
-@@ -727,12 +762,83 @@ void InnerWidget::loaded(const MTPpayments_SavedStarGifts &result) {
+@@ -727,12 +762,84 @@ void InnerWidget::loaded(const MTPpayments_SavedStarGifts &result) {
  	}
  	refreshButtons();
  	refreshAbout();
@@ -16835,7 +17289,7 @@ index a66e3d0c1..a6a3da379 100644
 +		return;
 +	}
 +	const auto records = Ayu::ParseLocalGifts(
-+		AyuSettings::getInstance().localGifts());
++		AyuSettings::localStars(&_peer->session()).localGifts());
 +	if (records.empty()) {
 +		return;
 +	}
@@ -16868,13 +17322,14 @@ index a66e3d0c1..a6a3da379 100644
 +				|| filter.skipSaved) {
 +				continue;
 +			}
-+			auto saved = Data::SavedStarGift();
-+			saved.info = info;
-+			saved.message = TextWithEntities{ record.message };
-+			saved.fromId = _peer->id;
-+			saved.date = TimeId(record.date);
-+			saved.anonymous = record.anonymous;
-+			saved.mine = true;
++			auto saved = Data::SavedStarGift{
++				.info = info,
++				.message = TextWithEntities{ record.message },
++				.fromId = _peer->id,
++				.date = TimeId(record.date),
++				.anonymous = record.anonymous,
++				.mine = true,
++			};
 +			auto descriptor = DescriptorForGift(_peer, saved);
 +			entries.push_back({
 +				.gift = std::move(saved),
@@ -16900,7 +17355,7 @@ index a66e3d0c1..a6a3da379 100644
  void InnerWidget::markInCollection(const Data::SavedStarGift &gift) {
  	if (const auto collectionId = _addingToCollectionId) {
  		const auto id = gift.manageId;
-@@ -1170,8 +1276,8 @@ void InnerWidget::showMenuFor(not_null<GiftButton*> button, QPoint point) {
+@@ -1170,8 +1277,8 @@ void InnerWidget::showMenuFor(not_null<GiftButton*> button, QPoint point) {
  	const auto collectionId = _descriptor.current().collectionId;
  	entry.pinnedSavedGifts = collectionId > 0 ? nullptr : pinnedSavedGifts();
  	_menu = base::make_unique_q<Ui::PopupMenu>(this, st::popupMenuWithIcons);
@@ -16911,7 +17366,7 @@ index a66e3d0c1..a6a3da379 100644
  		const auto addAction = Ui::Menu::CreateAddActionCallback(_menu);
  		addAction(Ui::Menu::MenuCallback::Args{
  			.text = tr::lng_gift_collection_add_to(tr::now),
-@@ -1189,7 +1295,6 @@ void InnerWidget::showMenuFor(not_null<GiftButton*> button, QPoint point) {
+@@ -1189,7 +1296,6 @@ void InnerWidget::showMenuFor(not_null<GiftButton*> button, QPoint point) {
  		::Settings::SavedStarGiftMenuType::List);
  
  	if (collectionId > 0 && _peer->canManageGifts()) {
@@ -16920,7 +17375,7 @@ index a66e3d0c1..a6a3da379 100644
  			const auto addAction = Ui::Menu::CreateAddActionCallback(_menu);
  			addAction({
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_actions.cpp b/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
-index 594061dbb..4a27ea439 100644
+index 594061dbb..537efb547 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
 @@ -7,6 +7,10 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -16947,7 +17402,15 @@ index 594061dbb..4a27ea439 100644
  		}, qrButton->lifetime());
  		const auto rightSkip = st::infoProfileLabeledButtonQrRightSkip;
  		fitLabelToButton(qrButton, usernameLine.text, rightSkip);
-@@ -2009,20 +2015,36 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2002,6 +2008,7 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupInfo() {
+ 
+ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+ 		not_null<UserData*> user) {
++	auto &profile = AyuSettings::localProfile(&user->session());
+ 	auto result = object_ptr<Ui::SlideWrap<Ui::VerticalLayout>>(
+ 		_wrap,
+ 		object_ptr<Ui::VerticalLayout>(_wrap));
+@@ -2009,20 +2016,36 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  	const auto window = _controller->parentController();
  	const auto duration = st::slideWrapDuration;
  
@@ -16969,9 +17432,9 @@ index 594061dbb..4a27ea439 100644
 -		) | rpl::map([](TextWithEntities &&text, ChannelData *channel) {
 +			tr::ayu_LocalProfileChannelProfileLabel(tr::marked),
 +			std::move(c),
-+			AyuSettings::getInstance().localProfileChannelEnabledValue(),
-+			AyuSettings::getInstance().localProfileChannelValue(),
-+			AyuSettings::getInstance().localProfileCloneIdValue()
++			profile.localProfileChannelEnabledValue(),
++			profile.localProfileChannelValue(),
++			profile.localProfileCloneIdValue()
 +		) | rpl::map([=](
 +				TextWithEntities &&personal,
 +				TextWithEntities &&showcase,
@@ -16988,7 +17451,7 @@ index 594061dbb..4a27ea439 100644
  			const auto count = channel ? channel->membersCount() : 0;
  			if (count > 1) {
  				text.append(' ')
-@@ -2045,16 +2067,31 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
+@@ -2045,16 +2068,30 @@ object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  		base::install_event_filter(container, [=](
  				not_null<QEvent*> e) {
  			if (e->type() == QEvent::ContextMenu) {
@@ -17009,9 +17472,8 @@ index 594061dbb..4a27ea439 100644
 +					state->menu->addAction(
 +						tr::ayu_LocalProfileChannelClear(tr::now),
 +						[=] {
-+							auto &settings = AyuSettings::getInstance();
-+							settings.setLocalProfileChannelEnabled(false);
-+							settings.setLocalProfileChannel(QString());
++							profile.setLocalProfileChannelEnabled(false);
++							profile.setLocalProfileChannel(QString());
 +							Ayu::RefreshLocalProfilePresentation(
 +								&user->session());
 +						});
@@ -17044,7 +17506,7 @@ index 594061dbb..4a27ea439 100644
 -		}) | rpl::flatten_latest() | rpl::map([](const QString &name) {
 +		auto text = rpl::combine(
 +			rpl::duplicate(channel),
-+			AyuSettings::getInstance().localProfileChannelWorkspaceValue()
++			profile.localProfileChannelWorkspaceValue()
 +		) | rpl::map([=](
 +				ChannelData *channel,
 +				const QString &) {
@@ -17158,7 +17620,7 @@ index 594061dbb..4a27ea439 100644
  	}
  }
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_badge.cpp b/Telegram/SourceFiles/info/profile/info_profile_badge.cpp
-index 4855a6aab..71d41e7e3 100644
+index 4855a6aab..42bbf23bb 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_badge.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_badge.cpp
 @@ -7,6 +7,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -17200,7 +17662,7 @@ index 4855a6aab..71d41e7e3 100644
 +	if (!peer->isSelf()) {
 +		return sourceValue(peer);
 +	}
-+	auto &settings = AyuSettings::getInstance();
++	auto &settings = AyuSettings::localProfile(&peer->session());
 +	return rpl::combine(
 +		settings.localProfileBadgeStyleValue(),
 +		settings.localProfileBotVerificationIdValue(),
@@ -17546,7 +18008,7 @@ index deaedd9f0..a404cd001 100644
  	std::unique_ptr<Ui::Animations::Simple> _giftsHiding;
  	rpl::lifetime _giftsLoadingLifetime;
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_values.cpp b/Telegram/SourceFiles/info/profile/info_profile_values.cpp
-index 19c194b8b..c5a8d06c8 100644
+index 19c194b8b..f12b11dd2 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_values.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_values.cpp
 @@ -7,6 +7,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -17697,7 +18159,7 @@ index 19c194b8b..c5a8d06c8 100644
 +	if (!peer->isSelf()) {
 +		return BadgeValueForPeer(peer);
 +	}
-+	auto &settings = AyuSettings::getInstance();
++	auto &settings = AyuSettings::localProfile(&peer->session());
 +	return rpl::combine(
 +		settings.localProfileBadgeStyleValue(),
 +		Ayu::LocalProfileCloneIdValue(peer)
@@ -17727,7 +18189,7 @@ index 19c194b8b..c5a8d06c8 100644
 +		Ayu::LocalProfileCloneIdValue(peer) | rpl::to_empty
 +	);
 +	if (peer->isSelf()) {
-+		auto &settings = AyuSettings::getInstance();
++		auto &settings = AyuSettings::localProfile(&peer->session());
 +		updates = rpl::merge(
 +			std::move(updates),
 +			settings.localProfileBadgeStyleValue() | rpl::to_empty,
@@ -17764,10 +18226,30 @@ index d278e366b..36bbb3883 100644
  
  rpl::producer<> Widget::showSettingsRequested() const {
 diff --git a/Telegram/SourceFiles/main/main_session.cpp b/Telegram/SourceFiles/main/main_session.cpp
-index 71d997ed9..6b1afeaca 100644
+index 71d997ed9..89c01aef9 100644
 --- a/Telegram/SourceFiles/main/main_session.cpp
 +++ b/Telegram/SourceFiles/main/main_session.cpp
-@@ -408,10 +408,10 @@ rpl::producer<bool> Session::premiumPossibleValue() const {
+@@ -376,8 +376,7 @@ rpl::producer<> Session::downloaderTaskFinished() const {
+ }
+ 
+ bool Session::premium() const {
+-	const auto &settings = AyuSettings::getInstance();
+-	if (settings.localPremium()) {
++	if (AyuSettings::localStars(userId().bare).localPremium()) {
+ 		return true;
+ 	}
+ 
+@@ -385,8 +384,7 @@ bool Session::premium() const {
+ }
+ 
+ bool Session::premiumPossible() const {
+-	const auto &settings = AyuSettings::getInstance();
+-	if (settings.localPremium()) {
++	if (AyuSettings::localStars(userId().bare).localPremium()) {
+ 		return true;
+ 	}
+ 
+@@ -408,10 +406,10 @@ rpl::producer<bool> Session::premiumPossibleValue() const {
  		return _user->isPremium();
  	});
  
@@ -17776,7 +18258,7 @@ index 71d997ed9..6b1afeaca 100644
 -		premium = rpl::single(true);
 -	}
 +	premium = rpl::combine(
-+		AyuSettings::getInstance().localPremiumValue(),
++		AyuSettings::localStars(userId().bare).localPremiumValue(),
 +		std::move(premium),
 +		_1 || _2);
  
@@ -17803,7 +18285,7 @@ index 1fb8ed681..1497e22e0 100644
  
  bool OverlayWidget::showCopyMediaRestriction(bool skipPRemiumCheck) {
 diff --git a/Telegram/SourceFiles/payments/payments_non_panel_process.cpp b/Telegram/SourceFiles/payments/payments_non_panel_process.cpp
-index fa517bf9c..fdfb7902a 100644
+index fa517bf9c..ca9b5aa62 100644
 --- a/Telegram/SourceFiles/payments/payments_non_panel_process.cpp
 +++ b/Telegram/SourceFiles/payments/payments_non_panel_process.cpp
 @@ -8,6 +8,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -17850,13 +18332,13 @@ index fa517bf9c..fdfb7902a 100644
 +				if (hasBadResult(result)) {
 +					return;
 +				}
-+				const auto settings = &AyuSettings::getInstance();
++				const auto settings = &AyuSettings::localStars(&show->session());
 +				settings->setLocalStarsBalance(
 +					settings->localStarsBalance() - int(credits));
 +				if (const auto gift
 +						= std::get_if<InvoiceStarGift>(&form->id.value)) {
 +					if (gift->recipient->isSelf()) {
-+						Ayu::AppendLocalGift({
++						Ayu::AppendLocalGift(&show->session(), {
 +							.giftId = gift->giftId,
 +							.stars = int64(credits),
 +							.date = base::unixtime::now(),
@@ -18320,7 +18802,7 @@ index 67d40e071..ce1d4c1bb 100644
  	if (type == PermissionType::Microphone) {
  		PermissionStatus result = PermissionStatus::Granted;
 diff --git a/Telegram/SourceFiles/settings/sections/settings_credits.cpp b/Telegram/SourceFiles/settings/sections/settings_credits.cpp
-index c2d1c009a..ca8ab4c48 100644
+index c2d1c009a..bc4c2e248 100644
 --- a/Telegram/SourceFiles/settings/sections/settings_credits.cpp
 +++ b/Telegram/SourceFiles/settings/sections/settings_credits.cpp
 @@ -10,6 +10,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -18331,31 +18813,33 @@ index c2d1c009a..ca8ab4c48 100644
  #include "base/call_delayed.h"
  #include "boxes/gift_credits_box.h"
  #include "boxes/gift_premium_box.h"
-@@ -587,7 +588,10 @@ void Credits::setupContent() {
+@@ -587,7 +588,11 @@ void Credits::setupContent() {
  				lt_amount,
  				(isCurrency
  					? controller()->session().credits().tonBalanceValue()
 -					: controller()->session().credits().balanceValue()
-+					: AyuSettings::getInstance().localStarsBalanceValue(
++					: AyuSettings::localStars(&controller()->session()
++						).localStarsBalanceValue(
 +					) | rpl::map([](int value) {
 +						return CreditsAmount(value);
 +					})
  				) | rpl::map(
  					Lang::FormatCreditsAmountDecimal
  				) | rpl::map(tr::bold),
-@@ -722,7 +726,10 @@ base::weak_qptr<Ui::RpWidget> Credits::createPinnedToTop(
+@@ -722,7 +727,11 @@ base::weak_qptr<Ui::RpWidget> Credits::createPinnedToTop(
  			&controller()->session(),
  			isCurrency
  				? controller()->session().credits().tonBalanceValue()
 -				: controller()->session().credits().balanceValue(),
-+				: AyuSettings::getInstance().localStarsBalanceValue(
++				: AyuSettings::localStars(&controller()->session()
++					).localStarsBalanceValue(
 +				) | rpl::map([](int value) {
 +					return CreditsAmount(value);
 +				}),
  			true,
  			content->heightValue() | rpl::map([=](int height) {
  				const auto ratio = float64(height - content->minimumHeight())
-@@ -943,10 +950,6 @@ void BuildCreditsButtons(
+@@ -943,10 +952,6 @@ void BuildCreditsButtons(
  	const auto self = session->user();
  
  	if (!isCurrency) {
@@ -18366,7 +18850,7 @@ index c2d1c009a..ca8ab4c48 100644
  		const auto stats = builder.addButton({
  			.id = u"stars/stats"_q,
  			.title = tr::lng_credits_stats_button(),
-@@ -957,7 +960,6 @@ void BuildCreditsButtons(
+@@ -957,7 +962,6 @@ void BuildCreditsButtons(
  					Info::BotEarn::Make(self));
  			},
  			.keywords = { u"statistics"_q },
@@ -18374,7 +18858,7 @@ index c2d1c009a..ca8ab4c48 100644
  		});
  		if (statsButton) {
  			*statsButton = stats;
-@@ -981,15 +983,14 @@ void BuildCreditsButtons(
+@@ -981,15 +985,14 @@ void BuildCreditsButtons(
  		}
  	}
  
@@ -18393,7 +18877,7 @@ index c2d1c009a..ca8ab4c48 100644
  			},
  			.keywords = { u"affiliate"_q, u"referral"_q },
  		});
-@@ -1103,11 +1104,10 @@ Fn<void()> BuyStarsHandler::handler(
+@@ -1103,11 +1106,10 @@ Fn<void()> BuyStarsHandler::handler(
  		box->setTitle(tr::lng_credits_summary_options_subtitle());
  		const auto inner = box->verticalLayout();
  		const auto self = show->session().user();
@@ -18407,7 +18891,7 @@ index c2d1c009a..ca8ab4c48 100644
  		FillCreditOptions(show, inner, self, amount, [=] {
  			if (const auto strong = weak.get()) {
  				strong->closeBox();
-@@ -1115,29 +1115,15 @@ Fn<void()> BuyStarsHandler::handler(
+@@ -1115,29 +1117,15 @@ Fn<void()> BuyStarsHandler::handler(
  			if (const auto onstack = paid) {
  				onstack();
  			}
@@ -18488,7 +18972,7 @@ index 24f2034f9..db4692a46 100644
  		parent,
  		rpl::duplicate(text),
 diff --git a/Telegram/SourceFiles/settings/sections/settings_main.cpp b/Telegram/SourceFiles/settings/sections/settings_main.cpp
-index fbe74c4c0..857a8fd00 100644
+index fbe74c4c0..88b420c37 100644
 --- a/Telegram/SourceFiles/settings/sections/settings_main.cpp
 +++ b/Telegram/SourceFiles/settings/sections/settings_main.cpp
 @@ -9,6 +9,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -18592,7 +19076,7 @@ index fbe74c4c0..857a8fd00 100644
 -		) | rpl::map([](CreditsAmount c) {
 -			return c
 -				? Lang::FormatCreditsAmountToShort(c).string
-+		.label = AyuSettings::getInstance().localStarsBalanceValue(
++		.label = AyuSettings::localStars(session).localStarsBalanceValue(
 +		) | rpl::map([](int value) {
 +			return value
 +				? Lang::FormatCountToShort(value).string
@@ -18623,7 +19107,7 @@ index 224794a86..bc3609e6a 100644
  
  		st::notifyClose.icon.paint(p, w - st::notifyClosePos.x() - st::notifyClose.width + st::notifyClose.iconPosition.x(), st::notifyClosePos.y() + st::notifyClose.iconPosition.y(), w);
 diff --git a/Telegram/SourceFiles/settings/sections/settings_premium.cpp b/Telegram/SourceFiles/settings/sections/settings_premium.cpp
-index fb973bb39..eecdb705c 100644
+index fb973bb39..534e6b9bc 100644
 --- a/Telegram/SourceFiles/settings/sections/settings_premium.cpp
 +++ b/Telegram/SourceFiles/settings/sections/settings_premium.cpp
 @@ -32,6 +32,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -18648,7 +19132,17 @@ index fb973bb39..eecdb705c 100644
  class EmojiStatusTopBar final {
  public:
  	EmojiStatusTopBar(
-@@ -1860,28 +1854,6 @@ void ShowPremiumGiftPremium(
+@@ -1502,8 +1496,7 @@ base::weak_qptr<Ui::RpWidget> Premium::createPinnedToTop(
+ 			}
+ 		}
+ 
+-		const auto &settings = AyuSettings::getInstance();
+-		if (settings.localPremium()) {
++		if (AyuSettings::localStars(&controller()->session()).localPremium()) {
+ 			return tr::ayu_LocalPremiumNotice(tr::rich);
+ 		}
+ 
+@@ -1860,28 +1853,6 @@ void ShowPremiumGiftPremium(
  	}));
  }
  
@@ -18677,7 +19171,7 @@ index fb973bb39..eecdb705c 100644
  QString LookupPremiumRef(PremiumFeature section) {
  	for (const auto &[ref, entry] : EntryMap()) {
  		if (entry.section == section) {
-@@ -2038,22 +2010,13 @@ not_null<Ui::GradientButton*> CreateSubscribeButton(
+@@ -2038,22 +2009,13 @@ not_null<Ui::GradientButton*> CreateSubscribeButton(
  			Settings::ShowPremium(window, computeRef());
  			return;
  		}
@@ -18723,7 +19217,7 @@ index 894e07c35..0e511ff30 100644
  
  void ShowPremiumPromoToast(
 diff --git a/Telegram/SourceFiles/settings/settings_credits_graphics.cpp b/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
-index 9ac4584e4..47e9d6245 100644
+index 9ac4584e4..a90c17d47 100644
 --- a/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
 +++ b/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
 @@ -12,6 +12,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -18735,7 +19229,13 @@ index 9ac4584e4..47e9d6245 100644
  #include "base/random.h"
  #include "base/timer_rpl.h"
  #include "base/unixtime.h"
-@@ -26,6 +28,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -21,11 +23,13 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "boxes/star_gift_craft_box.h"
+ #include "boxes/star_gift_resale_box.h"
+ #include "boxes/transfer_gift_box.h"
++#include "chat_helpers/compose/compose_show.h"
+ #include "chat_helpers/stickers_gift_box_pack.h"
+ #include "chat_helpers/stickers_lottie.h"
  #include "core/application.h"
  #include "core/click_handler_types.h"
  #include "core/click_handler_types.h" // UrlClickHandler
@@ -18743,7 +19243,7 @@ index 9ac4584e4..47e9d6245 100644
  #include "core/ui_integration.h"
  #include "data/components/credits.h"
  #include "data/components/recent_shared_media_gifts.h"
-@@ -59,12 +62,18 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -59,12 +63,18 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "lottie/lottie_single_player.h"
  #include "main/main_app_config.h"
  #include "main/main_session.h"
@@ -18762,16 +19262,17 @@ index 9ac4584e4..47e9d6245 100644
  #include "ui/boxes/confirm_box.h"
  #include "ui/controls/button_labels.h"
  #include "ui/controls/ton_common.h"
-@@ -97,6 +106,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -97,6 +107,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "ui/wrap/slide_wrap.h"
  #include "ui/wrap/vertical_layout.h"
  #include "ui/ui_utility.h"
 +#include "webview/webview_common.h"
++#include "window/main_window.h"
 +#include "window/themes/window_theme.h"
  #include "window/window_session_controller.h"
  #include "styles/style_calls.h"
  #include "styles/style_channel_earn.h"
-@@ -107,14 +118,20 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -107,14 +120,20 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "styles/style_layers.h"
  #include "styles/style_media_view.h"
  #include "styles/style_menu_icons.h"
@@ -18792,7 +19293,7 @@ index 9ac4584e4..47e9d6245 100644
  namespace Settings {
  namespace {
  
-@@ -280,6 +297,33 @@ void ConvertStarGift(
+@@ -280,6 +299,34 @@ void ConvertStarGift(
  	}).send();
  }
  
@@ -18801,14 +19302,15 @@ index 9ac4584e4..47e9d6245 100644
 +		const Data::CreditsHistoryEntry &e,
 +		int stars,
 +		Fn<void(bool)> done) {
-+	const auto settings = &AyuSettings::getInstance();
++	const auto settings = &AyuSettings::localStars(&show->session());
 +	settings->setLocalStarsBalance(settings->localStarsBalance() + stars);
-+	Ayu::AppendLocalStarsEarning({
++	Ayu::AppendLocalStarsEarning(&show->session(), {
 +		.date = base::unixtime::now(),
 +		.amount = stars,
 +		.source = Ayu::LocalStarsEarningSource::Convert,
 +	});
 +	Ayu::RemoveLocalGift(
++		&show->session(),
 +		e.stargiftId,
 +		base::unixtime::serialize(e.date),
 +		e.description.text);
@@ -18826,7 +19328,7 @@ index 9ac4584e4..47e9d6245 100644
  void AddViewMediaHandler(
  		not_null<Ui::RpWidget*> thumb,
  		std::shared_ptr<ChatHelpers::Show> show,
-@@ -379,6 +423,684 @@ void AddViewMediaHandler(
+@@ -379,6 +426,684 @@ void AddViewMediaHandler(
  	}, thumb->lifetime());
  }
  
@@ -19071,7 +19573,7 @@ index 9ac4584e4..47e9d6245 100644
 +		if (_finished) {
 +			return;
 +		}
-+		auto &settings = AyuSettings::getInstance();
++		auto &settings = AyuSettings::localStars(_session);
 +		settings.setLocalStarsBalance(
 +			settings.localStarsBalance() + int(_option.credits));
 +		if (const auto widget = _fireworks.data()) {
@@ -19357,7 +19859,7 @@ index 9ac4584e4..47e9d6245 100644
 +		// widget down underneath its own event handler.
 +		crl::on_main([this, result] {
 +			if (result == Payments::CheckoutResult::Paid) {
-+				AyuSettings::getInstance().setLocalPremium(true);
++				AyuSettings::localStars(_session).setLocalPremium(true);
 +			}
 +			if (ActiveLocalPremiumCheckout == this) {
 +				ActiveLocalPremiumCheckout = nullptr;
@@ -19511,7 +20013,7 @@ index 9ac4584e4..47e9d6245 100644
  } // namespace
  
  void AddMiniStars(
-@@ -463,6 +1185,29 @@ void FillCreditOptions(
+@@ -463,6 +1188,29 @@ void FillCreditOptions(
  		std::vector<Data::CreditTopupOption> preloadedTopupOptions,
  		bool dark,
  		PeerId spendPurposePeerId) {
@@ -19541,7 +20043,7 @@ index 9ac4584e4..47e9d6245 100644
  	const auto options = container->add(
  		object_ptr<Ui::SlideWrap<Ui::VerticalLayout>>(
  			container,
-@@ -647,6 +1392,64 @@ void FillCreditOptions(
+@@ -647,6 +1395,65 @@ void FillCreditOptions(
  					buttonHeight);
  			}, button->lifetime());
  			button->setClickedCallback([=] {
@@ -19558,12 +20060,13 @@ index 9ac4584e4..47e9d6245 100644
 +									return;
 +								}
 +								const auto settings
-+									= &AyuSettings::getInstance();
++									= &AyuSettings::localStars(&show->session());
 +								settings->setLocalStarsBalance(
 +									settings->localStarsBalance()
 +										- int(option.credits));
 +								if (const auto window
-+										= show->resolveWindow()) {
++										= ChatHelpers::ResolveWindowDefault()(
++											&show->session())) {
 +									window->showToast({
 +										.title = tr::lng_gift_sent_title(
 +											tr::now),
@@ -19606,7 +20109,7 @@ index 9ac4584e4..47e9d6245 100644
  				const auto invoice = Payments::InvoiceCredits{
  					.session = &show->session(),
  					.randomId = UniqueIdFromOption(option),
-@@ -701,7 +1504,9 @@ void FillCreditOptions(
+@@ -701,7 +1508,9 @@ void FillCreditOptions(
  	using ApiOptions = Api::CreditsTopupOptions;
  	const auto apiCredits = content->lifetime().make_state<ApiOptions>(peer);
  
@@ -19617,7 +20120,7 @@ index 9ac4584e4..47e9d6245 100644
  		if (preloadedTopupOptions.empty()) {
  			fillLoading();
  			std::move(showFinishes) | rpl::on_next([=] {
-@@ -721,12 +1526,14 @@ void FillCreditOptions(
+@@ -721,12 +1530,14 @@ void FillCreditOptions(
  		}
  	}
  
@@ -19638,7 +20141,7 @@ index 9ac4584e4..47e9d6245 100644
  }
  
  [[nodiscard]] object_ptr<Ui::FlatLabel> CreateCreditsTermsLabel(
-@@ -2023,8 +2830,12 @@ void GenericCreditsEntryBody(
+@@ -2023,8 +2834,12 @@ void GenericCreditsEntryBody(
  	const auto canToggle = starGiftCanManage
  		&& !e.giftTransferred
  		&& !e.giftRefunded
@@ -19652,7 +20155,7 @@ index 9ac4584e4..47e9d6245 100644
  		const auto showSection = !e.fromGiftsList;
  		const auto savedId = EntryToSavedStarGiftId(&show->session(), e);
  		const auto done = [=](bool ok) {
-@@ -2123,7 +2934,7 @@ void GenericCreditsEntryBody(
+@@ -2123,7 +2938,7 @@ void GenericCreditsEntryBody(
  					e);
  				if (stars) {
  					const auto done = [=](bool ok) {
@@ -19661,7 +20164,7 @@ index 9ac4584e4..47e9d6245 100644
  							using GiftAction = Data::GiftUpdate::Action;
  							show->session().data().notifyGiftUpdate({
  								.id = savedId,
-@@ -2138,7 +2949,11 @@ void GenericCreditsEntryBody(
+@@ -2138,7 +2953,11 @@ void GenericCreditsEntryBody(
  							}
  						}
  					};
@@ -19674,7 +20177,7 @@ index 9ac4584e4..47e9d6245 100644
  				}
  			});
  		};
-@@ -2722,7 +3537,11 @@ void GlobalStarGiftBox(
+@@ -2722,7 +3541,11 @@ void GlobalStarGiftBox(
  		CreditsEntryBoxStyleOverrides st) {
  	const auto selfId = show->session().userPeerId();
  	const auto ownerId = data.unique ? data.unique->ownerId.value : 0;
@@ -19687,7 +20190,7 @@ index 9ac4584e4..47e9d6245 100644
  	Settings::GenericCreditsEntryBox(
  		box,
  		show,
-@@ -2778,8 +3597,10 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
+@@ -2778,8 +3601,10 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
  		.peerType = Data::CreditsHistoryEntry::PeerType::Peer,
  		.limitedCount = data.info.limitedCount,
  		.limitedLeft = data.info.limitedLeft,
@@ -19700,15 +20203,15 @@ index 9ac4584e4..47e9d6245 100644
  		.starsUpgradedBySender = int(data.starsUpgradedBySender),
  		.starsForDetailsRemove = int(data.starsForDetailsRemove),
  		.giftNumber = data.giftNum,
-@@ -2790,6 +3611,7 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
+@@ -2789,6 +3614,7 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
+ 		.giftUpgradeSeparate = data.upgradeSeparate,
  		.giftPinned = data.pinned,
  		.savedToProfile = !data.hidden,
- 		.fromGiftsList = true,
 +		.localGift = !data.manageId,
+ 		.fromGiftsList = true,
  		.canUpgradeGift = data.upgradable,
  		.in = data.mine,
- 		.gift = true,
-@@ -3063,7 +3885,8 @@ void SmallBalanceBox(
+@@ -3063,7 +3889,8 @@ void SmallBalanceBox(
  		std::shared_ptr<Main::SessionShow> show,
  		uint64 wholeCredits,
  		SmallBalanceSource source,
@@ -19718,26 +20221,27 @@ index 9ac4584e4..47e9d6245 100644
  	Expects(show->session().credits().loaded());
  
  	auto credits = CreditsAmount(wholeCredits);
-@@ -3075,6 +3898,18 @@ void SmallBalanceBox(
+@@ -3075,6 +3902,19 @@ void SmallBalanceBox(
  		paid();
  	};
  
 +	const auto balanceValue = [=]() -> rpl::producer<CreditsAmount> {
 +		return useLocalBalance
-+			? AyuSettings::getInstance().localStarsBalanceValue(
++			? AyuSettings::localStars(&show->session()).localStarsBalanceValue(
 +			) | rpl::map([](int value) {
 +				return CreditsAmount(value);
 +			})
 +			: show->session().credits().balanceValue();
 +	};
 +	const auto currentBalance = useLocalBalance
-+		? CreditsAmount(AyuSettings::getInstance().localStarsBalance())
++		? CreditsAmount(AyuSettings::localStars(&show->session()
++			).localStarsBalance())
 +		: show->session().credits().balance();
 +
  	auto dark = false;
  	const auto owner = &show->session().data();
  	const auto name = v::match(source, [&](SmallBalanceBot value) {
-@@ -3106,7 +3941,7 @@ void SmallBalanceBox(
+@@ -3106,7 +3946,7 @@ void SmallBalanceBox(
  		return QString();
  	});
  
@@ -19746,7 +20250,7 @@ index 9ac4584e4..47e9d6245 100644
  	) | rpl::map([=](CreditsAmount balance) {
  		return (balance < credits) ? (credits - balance) : CreditsAmount();
  	});
-@@ -3217,7 +4052,7 @@ void SmallBalanceBox(
+@@ -3217,7 +4057,7 @@ void SmallBalanceBox(
  		show,
  		box->verticalLayout(),
  		show->session().user(),
@@ -19755,7 +20259,7 @@ index 9ac4584e4..47e9d6245 100644
  		[=] { show->session().credits().load(true); },
  		box->showFinishes(),
  		tr::lng_credits_summary_options_subtitle(),
-@@ -3243,7 +4078,7 @@ void SmallBalanceBox(
+@@ -3243,7 +4083,7 @@ void SmallBalanceBox(
  		const auto balance = AddBalanceWidget(
  			content,
  			&show->session(),
@@ -19764,7 +20268,7 @@ index 9ac4584e4..47e9d6245 100644
  			true,
  			nullptr,
  			dark);
-@@ -3275,7 +4110,8 @@ void AddWithdrawalWidget(
+@@ -3275,7 +4115,8 @@ void AddWithdrawalWidget(
  		rpl::producer<CreditsAmount> availableBalanceValue,
  		rpl::producer<QDateTime> dateValue,
  		bool withdrawalEnabled,
@@ -19774,7 +20278,7 @@ index 9ac4584e4..47e9d6245 100644
  	Ui::AddSkip(container);
  
  	const auto labels = container->add(
-@@ -3563,38 +4399,70 @@ void AddWithdrawalWidget(
+@@ -3563,38 +4404,70 @@ void AddWithdrawalWidget(
  		}, state->dateUpdateLifetime);
  	}, lockedLabel->lifetime());
  
@@ -19844,7 +20348,7 @@ index 9ac4584e4..47e9d6245 100644
 +					amount * 1.),
 +				.confirmed = [=](Fn<void()> close) {
 +					close();
-+					const auto settings = &AyuSettings::getInstance();
++					const auto settings = &AyuSettings::localStars(session);
 +					settings->setLocalStarsWithdrawn(
 +						settings->localStarsWithdrawn() + int(amount));
 +					controller->uiShow()->showToast(
@@ -19875,7 +20379,17 @@ index 9ac4584e4..47e9d6245 100644
  	Ui::ToggleChildrenVisibility(button, true);
  
  	Ui::AddSkip(container);
-@@ -3680,6 +4548,131 @@ void MaybeRequestBalanceIncrease(
+@@ -3660,7 +4533,8 @@ void MaybeRequestBalanceIncrease(
+ 				show,
+ 				credits,
+ 				source,
+-				success));
++				success,
++				false));
+ 			box->boxClosing() | rpl::on_next([=] {
+ 				crl::on_main([=] {
+ 					if (!state->success) {
+@@ -3680,6 +4554,133 @@ void MaybeRequestBalanceIncrease(
  	}, state->lifetime);
  }
  
@@ -19897,7 +20411,7 @@ index 9ac4584e4..47e9d6245 100644
 +		state->lifetime.destroy();
 +
 +		const auto balance = CreditsAmount(
-+			AyuSettings::getInstance().localStarsBalance());
++			AyuSettings::localStars(session).localStarsBalance());
 +		if (CreditsAmount(credits) <= balance) {
 +			if (const auto onstack = done) {
 +				onstack(SmallBalanceResult::Already);
@@ -19929,7 +20443,9 @@ index 9ac4584e4..47e9d6245 100644
 +	}, state->lifetime);
 +}
 +
-+void LocalEarnStarsBox(not_null<Ui::GenericBox*> box) {
++void LocalEarnStarsBox(
++		not_null<Ui::GenericBox*> box,
++		not_null<Main::Session*> session) {
 +	box->setWidth(st::boxWideWidth);
 +	box->setTitle(tr::lng_credits_earn_button());
 +	box->addButton(tr::lng_close(), [=] { box->closeBox(); });
@@ -19966,10 +20482,10 @@ index 9ac4584e4..47e9d6245 100644
 +		}, button->lifetime());
 +		Ui::ToggleChildrenVisibility(button, true);
 +		button->setClickedCallback([=] {
-+			const auto settings = &AyuSettings::getInstance();
++			const auto settings = &AyuSettings::localStars(session);
 +			settings->setLocalStarsBalance(
 +				settings->localStarsBalance() + stars);
-+			Ayu::AppendLocalStarsEarning({
++			Ayu::AppendLocalStarsEarning(session, {
 +				.date = base::unixtime::now(),
 +				.amount = stars,
 +				.source = Ayu::LocalStarsEarningSource::MiniApps,
@@ -19988,7 +20504,7 @@ index 9ac4584e4..47e9d6245 100644
 +	const auto show = Main::MakeSessionShow(
 +		window->uiShow(),
 +		&window->session());
-+	show->show(Box(LocalEarnStarsBox));
++	show->show(Box(LocalEarnStarsBox, &window->session()));
 +}
 +
 +void StartLocalPremiumPurchase(

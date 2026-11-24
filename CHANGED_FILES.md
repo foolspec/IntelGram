@@ -5,7 +5,7 @@ patch relative to official AyuGram Desktop `v6.7.8` commit
 `b25513a06ff88be0b3f4c928252b56c3da39cec7`.
 
 Patch SHA-256:
-`711076f2897648875734cf276463a40439f55621dcdc55f2fc9fc213a98425e7`
+`fbe83f246ebc2c24b730369769c39524bbe1255fb916e1315e54cee112123b25`
 
 ## Added
 
@@ -51,6 +51,7 @@ Patch SHA-256:
 - `Telegram/SourceFiles/ayu/ui/context_menu/context_menu.h`
 - `Telegram/SourceFiles/ayu/ui/settings/settings_appearance.cpp`
 - `Telegram/SourceFiles/ayu/ui/settings/settings_appearance.h`
+- `Telegram/SourceFiles/ayu/ui/settings/settings_ayu.cpp`
 - `Telegram/SourceFiles/ayu/ui/settings/settings_main.cpp`
 - `Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp`
 - `Telegram/SourceFiles/ayu/ui/settings/settings_other.h`
@@ -74,8 +75,10 @@ Patch SHA-256:
 - `Telegram/SourceFiles/data/data_peer_values.cpp`
 - `Telegram/SourceFiles/data/data_premium_subscription_option.h`
 - `Telegram/SourceFiles/data/data_session.cpp`
+- `Telegram/SourceFiles/data/data_user.cpp`
 - `Telegram/SourceFiles/dialogs/dialogs_inner_widget.cpp`
 - `Telegram/SourceFiles/dialogs/dialogs_row.cpp`
+- `Telegram/SourceFiles/dialogs/dialogs_top_bar_suggestion.cpp`
 - `Telegram/SourceFiles/dialogs/dialogs_widget.cpp`
 - `Telegram/SourceFiles/dialogs/dialogs_widget.h`
 - `Telegram/SourceFiles/dialogs/ui/dialogs_video_userpic.cpp`

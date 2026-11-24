@@ -28,6 +28,10 @@ Open **Settings -> My Stars -> Stars Balance**. Available, total, and lifetime p
 
 Open **Settings -> Telegram Premium** or **Telegram Business** and tap **Subscribe**. Pick the monthly or annual plan and pay through Telegram's native checkout panel with the demo American Express card. Afterwards the Premium badge, subscribed state, and Business feature screens appear as if the account owns them. Everything is local: no real payment is made, no bot is contacted, and Business setting saves are still rejected by Telegram's server without a real subscription.
 
+## Are my local profile and Stars shared across accounts?
+
+No. Each signed-in account keeps its own local profile clone, NFT collections, Stars balance, gift inventory, earnings, and Premium state. Switching accounts restores that account's data, and an account with no clone shows its real profile. Your existing clone, balance, gifts, earnings, and Premium carry over to the account you are using when you first open this version. The demo card is the same for every account.
+
 ## How do I change my local username?
 
 Enable local usernames, then click your username. The editor intentionally looks like Telegram's normal **Username** dialog, including its `@username` field, inline status, help copy, spacing, and buttons. It validates the local value's Telegram-style syntax and marks a valid value as available inside IntelGram, but does not ask Telegram whether the public username is available and does not update the account. Add the primary rendered username and, if needed, up to 20 other usernames.
