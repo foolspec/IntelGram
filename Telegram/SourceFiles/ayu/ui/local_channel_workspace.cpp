@@ -79,11 +79,11 @@ struct LocalChannelSettingsState {
 
 [[nodiscard]] QString CurrentChannelUsername() {
 	return NormalizeLocalProfileUsername(
-		AyuSettings::getInstance().localProfileChannel());
+		AyuSettings::localProfile().localProfileChannel());
 }
 
 [[nodiscard]] QJsonObject ReadWorkspaceRoot() {
-	const auto encoded = AyuSettings::getInstance(
+	const auto encoded = AyuSettings::localProfile(
 		).localProfileChannelWorkspace().toUtf8();
 	if (encoded.isEmpty()) {
 		return {};
@@ -223,7 +223,7 @@ void SaveChannelState(LocalChannelState state) {
 		encoded = QString::fromUtf8(
 			QJsonDocument(root).toJson(QJsonDocument::Compact));
 	}
-	AyuSettings::getInstance().setLocalProfileChannelWorkspace(encoded);
+	AyuSettings::localProfile().setLocalProfileChannelWorkspace(encoded);
 }
 
 [[nodiscard]] QString ChannelTitle(

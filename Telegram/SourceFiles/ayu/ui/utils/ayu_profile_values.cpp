@@ -69,13 +69,18 @@ struct LocalProfilePhotoCache {
 	std::shared_ptr<QImage> image;
 };
 
+[[nodiscard]] LocalProfileAccountSettings &LocalProfileSettings(
+		not_null<PeerData*> peer) {
+	return AyuSettings::localProfile(&peer->session());
+}
+
 [[nodiscard]] UserData *ResolveLocalProfileCloneUser(
 		not_null<PeerData*> peer) {
 	if (!peer->isSelf()) {
 		return nullptr;
 	}
 	const auto id = NormalizeLocalProfileCloneId(
-		AyuSettings::getInstance().localProfileCloneId());
+		LocalProfileSettings(peer).localProfileCloneId());
 	if (id.isEmpty()) {
 		return nullptr;
 	}
@@ -775,7 +780,7 @@ bool LocalProfileNameActive(not_null<PeerData*> peer) {
 	if (ResolveLocalProfileCloneUser(peer)) {
 		return true;
 	}
-	const auto &settings = AyuSettings::getInstance();
+	const auto &settings = LocalProfileSettings(peer);
 	return settings.localProfileNameEnabled()
 		&& !NormalizeLocalProfileName(settings.localProfileName()).isEmpty();
 }
@@ -787,7 +792,7 @@ bool LocalProfileIdActive(not_null<PeerData*> peer) {
 	if (ResolveLocalProfileCloneUser(peer)) {
 		return true;
 	}
-	const auto &settings = AyuSettings::getInstance();
+	const auto &settings = LocalProfileSettings(peer);
 	return settings.localProfileIdEnabled()
 		&& !NormalizeLocalProfileId(settings.localProfileId()).isEmpty();
 }
@@ -799,7 +804,7 @@ bool LocalProfileUsernameActive(not_null<PeerData*> peer) {
 	if (const auto clone = ResolveLocalProfileCloneUser(peer)) {
 		return !clone->usernames().empty() || !clone->username().isEmpty();
 	}
-	const auto &settings = AyuSettings::getInstance();
+	const auto &settings = LocalProfileSettings(peer);
 	return settings.localProfileUsernameEnabled()
 		&& !ParseLocalProfileUsernames(
 			settings.localProfileUsername(),
@@ -813,7 +818,7 @@ bool LocalProfilePhoneActive(not_null<UserData*> user) {
 	if (const auto clone = ResolveLocalProfileCloneUser(user)) {
 		return !clone->phone().isEmpty();
 	}
-	const auto &settings = AyuSettings::getInstance();
+	const auto &settings = LocalProfileSettings(user);
 	return settings.localProfilePhoneEnabled()
 		&& !NormalizeLocalProfilePhone(settings.localProfilePhone()).isEmpty();
 }
@@ -825,7 +830,7 @@ bool LocalProfileAboutActive(not_null<PeerData*> peer) {
 	if (ResolveLocalProfileCloneUser(peer)) {
 		return true;
 	}
-	const auto &settings = AyuSettings::getInstance();
+	const auto &settings = LocalProfileSettings(peer);
 	return settings.localProfileAboutEnabled()
 		&& !NormalizeLocalProfileAbout(settings.localProfileAbout()).isEmpty();
 }
@@ -838,7 +843,7 @@ bool LocalProfileChannelShowcaseActive(not_null<UserData*> user) {
 	if (!user->isSelf() || ResolveLocalProfileCloneUser(user)) {
 		return false;
 	}
-	const auto &settings = AyuSettings::getInstance();
+	const auto &settings = LocalProfileSettings(user);
 	return settings.localProfileChannelEnabled()
 		&& !NormalizeLocalProfileUsername(
 			settings.localProfileChannel()).isEmpty();
@@ -847,7 +852,7 @@ bool LocalProfileChannelShowcaseActive(not_null<UserData*> user) {
 ChannelData *LocalProfilePersonalChannel(not_null<UserData*> user) {
 	if (LocalProfileChannelShowcaseActive(user)) {
 		const auto username = NormalizeLocalProfileUsername(
-			AyuSettings::getInstance().localProfileChannel());
+			LocalProfileSettings(user).localProfileChannel());
 		const auto peer = user->owner().peerByUsername(username);
 		return peer ? peer->asChannel() : nullptr;
 	}
@@ -872,7 +877,7 @@ std::shared_ptr<QImage> LocalProfilePhotoImage(
 		return nullptr;
 	}
 	const auto path = NormalizeLocalProfilePhoto(
-		AyuSettings::getInstance().localProfilePhoto());
+		LocalProfileSettings(peer).localProfilePhoto());
 	const auto info = QFileInfo(path);
 	if (path.isEmpty() || !info.isFile()) {
 		return nullptr;
@@ -920,7 +925,7 @@ bool LocalProfileUserpicActive(not_null<PeerData*> peer) {
 }
 
 QString LocalProfileName(not_null<PeerData*> peer) {
-	const auto &settings = AyuSettings::getInstance();
+	const auto &settings = LocalProfileSettings(peer);
 	return ResolveLocalProfileName(
 		peer,
 		peer->name(),
@@ -936,11 +941,11 @@ QString LocalProfileId(not_null<PeerData*> peer) {
 		return QString::number(getBareID(peer));
 	}
 	return NormalizeLocalProfileId(
-		AyuSettings::getInstance().localProfileId());
+		LocalProfileSettings(peer).localProfileId());
 }
 
 QString LocalProfileUsername(not_null<PeerData*> peer) {
-	const auto &settings = AyuSettings::getInstance();
+	const auto &settings = LocalProfileSettings(peer);
 	return ResolveLocalProfileUsername(
 		peer,
 		peer->username(),
@@ -950,7 +955,7 @@ QString LocalProfileUsername(not_null<PeerData*> peer) {
 }
 
 std::vector<QString> LocalProfileUsernames(not_null<PeerData*> peer) {
-	const auto &settings = AyuSettings::getInstance();
+	const auto &settings = LocalProfileSettings(peer);
 	return ResolveLocalProfileUsernames(
 		peer,
 		RealProfileUsernames(peer),
@@ -960,7 +965,7 @@ std::vector<QString> LocalProfileUsernames(not_null<PeerData*> peer) {
 }
 
 QString LocalProfilePhone(not_null<UserData*> user) {
-	const auto &settings = AyuSettings::getInstance();
+	const auto &settings = LocalProfileSettings(user);
 	return ResolveLocalProfilePhone(
 		user,
 		user->phone(),
@@ -969,7 +974,7 @@ QString LocalProfilePhone(not_null<UserData*> user) {
 }
 
 QString LocalProfileAbout(not_null<PeerData*> peer) {
-	const auto &settings = AyuSettings::getInstance();
+	const auto &settings = LocalProfileSettings(peer);
 	return ResolveLocalProfileAbout(
 		peer,
 		peer->about(),
@@ -980,15 +985,14 @@ QString LocalProfileAbout(not_null<PeerData*> peer) {
 LocalProfileBadgeStyle LocalProfileBadgeStyleFor(
 		not_null<PeerData*> peer) {
 	return peer->isSelf()
-		? AyuSettings::getInstance().localProfileBadgeStyle()
+		? LocalProfileSettings(peer).localProfileBadgeStyle()
 		: LocalProfileBadgeStyle::Automatic;
 }
 
 EmojiStatusId LocalProfileEmojiStatusId(not_null<PeerData*> peer) {
 	const auto style = LocalProfileBadgeStyleFor(peer);
 	if (style != LocalProfileBadgeStyle::Automatic) {
-		const auto id = AyuSettings::getInstance(
-			).localProfileEmojiStatusId().toULongLong();
+		const auto id = LocalProfileSettings(peer).localProfileEmojiStatusId().toULongLong();
 		return EmojiStatusId{ DocumentId(id) };
 	}
 	if (const auto clone = ResolveLocalProfileCloneUser(peer)) {
@@ -1002,8 +1006,7 @@ Ui::BotVerifyDetails LocalProfileBotVerifyDetails(
 	auto source = peer.get();
 	const auto style = LocalProfileBadgeStyleFor(peer);
 	if (style != LocalProfileBadgeStyle::Automatic) {
-		const auto id = AyuSettings::getInstance(
-			).localProfileBotVerificationId().toULongLong();
+		const auto id = LocalProfileSettings(peer).localProfileBotVerificationId().toULongLong();
 		return { .iconId = DocumentId(id) };
 	} else if (const auto clone = ResolveLocalProfileCloneUser(peer)) {
 		source = clone;
@@ -1022,7 +1025,7 @@ std::vector<QString> LocalProfileGiftReferences(not_null<PeerData*> peer) {
 			? std::vector<QString>{ status.collectible->slug }
 			: std::vector<QString>();
 	}
-	const auto &settings = AyuSettings::getInstance();
+	const auto &settings = LocalProfileSettings(peer);
 	return settings.localProfileGiftEnabled()
 		? ParseLocalProfileGifts(
 			settings.localProfileGift(),
@@ -1040,7 +1043,7 @@ rpl::producer<QString> LocalProfileNameValue(not_null<PeerData*> peer) {
 	if (!peer->isSelf()) {
 		return name;
 	}
-	auto &settings = AyuSettings::getInstance();
+	auto &settings = LocalProfileSettings(peer);
 	return rpl::combine(
 		std::move(name),
 		settings.localProfileNameEnabledValue(),
@@ -1063,7 +1066,7 @@ rpl::producer<QString> LocalProfileIdValue(not_null<PeerData*> peer) {
 	if (!peer->isSelf()) {
 		return rpl::single(LocalProfileId(peer));
 	}
-	auto &settings = AyuSettings::getInstance();
+	auto &settings = LocalProfileSettings(peer);
 	return rpl::combine(
 		settings.localProfileIdEnabledValue(),
 		settings.localProfileIdValue(),
@@ -1083,7 +1086,7 @@ rpl::producer<QString> LocalProfileUsernameValue(not_null<PeerData*> peer) {
 	if (!peer->isSelf()) {
 		return username;
 	}
-	auto &settings = AyuSettings::getInstance();
+	auto &settings = LocalProfileSettings(peer);
 	return rpl::combine(
 		std::move(username),
 		settings.localProfileUsernameEnabledValue(),
@@ -1116,7 +1119,7 @@ rpl::producer<std::vector<QString>> LocalProfileUsernamesValue(
 	if (!peer->isSelf()) {
 		return usernames;
 	}
-	auto &settings = AyuSettings::getInstance();
+	auto &settings = LocalProfileSettings(peer);
 	return rpl::combine(
 		std::move(usernames),
 		settings.localProfileUsernameEnabledValue(),
@@ -1148,7 +1151,7 @@ rpl::producer<QString> LocalProfilePhoneValue(not_null<UserData*> user) {
 	if (!user->isSelf()) {
 		return phone;
 	}
-	auto &settings = AyuSettings::getInstance();
+	auto &settings = LocalProfileSettings(user);
 	return rpl::combine(
 		std::move(phone),
 		settings.localProfilePhoneEnabledValue(),
@@ -1177,7 +1180,7 @@ rpl::producer<QString> LocalProfileAboutValue(not_null<PeerData*> peer) {
 	if (!peer->isSelf()) {
 		return about;
 	}
-	auto &settings = AyuSettings::getInstance();
+	auto &settings = LocalProfileSettings(peer);
 	return rpl::combine(
 		std::move(about),
 		settings.localProfileAboutEnabledValue(),
@@ -1199,7 +1202,7 @@ rpl::producer<QString> LocalProfileAboutValue(not_null<PeerData*> peer) {
 rpl::producer<QString> LocalProfileCloneIdValue(
 		not_null<PeerData*> peer) {
 	return peer->isSelf()
-		? AyuSettings::getInstance().localProfileCloneIdValue()
+		? LocalProfileSettings(peer).localProfileCloneIdValue()
 		: rpl::single(QString());
 }
 
@@ -1221,7 +1224,7 @@ rpl::producer<ChannelData*> LocalProfilePersonalChannelValue(
 				: nullptr;
 		});
 	};
-	auto &settings = AyuSettings::getInstance();
+	auto &settings = LocalProfileSettings(user);
 	return rpl::combine(
 		LocalProfileCloneIdValue(user),
 		settings.localProfileChannelEnabledValue(),
@@ -1236,7 +1239,7 @@ auto LocalProfileGiftReferencesValue(not_null<PeerData*> peer)
 	if (!peer->isSelf()) {
 		return rpl::single(std::vector<QString>());
 	}
-	auto &settings = AyuSettings::getInstance();
+	auto &settings = LocalProfileSettings(peer);
 	return rpl::combine(
 		settings.localProfileGiftEnabledValue(),
 		settings.localProfileGiftValue(),
@@ -1295,7 +1298,7 @@ void ShowLocalProfileUsernameEditor(
 		const auto editor = box->addRow(
 			object_ptr<LocalUsernameEditor>(
 				box,
-				AyuSettings::getInstance().localProfileUsername()),
+				AyuSettings::localProfile(&controller->session()).localProfileUsername()),
 			style::margins());
 		const auto field = editor->field();
 		field->setMaxLength(kMaxLocalProfileUsernameLength);
@@ -1353,7 +1356,7 @@ void ShowLocalProfileUsernameEditor(
 			st::defaultBoxDividerLabelPadding));
 
 		const auto save = [=] {
-			auto &settings = AyuSettings::getInstance();
+			auto &settings = AyuSettings::localProfile(&controller->session());
 			settings.setLocalProfileUsername(field->getLastText());
 			settings.setLocalProfileUsernameEnabled(true);
 			box->closeBox();
@@ -1405,10 +1408,11 @@ QString IDString(MsgId topicRootId) {
 
 rpl::producer<TextWithEntities> IDValue(not_null<PeerData*> peer) {
 	auto &settings = AyuSettings::getInstance();
+	auto &profile = AyuSettings::localProfile(&peer->session());
 	return rpl::combine(
 		settings.showPeerIdValue(),
-		settings.localProfileIdEnabledValue(),
-		settings.localProfileIdValue()
+		profile.localProfileIdEnabledValue(),
+		profile.localProfileIdValue()
 	) | rpl::map([=](PeerIdDisplay display, bool, const QString &) {
 		return (display == PeerIdDisplay::Hidden)
 			? TextWithEntities()

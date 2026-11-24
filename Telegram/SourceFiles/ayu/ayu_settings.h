@@ -273,6 +273,134 @@ private:
 void to_json(nlohmann::json &j, const MessageShotSettings &s);
 void from_json(const nlohmann::json &j, MessageShotSettings &s);
 
+class LocalProfileAccountSettings {
+public:
+	[[nodiscard]] bool hasLocalProfile() const;
+
+	[[nodiscard]] bool localProfileNameEnabled() const { return _localProfileNameEnabled.current(); }
+	[[nodiscard]] const QString &localProfileName() const { return _localProfileName.current(); }
+	[[nodiscard]] bool localProfileIdEnabled() const { return _localProfileIdEnabled.current(); }
+	[[nodiscard]] const QString &localProfileId() const { return _localProfileId.current(); }
+	[[nodiscard]] bool localProfileUsernameEnabled() const { return _localProfileUsernameEnabled.current(); }
+	[[nodiscard]] const QString &localProfileUsername() const { return _localProfileUsername.current(); }
+	[[nodiscard]] const QString &localProfileUsernames() const { return _localProfileUsernames.current(); }
+	[[nodiscard]] bool localProfilePhoneEnabled() const { return _localProfilePhoneEnabled.current(); }
+	[[nodiscard]] const QString &localProfilePhone() const { return _localProfilePhone.current(); }
+	[[nodiscard]] bool localProfileAboutEnabled() const { return _localProfileAboutEnabled.current(); }
+	[[nodiscard]] const QString &localProfileAbout() const { return _localProfileAbout.current(); }
+	[[nodiscard]] const QString &localProfilePhoto() const { return _localProfilePhoto.current(); }
+	[[nodiscard]] const QString &localProfileCloneId() const { return _localProfileCloneId.current(); }
+	[[nodiscard]] LocalProfileBadgeStyle localProfileBadgeStyle() const { return _localProfileBadgeStyle.current(); }
+	[[nodiscard]] const QString &localProfileEmojiStatusId() const { return _localProfileEmojiStatusId.current(); }
+	[[nodiscard]] const QString &localProfileBotVerificationId() const { return _localProfileBotVerificationId.current(); }
+	[[nodiscard]] bool localProfileChannelEnabled() const { return _localProfileChannelEnabled.current(); }
+	[[nodiscard]] const QString &localProfileChannel() const { return _localProfileChannel.current(); }
+	[[nodiscard]] const QString &localProfileChannelWorkspace() const { return _localProfileChannelWorkspace.current(); }
+	[[nodiscard]] bool localProfileGiftEnabled() const { return _localProfileGiftEnabled.current(); }
+	[[nodiscard]] const QString &localProfileGift() const { return _localProfileGift.current(); }
+	[[nodiscard]] const QString &localProfileGifts() const { return _localProfileGifts.current(); }
+
+	void setLocalProfileNameEnabled(bool val);
+	void setLocalProfileName(const QString &val);
+	void setLocalProfileIdEnabled(bool val);
+	void setLocalProfileId(const QString &val);
+	void setLocalProfileUsernameEnabled(bool val);
+	void setLocalProfileUsername(const QString &val);
+	void setLocalProfileUsernames(const QString &val);
+	void setLocalProfilePhoneEnabled(bool val);
+	void setLocalProfilePhone(const QString &val);
+	void setLocalProfileAboutEnabled(bool val);
+	void setLocalProfileAbout(const QString &val);
+	void setLocalProfilePhoto(const QString &val);
+	void setLocalProfileCloneId(const QString &val);
+	void setLocalProfileBadgeStyle(LocalProfileBadgeStyle val);
+	void setLocalProfileEmojiStatusId(const QString &val);
+	void setLocalProfileBotVerificationId(const QString &val);
+	void setLocalProfileChannelEnabled(bool val);
+	void setLocalProfileChannel(const QString &val);
+	void setLocalProfileChannelWorkspace(const QString &val);
+	void setLocalProfileGiftEnabled(bool val);
+	void setLocalProfileGift(const QString &val);
+	void setLocalProfileGifts(const QString &val);
+
+	[[nodiscard]] rpl::producer<bool> localProfileNameEnabledValue() const { return _localProfileNameEnabled.value(); }
+	[[nodiscard]] rpl::producer<bool> localProfileNameEnabledChanges() const { return _localProfileNameEnabled.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileNameValue() const { return _localProfileName.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfileNameChanges() const { return _localProfileName.changes(); }
+	[[nodiscard]] rpl::producer<bool> localProfileIdEnabledValue() const { return _localProfileIdEnabled.value(); }
+	[[nodiscard]] rpl::producer<bool> localProfileIdEnabledChanges() const { return _localProfileIdEnabled.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileIdValue() const { return _localProfileId.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfileIdChanges() const { return _localProfileId.changes(); }
+	[[nodiscard]] rpl::producer<bool> localProfileUsernameEnabledValue() const { return _localProfileUsernameEnabled.value(); }
+	[[nodiscard]] rpl::producer<bool> localProfileUsernameEnabledChanges() const { return _localProfileUsernameEnabled.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileUsernameValue() const { return _localProfileUsername.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfileUsernameChanges() const { return _localProfileUsername.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileUsernamesValue() const { return _localProfileUsernames.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfileUsernamesChanges() const { return _localProfileUsernames.changes(); }
+	[[nodiscard]] rpl::producer<bool> localProfilePhoneEnabledValue() const { return _localProfilePhoneEnabled.value(); }
+	[[nodiscard]] rpl::producer<bool> localProfilePhoneEnabledChanges() const { return _localProfilePhoneEnabled.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfilePhoneValue() const { return _localProfilePhone.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfilePhoneChanges() const { return _localProfilePhone.changes(); }
+	[[nodiscard]] rpl::producer<bool> localProfileAboutEnabledValue() const { return _localProfileAboutEnabled.value(); }
+	[[nodiscard]] rpl::producer<bool> localProfileAboutEnabledChanges() const { return _localProfileAboutEnabled.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileAboutValue() const { return _localProfileAbout.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfileAboutChanges() const { return _localProfileAbout.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfilePhotoValue() const { return _localProfilePhoto.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfilePhotoChanges() const { return _localProfilePhoto.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileCloneIdValue() const { return _localProfileCloneId.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfileCloneIdChanges() const { return _localProfileCloneId.changes(); }
+	[[nodiscard]] rpl::producer<LocalProfileBadgeStyle> localProfileBadgeStyleValue() const { return _localProfileBadgeStyle.value(); }
+	[[nodiscard]] rpl::producer<LocalProfileBadgeStyle> localProfileBadgeStyleChanges() const { return _localProfileBadgeStyle.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileEmojiStatusIdValue() const { return _localProfileEmojiStatusId.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfileEmojiStatusIdChanges() const { return _localProfileEmojiStatusId.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileBotVerificationIdValue() const { return _localProfileBotVerificationId.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfileBotVerificationIdChanges() const { return _localProfileBotVerificationId.changes(); }
+	[[nodiscard]] rpl::producer<bool> localProfileChannelEnabledValue() const { return _localProfileChannelEnabled.value(); }
+	[[nodiscard]] rpl::producer<bool> localProfileChannelEnabledChanges() const { return _localProfileChannelEnabled.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileChannelValue() const { return _localProfileChannel.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfileChannelChanges() const { return _localProfileChannel.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileChannelWorkspaceValue() const { return _localProfileChannelWorkspace.value(); }
+	[[nodiscard]] rpl::producer<bool> localProfileGiftEnabledValue() const { return _localProfileGiftEnabled.value(); }
+	[[nodiscard]] rpl::producer<bool> localProfileGiftEnabledChanges() const { return _localProfileGiftEnabled.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileGiftValue() const { return _localProfileGift.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfileGiftChanges() const { return _localProfileGift.changes(); }
+	[[nodiscard]] rpl::producer<QString> localProfileGiftsValue() const { return _localProfileGifts.value(); }
+	[[nodiscard]] rpl::producer<QString> localProfileGiftsChanges() const { return _localProfileGifts.changes(); }
+
+	friend void to_json(nlohmann::json &j, const LocalProfileAccountSettings &s);
+	friend void from_json(const nlohmann::json &j, LocalProfileAccountSettings &s);
+
+private:
+	friend class AyuSettings;
+
+	rpl::variable<bool> _localProfileNameEnabled = false;
+	rpl::variable<QString> _localProfileName;
+	rpl::variable<bool> _localProfileIdEnabled = false;
+	rpl::variable<QString> _localProfileId;
+	rpl::variable<bool> _localProfileUsernameEnabled = false;
+	rpl::variable<QString> _localProfileUsername;
+	rpl::variable<QString> _localProfileUsernames;
+	rpl::variable<bool> _localProfilePhoneEnabled = false;
+	rpl::variable<QString> _localProfilePhone;
+	rpl::variable<bool> _localProfileAboutEnabled = false;
+	rpl::variable<QString> _localProfileAbout;
+	rpl::variable<QString> _localProfilePhoto;
+	rpl::variable<QString> _localProfileCloneId;
+	rpl::variable<LocalProfileBadgeStyle> _localProfileBadgeStyle = LocalProfileBadgeStyle::Automatic;
+	rpl::variable<QString> _localProfileEmojiStatusId;
+	rpl::variable<QString> _localProfileBotVerificationId;
+	rpl::variable<bool> _localProfileChannelEnabled = false;
+	rpl::variable<QString> _localProfileChannel;
+	rpl::variable<QString> _localProfileChannelWorkspace;
+	rpl::variable<bool> _localProfileGiftEnabled = false;
+	rpl::variable<QString> _localProfileGift;
+	rpl::variable<QString> _localProfileGifts;
+
+};
+
+void to_json(nlohmann::json &j, const LocalProfileAccountSettings &s);
+void from_json(const nlohmann::json &j, LocalProfileAccountSettings &s);
+
 class AyuSettings {
 public:
 	AyuSettings(const AyuSettings &) = delete;
@@ -289,6 +417,10 @@ public:
 	[[nodiscard]] static GhostModeAccountSettings &ghost(not_null<Main::Session*> session);
 	[[nodiscard]] static GhostModeAccountSettings &ghost(uint64 userId);
 	[[nodiscard]] static GhostModeAccountSettings &ghost();
+
+	[[nodiscard]] static LocalProfileAccountSettings &localProfile(not_null<Main::Session*> session);
+	[[nodiscard]] static LocalProfileAccountSettings &localProfile(uint64 userId);
+	[[nodiscard]] static LocalProfileAccountSettings &localProfile();
 
 	[[nodiscard]] bool useGlobalGhostMode() const { return _useGlobalGhostMode.current(); }
 	void setUseGlobalGhostMode(bool val);
@@ -344,28 +476,6 @@ public:
 	[[nodiscard]] bool removeMessageTail() const { return _removeMessageTail.current(); }
 	[[nodiscard]] bool disableNotificationsDelay() const { return _disableNotificationsDelay.current(); }
 	[[nodiscard]] bool localPremium() const { return _localPremium.current(); }
-	[[nodiscard]] bool localProfileNameEnabled() const { return _localProfileNameEnabled.current(); }
-	[[nodiscard]] const QString &localProfileName() const { return _localProfileName.current(); }
-	[[nodiscard]] bool localProfileIdEnabled() const { return _localProfileIdEnabled.current(); }
-	[[nodiscard]] const QString &localProfileId() const { return _localProfileId.current(); }
-	[[nodiscard]] bool localProfileUsernameEnabled() const { return _localProfileUsernameEnabled.current(); }
-	[[nodiscard]] const QString &localProfileUsername() const { return _localProfileUsername.current(); }
-	[[nodiscard]] const QString &localProfileUsernames() const { return _localProfileUsernames.current(); }
-	[[nodiscard]] bool localProfilePhoneEnabled() const { return _localProfilePhoneEnabled.current(); }
-	[[nodiscard]] const QString &localProfilePhone() const { return _localProfilePhone.current(); }
-	[[nodiscard]] bool localProfileAboutEnabled() const { return _localProfileAboutEnabled.current(); }
-	[[nodiscard]] const QString &localProfileAbout() const { return _localProfileAbout.current(); }
-	[[nodiscard]] const QString &localProfilePhoto() const { return _localProfilePhoto.current(); }
-	[[nodiscard]] const QString &localProfileCloneId() const { return _localProfileCloneId.current(); }
-	[[nodiscard]] LocalProfileBadgeStyle localProfileBadgeStyle() const { return _localProfileBadgeStyle.current(); }
-	[[nodiscard]] const QString &localProfileEmojiStatusId() const { return _localProfileEmojiStatusId.current(); }
-	[[nodiscard]] const QString &localProfileBotVerificationId() const { return _localProfileBotVerificationId.current(); }
-	[[nodiscard]] bool localProfileChannelEnabled() const { return _localProfileChannelEnabled.current(); }
-	[[nodiscard]] const QString &localProfileChannel() const { return _localProfileChannel.current(); }
-	[[nodiscard]] const QString &localProfileChannelWorkspace() const { return _localProfileChannelWorkspace.current(); }
-	[[nodiscard]] bool localProfileGiftEnabled() const { return _localProfileGiftEnabled.current(); }
-	[[nodiscard]] const QString &localProfileGift() const { return _localProfileGift.current(); }
-	[[nodiscard]] const QString &localProfileGifts() const { return _localProfileGifts.current(); }
 	[[nodiscard]] int localStarsBalance() const { return _localStarsBalance.current(); }
 	[[nodiscard]] const QString &localStarsActivity() const { return _localStarsActivity.current(); }
 	[[nodiscard]] const QString &localStarsCardName() const { return _localStarsCardName.current(); }
@@ -474,28 +584,6 @@ public:
 	void setRemoveMessageTail(bool val);
 	void setDisableNotificationsDelay(bool val);
 	void setLocalPremium(bool val);
-	void setLocalProfileNameEnabled(bool val);
-	void setLocalProfileName(const QString &val);
-	void setLocalProfileIdEnabled(bool val);
-	void setLocalProfileId(const QString &val);
-	void setLocalProfileUsernameEnabled(bool val);
-	void setLocalProfileUsername(const QString &val);
-	void setLocalProfileUsernames(const QString &val);
-	void setLocalProfilePhoneEnabled(bool val);
-	void setLocalProfilePhone(const QString &val);
-	void setLocalProfileAboutEnabled(bool val);
-	void setLocalProfileAbout(const QString &val);
-	void setLocalProfilePhoto(const QString &val);
-	void setLocalProfileCloneId(const QString &val);
-	void setLocalProfileBadgeStyle(LocalProfileBadgeStyle val);
-	void setLocalProfileEmojiStatusId(const QString &val);
-	void setLocalProfileBotVerificationId(const QString &val);
-	void setLocalProfileChannelEnabled(bool val);
-	void setLocalProfileChannel(const QString &val);
-	void setLocalProfileChannelWorkspace(const QString &val);
-	void setLocalProfileGiftEnabled(bool val);
-	void setLocalProfileGift(const QString &val);
-	void setLocalProfileGifts(const QString &val);
 	void setLocalStarsBalance(int val);
 	void setLocalStarsActivity(const QString &val);
 	void setLocalStarsCardName(const QString &val);
@@ -647,49 +735,6 @@ public:
 	[[nodiscard]] rpl::producer<bool> disableNotificationsDelayChanges() const { return _disableNotificationsDelay.changes(); }
 	[[nodiscard]] rpl::producer<bool> localPremiumValue() const { return _localPremium.value(); }
 	[[nodiscard]] rpl::producer<bool> localPremiumChanges() const { return _localPremium.changes(); }
-	[[nodiscard]] rpl::producer<bool> localProfileNameEnabledValue() const { return _localProfileNameEnabled.value(); }
-	[[nodiscard]] rpl::producer<bool> localProfileNameEnabledChanges() const { return _localProfileNameEnabled.changes(); }
-	[[nodiscard]] rpl::producer<QString> localProfileNameValue() const { return _localProfileName.value(); }
-	[[nodiscard]] rpl::producer<QString> localProfileNameChanges() const { return _localProfileName.changes(); }
-	[[nodiscard]] rpl::producer<bool> localProfileIdEnabledValue() const { return _localProfileIdEnabled.value(); }
-	[[nodiscard]] rpl::producer<bool> localProfileIdEnabledChanges() const { return _localProfileIdEnabled.changes(); }
-	[[nodiscard]] rpl::producer<QString> localProfileIdValue() const { return _localProfileId.value(); }
-	[[nodiscard]] rpl::producer<QString> localProfileIdChanges() const { return _localProfileId.changes(); }
-	[[nodiscard]] rpl::producer<bool> localProfileUsernameEnabledValue() const { return _localProfileUsernameEnabled.value(); }
-	[[nodiscard]] rpl::producer<bool> localProfileUsernameEnabledChanges() const { return _localProfileUsernameEnabled.changes(); }
-	[[nodiscard]] rpl::producer<QString> localProfileUsernameValue() const { return _localProfileUsername.value(); }
-	[[nodiscard]] rpl::producer<QString> localProfileUsernameChanges() const { return _localProfileUsername.changes(); }
-	[[nodiscard]] rpl::producer<QString> localProfileUsernamesValue() const { return _localProfileUsernames.value(); }
-	[[nodiscard]] rpl::producer<QString> localProfileUsernamesChanges() const { return _localProfileUsernames.changes(); }
-	[[nodiscard]] rpl::producer<bool> localProfilePhoneEnabledValue() const { return _localProfilePhoneEnabled.value(); }
-	[[nodiscard]] rpl::producer<bool> localProfilePhoneEnabledChanges() const { return _localProfilePhoneEnabled.changes(); }
-	[[nodiscard]] rpl::producer<QString> localProfilePhoneValue() const { return _localProfilePhone.value(); }
-	[[nodiscard]] rpl::producer<QString> localProfilePhoneChanges() const { return _localProfilePhone.changes(); }
-	[[nodiscard]] rpl::producer<bool> localProfileAboutEnabledValue() const { return _localProfileAboutEnabled.value(); }
-	[[nodiscard]] rpl::producer<bool> localProfileAboutEnabledChanges() const { return _localProfileAboutEnabled.changes(); }
-	[[nodiscard]] rpl::producer<QString> localProfileAboutValue() const { return _localProfileAbout.value(); }
-	[[nodiscard]] rpl::producer<QString> localProfileAboutChanges() const { return _localProfileAbout.changes(); }
-	[[nodiscard]] rpl::producer<QString> localProfilePhotoValue() const { return _localProfilePhoto.value(); }
-	[[nodiscard]] rpl::producer<QString> localProfilePhotoChanges() const { return _localProfilePhoto.changes(); }
-	[[nodiscard]] rpl::producer<QString> localProfileCloneIdValue() const { return _localProfileCloneId.value(); }
-	[[nodiscard]] rpl::producer<QString> localProfileCloneIdChanges() const { return _localProfileCloneId.changes(); }
-	[[nodiscard]] rpl::producer<LocalProfileBadgeStyle> localProfileBadgeStyleValue() const { return _localProfileBadgeStyle.value(); }
-	[[nodiscard]] rpl::producer<LocalProfileBadgeStyle> localProfileBadgeStyleChanges() const { return _localProfileBadgeStyle.changes(); }
-	[[nodiscard]] rpl::producer<QString> localProfileEmojiStatusIdValue() const { return _localProfileEmojiStatusId.value(); }
-	[[nodiscard]] rpl::producer<QString> localProfileEmojiStatusIdChanges() const { return _localProfileEmojiStatusId.changes(); }
-	[[nodiscard]] rpl::producer<QString> localProfileBotVerificationIdValue() const { return _localProfileBotVerificationId.value(); }
-	[[nodiscard]] rpl::producer<QString> localProfileBotVerificationIdChanges() const { return _localProfileBotVerificationId.changes(); }
-	[[nodiscard]] rpl::producer<bool> localProfileChannelEnabledValue() const { return _localProfileChannelEnabled.value(); }
-	[[nodiscard]] rpl::producer<bool> localProfileChannelEnabledChanges() const { return _localProfileChannelEnabled.changes(); }
-	[[nodiscard]] rpl::producer<QString> localProfileChannelValue() const { return _localProfileChannel.value(); }
-	[[nodiscard]] rpl::producer<QString> localProfileChannelChanges() const { return _localProfileChannel.changes(); }
-	[[nodiscard]] rpl::producer<QString> localProfileChannelWorkspaceValue() const { return _localProfileChannelWorkspace.value(); }
-	[[nodiscard]] rpl::producer<bool> localProfileGiftEnabledValue() const { return _localProfileGiftEnabled.value(); }
-	[[nodiscard]] rpl::producer<bool> localProfileGiftEnabledChanges() const { return _localProfileGiftEnabled.changes(); }
-	[[nodiscard]] rpl::producer<QString> localProfileGiftValue() const { return _localProfileGift.value(); }
-	[[nodiscard]] rpl::producer<QString> localProfileGiftChanges() const { return _localProfileGift.changes(); }
-	[[nodiscard]] rpl::producer<QString> localProfileGiftsValue() const { return _localProfileGifts.value(); }
-	[[nodiscard]] rpl::producer<QString> localProfileGiftsChanges() const { return _localProfileGifts.changes(); }
 	[[nodiscard]] rpl::producer<int> localStarsBalanceValue() const { return _localStarsBalance.value(); }
 	[[nodiscard]] rpl::producer<int> localStarsBalanceChanges() const { return _localStarsBalance.changes(); }
 	[[nodiscard]] rpl::producer<QString> localStarsActivityValue() const { return _localStarsActivity.value(); }
@@ -872,28 +917,6 @@ private:
 	rpl::variable<bool> _removeMessageTail = false;
 	rpl::variable<bool> _disableNotificationsDelay = false;
 	rpl::variable<bool> _localPremium = false;
-	rpl::variable<bool> _localProfileNameEnabled = false;
-	rpl::variable<QString> _localProfileName;
-	rpl::variable<bool> _localProfileIdEnabled = false;
-	rpl::variable<QString> _localProfileId;
-	rpl::variable<bool> _localProfileUsernameEnabled = false;
-	rpl::variable<QString> _localProfileUsername;
-	rpl::variable<QString> _localProfileUsernames;
-	rpl::variable<bool> _localProfilePhoneEnabled = false;
-	rpl::variable<QString> _localProfilePhone;
-	rpl::variable<bool> _localProfileAboutEnabled = false;
-	rpl::variable<QString> _localProfileAbout;
-	rpl::variable<QString> _localProfilePhoto;
-	rpl::variable<QString> _localProfileCloneId;
-	rpl::variable<LocalProfileBadgeStyle> _localProfileBadgeStyle = LocalProfileBadgeStyle::Automatic;
-	rpl::variable<QString> _localProfileEmojiStatusId;
-	rpl::variable<QString> _localProfileBotVerificationId;
-	rpl::variable<bool> _localProfileChannelEnabled = false;
-	rpl::variable<QString> _localProfileChannel;
-	rpl::variable<QString> _localProfileChannelWorkspace;
-	rpl::variable<bool> _localProfileGiftEnabled = false;
-	rpl::variable<QString> _localProfileGift;
-	rpl::variable<QString> _localProfileGifts;
 	rpl::variable<int> _localStarsBalance = 0;
 	rpl::variable<QString> _localStarsActivity;
 	rpl::variable<QString> _localStarsCardName;
@@ -964,6 +987,7 @@ private:
 
 	rpl::variable<bool> _useGlobalGhostMode = true;
 	std::map<uint64, std::unique_ptr<GhostModeAccountSettings>> _ghostAccounts;
+	std::map<uint64, std::unique_ptr<LocalProfileAccountSettings>> _localProfileAccounts;
 
 	MessageShotSettings _messageShotSettings;
 };

@@ -352,7 +352,7 @@ rpl::producer<Badge::Content> BotVerifyBadgeForPeer(
 	if (!peer->isSelf()) {
 		return sourceValue(peer);
 	}
-	auto &settings = AyuSettings::getInstance();
+	auto &settings = AyuSettings::localProfile(&peer->session());
 	return rpl::combine(
 		settings.localProfileBadgeStyleValue(),
 		settings.localProfileBotVerificationIdValue(),

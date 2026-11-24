@@ -719,7 +719,7 @@ rpl::producer<BadgeType> BadgeValue(not_null<PeerData*> peer) {
 	if (!peer->isSelf()) {
 		return BadgeValueForPeer(peer);
 	}
-	auto &settings = AyuSettings::getInstance();
+	auto &settings = AyuSettings::localProfile(&peer->session());
 	return rpl::combine(
 		settings.localProfileBadgeStyleValue(),
 		Ayu::LocalProfileCloneIdValue(peer)
@@ -745,7 +745,7 @@ rpl::producer<EmojiStatusId> EmojiStatusIdValue(not_null<PeerData*> peer) {
 		Ayu::LocalProfileCloneIdValue(peer) | rpl::to_empty
 	);
 	if (peer->isSelf()) {
-		auto &settings = AyuSettings::getInstance();
+		auto &settings = AyuSettings::localProfile(&peer->session());
 		updates = rpl::merge(
 			std::move(updates),
 			settings.localProfileBadgeStyleValue() | rpl::to_empty,
