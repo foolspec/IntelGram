@@ -60,9 +60,9 @@ permissions:
 
 env:
   SOURCE_TAG: v6.7.8
-  RELEASE_NAME: Local Stars & Gifts
-  RELEASE_SLUG: local-stars-and-gifts
-  PATCH_SHA256: c7befba853cc1917df39417fbfb8eed2847a53ccd2d9f9a9a703fac999d42513
+  RELEASE_NAME: Local Gifts, Premium & Business
+  RELEASE_SLUG: local-gifts-premium-and-business
+  PATCH_SHA256: 711076f2897648875734cf276463a40439f55621dcdc55f2fc9fc213a98425e7
   LIB_UI_COMMIT: b9a30917daf2bd8fdc17ccd9682acca178882b7b
   LIB_UI_REF: codex/intelgram-liquid-bounce-20260726
 
