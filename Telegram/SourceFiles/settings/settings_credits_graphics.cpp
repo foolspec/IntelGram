@@ -302,14 +302,15 @@ void ConvertLocalStarGift(
 		const Data::CreditsHistoryEntry &e,
 		int stars,
 		Fn<void(bool)> done) {
-	const auto settings = &AyuSettings::getInstance();
+	const auto settings = &AyuSettings::localStars(&show->session());
 	settings->setLocalStarsBalance(settings->localStarsBalance() + stars);
-	Ayu::AppendLocalStarsEarning({
+	Ayu::AppendLocalStarsEarning(&show->session(), {
 		.date = base::unixtime::now(),
 		.amount = stars,
 		.source = Ayu::LocalStarsEarningSource::Convert,
 	});
 	Ayu::RemoveLocalGift(
+		&show->session(),
 		e.stargiftId,
 		base::unixtime::serialize(e.date),
 		e.description.text);
@@ -664,7 +665,7 @@ private:
 		if (_finished) {
 			return;
 		}
-		auto &settings = AyuSettings::getInstance();
+		auto &settings = AyuSettings::localStars(_session);
 		settings.setLocalStarsBalance(
 			settings.localStarsBalance() + int(_option.credits));
 		if (const auto widget = _fireworks.data()) {
@@ -950,7 +951,7 @@ private:
 		// widget down underneath its own event handler.
 		crl::on_main([this, result] {
 			if (result == Payments::CheckoutResult::Paid) {
-				AyuSettings::getInstance().setLocalPremium(true);
+				AyuSettings::localStars(_session).setLocalPremium(true);
 			}
 			if (ActiveLocalPremiumCheckout == this) {
 				ActiveLocalPremiumCheckout = nullptr;
@@ -1405,7 +1406,7 @@ void FillCreditOptions(
 									return;
 								}
 								const auto settings
-									= &AyuSettings::getInstance();
+									= &AyuSettings::localStars(&show->session());
 								settings->setLocalStarsBalance(
 									settings->localStarsBalance()
 										- int(option.credits));
@@ -3900,14 +3901,15 @@ void SmallBalanceBox(
 
 	const auto balanceValue = [=]() -> rpl::producer<CreditsAmount> {
 		return useLocalBalance
-			? AyuSettings::getInstance().localStarsBalanceValue(
+			? AyuSettings::localStars(&show->session()).localStarsBalanceValue(
 			) | rpl::map([](int value) {
 				return CreditsAmount(value);
 			})
 			: show->session().credits().balanceValue();
 	};
 	const auto currentBalance = useLocalBalance
-		? CreditsAmount(AyuSettings::getInstance().localStarsBalance())
+		? CreditsAmount(AyuSettings::localStars(&show->session()
+			).localStarsBalance())
 		: show->session().credits().balance();
 
 	auto dark = false;
@@ -4438,7 +4440,7 @@ void AddWithdrawalWidget(
 					amount * 1.),
 				.confirmed = [=](Fn<void()> close) {
 					close();
-					const auto settings = &AyuSettings::getInstance();
+					const auto settings = &AyuSettings::localStars(session);
 					settings->setLocalStarsWithdrawn(
 						settings->localStarsWithdrawn() + int(amount));
 					controller->uiShow()->showToast(
@@ -4566,7 +4568,7 @@ void MaybeRequestLocalBalanceIncrease(
 		state->lifetime.destroy();
 
 		const auto balance = CreditsAmount(
-			AyuSettings::getInstance().localStarsBalance());
+			AyuSettings::localStars(session).localStarsBalance());
 		if (CreditsAmount(credits) <= balance) {
 			if (const auto onstack = done) {
 				onstack(SmallBalanceResult::Already);
@@ -4598,7 +4600,9 @@ void MaybeRequestLocalBalanceIncrease(
 	}, state->lifetime);
 }
 
-void LocalEarnStarsBox(not_null<Ui::GenericBox*> box) {
+void LocalEarnStarsBox(
+		not_null<Ui::GenericBox*> box,
+		not_null<Main::Session*> session) {
 	box->setWidth(st::boxWideWidth);
 	box->setTitle(tr::lng_credits_earn_button());
 	box->addButton(tr::lng_close(), [=] { box->closeBox(); });
@@ -4635,10 +4639,10 @@ void LocalEarnStarsBox(not_null<Ui::GenericBox*> box) {
 		}, button->lifetime());
 		Ui::ToggleChildrenVisibility(button, true);
 		button->setClickedCallback([=] {
-			const auto settings = &AyuSettings::getInstance();
+			const auto settings = &AyuSettings::localStars(session);
 			settings->setLocalStarsBalance(
 				settings->localStarsBalance() + stars);
-			Ayu::AppendLocalStarsEarning({
+			Ayu::AppendLocalStarsEarning(session, {
 				.date = base::unixtime::now(),
 				.amount = stars,
 				.source = Ayu::LocalStarsEarningSource::MiniApps,
@@ -4657,7 +4661,7 @@ void ShowLocalEarnStarsBox(not_null<Window::SessionController*> window) {
 	const auto show = Main::MakeSessionShow(
 		window->uiShow(),
 		&window->session());
-	show->show(Box(LocalEarnStarsBox));
+	show->show(Box(LocalEarnStarsBox, &window->session()));
 }
 
 void StartLocalPremiumPurchase(

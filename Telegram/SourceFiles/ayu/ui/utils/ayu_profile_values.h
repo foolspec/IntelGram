@@ -77,12 +77,19 @@ struct LocalStarsProceeds {
 [[nodiscard]] QString SerializeLocalStarsEarnings(
 	const std::vector<LocalStarsEarning> &earnings);
 [[nodiscard]] QString NormalizeLocalStarsEarnings(QString earnings);
-void AppendLocalStarsEarning(LocalStarsEarning earning);
+void AppendLocalStarsEarning(
+	not_null<Main::Session*> session,
+	LocalStarsEarning earning);
 [[nodiscard]] LocalStarsProceeds ComputeLocalStarsProceeds(
+	not_null<Main::Session*> session,
 	int64 withdrawn,
 	int64 now);
 [[nodiscard]] int64 LocalGiftConvertValue(int64 stars);
-void RemoveLocalGift(uint64 giftId, int64 date, const QString &message);
+void RemoveLocalGift(
+	not_null<Main::Session*> session,
+	uint64 giftId,
+	int64 date,
+	const QString &message);
 
 struct LocalGiftRecord {
 	uint64 giftId = 0;
@@ -97,7 +104,9 @@ struct LocalGiftRecord {
 [[nodiscard]] QString SerializeLocalGifts(
 	const std::vector<LocalGiftRecord> &records);
 [[nodiscard]] QString NormalizeLocalGifts(QString gifts);
-void AppendLocalGift(LocalGiftRecord record);
+void AppendLocalGift(
+	not_null<Main::Session*> session,
+	LocalGiftRecord record);
 
 [[nodiscard]] QString NormalizeLocalProfileName(QString name);
 [[nodiscard]] QString NormalizeLocalProfileId(QString id);

@@ -411,7 +411,7 @@ rpl::producer<bool> PeerPremiumValue(not_null<PeerData*> peer) {
 		return flags;
 	}
 	return rpl::combine(
-		AyuSettings::getInstance().localPremiumValue(),
+		AyuSettings::localStars(&user->session()).localPremiumValue(),
 		std::move(flags),
 		_1 || _2);
 }
@@ -420,7 +420,7 @@ rpl::producer<bool> AmPremiumValue(not_null<Main::Session*> session) {
 	using namespace rpl::mappers;
 
 	return rpl::combine(
-		AyuSettings::getInstance().localPremiumValue(),
+		AyuSettings::localStars(session).localPremiumValue(),
 		PeerPremiumValue(session->user()),
 		_1 || _2);
 }

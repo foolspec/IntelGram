@@ -588,7 +588,8 @@ void Credits::setupContent() {
 				lt_amount,
 				(isCurrency
 					? controller()->session().credits().tonBalanceValue()
-					: AyuSettings::getInstance().localStarsBalanceValue(
+					: AyuSettings::localStars(&controller()->session()
+						).localStarsBalanceValue(
 					) | rpl::map([](int value) {
 						return CreditsAmount(value);
 					})
@@ -726,7 +727,8 @@ base::weak_qptr<Ui::RpWidget> Credits::createPinnedToTop(
 			&controller()->session(),
 			isCurrency
 				? controller()->session().credits().tonBalanceValue()
-				: AyuSettings::getInstance().localStarsBalanceValue(
+				: AyuSettings::localStars(&controller()->session()
+					).localStarsBalanceValue(
 				) | rpl::map([](int value) {
 					return CreditsAmount(value);
 				}),

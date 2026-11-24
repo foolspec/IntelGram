@@ -64,9 +64,10 @@ void AddHeader(
 	header->resizeToWidth(header->width());
 }
 
-[[nodiscard]] Data::StatisticalChart LocalRevenueChart() {
+[[nodiscard]] Data::StatisticalChart LocalRevenueChart(
+		not_null<Main::Session*> session) {
 	const auto earnings = Ayu::ParseLocalStarsEarnings(
-		AyuSettings::getInstance().localStarsEarnings());
+		AyuSettings::localStars(session).localStarsEarnings());
 	auto result = Data::StatisticalChart();
 	if (earnings.empty()) {
 		return result;
@@ -127,7 +128,8 @@ void AddHeader(
 		not_null<Main::Session*> session) {
 	const auto now = base::unixtime::now();
 	const auto proceeds = Ayu::ComputeLocalStarsProceeds(
-		AyuSettings::getInstance().localStarsWithdrawn(),
+		session,
+		AyuSettings::localStars(session).localStarsWithdrawn(),
 		now);
 	auto result = Data::CreditsEarnStatistics();
 	result.currentBalance = CreditsAmount(proceeds.total);
@@ -139,7 +141,7 @@ void AddHeader(
 		result.nextWithdrawalAt = base::unixtime::parse(
 			TimeId(proceeds.nextMaturity));
 	}
-	result.revenueGraph.chart = LocalRevenueChart();
+	result.revenueGraph.chart = LocalRevenueChart(session);
 	return result;
 }
 

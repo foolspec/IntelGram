@@ -376,8 +376,7 @@ rpl::producer<> Session::downloaderTaskFinished() const {
 }
 
 bool Session::premium() const {
-	const auto &settings = AyuSettings::getInstance();
-	if (settings.localPremium()) {
+	if (AyuSettings::localStars(userId().bare).localPremium()) {
 		return true;
 	}
 
@@ -385,8 +384,7 @@ bool Session::premium() const {
 }
 
 bool Session::premiumPossible() const {
-	const auto &settings = AyuSettings::getInstance();
-	if (settings.localPremium()) {
+	if (AyuSettings::localStars(userId().bare).localPremium()) {
 		return true;
 	}
 
@@ -409,7 +407,7 @@ rpl::producer<bool> Session::premiumPossibleValue() const {
 	});
 
 	premium = rpl::combine(
-		AyuSettings::getInstance().localPremiumValue(),
+		AyuSettings::localStars(userId().bare).localPremiumValue(),
 		std::move(premium),
 		_1 || _2);
 

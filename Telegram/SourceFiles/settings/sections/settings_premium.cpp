@@ -1496,8 +1496,7 @@ base::weak_qptr<Ui::RpWidget> Premium::createPinnedToTop(
 			}
 		}
 
-		const auto &settings = AyuSettings::getInstance();
-		if (settings.localPremium()) {
+		if (AyuSettings::localStars(&controller()->session()).localPremium()) {
 			return tr::ayu_LocalPremiumNotice(tr::rich);
 		}
 

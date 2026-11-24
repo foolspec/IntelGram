@@ -125,13 +125,13 @@ void ProcessCreditsPayment(
 				if (hasBadResult(result)) {
 					return;
 				}
-				const auto settings = &AyuSettings::getInstance();
+				const auto settings = &AyuSettings::localStars(&show->session());
 				settings->setLocalStarsBalance(
 					settings->localStarsBalance() - int(credits));
 				if (const auto gift
 						= std::get_if<InvoiceStarGift>(&form->id.value)) {
 					if (gift->recipient->isSelf()) {
-						Ayu::AppendLocalGift({
+						Ayu::AppendLocalGift(&show->session(), {
 							.giftId = gift->giftId,
 							.stars = int64(credits),
 							.date = base::unixtime::now(),

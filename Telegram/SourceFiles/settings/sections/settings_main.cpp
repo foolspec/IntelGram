@@ -546,7 +546,7 @@ void BuildPremiumSection(SectionBuilder &builder) {
 	builder.addPremiumButton({
 		.id = u"main/credits"_q,
 		.title = tr::lng_settings_credits(),
-		.label = AyuSettings::getInstance().localStarsBalanceValue(
+		.label = AyuSettings::localStars(session).localStarsBalanceValue(
 		) | rpl::map([](int value) {
 			return value
 				? Lang::FormatCountToShort(value).string

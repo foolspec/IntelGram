@@ -650,23 +650,30 @@ QString NormalizeLocalGifts(QString gifts) {
 	return serialized;
 }
 
-void AppendLocalGift(LocalGiftRecord record) {
+void AppendLocalGift(
+		not_null<Main::Session*> session,
+		LocalGiftRecord record) {
 	if (!record.giftId) {
 		return;
 	}
 	auto records = ParseLocalGifts(
-		AyuSettings::getInstance().localGifts());
+		AyuSettings::localStars(session).localGifts());
 	record.message = record.message.left(kMaxLocalGiftMessageLength);
 	records.push_back(std::move(record));
 	while (records.size() > kMaxLocalGiftsCount) {
 		records.erase(records.begin());
 	}
-	AyuSettings::getInstance().setLocalGifts(SerializeLocalGifts(records));
+	AyuSettings::localStars(session).setLocalGifts(
+		SerializeLocalGifts(records));
 }
 
-void RemoveLocalGift(uint64 giftId, int64 date, const QString &message) {
+void RemoveLocalGift(
+		not_null<Main::Session*> session,
+		uint64 giftId,
+		int64 date,
+		const QString &message) {
 	auto records = ParseLocalGifts(
-		AyuSettings::getInstance().localGifts());
+		AyuSettings::localStars(session).localGifts());
 	const auto i = ranges::find_if(records, [&](const LocalGiftRecord &r) {
 		return r.giftId == giftId
 			&& r.date == date
@@ -676,7 +683,8 @@ void RemoveLocalGift(uint64 giftId, int64 date, const QString &message) {
 		return;
 	}
 	records.erase(i);
-	AyuSettings::getInstance().setLocalGifts(SerializeLocalGifts(records));
+	AyuSettings::localStars(session).setLocalGifts(
+		SerializeLocalGifts(records));
 }
 
 int64 LocalGiftConvertValue(int64 stars) {
@@ -741,24 +749,29 @@ QString NormalizeLocalStarsEarnings(QString earnings) {
 	return serialized;
 }
 
-void AppendLocalStarsEarning(LocalStarsEarning earning) {
+void AppendLocalStarsEarning(
+		not_null<Main::Session*> session,
+		LocalStarsEarning earning) {
 	if (earning.amount <= 0) {
 		return;
 	}
 	auto earnings = ParseLocalStarsEarnings(
-		AyuSettings::getInstance().localStarsEarnings());
+		AyuSettings::localStars(session).localStarsEarnings());
 	earnings.push_back(std::move(earning));
 	while (earnings.size() > kMaxLocalStarsEarningsCount) {
 		earnings.erase(earnings.begin());
 	}
-	AyuSettings::getInstance().setLocalStarsEarnings(
+	AyuSettings::localStars(session).setLocalStarsEarnings(
 		SerializeLocalStarsEarnings(earnings));
 }
 
-LocalStarsProceeds ComputeLocalStarsProceeds(int64 withdrawn, int64 now) {
+LocalStarsProceeds ComputeLocalStarsProceeds(
+		not_null<Main::Session*> session,
+		int64 withdrawn,
+		int64 now) {
 	auto result = LocalStarsProceeds();
 	const auto earnings = ParseLocalStarsEarnings(
-		AyuSettings::getInstance().localStarsEarnings());
+		AyuSettings::localStars(session).localStarsEarnings());
 	for (const auto &earning : earnings) {
 		result.lifetime += earning.amount;
 		const auto matureAt = earning.date + kLocalStarsProceedsMaturitySecs;

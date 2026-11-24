@@ -400,7 +400,7 @@ InnerWidget::InnerWidget(
 	}, lifetime());
 
 	if (_peer->isSelf() && !_addingToCollectionId) {
-		AyuSettings::getInstance().localGiftsChanges(
+		AyuSettings::localStars(&_peer->session()).localGiftsChanges(
 		) | rpl::on_next([=] {
 			if (!_localGiftsMerged) {
 				return;
@@ -777,7 +777,7 @@ void InnerWidget::mergeLocalGifts() {
 		return;
 	}
 	const auto records = Ayu::ParseLocalGifts(
-		AyuSettings::getInstance().localGifts());
+		AyuSettings::localStars(&_peer->session()).localGifts());
 	if (records.empty()) {
 		return;
 	}

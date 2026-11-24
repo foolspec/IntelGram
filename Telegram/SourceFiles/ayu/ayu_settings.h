@@ -401,6 +401,55 @@ private:
 void to_json(nlohmann::json &j, const LocalProfileAccountSettings &s);
 void from_json(const nlohmann::json &j, LocalProfileAccountSettings &s);
 
+class LocalStarsAccountSettings {
+public:
+	[[nodiscard]] bool hasLocalStars() const;
+
+	[[nodiscard]] bool localPremium() const { return _localPremium.current(); }
+	[[nodiscard]] int localStarsBalance() const { return _localStarsBalance.current(); }
+	[[nodiscard]] const QString &localStarsActivity() const { return _localStarsActivity.current(); }
+	[[nodiscard]] const QString &localGifts() const { return _localGifts.current(); }
+	[[nodiscard]] const QString &localStarsEarnings() const { return _localStarsEarnings.current(); }
+	[[nodiscard]] int localStarsWithdrawn() const { return _localStarsWithdrawn.current(); }
+
+	void setLocalPremium(bool val);
+	void setLocalStarsBalance(int val);
+	void setLocalStarsActivity(const QString &val);
+	void setLocalGifts(const QString &val);
+	void setLocalStarsEarnings(const QString &val);
+	void setLocalStarsWithdrawn(int val);
+
+	[[nodiscard]] rpl::producer<bool> localPremiumValue() const { return _localPremium.value(); }
+	[[nodiscard]] rpl::producer<bool> localPremiumChanges() const { return _localPremium.changes(); }
+	[[nodiscard]] rpl::producer<int> localStarsBalanceValue() const { return _localStarsBalance.value(); }
+	[[nodiscard]] rpl::producer<int> localStarsBalanceChanges() const { return _localStarsBalance.changes(); }
+	[[nodiscard]] rpl::producer<QString> localStarsActivityValue() const { return _localStarsActivity.value(); }
+	[[nodiscard]] rpl::producer<QString> localStarsActivityChanges() const { return _localStarsActivity.changes(); }
+	[[nodiscard]] rpl::producer<QString> localGiftsValue() const { return _localGifts.value(); }
+	[[nodiscard]] rpl::producer<QString> localGiftsChanges() const { return _localGifts.changes(); }
+	[[nodiscard]] rpl::producer<QString> localStarsEarningsValue() const { return _localStarsEarnings.value(); }
+	[[nodiscard]] rpl::producer<QString> localStarsEarningsChanges() const { return _localStarsEarnings.changes(); }
+	[[nodiscard]] rpl::producer<int> localStarsWithdrawnValue() const { return _localStarsWithdrawn.value(); }
+	[[nodiscard]] rpl::producer<int> localStarsWithdrawnChanges() const { return _localStarsWithdrawn.changes(); }
+
+	friend void to_json(nlohmann::json &j, const LocalStarsAccountSettings &s);
+	friend void from_json(const nlohmann::json &j, LocalStarsAccountSettings &s);
+
+private:
+	friend class AyuSettings;
+
+	rpl::variable<bool> _localPremium = false;
+	rpl::variable<int> _localStarsBalance = 0;
+	rpl::variable<QString> _localStarsActivity;
+	rpl::variable<QString> _localGifts;
+	rpl::variable<QString> _localStarsEarnings;
+	rpl::variable<int> _localStarsWithdrawn = 0;
+
+};
+
+void to_json(nlohmann::json &j, const LocalStarsAccountSettings &s);
+void from_json(const nlohmann::json &j, LocalStarsAccountSettings &s);
+
 class AyuSettings {
 public:
 	AyuSettings(const AyuSettings &) = delete;
@@ -421,6 +470,10 @@ public:
 	[[nodiscard]] static LocalProfileAccountSettings &localProfile(not_null<Main::Session*> session);
 	[[nodiscard]] static LocalProfileAccountSettings &localProfile(uint64 userId);
 	[[nodiscard]] static LocalProfileAccountSettings &localProfile();
+
+	[[nodiscard]] static LocalStarsAccountSettings &localStars(not_null<Main::Session*> session);
+	[[nodiscard]] static LocalStarsAccountSettings &localStars(uint64 userId);
+	[[nodiscard]] static LocalStarsAccountSettings &localStars();
 
 	[[nodiscard]] bool useGlobalGhostMode() const { return _useGlobalGhostMode.current(); }
 	void setUseGlobalGhostMode(bool val);
@@ -475,13 +528,7 @@ public:
 	[[nodiscard]] bool animateWindowOpening() const { return _animateWindowOpening.current(); }
 	[[nodiscard]] bool removeMessageTail() const { return _removeMessageTail.current(); }
 	[[nodiscard]] bool disableNotificationsDelay() const { return _disableNotificationsDelay.current(); }
-	[[nodiscard]] bool localPremium() const { return _localPremium.current(); }
-	[[nodiscard]] int localStarsBalance() const { return _localStarsBalance.current(); }
-	[[nodiscard]] const QString &localStarsActivity() const { return _localStarsActivity.current(); }
 	[[nodiscard]] const QString &localStarsCardName() const { return _localStarsCardName.current(); }
-	[[nodiscard]] const QString &localGifts() const { return _localGifts.current(); }
-	[[nodiscard]] const QString &localStarsEarnings() const { return _localStarsEarnings.current(); }
-	[[nodiscard]] int localStarsWithdrawn() const { return _localStarsWithdrawn.current(); }
 	[[nodiscard]] bool showChannelReactions() const { return _showChannelReactions.current(); }
 	[[nodiscard]] bool showGroupReactions() const { return _showGroupReactions.current(); }
 	[[nodiscard]] bool showPrivateChatReactions() const { return _showPrivateChatReactions.current(); }
@@ -583,13 +630,7 @@ public:
 	void setAnimateWindowOpening(bool val);
 	void setRemoveMessageTail(bool val);
 	void setDisableNotificationsDelay(bool val);
-	void setLocalPremium(bool val);
-	void setLocalStarsBalance(int val);
-	void setLocalStarsActivity(const QString &val);
 	void setLocalStarsCardName(const QString &val);
-	void setLocalGifts(const QString &val);
-	void setLocalStarsEarnings(const QString &val);
-	void setLocalStarsWithdrawn(int val);
 	void setShowChannelReactions(bool val);
 	void setShowGroupReactions(bool val);
 	void setShowPrivateChatReactions(bool val);
@@ -733,20 +774,8 @@ public:
 	[[nodiscard]] rpl::producer<bool> removeMessageTailChanges() const { return _removeMessageTail.changes(); }
 	[[nodiscard]] rpl::producer<bool> disableNotificationsDelayValue() const { return _disableNotificationsDelay.value(); }
 	[[nodiscard]] rpl::producer<bool> disableNotificationsDelayChanges() const { return _disableNotificationsDelay.changes(); }
-	[[nodiscard]] rpl::producer<bool> localPremiumValue() const { return _localPremium.value(); }
-	[[nodiscard]] rpl::producer<bool> localPremiumChanges() const { return _localPremium.changes(); }
-	[[nodiscard]] rpl::producer<int> localStarsBalanceValue() const { return _localStarsBalance.value(); }
-	[[nodiscard]] rpl::producer<int> localStarsBalanceChanges() const { return _localStarsBalance.changes(); }
-	[[nodiscard]] rpl::producer<QString> localStarsActivityValue() const { return _localStarsActivity.value(); }
-	[[nodiscard]] rpl::producer<QString> localStarsActivityChanges() const { return _localStarsActivity.changes(); }
 	[[nodiscard]] rpl::producer<QString> localStarsCardNameValue() const { return _localStarsCardName.value(); }
 	[[nodiscard]] rpl::producer<QString> localStarsCardNameChanges() const { return _localStarsCardName.changes(); }
-	[[nodiscard]] rpl::producer<QString> localGiftsValue() const { return _localGifts.value(); }
-	[[nodiscard]] rpl::producer<QString> localGiftsChanges() const { return _localGifts.changes(); }
-	[[nodiscard]] rpl::producer<QString> localStarsEarningsValue() const { return _localStarsEarnings.value(); }
-	[[nodiscard]] rpl::producer<QString> localStarsEarningsChanges() const { return _localStarsEarnings.changes(); }
-	[[nodiscard]] rpl::producer<int> localStarsWithdrawnValue() const { return _localStarsWithdrawn.value(); }
-	[[nodiscard]] rpl::producer<int> localStarsWithdrawnChanges() const { return _localStarsWithdrawn.changes(); }
 	[[nodiscard]] rpl::producer<bool> showChannelReactionsValue() const { return _showChannelReactions.value(); }
 	[[nodiscard]] rpl::producer<bool> showChannelReactionsChanges() const { return _showChannelReactions.changes(); }
 	[[nodiscard]] rpl::producer<bool> showGroupReactionsValue() const { return _showGroupReactions.value(); }
@@ -916,13 +945,7 @@ private:
 	rpl::variable<bool> _animateWindowOpening = true;
 	rpl::variable<bool> _removeMessageTail = false;
 	rpl::variable<bool> _disableNotificationsDelay = false;
-	rpl::variable<bool> _localPremium = false;
-	rpl::variable<int> _localStarsBalance = 0;
-	rpl::variable<QString> _localStarsActivity;
 	rpl::variable<QString> _localStarsCardName;
-	rpl::variable<QString> _localGifts;
-	rpl::variable<QString> _localStarsEarnings;
-	rpl::variable<int> _localStarsWithdrawn = 0;
 	rpl::variable<bool> _showChannelReactions = true;
 	rpl::variable<bool> _showGroupReactions = true;
 	rpl::variable<bool> _showPrivateChatReactions = true;
@@ -988,6 +1011,7 @@ private:
 	rpl::variable<bool> _useGlobalGhostMode = true;
 	std::map<uint64, std::unique_ptr<GhostModeAccountSettings>> _ghostAccounts;
 	std::map<uint64, std::unique_ptr<LocalProfileAccountSettings>> _localProfileAccounts;
+	std::map<uint64, std::unique_ptr<LocalStarsAccountSettings>> _localStarsAccounts;
 
 	MessageShotSettings _messageShotSettings;
 };

@@ -1258,11 +1258,11 @@ void SendLocalStarGift(
 				}
 				return;
 			}
-			const auto settings = &AyuSettings::getInstance();
+			const auto settings = &AyuSettings::localStars(&window->session());
 			settings->setLocalStarsBalance(
 				settings->localStarsBalance() - int(cost));
 			if (self) {
-				Ayu::AppendLocalGift({
+				Ayu::AppendLocalGift(&window->session(), {
 					.giftId = giftId,
 					.stars = stars,
 					.date = base::unixtime::now(),

@@ -664,11 +664,17 @@ void BuildSpyEssentials(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 void BuildOther(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 	builder.addSubsectionTitle(tr::ayu_MessageSavingOtherHeader());
 
-	ayu.addSettingToggle({
+	const auto controller = builder.controller();
+	auto &stars = AyuSettings::localStars(&controller->session());
+	ayu.addToggle({
 		.id = u"ayu/localPremium"_q,
 		.title = tr::ayu_LocalPremium(),
-		.getter = &AyuSettings::localPremium,
-		.setter = &AyuSettings::setLocalPremium,
+		.getter = [stars] {
+			return stars.localPremium();
+		},
+		.setter = [stars](bool enabled) {
+			stars.setLocalPremium(enabled);
+		},
 	});
 	ayu.addSettingToggle({
 		.id = u"ayu/disableAds"_q,
