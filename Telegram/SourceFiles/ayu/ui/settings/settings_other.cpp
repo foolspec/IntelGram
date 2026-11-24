@@ -564,7 +564,7 @@ void ShowLocalPinnedGiftManager(
 		not_null<Window::SessionController*> controller) {
 	controller->show(Box([=](not_null<Ui::GenericBox*> box) {
 		box->setTitle(tr::ayu_LocalProfileGiftPickerManagePinned());
-		auto &settings = AyuSettings::localProfile(&controller->session());
+		auto *settings = &AyuSettings::localProfile(&controller->session());
 		const auto content = box->verticalLayout();
 		const auto add = AddButtonWithIcon(
 			content,
@@ -610,7 +610,7 @@ void ShowLocalPinnedGiftManager(
 							kept.push_back(entry);
 						}
 					}
-					settings.setLocalProfileGifts(
+					settings->setLocalProfileGifts(
 						SerializeLocalGiftReferences(kept));
 					button->hide();
 				});
@@ -630,7 +630,7 @@ void ShowLocalPinnedGiftManager(
 				st::settingsButton,
 				{ &st::menuIconDelete });
 			clear->setClickedCallback([=] {
-				settings.setLocalProfileGifts(QString());
+				settings->setLocalProfileGifts(QString());
 				box->closeBox();
 			});
 		}
