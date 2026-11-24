@@ -383,7 +383,8 @@ rpl::producer<Ui::SlideWrap<Ui::RpWidget>*> TopBarSuggestionValue(
 							[=] {
 								promo->dismiss(kSugLowCreditsSubs.utf8());
 								repeat(repeat);
-							}));
+							},
+							false));
 					});
 					content->setHideCallback([=] {
 						promo->dismiss(kSugLowCreditsSubs.utf8());

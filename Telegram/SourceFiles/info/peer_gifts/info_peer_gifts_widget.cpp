@@ -810,13 +810,14 @@ void InnerWidget::mergeLocalGifts() {
 				|| filter.skipSaved) {
 				continue;
 			}
-			auto saved = Data::SavedStarGift();
-			saved.info = info;
-			saved.message = TextWithEntities{ record.message };
-			saved.fromId = _peer->id;
-			saved.date = TimeId(record.date);
-			saved.anonymous = record.anonymous;
-			saved.mine = true;
+			auto saved = Data::SavedStarGift{
+				.info = info,
+				.message = TextWithEntities{ record.message },
+				.fromId = _peer->id,
+				.date = TimeId(record.date),
+				.anonymous = record.anonymous,
+				.mine = true,
+			};
 			auto descriptor = DescriptorForGift(_peer, saved);
 			entries.push_back({
 				.gift = std::move(saved),

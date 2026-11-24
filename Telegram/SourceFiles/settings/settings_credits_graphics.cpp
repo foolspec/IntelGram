@@ -23,6 +23,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "boxes/star_gift_craft_box.h"
 #include "boxes/star_gift_resale_box.h"
 #include "boxes/transfer_gift_box.h"
+#include "chat_helpers/compose/compose_show.h"
 #include "chat_helpers/stickers_gift_box_pack.h"
 #include "chat_helpers/stickers_lottie.h"
 #include "core/application.h"
@@ -107,6 +108,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ui/wrap/vertical_layout.h"
 #include "ui/ui_utility.h"
 #include "webview/webview_common.h"
+#include "window/main_window.h"
 #include "window/themes/window_theme.h"
 #include "window/window_session_controller.h"
 #include "styles/style_calls.h"
@@ -1411,7 +1413,8 @@ void FillCreditOptions(
 									settings->localStarsBalance()
 										- int(option.credits));
 								if (const auto window
-										= show->resolveWindow()) {
+										= ChatHelpers::ResolveWindowDefault()(
+											&show->session())) {
 									window->showToast({
 										.title = tr::lng_gift_sent_title(
 											tr::now),
@@ -3611,8 +3614,8 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
 		.giftUpgradeSeparate = data.upgradeSeparate,
 		.giftPinned = data.pinned,
 		.savedToProfile = !data.hidden,
-		.fromGiftsList = true,
 		.localGift = !data.manageId,
+		.fromGiftsList = true,
 		.canUpgradeGift = data.upgradable,
 		.in = data.mine,
 		.gift = true,
@@ -4530,7 +4533,8 @@ void MaybeRequestBalanceIncrease(
 				show,
 				credits,
 				source,
-				success));
+				success,
+				false));
 			box->boxClosing() | rpl::on_next([=] {
 				crl::on_main([=] {
 					if (!state->success) {
