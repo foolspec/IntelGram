@@ -8749,7 +8749,7 @@ index 869861bba..7395a80ec 100644
  
  [[nodiscard]] Type AyuAppearanceId();
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_ayu.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_ayu.cpp
-index 657677d61..a215ed4fc 100644
+index 657677d61..d75fa2406 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_ayu.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_ayu.cpp
 @@ -664,11 +664,17 @@ void BuildSpyEssentials(SectionBuilder &builder, AyuSectionBuilder &ayu) {
@@ -8758,17 +8758,17 @@ index 657677d61..a215ed4fc 100644
  
 -	ayu.addSettingToggle({
 +	const auto controller = builder.controller();
-+	auto &stars = AyuSettings::localStars(&controller->session());
++	auto *stars = &AyuSettings::localStars(&controller->session());
 +	ayu.addToggle({
  		.id = u"ayu/localPremium"_q,
  		.title = tr::ayu_LocalPremium(),
 -		.getter = &AyuSettings::localPremium,
 -		.setter = &AyuSettings::setLocalPremium,
 +		.getter = [stars] {
-+			return stars.localPremium();
++			return stars->localPremium();
 +		},
 +		.setter = [stars](bool enabled) {
-+			stars.setLocalPremium(enabled);
++			stars->setLocalPremium(enabled);
 +		},
  	});
  	ayu.addSettingToggle({
@@ -9140,7 +9140,7 @@ index a4b1e7ad4..9e4d787a7 100644
  	builder.addSkip();
  }
 diff --git a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
-index 929cf4609..8d65024c2 100644
+index 929cf4609..f065587e1 100644
 --- a/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 +++ b/Telegram/SourceFiles/ayu/ui/settings/settings_other.cpp
 @@ -6,33 +6,51 @@
@@ -10151,7 +10151,7 @@ index 929cf4609..8d65024c2 100644
 +
 +void BuildLocalProfile(SectionBuilder &builder, AyuSectionBuilder &ayu) {
 +	const auto controller = builder.controller();
-+	auto &profile = AyuSettings::localProfile(&controller->session());
++	auto *profile = &AyuSettings::localProfile(&controller->session());
 +
  	builder.addSkip();
 -	builder.addSubsectionTitle(tr::ayu_CategoryOther());
@@ -10169,7 +10169,7 @@ index 929cf4609..8d65024c2 100644
 +		.title = tr::ayu_LocalProfileCloneClear(),
 +		.icon = { &st::menuIconDelete },
 +		.onClick = [=] {
-+			profile.setLocalProfileCloneId(QString());
++			profile->setLocalProfileCloneId(QString());
 +			Ayu::RefreshLocalProfilePresentation(&controller->session());
 +			controller->showToast(tr::lng_box_done(tr::now));
 +		},
@@ -10197,24 +10197,24 @@ index 929cf4609..8d65024c2 100644
 +		.id = u"ayu/localProfileNameEnabled"_q,
 +		.title = tr::ayu_LocalProfileNameEnabled(),
 +		.getter = [profile] {
-+			return profile.localProfileNameEnabled();
++			return profile->localProfileNameEnabled();
 +		},
 +		.setter = [profile](bool enabled) {
-+			profile.setLocalProfileNameEnabled(enabled);
++			profile->setLocalProfileNameEnabled(enabled);
 +		},
 +		.icon = { &st::menuIconProfile },
 +	});
-+	builder.add([](const WidgetContext &wctx) {
++	builder.add([profile](const WidgetContext &wctx) {
 +		auto field = object_ptr<Ui::InputField>(
 +			wctx.container,
 +			st::settingsDeviceName,
 +			tr::ayu_LocalProfileName(),
-+			profile.localProfileName());
++			profile->localProfileName());
 +		const auto raw = field.data();
 +		raw->setMaxLength(Ayu::kMaxLocalProfileNameLength);
 +		raw->changes(
 +		) | rpl::on_next([=] {
-+			profile.setLocalProfileName(
++			profile->setLocalProfileName(
 +				raw->getLastText());
 +		}, raw->lifetime());
 +		return SectionBuilder::WidgetToAdd{
@@ -10236,24 +10236,24 @@ index 929cf4609..8d65024c2 100644
 +		.id = u"ayu/localProfileIdEnabled"_q,
 +		.title = tr::ayu_LocalProfileIdEnabled(),
 +		.getter = [profile] {
-+			return profile.localProfileIdEnabled();
++			return profile->localProfileIdEnabled();
 +		},
 +		.setter = [profile](bool enabled) {
-+			profile.setLocalProfileIdEnabled(enabled);
++			profile->setLocalProfileIdEnabled(enabled);
 +		},
 +		.icon = { &st::menuIconInfo },
 +	});
-+	builder.add([](const WidgetContext &wctx) {
++	builder.add([profile](const WidgetContext &wctx) {
 +		auto field = object_ptr<Ui::InputField>(
 +			wctx.container,
 +			st::settingsDeviceName,
 +			tr::ayu_LocalProfileId(),
-+			profile.localProfileId());
++			profile->localProfileId());
 +		const auto raw = field.data();
 +		raw->setMaxLength(Ayu::kMaxLocalProfileIdLength);
 +		raw->changes(
 +		) | rpl::on_next([=] {
-+			profile.setLocalProfileId(
++			profile->setLocalProfileId(
 +				raw->getLastText());
 +		}, raw->lifetime());
 +		return SectionBuilder::WidgetToAdd{
@@ -10281,24 +10281,24 @@ index 929cf4609..8d65024c2 100644
 +		.id = u"ayu/localProfileUsernameEnabled"_q,
 +		.title = tr::ayu_LocalProfileUsernameEnabled(),
 +		.getter = [profile] {
-+			return profile.localProfileUsernameEnabled();
++			return profile->localProfileUsernameEnabled();
 +		},
 +		.setter = [profile](bool enabled) {
-+			profile.setLocalProfileUsernameEnabled(enabled);
++			profile->setLocalProfileUsernameEnabled(enabled);
 +		},
 +		.icon = { &st::menuIconLink },
 +	});
-+	builder.add([](const WidgetContext &wctx) {
++	builder.add([profile](const WidgetContext &wctx) {
 +		auto field = object_ptr<Ui::InputField>(
 +			wctx.container,
 +			st::settingsDeviceName,
 +			tr::ayu_LocalProfileUsername(),
-+			profile.localProfileUsername());
++			profile->localProfileUsername());
 +		const auto raw = field.data();
 +		raw->setMaxLength(Ayu::kMaxLocalProfileUsernameLength);
 +		raw->changes(
 +		) | rpl::on_next([=] {
-+			profile.setLocalProfileUsername(
++			profile->setLocalProfileUsername(
 +				raw->getLastText());
 +		}, raw->lifetime());
 +		return SectionBuilder::WidgetToAdd{
@@ -10316,17 +10316,17 @@ index 929cf4609..8d65024c2 100644
 +			.icon = { &st::menuIconLink },
 +		};
 +	});
-+	builder.add([](const WidgetContext &wctx) {
++	builder.add([profile](const WidgetContext &wctx) {
 +		auto field = object_ptr<Ui::InputField>(
 +			wctx.container,
 +			st::settingsDeviceName,
 +			tr::ayu_LocalProfileUsernames(),
-+			profile.localProfileUsernames());
++			profile->localProfileUsernames());
 +		const auto raw = field.data();
 +		raw->setMaxLength(Ayu::kMaxLocalProfileUsernamesLength);
 +		raw->changes(
 +		) | rpl::on_next([=] {
-+			profile.setLocalProfileUsernames(
++			profile->setLocalProfileUsernames(
 +				raw->getLastText());
 +		}, raw->lifetime());
 +		return SectionBuilder::WidgetToAdd{
@@ -10348,24 +10348,24 @@ index 929cf4609..8d65024c2 100644
 +		.id = u"ayu/localProfilePhoneEnabled"_q,
 +		.title = tr::ayu_LocalProfilePhoneEnabled(),
 +		.getter = [profile] {
-+			return profile.localProfilePhoneEnabled();
++			return profile->localProfilePhoneEnabled();
 +		},
 +		.setter = [profile](bool enabled) {
-+			profile.setLocalProfilePhoneEnabled(enabled);
++			profile->setLocalProfilePhoneEnabled(enabled);
 +		},
 +		.icon = { &st::menuIconPhone },
 +	});
-+	builder.add([](const WidgetContext &wctx) {
++	builder.add([profile](const WidgetContext &wctx) {
 +		auto field = object_ptr<Ui::InputField>(
 +			wctx.container,
 +			st::settingsDeviceName,
 +			tr::ayu_LocalProfilePhone(),
-+			profile.localProfilePhone());
++			profile->localProfilePhone());
 +		const auto raw = field.data();
 +		raw->setMaxLength(Ayu::kMaxLocalProfilePhoneLength);
 +		raw->changes(
 +		) | rpl::on_next([=] {
-+			profile.setLocalProfilePhone(
++			profile->setLocalProfilePhone(
 +				raw->getLastText());
 +		}, raw->lifetime());
 +		return SectionBuilder::WidgetToAdd{
@@ -10387,24 +10387,24 @@ index 929cf4609..8d65024c2 100644
 +		.id = u"ayu/localProfileAboutEnabled"_q,
 +		.title = tr::ayu_LocalProfileAboutEnabled(),
 +		.getter = [profile] {
-+			return profile.localProfileAboutEnabled();
++			return profile->localProfileAboutEnabled();
 +		},
 +		.setter = [profile](bool enabled) {
-+			profile.setLocalProfileAboutEnabled(enabled);
++			profile->setLocalProfileAboutEnabled(enabled);
 +		},
 +		.icon = { &st::menuIconInfo },
 +	});
-+	builder.add([](const WidgetContext &wctx) {
++	builder.add([profile](const WidgetContext &wctx) {
 +		auto field = object_ptr<Ui::InputField>(
 +			wctx.container,
 +			st::settingsDeviceName,
 +			tr::ayu_LocalProfileAbout(),
-+			profile.localProfileAbout());
++			profile->localProfileAbout());
 +		const auto raw = field.data();
 +		raw->setMaxLength(Ayu::kMaxLocalProfileAboutLength);
 +		raw->changes(
 +		) | rpl::on_next([=] {
-+			profile.setLocalProfileAbout(
++			profile->setLocalProfileAbout(
 +				raw->getLastText());
 +		}, raw->lifetime());
 +		return SectionBuilder::WidgetToAdd{
@@ -10439,7 +10439,7 @@ index 929cf4609..8d65024c2 100644
 +		.title = tr::ayu_LocalProfilePhotoClear(),
 +		.icon = { &st::menuIconDelete },
 +		.onClick = [=] {
-+			profile.setLocalProfilePhoto(QString());
++			profile->setLocalProfilePhoto(QString());
 +			Ayu::RefreshLocalProfilePresentation(&controller->session());
 +			controller->showToast(tr::lng_box_done(tr::now));
 +		},
@@ -10453,10 +10453,10 @@ index 929cf4609..8d65024c2 100644
 +		.id = u"ayu/localProfileChannelEnabled"_q,
 +		.title = tr::ayu_LocalProfileChannelEnabled(),
 +		.getter = [profile] {
-+			return profile.localProfileChannelEnabled();
++			return profile->localProfileChannelEnabled();
 +		},
 +		.setter = [profile](bool enabled) {
-+			profile.setLocalProfileChannelEnabled(enabled);
++			profile->setLocalProfileChannelEnabled(enabled);
 +		},
 +		.icon = { &st::menuIconChannel },
 +	});
@@ -10464,7 +10464,7 @@ index 929cf4609..8d65024c2 100644
 +		.id = u"ayu/localProfileChannel"_q,
 +		.title = tr::ayu_LocalProfileChannelChoose(),
 +		.icon = { &st::menuIconChannel },
-+		.label = profile.localProfileChannelValue(
++		.label = profile->localProfileChannelValue(
 +		) | rpl::map([](const QString &username) {
 +			return username.isEmpty()
 +				? tr::ayu_LocalProfileChannelNone(tr::now)
@@ -10487,9 +10487,9 @@ index 929cf4609..8d65024c2 100644
 +		.title = tr::ayu_LocalProfileChannelClear(),
 +		.icon = { &st::menuIconDelete },
 +		.onClick = [=] {
-+			auto &settings = profile;
-+			settings.setLocalProfileChannelEnabled(false);
-+			settings.setLocalProfileChannel(QString());
++			auto *settings = profile;
++			settings->setLocalProfileChannelEnabled(false);
++			settings->setLocalProfileChannel(QString());
 +			Ayu::RefreshLocalProfilePresentation(&controller->session());
 +			controller->showToast(tr::lng_box_done(tr::now));
 +		},
@@ -10503,10 +10503,10 @@ index 929cf4609..8d65024c2 100644
 +		.id = u"ayu/localProfileGiftEnabled"_q,
 +		.title = tr::ayu_LocalProfileGiftEnabled(),
 +		.getter = [profile] {
-+			return profile.localProfileGiftEnabled();
++			return profile->localProfileGiftEnabled();
 +		},
 +		.setter = [profile](bool enabled) {
-+			profile.setLocalProfileGiftEnabled(enabled);
++			profile->setLocalProfileGiftEnabled(enabled);
 +		},
 +		.icon = { &st::menuIconGiftPremium },
 +	});
@@ -10533,7 +10533,7 @@ index 929cf4609..8d65024c2 100644
 +		.title = tr::ayu_LocalProfileGiftPickerClearFeatured(),
 +		.icon = { &st::menuIconDelete },
 +		.onClick = [=] {
-+			profile.setLocalProfileGift(QString());
++			profile->setLocalProfileGift(QString());
 +			controller->showToast(tr::lng_box_done(tr::now));
 +		},
 +	});
@@ -17375,7 +17375,7 @@ index a66e3d0c1..af051fcdb 100644
  			const auto addAction = Ui::Menu::CreateAddActionCallback(_menu);
  			addAction({
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_actions.cpp b/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
-index 594061dbb..537efb547 100644
+index 594061dbb..0c536e635 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_actions.cpp
 @@ -7,6 +7,10 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -17406,7 +17406,7 @@ index 594061dbb..537efb547 100644
  
  object_ptr<Ui::RpWidget> DetailsFiller::setupPersonalChannel(
  		not_null<UserData*> user) {
-+	auto &profile = AyuSettings::localProfile(&user->session());
++	auto *profile = &AyuSettings::localProfile(&user->session());
  	auto result = object_ptr<Ui::SlideWrap<Ui::VerticalLayout>>(
  		_wrap,
  		object_ptr<Ui::VerticalLayout>(_wrap));
@@ -17432,9 +17432,9 @@ index 594061dbb..537efb547 100644
 -		) | rpl::map([](TextWithEntities &&text, ChannelData *channel) {
 +			tr::ayu_LocalProfileChannelProfileLabel(tr::marked),
 +			std::move(c),
-+			profile.localProfileChannelEnabledValue(),
-+			profile.localProfileChannelValue(),
-+			profile.localProfileCloneIdValue()
++			profile->localProfileChannelEnabledValue(),
++			profile->localProfileChannelValue(),
++			profile->localProfileCloneIdValue()
 +		) | rpl::map([=](
 +				TextWithEntities &&personal,
 +				TextWithEntities &&showcase,
@@ -17472,8 +17472,8 @@ index 594061dbb..537efb547 100644
 +					state->menu->addAction(
 +						tr::ayu_LocalProfileChannelClear(tr::now),
 +						[=] {
-+							profile.setLocalProfileChannelEnabled(false);
-+							profile.setLocalProfileChannel(QString());
++							profile->setLocalProfileChannelEnabled(false);
++							profile->setLocalProfileChannel(QString());
 +							Ayu::RefreshLocalProfilePresentation(
 +								&user->session());
 +						});
@@ -17506,7 +17506,7 @@ index 594061dbb..537efb547 100644
 -		}) | rpl::flatten_latest() | rpl::map([](const QString &name) {
 +		auto text = rpl::combine(
 +			rpl::duplicate(channel),
-+			profile.localProfileChannelWorkspaceValue()
++			profile->localProfileChannelWorkspaceValue()
 +		) | rpl::map([=](
 +				ChannelData *channel,
 +				const QString &) {
@@ -19217,7 +19217,7 @@ index 894e07c35..0e511ff30 100644
  
  void ShowPremiumPromoToast(
 diff --git a/Telegram/SourceFiles/settings/settings_credits_graphics.cpp b/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
-index 9ac4584e4..a90c17d47 100644
+index 9ac4584e4..612058a35 100644
 --- a/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
 +++ b/Telegram/SourceFiles/settings/settings_credits_graphics.cpp
 @@ -12,6 +12,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -19243,11 +19243,12 @@ index 9ac4584e4..a90c17d47 100644
  #include "core/ui_integration.h"
  #include "data/components/credits.h"
  #include "data/components/recent_shared_media_gifts.h"
-@@ -59,12 +63,18 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -59,12 +63,19 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "lottie/lottie_single_player.h"
  #include "main/main_app_config.h"
  #include "main/main_session.h"
 +#include "main/session/session_show.h"
++#include "mainwindow.h"
  #include "payments/payments_checkout_process.h"
  #include "payments/payments_form.h"
  #include "payments/payments_non_panel_process.h"
@@ -19262,7 +19263,7 @@ index 9ac4584e4..a90c17d47 100644
  #include "ui/boxes/confirm_box.h"
  #include "ui/controls/button_labels.h"
  #include "ui/controls/ton_common.h"
-@@ -97,6 +107,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -97,6 +108,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "ui/wrap/slide_wrap.h"
  #include "ui/wrap/vertical_layout.h"
  #include "ui/ui_utility.h"
@@ -19272,7 +19273,7 @@ index 9ac4584e4..a90c17d47 100644
  #include "window/window_session_controller.h"
  #include "styles/style_calls.h"
  #include "styles/style_channel_earn.h"
-@@ -107,14 +120,20 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -107,14 +121,20 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "styles/style_layers.h"
  #include "styles/style_media_view.h"
  #include "styles/style_menu_icons.h"
@@ -19293,7 +19294,7 @@ index 9ac4584e4..a90c17d47 100644
  namespace Settings {
  namespace {
  
-@@ -280,6 +299,34 @@ void ConvertStarGift(
+@@ -280,6 +300,34 @@ void ConvertStarGift(
  	}).send();
  }
  
@@ -19328,7 +19329,7 @@ index 9ac4584e4..a90c17d47 100644
  void AddViewMediaHandler(
  		not_null<Ui::RpWidget*> thumb,
  		std::shared_ptr<ChatHelpers::Show> show,
-@@ -379,6 +426,684 @@ void AddViewMediaHandler(
+@@ -379,6 +427,684 @@ void AddViewMediaHandler(
  	}, thumb->lifetime());
  }
  
@@ -20013,7 +20014,7 @@ index 9ac4584e4..a90c17d47 100644
  } // namespace
  
  void AddMiniStars(
-@@ -463,6 +1188,29 @@ void FillCreditOptions(
+@@ -463,6 +1189,29 @@ void FillCreditOptions(
  		std::vector<Data::CreditTopupOption> preloadedTopupOptions,
  		bool dark,
  		PeerId spendPurposePeerId) {
@@ -20043,7 +20044,7 @@ index 9ac4584e4..a90c17d47 100644
  	const auto options = container->add(
  		object_ptr<Ui::SlideWrap<Ui::VerticalLayout>>(
  			container,
-@@ -647,6 +1395,65 @@ void FillCreditOptions(
+@@ -647,6 +1396,65 @@ void FillCreditOptions(
  					buttonHeight);
  			}, button->lifetime());
  			button->setClickedCallback([=] {
@@ -20109,7 +20110,7 @@ index 9ac4584e4..a90c17d47 100644
  				const auto invoice = Payments::InvoiceCredits{
  					.session = &show->session(),
  					.randomId = UniqueIdFromOption(option),
-@@ -701,7 +1508,9 @@ void FillCreditOptions(
+@@ -701,7 +1509,9 @@ void FillCreditOptions(
  	using ApiOptions = Api::CreditsTopupOptions;
  	const auto apiCredits = content->lifetime().make_state<ApiOptions>(peer);
  
@@ -20120,7 +20121,7 @@ index 9ac4584e4..a90c17d47 100644
  		if (preloadedTopupOptions.empty()) {
  			fillLoading();
  			std::move(showFinishes) | rpl::on_next([=] {
-@@ -721,12 +1530,14 @@ void FillCreditOptions(
+@@ -721,12 +1531,14 @@ void FillCreditOptions(
  		}
  	}
  
@@ -20141,7 +20142,7 @@ index 9ac4584e4..a90c17d47 100644
  }
  
  [[nodiscard]] object_ptr<Ui::FlatLabel> CreateCreditsTermsLabel(
-@@ -2023,8 +2834,12 @@ void GenericCreditsEntryBody(
+@@ -2023,8 +2835,12 @@ void GenericCreditsEntryBody(
  	const auto canToggle = starGiftCanManage
  		&& !e.giftTransferred
  		&& !e.giftRefunded
@@ -20155,7 +20156,7 @@ index 9ac4584e4..a90c17d47 100644
  		const auto showSection = !e.fromGiftsList;
  		const auto savedId = EntryToSavedStarGiftId(&show->session(), e);
  		const auto done = [=](bool ok) {
-@@ -2123,7 +2938,7 @@ void GenericCreditsEntryBody(
+@@ -2123,7 +2939,7 @@ void GenericCreditsEntryBody(
  					e);
  				if (stars) {
  					const auto done = [=](bool ok) {
@@ -20164,7 +20165,7 @@ index 9ac4584e4..a90c17d47 100644
  							using GiftAction = Data::GiftUpdate::Action;
  							show->session().data().notifyGiftUpdate({
  								.id = savedId,
-@@ -2138,7 +2953,11 @@ void GenericCreditsEntryBody(
+@@ -2138,7 +2954,11 @@ void GenericCreditsEntryBody(
  							}
  						}
  					};
@@ -20177,7 +20178,7 @@ index 9ac4584e4..a90c17d47 100644
  				}
  			});
  		};
-@@ -2722,7 +3541,11 @@ void GlobalStarGiftBox(
+@@ -2722,7 +3542,11 @@ void GlobalStarGiftBox(
  		CreditsEntryBoxStyleOverrides st) {
  	const auto selfId = show->session().userPeerId();
  	const auto ownerId = data.unique ? data.unique->ownerId.value : 0;
@@ -20190,7 +20191,7 @@ index 9ac4584e4..a90c17d47 100644
  	Settings::GenericCreditsEntryBox(
  		box,
  		show,
-@@ -2778,8 +3601,10 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
+@@ -2778,8 +3602,10 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
  		.peerType = Data::CreditsHistoryEntry::PeerType::Peer,
  		.limitedCount = data.info.limitedCount,
  		.limitedLeft = data.info.limitedLeft,
@@ -20203,7 +20204,7 @@ index 9ac4584e4..a90c17d47 100644
  		.starsUpgradedBySender = int(data.starsUpgradedBySender),
  		.starsForDetailsRemove = int(data.starsForDetailsRemove),
  		.giftNumber = data.giftNum,
-@@ -2789,6 +3614,7 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
+@@ -2789,6 +3615,7 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
  		.giftUpgradeSeparate = data.upgradeSeparate,
  		.giftPinned = data.pinned,
  		.savedToProfile = !data.hidden,
@@ -20211,7 +20212,7 @@ index 9ac4584e4..a90c17d47 100644
  		.fromGiftsList = true,
  		.canUpgradeGift = data.upgradable,
  		.in = data.mine,
-@@ -3063,7 +3889,8 @@ void SmallBalanceBox(
+@@ -3063,7 +3890,8 @@ void SmallBalanceBox(
  		std::shared_ptr<Main::SessionShow> show,
  		uint64 wholeCredits,
  		SmallBalanceSource source,
@@ -20221,7 +20222,7 @@ index 9ac4584e4..a90c17d47 100644
  	Expects(show->session().credits().loaded());
  
  	auto credits = CreditsAmount(wholeCredits);
-@@ -3075,6 +3902,19 @@ void SmallBalanceBox(
+@@ -3075,6 +3903,19 @@ void SmallBalanceBox(
  		paid();
  	};
  
@@ -20241,7 +20242,7 @@ index 9ac4584e4..a90c17d47 100644
  	auto dark = false;
  	const auto owner = &show->session().data();
  	const auto name = v::match(source, [&](SmallBalanceBot value) {
-@@ -3106,7 +3946,7 @@ void SmallBalanceBox(
+@@ -3106,7 +3947,7 @@ void SmallBalanceBox(
  		return QString();
  	});
  
@@ -20250,7 +20251,7 @@ index 9ac4584e4..a90c17d47 100644
  	) | rpl::map([=](CreditsAmount balance) {
  		return (balance < credits) ? (credits - balance) : CreditsAmount();
  	});
-@@ -3217,7 +4057,7 @@ void SmallBalanceBox(
+@@ -3217,7 +4058,7 @@ void SmallBalanceBox(
  		show,
  		box->verticalLayout(),
  		show->session().user(),
@@ -20259,7 +20260,7 @@ index 9ac4584e4..a90c17d47 100644
  		[=] { show->session().credits().load(true); },
  		box->showFinishes(),
  		tr::lng_credits_summary_options_subtitle(),
-@@ -3243,7 +4083,7 @@ void SmallBalanceBox(
+@@ -3243,7 +4084,7 @@ void SmallBalanceBox(
  		const auto balance = AddBalanceWidget(
  			content,
  			&show->session(),
@@ -20268,7 +20269,7 @@ index 9ac4584e4..a90c17d47 100644
  			true,
  			nullptr,
  			dark);
-@@ -3275,7 +4115,8 @@ void AddWithdrawalWidget(
+@@ -3275,7 +4116,8 @@ void AddWithdrawalWidget(
  		rpl::producer<CreditsAmount> availableBalanceValue,
  		rpl::producer<QDateTime> dateValue,
  		bool withdrawalEnabled,
@@ -20278,7 +20279,7 @@ index 9ac4584e4..a90c17d47 100644
  	Ui::AddSkip(container);
  
  	const auto labels = container->add(
-@@ -3563,38 +4404,70 @@ void AddWithdrawalWidget(
+@@ -3563,38 +4405,70 @@ void AddWithdrawalWidget(
  		}, state->dateUpdateLifetime);
  	}, lockedLabel->lifetime());
  
@@ -20379,7 +20380,7 @@ index 9ac4584e4..a90c17d47 100644
  	Ui::ToggleChildrenVisibility(button, true);
  
  	Ui::AddSkip(container);
-@@ -3660,7 +4533,8 @@ void MaybeRequestBalanceIncrease(
+@@ -3660,7 +4534,8 @@ void MaybeRequestBalanceIncrease(
  				show,
  				credits,
  				source,
@@ -20389,7 +20390,7 @@ index 9ac4584e4..a90c17d47 100644
  			box->boxClosing() | rpl::on_next([=] {
  				crl::on_main([=] {
  					if (!state->success) {
-@@ -3680,6 +4554,133 @@ void MaybeRequestBalanceIncrease(
+@@ -3680,6 +4555,133 @@ void MaybeRequestBalanceIncrease(
  	}, state->lifetime);
  }
  

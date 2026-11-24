@@ -51,6 +51,7 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 
 - The Stars panel, gifts tab, and dialogs suggestion code called Telegram APIs that do not exist in the pinned AyuGram v6.7.8 source, which failed the first v22 build on macOS and Linux. Those calls now match the pinned source.
 - The Windows dependency setup no longer installs the MSYS2 diffutils package that MSYS2 removed from its repository, which failed the first v22 build's Windows dependency stage.
+- The per-account profile and Stars code called setters on settings objects the compiler treats as read-only inside settings lambdas, and the Premium checkout passed a main-window pointer the compiler could not convert, which failed the v22 rebuild on Linux. Settings are now reached through the live per-account entry, and the checkout includes the correct main-window header.
 
 ### Changed
 

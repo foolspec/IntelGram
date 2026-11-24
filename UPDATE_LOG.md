@@ -20,6 +20,7 @@
 - Per-account profile clones: each signed-in account keeps its own local profile clone and NFT collections; switching accounts restores that account's clone and collections, and an account with no clone shows its real profile. Your existing clone carries over to the account you are using.
 - Per-account Stars, gifts, earnings, and Premium: each signed-in account keeps its own local Stars balance, gift inventory, earnings, and Premium state; Premium bought on one account no longer appears on the others. Your existing balance, gifts, earnings, and Premium carry over to the account you are using.
 - Build fix: the Stars panel, gifts tab, and dialogs code now call only APIs present in AyuGram v6.7.8, and the Windows dependency setup no longer installs the removed MSYS2 diffutils package.
+- Per-account compile fix: the per-account profile and Stars settings are now mutated through the live per-account entry instead of a copied settings object, and the Premium checkout includes the correct main-window header, so the rebuild compiles on Linux and macOS.
 - Honest limits: there is no simulated bot chat; Business setting saves are still rejected by Telegram's server without a real subscription; converting a local gift returns an estimated 50% of its star price; gifting Premium to others is untouched.
 - Payment boundary: no real card details are collected, no payment provider is contacted, and no Telegram payment, gift-transfer, or subscription API is invoked.
 
