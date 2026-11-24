@@ -162,13 +162,17 @@ jobs:
         run: |
           $pacman = Join-Path $PWD "ThirdParty\msys64\usr\bin\pacman.exe"
           if (-not (Test-Path $pacman)) { throw "MSYS2 pacman was not restored" }
-          & $pacman -S --noconfirm --needed mingw-w64-x86_64-yasm
-          if ($LASTEXITCODE -ne 0) { throw "Could not install the pinned MSYS2 Yasm package" }
+          & $pacman -S --noconfirm --needed yasm
+          if ($LASTEXITCODE -ne 0) { throw "Could not install the MSYS2 Yasm package" }
           $directory = Join-Path $PWD "ThirdParty\msys64\mingw64\bin"
+          $source = Join-Path $PWD "ThirdParty\msys64\usr\bin\yasm.exe"
+          if (-not (Test-Path $source)) { throw "MSYS2 Yasm executable was not installed" }
+          Copy-Item $source (Join-Path $directory "yasm.exe") -Force
           $executable = Join-Path $directory "yasm.exe"
           if (-not (Test-Path $executable)) { throw "MSYS2 Yasm executable was not installed" }
           $probeSource = Join-Path $directory "intelgram-yasm-probe.asm"
           $probeObject = Join-Path $directory "intelgram-yasm-probe.obj"
+          
           @(
             "section .text"
             "global intelgram_yasm_probe"
