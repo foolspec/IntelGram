@@ -8,6 +8,7 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 
 | Version | Published | Update |
 | --- | --- | --- |
+| v23 | 2026-11-25 | Collectibles, Boosts & Giveaways |
 | v22 | 2026-11-23 | Local Gifts, Premium & Business |
 | v21 | 2026-11-23 | Local Stars & Gifts |
 | v20 | 2026-11-22 | Local Stars & Gifts |
@@ -30,6 +31,53 @@ IntelGram uses sequential product versions beginning with v1. The retained `v6.7
 | v3 | 2026-07-14 | Multiplatform Launch |
 | v2 | 2026-07-13 | Local Profile Build Refresh |
 | v1 | 2026-07-13 | Initial Local Profile |
+
+## IntelGram v23 Collectibles, Boosts & Giveaways - 2026-11-25
+
+### Added
+
+- Gift upgrades to collectibles: upgrade a local gift at Telegram's upgrade fee and it becomes a collectible with its own model, pattern, backdrop, and sequential serial number, shown in the Collectibles filter.
+- Paid reactions: react to messages with Stars from the local balance through Telegram's native reaction picker. Paid reactions persist on the message, and reactions on your own channels credit the channel's local earnings.
+- Channel boosts: a local Premium account can spend its boost slots on channels from the native Boost screens, with the boost level, progress bar, and boost removal all working locally.
+- Giveaways: create Premium or Stars giveaways in your channels with Telegram's native creation flow. Winners are drawn locally when a giveaway ends and the results are posted in the channel, and local giveaways appear in the channel's boost statistics.
+- Business saves stored locally: greeting, away, working hours, intro, location, chatbot, and quick-reply settings now persist on-device instead of being rejected by Telegram's server. Quick replies keep their message text, and sending a quick reply from a local shortcut works.
+- Local gift collections: local gifts can be added to collections, hidden, and pinned from the gift's context menu and the collection editor, the same as server gifts.
+- Gifting that shows under the recipient's profile: a gift sent to a friend appears in that friend's Gifts tab in this client, marked as from you, and can be upgraded there. Gifting Premium shows the Premium badge on their profile, and gifting Stars is recorded in your Stars history.
+- A local Stars activity history: top-ups, gifts sent, earnings, withdrawals, and gift conversions are recorded on-device and shown in the My Stars history, merged with any real Telegram activity.
+
+### Fixed
+
+- Withdrawing Stars now deducts them from the spendable balance; before, withdrawn Stars stayed spendable.
+- View Statistics showed dollar amounts about 77 times too high because it used the TON exchange rate; it now uses the Stars withdrawal rate.
+- The Earn Stars options could be claimed endlessly; each one is now claimable once per day, like Telegram's.
+- The My Stars history was always empty for local activity; the new local activity history feeds it.
+- Sending a paid reaction could close the app when the real Telegram Stars balance was lower than the reaction amount.
+- Paid reactions disappeared a few seconds after sending; they now stay on the message.
+- Local Premium never expired and the plan picker could invoice a different plan than the one selected; subscriptions now expire on schedule and charge the selected plan.
+- Gifts sent to friends were charged but never appeared anywhere; they now show under the recipient's profile.
+- Converting a gift back to Stars returned 50% of its price; it now returns 85%, matching Telegram, and upgraded collectibles can no longer be converted, also matching Telegram.
+- Buying a gift with a full 200-gift inventory silently discarded the oldest gift; the purchase is now refused at the cap with an explanation.
+- The card typed into the checkout panel was forgotten before the next purchase; the saved card now persists.
+- A gift whose design Telegram removed from the catalog no longer vanishes from the local inventory.
+- The checkout invoice thumbnail now uses Telegram's violet star artwork.
+
+### Changed
+
+- The Stars, gifts, Premium, and Business flows no longer describe themselves as local or simulated inside the app: the Premium section shows Telegram's own Premium summary text, the Earn Stars box reads like Telegram's, and the withdrawal confirmation shows the amount and its dollar value.
+- The in-app update log now covers the 1:1 Stars checkout and the v22 and v23 features (issue #5).
+- The AyuGram settings switch that granted local Premium without the purchase flow was removed; Premium is obtained through the purchase flow.
+
+### Limits
+
+- Gifted Premium shows the badge on the recipient's profile only; it does not grant that person Premium features, and gifted Stars do not change the recipient's real balance. Both live on Telegram's server.
+- Local collectibles cannot be transferred, resold, or crafted, and their `nft/` links do not resolve.
+- Group-call paid reactions still use Telegram's real flow.
+- Broadcast-channel giveaways draw winners from the participants this client already knows; giveaways for specific users record those users as the winners.
+
+### Privacy
+
+- Every v23 action completes locally. No real payment is made, no payment provider is contacted, and no Telegram gift-transfer, payment, subscription, boost, or giveaway API is invoked.
+- Upgrades, reactions, boosts, giveaways, Business settings, and gifted items exist only inside this client's settings file, scoped per account.
 
 ## IntelGram v22 Local Gifts, Premium & Business - 2026-11-23
 

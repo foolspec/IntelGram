@@ -122,7 +122,15 @@ This document covers IntelGram's custom additions. IntelGram also retains the up
 - Buys and sends gifts with local Stars at Telegram's native star prices, including the optional upgrade fee.
 - Keeps up to 200 locally owned gifts in the profile Gifts tab, in Telegram's native grid with detail popups and All Gifts / Collectibles filtering.
 - Tracks local Stars proceeds with available, total, and lifetime balances, the 21-day maturity rule, a local Fragment-style withdrawal flow, and a statistics view.
-- Offers local Earn Stars options from Mini Apps: Demo Quest, Demo Game, and Demo Ad credit 50, 25, and 10 Stars.
+- Offers local Earn Stars options from Mini Apps: Daily Quest, Mini Game, and Watch Ad credit 50, 25, and 10 Stars, each claimable once per day.
+- Upgrades local gifts to collectibles at Telegram's upgrade fee, with a model, pattern, backdrop, and sequential serial number per gift type.
+- Sends paid reactions with Stars from the local balance through Telegram's native reaction picker; reactions persist on the message and credit your own channels' local earnings.
+- Boosts channels from the native Boost screens using a local Premium account's boost slots, with level, progress, and removal handled locally.
+- Runs Premium and Stars giveaways in your channels with the native creation flow; winners are drawn locally at the end date, results are posted in the channel, and giveaways appear in the channel's boost statistics.
+- Stores Business settings on-device: greeting, away, working hours, intro, location, chatbots, and quick replies including their message text, instead of submitting them to Telegram's server.
+- Adds local gifts to collections and supports hiding and pinning them from the context menu and the collection editor.
+- Shows a gift sent to a friend under that friend's profile in this client, marked as from you, with upgrades available there; gifting Premium shows the Premium badge on their profile.
+- Records local Stars activity on-device and shows top-ups, gifts, earnings, withdrawals, and conversions in the My Stars history.
 - Simulates Telegram Premium and Business purchases end to end: the native plan picker and checkout panel, and afterwards the Premium badge, subscribed state, and Business feature screens appear as if the account owns them.
 - Keeps each signed-in account's Stars balance, gift inventory, earnings, and Premium state separate; switching accounts restores that account's data.
 - Never contacts a payment provider or Telegram's payment, gift-transfer, or subscription APIs.

@@ -1,6 +1,30 @@
 # IntelGram Update Log
 
-## Current Update: IntelGram v22
+## Current Update: IntelGram v23
+
+- Base source: official AyuGram Desktop `v6.7.8` at `b25513a06ff88be0b3f4c928252b56c3da39cec7` with required submodules.
+- Product versioning: IntelGram releases advance sequentially from v1; the current product release is v23, while `v6.7.8` identifies only the upstream AyuGram source.
+- Product identity: IntelGram on macOS, Windows, and Linux with separate application identifiers.
+- Source delivery: one complete IntelGram patch plus deterministic branding and validation scripts.
+- Build delivery: GitHub Actions packages macOS Apple Silicon, Windows x64, and Linux x64.
+- Build reliability: macOS and Windows dependency preparation uses bounded cache stages, platform cache creation is serialized, installed Qt source trees are pruned, macOS can resume directly from a completed Qt stage, and Windows-only runs carry every dependency stage through to the packaged application.
+- Gift upgrades to collectibles: upgrade a local gift at Telegram's upgrade fee; it gains a model, pattern, backdrop, and sequential serial number and moves into the Collectibles filter.
+- Paid reactions: react with Stars from the local balance in Telegram's native picker; reactions persist on the message and credit your own channels' local earnings.
+- Channel boosts: local Premium accounts spend boost slots from the native Boost screens, with level, progress, and removal handled locally.
+- Giveaways: create Premium or Stars giveaways with the native flow; winners are drawn locally at the end date, results are posted in the channel, and giveaways appear in the channel's boost statistics.
+- Business saves stored locally: greeting, away, working hours, intro, location, chatbot, and quick-reply settings persist on-device, including quick-reply message text; sending a local quick reply works.
+- Local gift collections: local gifts join collections and can be hidden and pinned from the context menu and the collection editor.
+- Gifting friends: a gift sent to a friend appears in that friend's Gifts tab in this client, marked as from you, and can be upgraded there; gifting Premium shows the Premium badge on their profile; gifted Stars are recorded in your Stars history.
+- Local Stars activity history: top-ups, gifts, earnings, withdrawals, and conversions are recorded on-device and shown in the My Stars history.
+- Withdrawal fix: withdrawn Stars are now deducted from the spendable balance.
+- Statistics fix: dollar amounts use the Stars withdrawal rate instead of the TON rate, and Earn Stars options are claimable once per day.
+- Premium fix: local subscriptions expire on schedule, and the plan picker charges the plan you selected.
+- Convert fix: converting a gift returns 85% of its star price, matching Telegram; upgraded collectibles cannot be converted.
+- 1:1 presentation: the Stars, gifts, Premium, and Business flows no longer describe themselves as local or simulated in the app, and the in-app update log covers the 1:1 checkout and the v22 and v23 features.
+- Honest limits: gifted Premium is a profile badge only and gifted Stars do not change the recipient's real balance; local collectibles cannot be transferred, resold, or crafted; group-call paid reactions still use Telegram's real flow.
+- Payment boundary: no real card details are collected, no payment provider is contacted, and no Telegram payment, gift-transfer, subscription, boost, or giveaway API is invoked.
+
+## IntelGram v22 Local Gifts, Premium & Business
 
 - Base source: official AyuGram Desktop `v6.7.8` at `b25513a06ff88be0b3f4c928252b56c3da39cec7` with required submodules.
 - Product versioning: IntelGram releases advance sequentially from v1; the current product release is v22, while `v6.7.8` identifies only the upstream AyuGram source.

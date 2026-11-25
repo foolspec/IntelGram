@@ -5,7 +5,7 @@ patch relative to official AyuGram Desktop `v6.7.8` commit
 `b25513a06ff88be0b3f4c928252b56c3da39cec7`.
 
 Patch SHA-256:
-`e232f604bc48f525ac4b918455515f1986e283e0e90bfa080cadf890a1918380`
+`121c061c2bedf8dd7230548c59b847556d9ce08d1e51eb82b493cd9e9964da4c`
 
 ## Added
 
@@ -64,17 +64,25 @@ Patch SHA-256:
 - `Telegram/SourceFiles/boxes/gift_premium_box.cpp`
 - `Telegram/SourceFiles/boxes/peers/edit_peer_color_box.cpp`
 - `Telegram/SourceFiles/boxes/peers/prepare_short_info_box.cpp`
-- `Telegram/SourceFiles/boxes/star_gift_box.cpp`
 - `Telegram/SourceFiles/boxes/send_credits_box.cpp`
+- `Telegram/SourceFiles/boxes/star_gift_box.cpp`
+- `Telegram/SourceFiles/boxes/star_gift_box.h`
 - `Telegram/SourceFiles/core/local_url_handlers.cpp`
 - `Telegram/SourceFiles/core/local_url_handlers.h`
+- `Telegram/SourceFiles/data/business/data_business_chatbots.cpp`
+- `Telegram/SourceFiles/data/business/data_business_info.cpp`
+- `Telegram/SourceFiles/data/business/data_business_info.h`
+- `Telegram/SourceFiles/data/business/data_shortcut_messages.cpp`
+- `Telegram/SourceFiles/data/business/data_shortcut_messages.h`
 - `Telegram/SourceFiles/data/data_auto_download.cpp`
 - `Telegram/SourceFiles/data/data_credits.h`
 - `Telegram/SourceFiles/data/data_message_reactions.cpp`
+- `Telegram/SourceFiles/data/data_message_reactions.h`
 - `Telegram/SourceFiles/data/data_peer.cpp`
 - `Telegram/SourceFiles/data/data_peer_values.cpp`
 - `Telegram/SourceFiles/data/data_premium_subscription_option.h`
 - `Telegram/SourceFiles/data/data_session.cpp`
+- `Telegram/SourceFiles/data/data_star_gift.h`
 - `Telegram/SourceFiles/data/data_user.cpp`
 - `Telegram/SourceFiles/dialogs/dialogs_inner_widget.cpp`
 - `Telegram/SourceFiles/dialogs/dialogs_row.cpp`
@@ -96,6 +104,10 @@ Patch SHA-256:
 - `Telegram/SourceFiles/history/view/history_view_top_bar_widget.cpp`
 - `Telegram/SourceFiles/history/view/reactions/history_view_reactions_selector.cpp`
 - `Telegram/SourceFiles/info/bot/earn/info_bot_earn_list.cpp`
+- `Telegram/SourceFiles/info/channel_statistics/boosts/create_giveaway_box.cpp`
+- `Telegram/SourceFiles/info/channel_statistics/boosts/info_boosts_inner_widget.cpp`
+- `Telegram/SourceFiles/info/peer_gifts/info_peer_gifts_common.cpp`
+- `Telegram/SourceFiles/info/peer_gifts/info_peer_gifts_common.h`
 - `Telegram/SourceFiles/info/peer_gifts/info_peer_gifts_widget.cpp`
 - `Telegram/SourceFiles/info/profile/info_profile_actions.cpp`
 - `Telegram/SourceFiles/info/profile/info_profile_badge.cpp`
@@ -107,6 +119,7 @@ Patch SHA-256:
 - `Telegram/SourceFiles/main/main_session.cpp`
 - `Telegram/SourceFiles/media/view/media_view_overlay_widget.cpp`
 - `Telegram/SourceFiles/payments/payments_non_panel_process.cpp`
+- `Telegram/SourceFiles/payments/payments_reaction_process.cpp`
 - `Telegram/SourceFiles/platform/linux/main_window_linux.cpp`
 - `Telegram/SourceFiles/platform/linux/specific_linux.cpp`
 - `Telegram/SourceFiles/platform/mac/global_menu_mac.mm`
@@ -115,6 +128,11 @@ Patch SHA-256:
 - `Telegram/SourceFiles/platform/mac/window_title_mac.mm`
 - `Telegram/SourceFiles/platform/platform_specific.h`
 - `Telegram/SourceFiles/platform/win/specific_win.cpp`
+- `Telegram/SourceFiles/settings/business/settings_away_message.cpp`
+- `Telegram/SourceFiles/settings/business/settings_chat_intro.cpp`
+- `Telegram/SourceFiles/settings/business/settings_chatbots.cpp`
+- `Telegram/SourceFiles/settings/business/settings_greeting.cpp`
+- `Telegram/SourceFiles/settings/business/settings_location.cpp`
 - `Telegram/SourceFiles/settings/sections/settings_credits.cpp`
 - `Telegram/SourceFiles/settings/sections/settings_information.cpp`
 - `Telegram/SourceFiles/settings/sections/settings_main.cpp`
@@ -136,4 +154,5 @@ Patch SHA-256:
 - `Telegram/SourceFiles/window/window_main_menu.h`
 - `Telegram/SourceFiles/window/window_peer_menu.cpp`
 - `Telegram/SourceFiles/window/window_session_controller.cpp`
+- `Telegram/SourceFiles/window/window_session_controller.h`
 - `Telegram/lib_ui`

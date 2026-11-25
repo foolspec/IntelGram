@@ -18,7 +18,7 @@ Open **Settings -> My Stars**. The row shows your on-device balance. **Top Up Ba
 
 ## How do I gift Stars or send gifts?
 
-Open a friend's profile or chat and use Telegram's native **Gift Stars** and **Send a Gift** flows. Stars are deducted from your on-device balance, and the native sent confirmation appears. Gifts bought for yourself go into your local gift inventory on your profile's Gifts tab, which matches Telegram's native grid, detail popups, and All Gifts / Collectibles filtering. Nothing is sent to Telegram.
+Open a friend's profile or chat and use Telegram's native **Gift Stars** and **Send a Gift** flows. Stars are deducted from your on-device balance, and the native sent confirmation appears. Gifts bought for yourself go into your local gift inventory on your profile's Gifts tab, which matches Telegram's native grid, detail popups, and All Gifts / Collectibles filtering. A gift sent to a friend appears under that friend's Gifts tab in this client, marked as from you. Nothing is sent to Telegram.
 
 ## How do I check my Stars balance and proceeds?
 
@@ -26,7 +26,27 @@ Open **Settings -> My Stars -> Stars Balance**. Available, total, and lifetime p
 
 ## How do I get Premium or Business?
 
-Open **Settings -> Telegram Premium** or **Telegram Business** and tap **Subscribe**. Pick the monthly or annual plan and pay through Telegram's native checkout panel with the demo American Express card. Afterwards the Premium badge, subscribed state, and Business feature screens appear as if the account owns them. Everything is local: no real payment is made, no bot is contacted, and Business setting saves are still rejected by Telegram's server without a real subscription.
+Open **Settings -> Telegram Premium** or **Telegram Business** and tap **Subscribe**. Pick the monthly or annual plan and pay through Telegram's native checkout panel with the demo American Express card. Afterwards the Premium badge, subscribed state, and Business feature screens appear as if the account owns them. Everything is local: no real payment is made and no bot is contacted. With a local subscription, Business settings such as greeting, away, working hours, and quick replies are saved on this device instead of being sent to Telegram's server.
+
+## How do I upgrade a gift to a collectible?
+
+Open the gift from a profile's **Gifts** tab and choose **Upgrade**. The upgrade costs the gift's upgrade fee in Stars from your local balance. The gift becomes a collectible with its own model, pattern, backdrop, and serial number, and appears under the **Collectibles** filter. Upgraded collectibles can no longer be converted back to Stars, matching Telegram.
+
+## How do I send a paid reaction?
+
+Open the reaction picker on a message and choose the Stars reaction, the same as in Telegram. The amount is deducted from your local Stars balance, the reaction stays on the message, and paid reactions on your own channels count toward the channel's local earnings. Group-call paid reactions still use Telegram's real flow.
+
+## How do I boost a channel?
+
+Open the channel and use Telegram's **Boost** action, or open the channel's statistics. A local Premium subscription comes with boost slots; assign them to channels from the native Boost screens and remove them there too. Boost levels and progress are tracked on this device.
+
+## How do I run a giveaway?
+
+Open your channel's statistics and choose **Giveaway**, the same as in Telegram. Pick a Premium or Stars prize, the number of winners, and the end date. When the giveaway ends, winners are drawn locally from the channel's participants and the results are posted in the channel. You can also name specific winners when you create the giveaway.
+
+## How do I organize my gifts into collections?
+
+Open your profile's **Gifts** tab. Local gifts can be added to collections from the gift's context menu or the collection editor, and hidden or pinned the same way as gifts from Telegram. Collections, hidden state, and pins are stored on this device, per account.
 
 ## Are my local profile and Stars shared across accounts?
 
