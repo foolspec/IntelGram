@@ -1286,7 +1286,7 @@ void SendLocalStarGift(
 			auto record = Ayu::LocalGiftRecord{
 				.giftId = giftId,
 				.stickerId = uint64(gift.info.document->id),
-				.recipientId = peer->isSelf() ? 0 : peer->id.bare,
+				.recipientId = peer->isSelf() ? 0 : peer->id.value,
 				.title = gift.info.resellTitle,
 				.stars = stars,
 				.date = base::unixtime::now(),
@@ -1398,7 +1398,7 @@ void SendGift(
 		if (!peer->isSelf()) {
 			Ayu::AddLocalPremiumGift(
 				&window->session(),
-				peer->id.bare,
+				peer->id.value,
 				std::max(gift.months, 1));
 			if (const auto onstack = done) {
 				onstack(Payments::CheckoutResult::Paid);

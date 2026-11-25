@@ -13,6 +13,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "apiwrap.h"
 #include "ayu/ayu_settings.h"
 #include "ayu/ui/utils/ayu_profile_values.h"
+#include "base/unixtime.h"
 #include "boxes/share_box.h"
 #include "boxes/star_gift_box.h"
 #include "core/ui_integration.h"
@@ -20,6 +21,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "data/stickers/data_custom_emoji.h"
 #include "data/data_channel.h"
 #include "data/data_credits.h"
+#include "data/data_document.h"
 #include "data/data_session.h"
 #include "data/data_user.h"
 #include "info/peer_gifts/info_peer_gifts_collections.h"
@@ -807,7 +809,7 @@ void InnerWidget::mergeLocalGifts() {
 		for (auto i = records.rbegin(); i != records.rend(); ++i) {
 			const auto &record = *i;
 			if (record.recipientId
-				? (record.recipientId != _peer->id.bare)
+				? (record.recipientId != _peer->id.value)
 				: !self) {
 				continue;
 			}
@@ -825,9 +827,9 @@ void InnerWidget::mergeLocalGifts() {
 				: (record.stickerId
 					? std::optional<Data::StarGift>(Data::StarGift{
 						.id = record.giftId,
+						.stars = record.stars,
 						.document = _peer->session().data().document(
 							record.stickerId),
-						.stars = record.stars,
 						.resellTitle = record.title,
 					})
 					: std::nullopt);
@@ -1186,14 +1188,14 @@ auto InnerWidget::pinnedSavedGifts()
 		for (const auto &entry : entries) {
 			const auto &id = entry.id;
 			result.push_back({
+				.date = entry.date,
 				.bareMsgId = uint64(id.userMessageId().bare),
+				.bareGiftStickerId = entry.bareGiftStickerId,
 				.bareEntryOwnerId = id.chat() ? id.chat()->id.value : 0,
 				.giftChannelSavedId = id.chatSavedId(),
 				.stargiftId = entry.stargiftId,
 				.localUid = entry.localUid,
 				.giftTitle = entry.giftTitle,
-				.bareGiftStickerId = entry.bareGiftStickerId,
-				.date = entry.date,
 				.uniqueGift = entry.unique,
 				.stargift = true,
 			});

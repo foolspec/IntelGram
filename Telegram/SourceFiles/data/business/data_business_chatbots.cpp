@@ -47,7 +47,7 @@ void WriteLocalBusiness(
 	object.insert(u"non"_q, bool(chats.types & Type::NonContacts));
 	auto users = QJsonArray();
 	for (const auto user : chats.list) {
-		users.append(QJsonValue(qint64(user->id.bare)));
+		users.append(QJsonValue(qint64(user->id.value)));
 	}
 	object.insert(u"u"_q, std::move(users));
 	return object;
@@ -148,7 +148,7 @@ void WriteLocalBusiness(
 		const ChatbotsSettings &data) {
 	auto object = QJsonObject();
 	object.insert(u"bot"_q, QJsonValue(
-		qint64(data.bot ? data.bot->id.bare : 0)));
+		qint64(data.bot ? data.bot->id.value : 0)));
 	object.insert(u"rec"_q, BusinessRecipientsToJson(data.recipients));
 	object.insert(u"perm"_q, ChatbotsPermissionsToJson(data.permissions));
 	return object;
@@ -159,7 +159,7 @@ void WriteLocalBusiness(
 		const QJsonObject &object) {
 	auto result = ChatbotsSettings();
 	const auto botId = object.value(u"bot"_q).toVariant().toULongLong();
-	result.bot = botId ? owner->user(UserId(botId)) : nullptr;
+	result.bot = botId ? owner->user(UserId(botId)).get() : nullptr;
 	result.recipients = BusinessRecipientsFromJson(
 		owner,
 		object.value(u"rec"_q).toObject());

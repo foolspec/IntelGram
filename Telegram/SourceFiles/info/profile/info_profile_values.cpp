@@ -696,7 +696,7 @@ rpl::producer<BadgeType> BadgeValueForPeer(not_null<PeerData*> peer) {
 			if (base != BadgeType::None) {
 				return base;
 			}
-			return Ayu::HasLocalPremiumGift(session, peer->id.bare)
+			return Ayu::HasLocalPremiumGift(session, peer->id.value)
 				? BadgeType::Premium
 				: BadgeType::None;
 		});

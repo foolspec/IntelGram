@@ -172,7 +172,7 @@ void WriteLocalBusiness(
 	object.insert(u"non"_q, bool(chats.types & Type::NonContacts));
 	auto users = QJsonArray();
 	for (const auto user : chats.list) {
-		users.append(QJsonValue(qint64(user->id.bare)));
+		users.append(QJsonValue(qint64(user->id.value)));
 	}
 	object.insert(u"u"_q, std::move(users));
 	return object;

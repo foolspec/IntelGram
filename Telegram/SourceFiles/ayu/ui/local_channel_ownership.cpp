@@ -1,5 +1,6 @@
 #include "ayu/ui/local_channel_ownership.h"
 
+#include "api/api_chat_participants.h"
 #include "apiwrap.h"
 #include "ayu/data/intelgram_vault.h"
 #include "ayu/ui/utils/ayu_profile_values.h"
@@ -11,6 +12,7 @@
 #include "data/data_channel.h"
 #include "data/data_message_reaction_id.h"
 #include "data/data_session.h"
+#include "data/data_user.h"
 #include "history/history.h"
 #include "history/history_item.h"
 #include "lang_auto.h"
@@ -1097,7 +1099,7 @@ void AddLocalGiveawayMessage(
 		channels.push_back(session->data().channel(
 			ChannelId(record.channelId)));
 	}
-	auto flags = MessageFlag();
+	auto flags = MessageFlags();
 	if (history->peer->isBroadcast()) {
 		flags |= MessageFlag::Post | MessageFlag::HasViews;
 	}
@@ -1134,7 +1136,8 @@ void AddLocalGiveawayResultsMessage(
 	const auto channel = session->data().channel(ChannelId(record.channelId));
 	auto winners = std::vector<not_null<PeerData*>>();
 	for (const auto id : record.winners) {
-		winners.push_back(session->data().user(UserId(id)));
+		winners.push_back(not_null<PeerData*>(
+			session->data().user(UserId(id)).get()));
 	}
 	const auto launchId = [&] {
 		const auto i = RuntimeGiveaways().find(history);
@@ -1148,7 +1151,7 @@ void AddLocalGiveawayResultsMessage(
 		}
 		return MsgId(0);
 	}();
-	auto flags = MessageFlag();
+	auto flags = MessageFlags();
 	if (history->peer->isBroadcast()) {
 		flags |= MessageFlag::Post | MessageFlag::HasViews;
 	}
@@ -1226,7 +1229,7 @@ void EnsureLocalGiveaways(not_null<History*> history) {
 					int(pool.size()),
 					std::max(record.quantity, 0));
 				for (auto i = 0; i < count; ++i) {
-					record.winners.push_back(pool[i]->id.bare);
+					record.winners.push_back(pool[i]->id.value);
 				}
 			}
 			record.resultsPosted = true;

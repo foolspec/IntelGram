@@ -39,6 +39,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "api/api_user_names.h"
 #include "api/api_websites.h"
 #include "ayu/data/intelgram_vault.h"
+#include "data/business/data_business_info.h"
 #include "data/business/data_shortcut_messages.h"
 #include "data/components/scheduled_messages.h"
 #include "data/notify/data_notify_settings.h"

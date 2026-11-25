@@ -16,6 +16,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "base/unixtime.h"
 #include "countries/countries_instance.h"
 #include "data/data_peer.h"
+#include "data/data_session.h"
 #include "info/channel_statistics/boosts/giveaway/boost_badge.h"
 #include "info/channel_statistics/boosts/giveaway/giveaway_list_controllers.h"
 #include "info/channel_statistics/boosts/giveaway/giveaway_type_row.h"
@@ -1557,7 +1558,7 @@ void CreateGiveawayBox(
 				auto winners = std::vector<uint64>();
 				if (isSpecific) {
 					for (const auto user : state->selectedToAward) {
-						winners.push_back(user->id.bare);
+						winners.push_back(user->id.value);
 					}
 				}
 				const auto record = Ayu::LocalGiveawayRecord{

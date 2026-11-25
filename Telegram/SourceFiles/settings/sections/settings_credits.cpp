@@ -13,6 +13,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "ayu/ayu_settings.h"
 #include "ayu/ui/utils/ayu_profile_values.h"
 #include "base/call_delayed.h"
+#include "base/unixtime.h"
 #include "boxes/gift_credits_box.h"
 #include "boxes/gift_premium_box.h"
 #include "boxes/star_gift_box.h"
@@ -94,7 +95,7 @@ using namespace Builder;
 			title = tr::ayu_LocalStarsPurchaseEntry(
 				tr::now,
 				lt_amount,
-				entry.amount);
+				QString::number(entry.amount));
 			break;
 		case Ayu::LocalStarsActivityKind::GiftSent:
 			title = entry.note;
@@ -103,19 +104,19 @@ using namespace Builder;
 			title = tr::ayu_LocalStarsEarnEntry(
 				tr::now,
 				lt_amount,
-				entry.amount);
+				QString::number(entry.amount));
 			break;
 		case Ayu::LocalStarsActivityKind::Withdrawn:
 			title = tr::ayu_LocalStarsWithdrawEntry(
 				tr::now,
 				lt_amount,
-				entry.amount);
+				QString::number(entry.amount));
 			break;
 		case Ayu::LocalStarsActivityKind::Converted:
 			title = tr::ayu_LocalStarsConvertEntry(
 				tr::now,
 				lt_amount,
-				entry.amount);
+				QString::number(entry.amount));
 			break;
 		}
 		result.push_back({
@@ -123,8 +124,8 @@ using namespace Builder;
 			.title = title,
 			.date = base::unixtime::parse(TimeId(entry.date)),
 			.credits = CreditsAmount(entry.amount),
-			.in = in,
 			.peerType = Data::CreditsHistoryEntry::PeerType::PremiumBot,
+			.in = in,
 		});
 	}
 	return result;
