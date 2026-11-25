@@ -1706,18 +1706,19 @@ index 54e1b7e85..b9cce3683 100644
  	}
  	const auto id = item->id;
 diff --git a/Telegram/SourceFiles/apiwrap.cpp b/Telegram/SourceFiles/apiwrap.cpp
-index 8893dce20..b741302ea 100644
+index 8893dce20..4a3e4a543 100644
 --- a/Telegram/SourceFiles/apiwrap.cpp
 +++ b/Telegram/SourceFiles/apiwrap.cpp
-@@ -38,6 +38,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -38,6 +38,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "api/api_premium.h"
  #include "api/api_user_names.h"
  #include "api/api_websites.h"
 +#include "ayu/data/intelgram_vault.h"
++#include "data/business/data_business_info.h"
  #include "data/business/data_shortcut_messages.h"
  #include "data/components/scheduled_messages.h"
  #include "data/notify/data_notify_settings.h"
-@@ -2001,6 +2002,9 @@ void ApiWrap::sendNotifySettingsUpdates() {
+@@ -2001,6 +2003,9 @@ void ApiWrap::sendNotifySettingsUpdates() {
  }
  
  void ApiWrap::saveDraftToCloudDelayed(not_null<Data::Thread*> thread) {
@@ -1727,7 +1728,7 @@ index 8893dce20..b741302ea 100644
  	_draftsSaveRequestIds.emplace(base::make_weak(thread), 0);
  	if (!_draftsSaveTimer.isActive()) {
  		_draftsSaveTimer.callOnce(kSaveCloudDraftTimeout);
-@@ -2207,6 +2211,9 @@ void ApiWrap::saveDraftsToCloud() {
+@@ -2207,6 +2212,9 @@ void ApiWrap::saveDraftsToCloud() {
  		if (!thread) {
  			i = _draftsSaveRequestIds.erase(i);
  			continue;
@@ -1737,7 +1738,7 @@ index 8893dce20..b741302ea 100644
  		} else if (i->second) {
  			++i;
  			continue; // sent already
-@@ -4245,6 +4252,21 @@ void ApiWrap::sendMessage(
+@@ -4245,6 +4253,21 @@ void ApiWrap::sendMessage(
  			.effectId = action.options.effectId,
  			.suggest = HistoryMessageSuggestInfo(action.options),
  		}, sending, media);
@@ -6306,12 +6307,13 @@ index 000000000..d02375f9a
 +} // namespace Ayu
 diff --git a/Telegram/SourceFiles/ayu/ui/local_channel_ownership.cpp b/Telegram/SourceFiles/ayu/ui/local_channel_ownership.cpp
 new file mode 100644
-index 000000000..fdf5a2f27
+index 000000000..2836e6982
 --- /dev/null
 +++ b/Telegram/SourceFiles/ayu/ui/local_channel_ownership.cpp
-@@ -0,0 +1,1873 @@
+@@ -0,0 +1,1876 @@
 +#include "ayu/ui/local_channel_ownership.h"
 +
++#include "api/api_chat_participants.h"
 +#include "apiwrap.h"
 +#include "ayu/data/intelgram_vault.h"
 +#include "ayu/ui/utils/ayu_profile_values.h"
@@ -6323,6 +6325,7 @@ index 000000000..fdf5a2f27
 +#include "data/data_channel.h"
 +#include "data/data_message_reaction_id.h"
 +#include "data/data_session.h"
++#include "data/data_user.h"
 +#include "history/history.h"
 +#include "history/history_item.h"
 +#include "lang_auto.h"
@@ -7409,7 +7412,7 @@ index 000000000..fdf5a2f27
 +		channels.push_back(session->data().channel(
 +			ChannelId(record.channelId)));
 +	}
-+	auto flags = MessageFlag();
++	auto flags = MessageFlags();
 +	if (history->peer->isBroadcast()) {
 +		flags |= MessageFlag::Post | MessageFlag::HasViews;
 +	}
@@ -7446,7 +7449,8 @@ index 000000000..fdf5a2f27
 +	const auto channel = session->data().channel(ChannelId(record.channelId));
 +	auto winners = std::vector<not_null<PeerData*>>();
 +	for (const auto id : record.winners) {
-+		winners.push_back(session->data().user(UserId(id)));
++		winners.push_back(not_null<PeerData*>(
++			session->data().user(UserId(id)).get()));
 +	}
 +	const auto launchId = [&] {
 +		const auto i = RuntimeGiveaways().find(history);
@@ -7460,7 +7464,7 @@ index 000000000..fdf5a2f27
 +		}
 +		return MsgId(0);
 +	}();
-+	auto flags = MessageFlag();
++	auto flags = MessageFlags();
 +	if (history->peer->isBroadcast()) {
 +		flags |= MessageFlag::Post | MessageFlag::HasViews;
 +	}
@@ -7538,7 +7542,7 @@ index 000000000..fdf5a2f27
 +					int(pool.size()),
 +					std::max(record.quantity, 0));
 +				for (auto i = 0; i < count; ++i) {
-+					record.winners.push_back(pool[i]->id.bare);
++					record.winners.push_back(pool[i]->id.value);
 +				}
 +			}
 +			record.resultsPosted = true;
@@ -16248,7 +16252,7 @@ index b3b237c07..300fe6132 100644
  		MTP_long(data->formId),
  		data->inputInvoice
 diff --git a/Telegram/SourceFiles/boxes/star_gift_box.cpp b/Telegram/SourceFiles/boxes/star_gift_box.cpp
-index 6b404b99e..eabfc9443 100644
+index 6b404b99e..d85f0f164 100644
 --- a/Telegram/SourceFiles/boxes/star_gift_box.cpp
 +++ b/Telegram/SourceFiles/boxes/star_gift_box.cpp
 @@ -14,6 +14,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -16328,7 +16332,7 @@ index 6b404b99e..eabfc9443 100644
 +			auto record = Ayu::LocalGiftRecord{
 +				.giftId = giftId,
 +				.stickerId = uint64(gift.info.document->id),
-+				.recipientId = peer->isSelf() ? 0 : peer->id.bare,
++				.recipientId = peer->isSelf() ? 0 : peer->id.value,
 +				.title = gift.info.resellTitle,
 +				.stars = stars,
 +				.date = base::unixtime::now(),
@@ -16438,7 +16442,7 @@ index 6b404b99e..eabfc9443 100644
 +		if (!peer->isSelf()) {
 +			Ayu::AddLocalPremiumGift(
 +				&window->session(),
-+				peer->id.bare,
++				peer->id.value,
 +				std::max(gift.months, 1));
 +			if (const auto onstack = done) {
 +				onstack(Payments::CheckoutResult::Paid);
@@ -16795,7 +16799,7 @@ index af9c2a4bf..047fc724f 100644
  [[nodiscard]] TimeId ParseVideoTimestamp(QStringView value);
  
 diff --git a/Telegram/SourceFiles/data/business/data_business_chatbots.cpp b/Telegram/SourceFiles/data/business/data_business_chatbots.cpp
-index 6c64c79b3..be68e213e 100644
+index 6c64c79b3..35785d239 100644
 --- a/Telegram/SourceFiles/data/business/data_business_chatbots.cpp
 +++ b/Telegram/SourceFiles/data/business/data_business_chatbots.cpp
 @@ -8,6 +8,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -16840,7 +16844,7 @@ index 6c64c79b3..be68e213e 100644
 +	object.insert(u"non"_q, bool(chats.types & Type::NonContacts));
 +	auto users = QJsonArray();
 +	for (const auto user : chats.list) {
-+		users.append(QJsonValue(qint64(user->id.bare)));
++		users.append(QJsonValue(qint64(user->id.value)));
 +	}
 +	object.insert(u"u"_q, std::move(users));
 +	return object;
@@ -16941,7 +16945,7 @@ index 6c64c79b3..be68e213e 100644
 +		const ChatbotsSettings &data) {
 +	auto object = QJsonObject();
 +	object.insert(u"bot"_q, QJsonValue(
-+		qint64(data.bot ? data.bot->id.bare : 0)));
++		qint64(data.bot ? data.bot->id.value : 0)));
 +	object.insert(u"rec"_q, BusinessRecipientsToJson(data.recipients));
 +	object.insert(u"perm"_q, ChatbotsPermissionsToJson(data.permissions));
 +	return object;
@@ -16952,7 +16956,7 @@ index 6c64c79b3..be68e213e 100644
 +		const QJsonObject &object) {
 +	auto result = ChatbotsSettings();
 +	const auto botId = object.value(u"bot"_q).toVariant().toULongLong();
-+	result.bot = botId ? owner->user(UserId(botId)) : nullptr;
++	result.bot = botId ? owner->user(UserId(botId)).get() : nullptr;
 +	result.recipients = BusinessRecipientsFromJson(
 +		owner,
 +		object.value(u"rec"_q).toObject());
@@ -17027,7 +17031,7 @@ index 6c64c79b3..be68e213e 100644
  	const auto api = &_owner->session().api();
  	const auto i = _sentRequests.find(peer);
 diff --git a/Telegram/SourceFiles/data/business/data_business_info.cpp b/Telegram/SourceFiles/data/business/data_business_info.cpp
-index d9bb6ec7a..9834be996 100644
+index d9bb6ec7a..e0fa26c7a 100644
 --- a/Telegram/SourceFiles/data/business/data_business_info.cpp
 +++ b/Telegram/SourceFiles/data/business/data_business_info.cpp
 @@ -8,16 +8,24 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -17162,7 +17166,7 @@ index d9bb6ec7a..9834be996 100644
 +	object.insert(u"non"_q, bool(chats.types & Type::NonContacts));
 +	auto users = QJsonArray();
 +	for (const auto user : chats.list) {
-+		users.append(QJsonValue(qint64(user->id.bare)));
++		users.append(QJsonValue(qint64(user->id.value)));
 +	}
 +	object.insert(u"u"_q, std::move(users));
 +	return object;
@@ -20152,10 +20156,10 @@ index 0fb935609..f33a9f988 100644
  	}
  	if (BotStarRef::Join::Allowed(peer()) && !peer()->isSelf()) {
 diff --git a/Telegram/SourceFiles/info/channel_statistics/boosts/create_giveaway_box.cpp b/Telegram/SourceFiles/info/channel_statistics/boosts/create_giveaway_box.cpp
-index df14f19bb..5b5b2995b 100644
+index df14f19bb..709f30666 100644
 --- a/Telegram/SourceFiles/info/channel_statistics/boosts/create_giveaway_box.cpp
 +++ b/Telegram/SourceFiles/info/channel_statistics/boosts/create_giveaway_box.cpp
-@@ -9,6 +9,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -9,10 +9,14 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  
  #include "api/api_credits.h"
  #include "api/api_premium.h"
@@ -20165,7 +20169,12 @@ index df14f19bb..5b5b2995b 100644
  #include "base/call_delayed.h"
  #include "base/unixtime.h"
  #include "countries/countries_instance.h"
-@@ -23,9 +26,11 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "data/data_peer.h"
++#include "data/data_session.h"
+ #include "info/channel_statistics/boosts/giveaway/boost_badge.h"
+ #include "info/channel_statistics/boosts/giveaway/giveaway_list_controllers.h"
+ #include "info/channel_statistics/boosts/giveaway/giveaway_type_row.h"
+@@ -23,9 +27,11 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "info/statistics/info_statistics_list_controllers.h"
  #include "lang/lang_keys.h"
  #include "main/main_session.h"
@@ -20177,7 +20186,7 @@ index df14f19bb..5b5b2995b 100644
  #include "settings/sections/settings_premium.h" // Settings::ShowPremium
  #include "ui/boxes/choose_date_time.h"
  #include "ui/boxes/confirm_box.h"
-@@ -1534,7 +1539,102 @@ void CreateGiveawayBox(
+@@ -1534,7 +1540,102 @@ void CreateGiveawayBox(
  					.cancelled = cancel,
  				}));
  			} else {
@@ -20200,7 +20209,7 @@ index df14f19bb..5b5b2995b 100644
 +				auto winners = std::vector<uint64>();
 +				if (isSpecific) {
 +					for (const auto user : state->selectedToAward) {
-+						winners.push_back(user->id.bare);
++						winners.push_back(user->id.value);
 +					}
 +				}
 +				const auto record = Ayu::LocalGiveawayRecord{
@@ -20436,19 +20445,28 @@ index 0b31fd321..0517eae6b 100644
  [[nodiscard]] QColor BurnedBadgeBg();
  
 diff --git a/Telegram/SourceFiles/info/peer_gifts/info_peer_gifts_widget.cpp b/Telegram/SourceFiles/info/peer_gifts/info_peer_gifts_widget.cpp
-index a66e3d0c1..e1890b8ec 100644
+index a66e3d0c1..88fcaaf9e 100644
 --- a/Telegram/SourceFiles/info/peer_gifts/info_peer_gifts_widget.cpp
 +++ b/Telegram/SourceFiles/info/peer_gifts/info_peer_gifts_widget.cpp
-@@ -11,6 +11,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -11,6 +11,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "api/api_hash.h"
  #include "api/api_premium.h"
  #include "apiwrap.h"
 +#include "ayu/ayu_settings.h"
 +#include "ayu/ui/utils/ayu_profile_values.h"
++#include "base/unixtime.h"
  #include "boxes/share_box.h"
  #include "boxes/star_gift_box.h"
  #include "core/ui_integration.h"
-@@ -131,6 +133,11 @@ public:
+@@ -18,6 +21,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+ #include "data/stickers/data_custom_emoji.h"
+ #include "data/data_channel.h"
+ #include "data/data_credits.h"
++#include "data/data_document.h"
+ #include "data/data_session.h"
+ #include "data/data_user.h"
+ #include "info/peer_gifts/info_peer_gifts_collections.h"
+@@ -131,6 +135,11 @@ public:
  		return _collectionChanges.value();
  	}
  
@@ -20460,7 +20478,7 @@ index a66e3d0c1..e1890b8ec 100644
  	[[nodiscard]] rpl::producer<bool> collectionEmptyValue() const {
  		return _collectionEmpty.value();
  	}
-@@ -153,12 +160,15 @@ private:
+@@ -153,12 +162,15 @@ private:
  	struct Entry {
  		Data::SavedStarGift gift;
  		GiftDescriptor descriptor;
@@ -20476,7 +20494,7 @@ index a66e3d0c1..e1890b8ec 100644
  	};
  	struct View {
  		std::unique_ptr<GiftButton> button;
-@@ -204,7 +214,8 @@ private:
+@@ -204,7 +216,8 @@ private:
  	void loadCollections();
  	void loadMore();
  	void loaded(const MTPpayments_SavedStarGifts &result);
@@ -20486,7 +20504,7 @@ index a66e3d0c1..e1890b8ec 100644
  	void refreshButtons();
  	void validateButtons();
  	[[nodiscard]] std::unique_ptr<GiftButton> createGiftButton();
-@@ -262,12 +273,16 @@ private:
+@@ -262,12 +275,16 @@ private:
  	not_null<std::vector<Entry>*> _list;
  	rpl::variable<Data::GiftsUpdate> _collectionChanges;
  	base::flat_set<Data::SavedStarGiftId> _inCollection;
@@ -20503,7 +20521,7 @@ index a66e3d0c1..e1890b8ec 100644
  
  	rpl::event_stream<Descriptor> _descriptorChanges;
  	rpl::event_stream<bool> _notifyEnabled;
-@@ -392,6 +407,34 @@ InnerWidget::InnerWidget(
+@@ -392,6 +409,34 @@ InnerWidget::InnerWidget(
  	) | rpl::on_next([=](Descriptor now) {
  		switchTo(now.collectionId);
  	}, lifetime());
@@ -20538,7 +20556,7 @@ index a66e3d0c1..e1890b8ec 100644
  }
  
  void InnerWidget::switchTo(int collectionId) {
-@@ -402,6 +445,7 @@ void InnerWidget::switchTo(int collectionId) {
+@@ -402,6 +447,7 @@ void InnerWidget::switchTo(int collectionId) {
  	refreshButtons();
  	refreshAbout();
  	loadMore();
@@ -20546,7 +20564,7 @@ index a66e3d0c1..e1890b8ec 100644
  }
  
  void InnerWidget::loadCollections() {
-@@ -697,6 +741,9 @@ void InnerWidget::loaded(const MTPpayments_SavedStarGifts &result) {
+@@ -697,6 +743,9 @@ void InnerWidget::loaded(const MTPpayments_SavedStarGifts &result) {
  	if (_entries->filter != filter) {
  		_entries->filter = filter;
  		_list->clear();
@@ -20556,7 +20574,7 @@ index a66e3d0c1..e1890b8ec 100644
  	}
  	_list->reserve(_list->size() + data.vgifts().v.size());
  
-@@ -727,14 +774,176 @@ void InnerWidget::loaded(const MTPpayments_SavedStarGifts &result) {
+@@ -727,14 +776,176 @@ void InnerWidget::loaded(const MTPpayments_SavedStarGifts &result) {
  	}
  	refreshButtons();
  	refreshAbout();
@@ -20594,7 +20612,7 @@ index a66e3d0c1..e1890b8ec 100644
 +		for (auto i = records.rbegin(); i != records.rend(); ++i) {
 +			const auto &record = *i;
 +			if (record.recipientId
-+				? (record.recipientId != _peer->id.bare)
++				? (record.recipientId != _peer->id.value)
 +				: !self) {
 +				continue;
 +			}
@@ -20612,9 +20630,9 @@ index a66e3d0c1..e1890b8ec 100644
 +				: (record.stickerId
 +					? std::optional<Data::StarGift>(Data::StarGift{
 +						.id = record.giftId,
++						.stars = record.stars,
 +						.document = _peer->session().data().document(
 +							record.stickerId),
-+						.stars = record.stars,
 +						.resellTitle = record.title,
 +					})
 +					: std::nullopt);
@@ -20734,7 +20752,7 @@ index a66e3d0c1..e1890b8ec 100644
  		const auto id = gift.manageId;
  		if (ranges::contains(gift.collectionIds, collectionId)) {
  			const auto &changes = _collectionChanges.current();
-@@ -856,7 +1065,8 @@ void InnerWidget::validateButtons() {
+@@ -856,7 +1067,8 @@ void InnerWidget::validateButtons() {
  		view.giftId = giftId;
  		if (_addingToCollectionId) {
  			view.button->toggleSelected(
@@ -20744,7 +20762,7 @@ index a66e3d0c1..e1890b8ec 100644
  				GiftSelectionMode::Check,
  				anim::type::instant);
  		}
-@@ -923,7 +1133,8 @@ void InnerWidget::validateButtons() {
+@@ -923,7 +1135,8 @@ void InnerWidget::validateButtons() {
  				_draggedView->button->setDescriptor(entry.descriptor, _mode);
  				if (_addingToCollectionId) {
  					_draggedView->button->toggleSelected(
@@ -20754,7 +20772,7 @@ index a66e3d0c1..e1890b8ec 100644
  						GiftSelectionMode::Check,
  						anim::type::instant);
  				}
-@@ -948,18 +1159,25 @@ auto InnerWidget::pinnedSavedGifts()
+@@ -948,18 +1161,25 @@ auto InnerWidget::pinnedSavedGifts()
  -> Fn<std::vector<Data::CreditsHistoryEntry>()> {
  	struct Entry {
  		Data::SavedStarGiftId id;
@@ -20783,19 +20801,22 @@ index a66e3d0c1..e1890b8ec 100644
  		}
  	}
  	return [entries] {
-@@ -971,6 +1189,11 @@ auto InnerWidget::pinnedSavedGifts()
+@@ -968,9 +1188,14 @@ auto InnerWidget::pinnedSavedGifts()
+ 		for (const auto &entry : entries) {
+ 			const auto &id = entry.id;
+ 			result.push_back({
++				.date = entry.date,
  				.bareMsgId = uint64(id.userMessageId().bare),
++				.bareGiftStickerId = entry.bareGiftStickerId,
  				.bareEntryOwnerId = id.chat() ? id.chat()->id.value : 0,
  				.giftChannelSavedId = id.chatSavedId(),
 +				.stargiftId = entry.stargiftId,
 +				.localUid = entry.localUid,
 +				.giftTitle = entry.giftTitle,
-+				.bareGiftStickerId = entry.bareGiftStickerId,
-+				.date = entry.date,
  				.uniqueGift = entry.unique,
  				.stargift = true,
  			});
-@@ -1077,6 +1300,42 @@ void InnerWidget::fillCollectionsMenu(
+@@ -1077,6 +1302,42 @@ void InnerWidget::fillCollectionsMenu(
  		const auto title = collection.title;
  
  		auto callback = [=] {
@@ -20838,7 +20859,7 @@ index a66e3d0c1..e1890b8ec 100644
  			if (contains) {
  				removeGiftFromCollection(gift.manageId, id);
  			} else {
-@@ -1170,8 +1429,8 @@ void InnerWidget::showMenuFor(not_null<GiftButton*> button, QPoint point) {
+@@ -1170,8 +1431,8 @@ void InnerWidget::showMenuFor(not_null<GiftButton*> button, QPoint point) {
  	const auto collectionId = _descriptor.current().collectionId;
  	entry.pinnedSavedGifts = collectionId > 0 ? nullptr : pinnedSavedGifts();
  	_menu = base::make_unique_q<Ui::PopupMenu>(this, st::popupMenuWithIcons);
@@ -20848,7 +20869,7 @@ index a66e3d0c1..e1890b8ec 100644
  		const auto addAction = Ui::Menu::CreateAddActionCallback(_menu);
  		addAction(Ui::Menu::MenuCallback::Args{
  			.text = tr::lng_gift_collection_add_to(tr::now),
-@@ -1189,12 +1448,39 @@ void InnerWidget::showMenuFor(not_null<GiftButton*> button, QPoint point) {
+@@ -1189,12 +1450,39 @@ void InnerWidget::showMenuFor(not_null<GiftButton*> button, QPoint point) {
  		::Settings::SavedStarGiftMenuType::List);
  
  	if (collectionId > 0 && _peer->canManageGifts()) {
@@ -20889,7 +20910,7 @@ index a66e3d0c1..e1890b8ec 100644
  					removeGiftFromCollection(gift.manageId, collectionId);
  				},
  				.icon = &st::menuIconDeleteAttention,
-@@ -1213,7 +1499,38 @@ void InnerWidget::showGift(int index) {
+@@ -1213,7 +1501,38 @@ void InnerWidget::showGift(int index) {
  	Expects(index >= 0 && index < _list->size());
  
  	if (const auto id = _addingToCollectionId) {
@@ -20929,7 +20950,7 @@ index a66e3d0c1..e1890b8ec 100644
  		auto changes = _collectionChanges.current();
  		const auto selected = _inCollection.contains(gift.manageId);
  		if (selected) {
-@@ -1427,12 +1744,45 @@ void InnerWidget::editCollectionGifts(int id) {
+@@ -1427,12 +1746,45 @@ void InnerWidget::editCollectionGifts(int id) {
  			for (const auto &id : changes.removed) {
  				remove.push_back(Api::InputSavedStarGiftId(id));
  			}
@@ -21611,7 +21632,7 @@ index deaedd9f0..a404cd001 100644
  	std::unique_ptr<Ui::Animations::Simple> _giftsHiding;
  	rpl::lifetime _giftsLoadingLifetime;
 diff --git a/Telegram/SourceFiles/info/profile/info_profile_values.cpp b/Telegram/SourceFiles/info/profile/info_profile_values.cpp
-index 19c194b8b..4edd5ffe6 100644
+index 19c194b8b..9446a5aaf 100644
 --- a/Telegram/SourceFiles/info/profile/info_profile_values.cpp
 +++ b/Telegram/SourceFiles/info/profile/info_profile_values.cpp
 @@ -7,6 +7,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -21741,7 +21762,7 @@ index 19c194b8b..4edd5ffe6 100644
 +			if (base != BadgeType::None) {
 +				return base;
 +			}
-+			return Ayu::HasLocalPremiumGift(session, peer->id.bare)
++			return Ayu::HasLocalPremiumGift(session, peer->id.value)
 +				? BadgeType::Premium
 +				: BadgeType::None;
 +		});
@@ -22537,19 +22558,21 @@ index 57098491a..d8fa95d24 100644
  
  bool Location::mapSupported() const {
 diff --git a/Telegram/SourceFiles/settings/sections/settings_credits.cpp b/Telegram/SourceFiles/settings/sections/settings_credits.cpp
-index c2d1c009a..398437744 100644
+index c2d1c009a..21cd4f9fe 100644
 --- a/Telegram/SourceFiles/settings/sections/settings_credits.cpp
 +++ b/Telegram/SourceFiles/settings/sections/settings_credits.cpp
-@@ -10,6 +10,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
+@@ -10,7 +10,10 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
  #include "api/api_credits.h"
  #include "api/api_earn.h"
  #include "api/api_statistics.h"
 +#include "ayu/ayu_settings.h"
 +#include "ayu/ui/utils/ayu_profile_values.h"
  #include "base/call_delayed.h"
++#include "base/unixtime.h"
  #include "boxes/gift_credits_box.h"
  #include "boxes/gift_premium_box.h"
-@@ -76,6 +78,58 @@ namespace {
+ #include "boxes/star_gift_box.h"
+@@ -76,6 +79,58 @@ namespace {
  
  using namespace Builder;
  
@@ -22569,7 +22592,7 @@ index c2d1c009a..398437744 100644
 +			title = tr::ayu_LocalStarsPurchaseEntry(
 +				tr::now,
 +				lt_amount,
-+				entry.amount);
++				QString::number(entry.amount));
 +			break;
 +		case Ayu::LocalStarsActivityKind::GiftSent:
 +			title = entry.note;
@@ -22578,19 +22601,19 @@ index c2d1c009a..398437744 100644
 +			title = tr::ayu_LocalStarsEarnEntry(
 +				tr::now,
 +				lt_amount,
-+				entry.amount);
++				QString::number(entry.amount));
 +			break;
 +		case Ayu::LocalStarsActivityKind::Withdrawn:
 +			title = tr::ayu_LocalStarsWithdrawEntry(
 +				tr::now,
 +				lt_amount,
-+				entry.amount);
++				QString::number(entry.amount));
 +			break;
 +		case Ayu::LocalStarsActivityKind::Converted:
 +			title = tr::ayu_LocalStarsConvertEntry(
 +				tr::now,
 +				lt_amount,
-+				entry.amount);
++				QString::number(entry.amount));
 +			break;
 +		}
 +		result.push_back({
@@ -22598,8 +22621,8 @@ index c2d1c009a..398437744 100644
 +			.title = title,
 +			.date = base::unixtime::parse(TimeId(entry.date)),
 +			.credits = CreditsAmount(entry.amount),
-+			.in = in,
 +			.peerType = Data::CreditsHistoryEntry::PeerType::PremiumBot,
++			.in = in,
 +		});
 +	}
 +	return result;
@@ -22608,7 +22631,7 @@ index c2d1c009a..398437744 100644
  void BuildCurrencyWithdrawalSection(
  	not_null<Ui::VerticalLayout*> content,
  	not_null<Window::SessionController*> controller);
-@@ -282,12 +336,33 @@ void Credits::setupHistory(not_null<Ui::VerticalLayout*> container) {
+@@ -282,12 +337,33 @@ void Credits::setupHistory(not_null<Ui::VerticalLayout*> container) {
  			const Data::CreditsStatusSlice &inSlice,
  			const Data::CreditsStatusSlice &outSlice) {
  		const auto inner = content;
@@ -22646,7 +22669,7 @@ index c2d1c009a..398437744 100644
  		const auto fullTabText = tr::lng_credits_summary_history_tab_full(
  			tr::now);
  		const auto inTabText = tr::lng_credits_summary_history_tab_in(
-@@ -388,7 +463,7 @@ void Credits::setupHistory(not_null<Ui::VerticalLayout*> container) {
+@@ -388,7 +464,7 @@ void Credits::setupHistory(not_null<Ui::VerticalLayout*> container) {
  
  		Info::Statistics::AddCreditsHistoryList(
  			window->uiShow(),
@@ -22655,7 +22678,7 @@ index c2d1c009a..398437744 100644
  			fullWrap->entity(),
  			entryClicked,
  			self,
-@@ -396,7 +471,7 @@ void Credits::setupHistory(not_null<Ui::VerticalLayout*> container) {
+@@ -396,7 +472,7 @@ void Credits::setupHistory(not_null<Ui::VerticalLayout*> container) {
  			true);
  		Info::Statistics::AddCreditsHistoryList(
  			window->uiShow(),
@@ -22664,7 +22687,7 @@ index c2d1c009a..398437744 100644
  			inWrap->entity(),
  			entryClicked,
  			self,
-@@ -404,7 +479,7 @@ void Credits::setupHistory(not_null<Ui::VerticalLayout*> container) {
+@@ -404,7 +480,7 @@ void Credits::setupHistory(not_null<Ui::VerticalLayout*> container) {
  			false);
  		Info::Statistics::AddCreditsHistoryList(
  			window->uiShow(),
@@ -22673,7 +22696,7 @@ index c2d1c009a..398437744 100644
  			outWrap->entity(),
  			std::move(entryClicked),
  			self,
-@@ -587,7 +662,11 @@ void Credits::setupContent() {
+@@ -587,7 +663,11 @@ void Credits::setupContent() {
  				lt_amount,
  				(isCurrency
  					? controller()->session().credits().tonBalanceValue()
@@ -22686,7 +22709,7 @@ index c2d1c009a..398437744 100644
  				) | rpl::map(
  					Lang::FormatCreditsAmountDecimal
  				) | rpl::map(tr::bold),
-@@ -722,7 +801,11 @@ base::weak_qptr<Ui::RpWidget> Credits::createPinnedToTop(
+@@ -722,7 +802,11 @@ base::weak_qptr<Ui::RpWidget> Credits::createPinnedToTop(
  			&controller()->session(),
  			isCurrency
  				? controller()->session().credits().tonBalanceValue()
@@ -22699,7 +22722,7 @@ index c2d1c009a..398437744 100644
  			true,
  			content->heightValue() | rpl::map([=](int height) {
  				const auto ratio = float64(height - content->minimumHeight())
-@@ -943,10 +1026,6 @@ void BuildCreditsButtons(
+@@ -943,10 +1027,6 @@ void BuildCreditsButtons(
  	const auto self = session->user();
  
  	if (!isCurrency) {
@@ -22710,7 +22733,7 @@ index c2d1c009a..398437744 100644
  		const auto stats = builder.addButton({
  			.id = u"stars/stats"_q,
  			.title = tr::lng_credits_stats_button(),
-@@ -957,7 +1036,6 @@ void BuildCreditsButtons(
+@@ -957,7 +1037,6 @@ void BuildCreditsButtons(
  					Info::BotEarn::Make(self));
  			},
  			.keywords = { u"statistics"_q },
@@ -22718,7 +22741,7 @@ index c2d1c009a..398437744 100644
  		});
  		if (statsButton) {
  			*statsButton = stats;
-@@ -981,15 +1059,14 @@ void BuildCreditsButtons(
+@@ -981,15 +1060,14 @@ void BuildCreditsButtons(
  		}
  	}
  
@@ -22737,7 +22760,7 @@ index c2d1c009a..398437744 100644
  			},
  			.keywords = { u"affiliate"_q, u"referral"_q },
  		});
-@@ -1103,11 +1180,10 @@ Fn<void()> BuyStarsHandler::handler(
+@@ -1103,11 +1181,10 @@ Fn<void()> BuyStarsHandler::handler(
  		box->setTitle(tr::lng_credits_summary_options_subtitle());
  		const auto inner = box->verticalLayout();
  		const auto self = show->session().user();
@@ -22751,7 +22774,7 @@ index c2d1c009a..398437744 100644
  		FillCreditOptions(show, inner, self, amount, [=] {
  			if (const auto strong = weak.get()) {
  				strong->closeBox();
-@@ -1115,29 +1191,15 @@ Fn<void()> BuyStarsHandler::handler(
+@@ -1115,29 +1192,15 @@ Fn<void()> BuyStarsHandler::handler(
  			if (const auto onstack = paid) {
  				onstack();
  			}
