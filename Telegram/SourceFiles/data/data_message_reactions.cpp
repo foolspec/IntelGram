@@ -1914,7 +1914,7 @@ void Reactions::sendPaidRequest(
 	settings->setLocalStarsBalance(balance - send.count);
 	Ayu::AppendLocalPaidReaction(session, {
 		.peerId = item->history()->peer->id.value,
-		.msgId = item->id.bare,
+		.msgId = int32(item->id.bare),
 		.count = send.count,
 		.date = base::unixtime::now(),
 	});
