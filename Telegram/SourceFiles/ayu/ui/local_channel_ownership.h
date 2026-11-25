@@ -17,6 +17,8 @@ class SessionController;
 
 namespace Ayu {
 
+struct LocalGiveawayRecord;
+
 enum class LocalChannelBroadcastResult {
 	NotHandled,
 	Saved,
@@ -25,6 +27,11 @@ enum class LocalChannelBroadcastResult {
 
 [[nodiscard]] bool LocalChannelOwnershipActive(PeerData *peer);
 void EnsureLocalChannelBroadcasts(not_null<History*> history);
+void EnsureLocalGiveaways(not_null<History*> history);
+void AddLocalGiveawayMessage(
+	not_null<History*> history,
+	const LocalGiveawayRecord &record);
+[[nodiscard]] bool IsLocalGiveaway(HistoryItem *item);
 [[nodiscard]] LocalChannelBroadcastResult HandleLocalChannelBroadcast(
 	not_null<History*> history,
 	const TextWithTags &text,

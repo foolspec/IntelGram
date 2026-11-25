@@ -885,9 +885,28 @@ void SessionNavigation::resolveBoostState(
 			});
 		};
 		const auto lifting = base::take(_boostsToLift);
+		auto counters = ParseBoostCounters(result);
+		if (AyuSettings::localStars(_session).localPremium()) {
+			const auto channelId = peerToChannel(channel->id).bare;
+			const auto adjusted = Ayu::AdjustLocalBoostLevel(
+				_session,
+				channelId,
+				Ayu::LocalBoostLevel{
+					.level = counters.level,
+					.boosts = counters.boosts,
+					.thisLevelBoosts = counters.thisLevelBoosts,
+					.nextLevelBoosts = counters.nextLevelBoosts,
+				});
+			counters.level = adjusted.level;
+			counters.boosts = adjusted.boosts;
+			counters.thisLevelBoosts = adjusted.thisLevelBoosts;
+			counters.nextLevelBoosts = adjusted.nextLevelBoosts;
+			counters.mine = adjusted.mine;
+			channel->updateLevelHint(adjusted.level);
+		}
 		const auto box = uiShow()->show(Box(Ui::BoostBox, Ui::BoostBoxData{
 			.name = channel->name(),
-			.boost = ParseBoostCounters(result),
+			.boost = counters,
 			.features = LookupBoostFeatures(channel),
 			.lifting = lifting,
 			.allowMulti = (BoostsForGift(_session) > 0),
@@ -1070,6 +1089,10 @@ void SessionNavigation::resolveConferenceCall(
 void SessionNavigation::applyBoost(
 		not_null<ChannelData*> channel,
 		Fn<void(Ui::BoostCounters)> done) {
+	if (AyuSettings::localStars(_session).localPremium()) {
+		applyLocalBoost(channel, done);
+		return;
+	}
 	_api.request(MTPpremium_GetMyBoosts(
 	)).done([=](const MTPpremium_MyBoosts &result) {
 		const auto &data = result.data();
@@ -1153,10 +1176,128 @@ void SessionNavigation::applyBoost(
 	}).handleFloodErrors().send();
 }
 
+void SessionNavigation::applyLocalBoost(
+		not_null<ChannelData*> channel,
+		Fn<void(Ui::BoostCounters)> done) {
+	const auto channelId = peerToChannel(channel->id).bare;
+	const auto records = Ayu::LocalBoosts(_session);
+	auto free = std::vector<int>();
+	auto already = std::vector<int>();
+	auto other = std::vector<TakenBoostSlot>();
+	for (auto slot = 1; slot <= Ayu::kLocalBoostSlotsTotal; ++slot) {
+		const auto i = ranges::find(
+			records,
+			slot,
+			&Ayu::LocalBoostRecord::slot);
+		if (i == end(records)) {
+			free.push_back(slot);
+		} else if (i->channelId == channelId) {
+			already.push_back(slot);
+		} else {
+			other.push_back(TakenBoostSlot{
+				.id = slot,
+				.peerId = peerFromChannel(ChannelId(i->channelId)),
+			});
+		}
+	}
+	if (!free.empty()) {
+		applyBoostsChecked(channel, { free.front() }, done);
+		return;
+	}
+	if (other.empty()) {
+		if (!already.empty()) {
+			uiShow()->show(
+				Box(Ui::BoostBoxAlready, channel->isMegagroup()));
+		} else {
+			uiShow()->show(
+				Box(Ui::GiftedNoBoostsBox, channel->isMegagroup()));
+		}
+		done({});
+		return;
+	}
+	const auto weak = std::make_shared<base::weak_qptr<Ui::BoxContent>>();
+	const auto reassign = [=](
+			std::vector<int> slots,
+			int groups,
+			int channels) {
+		const auto count = int(slots.size());
+		const auto callback = [=](Ui::BoostCounters counters) {
+			if (const auto strong = weak->get()) {
+				strong->closeBox();
+			}
+			done(counters);
+			uiShow()->showToast(tr::lng_boost_reassign_done(
+				tr::now,
+				lt_count,
+				count,
+				lt_channels,
+				(!groups
+					? tr::lng_boost_reassign_channels
+					: !channels
+					? tr::lng_boost_reassign_groups
+					: tr::lng_boost_reassign_mixed)(
+						tr::now,
+						lt_count,
+						groups + channels)));
+		};
+		applyBoostsChecked(
+			channel,
+			slots,
+			crl::guard(this, callback));
+	};
+	*weak = uiShow()->show(ReassignBoostsBox(
+		channel,
+		other,
+		reassign,
+		[=] { done({}); }));
+}
+
 void SessionNavigation::applyBoostsChecked(
 		not_null<ChannelData*> channel,
 		std::vector<int> slots,
 		Fn<void(Ui::BoostCounters)> done) {
+	if (AyuSettings::localStars(_session).localPremium()) {
+		const auto channelId = peerToChannel(channel->id).bare;
+		for (const auto slot : slots) {
+			Ayu::AssignLocalBoostSlot(_session, channelId, slot);
+		}
+		_api.request(MTPpremium_GetBoostsStatus(
+			channel->input()
+		)).done([=](const MTPpremium_BoostsStatus &result) {
+			const auto server = ParseBoostCounters(result);
+			const auto adjusted = Ayu::AdjustLocalBoostLevel(
+				_session,
+				channelId,
+				Ayu::LocalBoostLevel{
+					.level = server.level,
+					.boosts = server.boosts,
+					.thisLevelBoosts = server.thisLevelBoosts,
+					.nextLevelBoosts = server.nextLevelBoosts,
+				});
+			channel->updateLevelHint(adjusted.level);
+			done(Ui::BoostCounters{
+				.level = adjusted.level,
+				.boosts = adjusted.boosts,
+				.thisLevelBoosts = adjusted.thisLevelBoosts,
+				.nextLevelBoosts = adjusted.nextLevelBoosts,
+				.mine = adjusted.mine,
+			});
+		}).fail([=] {
+			const auto adjusted = Ayu::AdjustLocalBoostLevel(
+				_session,
+				channelId,
+				Ayu::LocalBoostLevel());
+			channel->updateLevelHint(adjusted.level);
+			done(Ui::BoostCounters{
+				.level = adjusted.level,
+				.boosts = adjusted.boosts,
+				.thisLevelBoosts = adjusted.thisLevelBoosts,
+				.nextLevelBoosts = adjusted.nextLevelBoosts,
+				.mine = adjusted.mine,
+			});
+		}).send();
+		return;
+	}
 	auto mtp = MTP_vector_from_range(ranges::views::all(
 		slots
 	) | ranges::views::transform([](int slot) {

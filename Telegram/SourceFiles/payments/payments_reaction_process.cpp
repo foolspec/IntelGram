@@ -10,6 +10,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "api/api_credits.h"
 #include "api/api_global_privacy.h"
 #include "apiwrap.h"
+#include "ayu/ayu_settings.h"
 #include "boxes/peers/prepare_short_info_box.h"
 #include "boxes/send_credits_box.h" // CreditsEmojiSmall.
 #include "calls/group/calls_group_call.h"
@@ -87,7 +88,7 @@ void TryAddingPaidReaction(
 		}
 	};
 	const auto channelId = peerToChannel(itemId.peer);
-	Settings::MaybeRequestBalanceIncrease(
+	Settings::MaybeRequestLocalBalanceIncrease(
 		show,
 		count,
 		Settings::SmallBalanceReaction{ .channelId = channelId },
@@ -290,7 +291,10 @@ void ShowPaidReactionDetails(
 		.session = &channel->session(),
 		.name = channel->name(),
 		.submit = std::move(submitText),
-		.balanceValue = session->credits().balanceValue(),
+		.balanceValue = AyuSettings::localStars(session).localStarsBalanceValue(
+		) | rpl::map([](int balance) {
+			return CreditsAmount(balance);
+		}),
 		.send = [=](int count, uint64 barePeerId) {
 			send(count, PeerId(barePeerId), send);
 		},

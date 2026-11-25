@@ -45,6 +45,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 // AyuGram includes
 #include "ayu/ayu_settings.h"
 #include "ayu/ui/local_channel_ownership.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "ayu/utils/telegram_helpers.h"
 
 #include <algorithm>
@@ -1898,44 +1899,26 @@ void Reactions::sendPaidRequest(
 	Expects(!_sendingPaid.contains(item));
 
 	if (!send.count) {
-		sendPaidPrivacyRequest(item, send);
+		sendPaidFinish(item, send, true);
 		return;
 	}
 
 	markReadAfterAction(item->history());
-	const auto id = item->fullId();
-	const auto randomId = base::unixtime::mtproto_msg_id();
-	auto &api = _owner->session().api();
-	using Flag = MTPmessages_SendPaidReaction::Flag;
-	const auto requestId = api.request(MTPmessages_SendPaidReaction(
-		MTP_flags(send.shownPeer ? Flag::f_private : Flag()),
-		item->history()->peer->input(),
-		MTP_int(id.msg),
-		MTP_int(send.count),
-		MTP_long(randomId),
-		(!send.shownPeer
-			? MTPPaidReactionPrivacy()
-			: PaidReactionShownPeerToTL(&_owner->session(), *send.shownPeer))
-	)).done([=](const MTPUpdates &result) {
-		if (const auto item = _owner->message(id)) {
-			if (_sendingPaid.remove(item)) {
-				sendPaidFinish(item, send, true);
-			}
-		}
-		_owner->session().api().applyUpdates(result);
-		checkQuitPreventFinished();
-	}).fail([=](const MTP::Error &error) {
-		if (const auto item = _owner->message(id)) {
-			_sendingPaid.remove(item);
-			if (error.type() == u"RANDOM_ID_EXPIRED"_q) {
-				sendPaidRequest(item, send);
-			} else {
-				sendPaidFinish(item, send, false);
-			}
-		}
-		checkQuitPreventFinished();
-	}).send();
-	_sendingPaid[item] = requestId;
+	const auto session = &_owner->session();
+	const auto settings = &AyuSettings::localStars(session);
+	const auto balance = settings->localStarsBalance();
+	if (send.count > balance) {
+		sendPaidFinish(item, send, false);
+		return;
+	}
+	settings->setLocalStarsBalance(balance - send.count);
+	Ayu::AppendLocalPaidReaction(session, {
+		.peerId = item->history()->peer->id.value,
+		.msgId = item->id.bare,
+		.count = send.count,
+		.date = base::unixtime::now(),
+	});
+	sendPaidFinish(item, send, true);
 }
 
 void Reactions::checkQuitPreventFinished() {

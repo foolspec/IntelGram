@@ -370,6 +370,9 @@ private:
 	void applyBoost(
 		not_null<ChannelData*> channel,
 		Fn<void(Ui::BoostCounters)> done);
+	void applyLocalBoost(
+		not_null<ChannelData*> channel,
+		Fn<void(Ui::BoostCounters)> done);
 	void applyBoostsChecked(
 		not_null<ChannelData*> channel,
 		std::vector<int> slots,

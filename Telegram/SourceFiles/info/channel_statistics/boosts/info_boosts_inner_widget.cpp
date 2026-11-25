@@ -9,6 +9,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 #include "api/api_premium.h"
 #include "api/api_statistics.h"
+#include "ayu/ayu_settings.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "boxes/gift_premium_box.h"
 #include "boxes/peers/edit_peer_invite_link.h"
 #include "data/data_peer.h"
@@ -297,7 +299,24 @@ void InnerWidget::load() {
 
 void InnerWidget::fill() {
 	const auto fakeShowed = lifetime().make_state<rpl::event_stream<>>();
-	const auto &status = _state;
+	auto status = _state;
+	if (AyuSettings::localStars(&_peer->session()).localPremium()) {
+		const auto channelId = peerToChannel(_peer->id).bare;
+		const auto adjusted = Ayu::AdjustLocalBoostLevel(
+			&_peer->session(),
+			channelId,
+			Ayu::LocalBoostLevel{
+				.level = status.overview.level,
+				.boosts = status.overview.boostCount,
+				.thisLevelBoosts = status.overview.currentLevelBoostCount,
+				.nextLevelBoosts = status.overview.nextLevelBoostCount,
+			});
+		status.overview.level = adjusted.level;
+		status.overview.boostCount = adjusted.boosts;
+		status.overview.currentLevelBoostCount = adjusted.thisLevelBoosts;
+		status.overview.nextLevelBoostCount = adjusted.nextLevelBoosts;
+		status.overview.mine = adjusted.mine;
+	}
 	const auto inner = this;
 
 	const auto reloadOnDone = crl::guard(this, [=] {

@@ -1041,6 +1041,7 @@ void ApplyUserUpdate(not_null<UserData*> user, const MTPDuserFull &update) {
 			FromMTP(&user->owner(), update.vbusiness_away_message()));
 		user->owner().businessInfo().applyGreetingSettings(
 			FromMTP(&user->owner(), update.vbusiness_greeting_message()));
+		user->owner().businessInfo().applyLocalBusinessSettings();
 	}
 	user->setBotVerifyDetails(
 		ParseBotVerifyDetails(update.vbot_verification()));

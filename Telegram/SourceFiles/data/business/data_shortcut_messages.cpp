@@ -10,6 +10,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "api/api_hash.h"
 #include "apiwrap.h"
 #include "base/unixtime.h"
+#include "data/business/data_business_info.h"
 #include "data/data_peer.h"
 #include "data/data_session.h"
 #include "api/api_text_entities.h"
@@ -466,6 +467,7 @@ void ShortcutMessages::preloadShortcuts() {
 				_shortcutsChanged.fire({});
 			}
 		});
+		owner->businessInfo().restoreLocalShortcuts();
 	}).send();
 }
 
@@ -496,6 +498,7 @@ BusinessShortcutId ShortcutMessages::emplaceShortcut(QString name) {
 	}
 	const auto result = --_localShortcutId;
 	_shortcuts.list.emplace(result, Shortcut{ .id = result, .name = name });
+	_session->data().businessInfo().saveLocalShortcuts();
 	return result;
 }
 
@@ -549,13 +552,17 @@ void ShortcutMessages::editShortcut(
 			}
 		}
 	}
+	if (id < 0) {
+		finish();
+		_session->data().businessInfo().saveLocalShortcuts();
+		return;
+	}
 	_session->api().request(MTPmessages_EditQuickReplyShortcut(
 		MTP_int(id),
 		MTP_string(name)
 	)).done(finish).fail([=](const MTP::Error &error) {
 		const auto type = error.type();
 		if (type == u"SHORTCUT_ID_INVALID"_q) {
-			// Not on the server (yet).
 			finish();
 		} else {
 			fail(type);
@@ -576,6 +583,10 @@ void ShortcutMessages::removeShortcut(BusinessShortcutId shortcutId) {
 	_shortcuts.list.remove(shortcutId);
 	_shortcutIdChanges.fire({ shortcutId, 0 });
 
+	_session->data().businessInfo().saveLocalShortcuts();
+	if (shortcutId < 0) {
+		return;
+	}
 	_session->api().request(MTPmessages_DeleteQuickReplyShortcut(
 		MTP_int(shortcutId)
 	)).send();

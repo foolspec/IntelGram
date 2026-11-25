@@ -1268,6 +1268,17 @@ void SendLocalStarGift(
 					.date = base::unixtime::now(),
 					.message = message,
 					.anonymous = anonymous,
+					.upgraded = details.upgraded,
+					.modelName = gift.info.resellTitle,
+					.patternName = gift.info.resellTitle,
+					.backdropName = gift.info.resellTitle,
+					.backdropCenter = 0xFF1B2A4A,
+					.backdropEdge = 0xFF0D1424,
+					.backdropPattern = 0xFFF5A623,
+					.backdropText = 0xFFFFFFFF,
+					.number = details.upgraded
+						? int(base::RandomIndex(100000)) + 1
+						: 0,
 				});
 			}
 			if (const auto onstack = done) {
@@ -3814,6 +3825,110 @@ void PricesBox(
 	).append(' ').append(tr::lng_stars_rating_understood(tr::now))));
 }
 
+void UpgradeLocalStarGift(
+		not_null<Window::SessionController*> window,
+		const UpgradeArgs &args,
+		int cost,
+		Fn<void(bool, std::shared_ptr<Data::GiftUpgradeResult>)> done) {
+	const auto session = &window->session();
+	const auto show = Main::MakeSessionShow(
+		window->uiShow(),
+		session);
+	const auto finish = [=](bool success) {
+		if (!success) {
+			if (const auto onstack = done) {
+				onstack(false, nullptr);
+			}
+			return;
+		}
+		const auto settings = &AyuSettings::localStars(session);
+		settings->setLocalStarsBalance(
+			settings->localStarsBalance() - cost);
+		auto model = Data::UniqueGiftModel{
+			.document = args.stargift.document,
+		};
+		model.name = args.stargift.resellTitle;
+		if (!args.models.empty()) {
+			model = args.models[base::RandomIndex(args.models.size())];
+		}
+		auto pattern = Data::UniqueGiftPattern{
+			.document = args.stargift.document,
+		};
+		pattern.name = args.stargift.resellTitle;
+		if (!args.patterns.empty()) {
+			pattern = args.patterns[
+				base::RandomIndex(args.patterns.size())];
+		}
+		auto backdrop = Data::UniqueGiftBackdrop{};
+		backdrop.name = args.stargift.resellTitle;
+		backdrop.centerColor = QColor(0x1b, 0x2a, 0x4a);
+		backdrop.edgeColor = QColor(0x0d, 0x14, 0x24);
+		backdrop.patternColor = QColor(0xf5, 0xa6, 0x23);
+		backdrop.textColor = QColor(0xff, 0xff, 0xff);
+		if (!args.backdrops.empty()) {
+			backdrop = args.backdrops[
+				base::RandomIndex(args.backdrops.size())];
+		}
+		const auto number = int(base::RandomIndex(100000)) + 1;
+		const auto result = std::make_shared<Data::GiftUpgradeResult>(
+			Data::GiftUpgradeResult{
+				.info = args.stargift,
+				.date = base::unixtime::now(),
+				.saved = true,
+			});
+		result->info.unique = std::make_shared<Data::UniqueGift>(
+			Data::UniqueGift{
+				.id = uint64(args.stargift.id) * 1000000007ULL
+					+ uint64(args.localDate),
+				.initialGiftId = args.stargift.id,
+				.slug = u"local-%1-%2"_q
+					.arg(args.stargift.id)
+					.arg(args.localDate),
+				.title = args.stargift.resellTitle,
+				.ownerId = session->userPeerId(),
+				.releasedBy = session->user(),
+				.number = number,
+				.model = model,
+				.pattern = pattern,
+				.backdrop = backdrop,
+			});
+		Ayu::UpdateLocalGift(
+			session,
+			args.stargift.id,
+			args.localDate,
+			args.localMessage,
+			[&](Ayu::LocalGiftRecord &record) {
+				record.upgraded = true;
+				record.modelName = model.name;
+				record.modelRarity = model.rarityValue;
+				record.patternName = pattern.name;
+				record.patternRarity = pattern.rarityValue;
+				record.backdropName = backdrop.name;
+				record.backdropId = backdrop.id;
+				record.backdropCenter = uint32(
+					backdrop.centerColor.rgba());
+				record.backdropEdge = uint32(
+					backdrop.edgeColor.rgba());
+				record.backdropPattern = uint32(
+					backdrop.patternColor.rgba());
+				record.backdropText = uint32(
+					backdrop.textColor.rgba());
+				record.number = number;
+			});
+		if (const auto onstack = done) {
+			onstack(true, result);
+		}
+	};
+	Settings::MaybeRequestLocalBalanceIncrease(
+		show,
+		uint64(std::max(cost, 0)),
+		Settings::SmallBalanceStarGift{ args.peer->id },
+		[=](Settings::SmallBalanceResult result) {
+			finish(result == Settings::SmallBalanceResult::Already
+				|| result == Settings::SmallBalanceResult::Success);
+		});
+}
+
 void UpgradeBox(
 		not_null<GenericBox*> box,
 		not_null<Window::SessionController*> controller,
@@ -3902,7 +4017,7 @@ void UpgradeBox(
 
 	const auto gifting = !args.savedId
 		&& !args.giftPrepayUpgradeHash.isEmpty();
-	const auto preview = !args.savedId && !gifting;
+	const auto preview = !args.savedId && !gifting && !args.localGift;
 	const auto showPrices = !preview
 		&& (args.cost > 0)
 		&& (args.prices.size() > 1)
@@ -4041,7 +4156,11 @@ void UpgradeBox(
 				}
 			};
 			state->upgrading = true;
-			UpgradeGift(controller, args.savedId, keepDetails, cost, done);
+			if (args.localGift) {
+				UpgradeLocalStarGift(controller, args, cost, done);
+			} else {
+				UpgradeGift(controller, args.savedId, keepDetails, cost, done);
+			}
 
 			//AssertIsDebug();
 			//const auto modelIndex = base::RandomIndex(args.models.size());

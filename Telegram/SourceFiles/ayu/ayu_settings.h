@@ -411,6 +411,10 @@ public:
 	[[nodiscard]] const QString &localGifts() const { return _localGifts.current(); }
 	[[nodiscard]] const QString &localStarsEarnings() const { return _localStarsEarnings.current(); }
 	[[nodiscard]] int localStarsWithdrawn() const { return _localStarsWithdrawn.current(); }
+	[[nodiscard]] const QString &localPaidReactions() const { return _localPaidReactions.current(); }
+	[[nodiscard]] const QString &localBoosts() const { return _localBoosts.current(); }
+	[[nodiscard]] const QString &localGiveaways() const { return _localGiveaways.current(); }
+	[[nodiscard]] const QString &localBusiness() const { return _localBusiness.current(); }
 
 	void setLocalPremium(bool val);
 	void setLocalStarsBalance(int val);
@@ -418,6 +422,10 @@ public:
 	void setLocalGifts(const QString &val);
 	void setLocalStarsEarnings(const QString &val);
 	void setLocalStarsWithdrawn(int val);
+	void setLocalPaidReactions(const QString &val);
+	void setLocalBoosts(const QString &val);
+	void setLocalGiveaways(const QString &val);
+	void setLocalBusiness(const QString &val);
 
 	[[nodiscard]] rpl::producer<bool> localPremiumValue() const { return _localPremium.value(); }
 	[[nodiscard]] rpl::producer<bool> localPremiumChanges() const { return _localPremium.changes(); }
@@ -431,6 +439,14 @@ public:
 	[[nodiscard]] rpl::producer<QString> localStarsEarningsChanges() const { return _localStarsEarnings.changes(); }
 	[[nodiscard]] rpl::producer<int> localStarsWithdrawnValue() const { return _localStarsWithdrawn.value(); }
 	[[nodiscard]] rpl::producer<int> localStarsWithdrawnChanges() const { return _localStarsWithdrawn.changes(); }
+	[[nodiscard]] rpl::producer<QString> localPaidReactionsValue() const { return _localPaidReactions.value(); }
+	[[nodiscard]] rpl::producer<QString> localPaidReactionsChanges() const { return _localPaidReactions.changes(); }
+	[[nodiscard]] rpl::producer<QString> localBoostsValue() const { return _localBoosts.value(); }
+	[[nodiscard]] rpl::producer<QString> localBoostsChanges() const { return _localBoosts.changes(); }
+	[[nodiscard]] rpl::producer<QString> localGiveawaysValue() const { return _localGiveaways.value(); }
+	[[nodiscard]] rpl::producer<QString> localGiveawaysChanges() const { return _localGiveaways.changes(); }
+	[[nodiscard]] rpl::producer<QString> localBusinessValue() const { return _localBusiness.value(); }
+	[[nodiscard]] rpl::producer<QString> localBusinessChanges() const { return _localBusiness.changes(); }
 
 	friend void to_json(nlohmann::json &j, const LocalStarsAccountSettings &s);
 	friend void from_json(const nlohmann::json &j, LocalStarsAccountSettings &s);
@@ -444,6 +460,10 @@ private:
 	rpl::variable<QString> _localGifts;
 	rpl::variable<QString> _localStarsEarnings;
 	rpl::variable<int> _localStarsWithdrawn = 0;
+	rpl::variable<QString> _localPaidReactions;
+	rpl::variable<QString> _localBoosts;
+	rpl::variable<QString> _localGiveaways;
+	rpl::variable<QString> _localBusiness;
 
 };
 

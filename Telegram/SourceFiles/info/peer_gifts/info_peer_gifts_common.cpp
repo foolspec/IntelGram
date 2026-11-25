@@ -1464,7 +1464,7 @@ QImage ValidateRotatedBadge(
 void SelectGiftToUnpin(
 		std::shared_ptr<ChatHelpers::Show> show,
 		const std::vector<Data::CreditsHistoryEntry> &pinned,
-		Fn<void(Data::SavedStarGiftId)> chosen) {
+		Fn<void(const Data::CreditsHistoryEntry &)> chosen) {
 	show->show(Box([=](not_null<Ui::GenericBox*> box) {
 		struct State {
 			explicit State(not_null<Main::Session*> session)
@@ -1571,7 +1571,7 @@ void SelectGiftToUnpin(
 			Assert(index < int(pinned.size()));
 			const auto &entry = pinned[index];
 			const auto weak = base::make_weak(box);
-			chosen(::Settings::EntryToSavedStarGiftId(session, entry));
+			chosen(entry);
 			if (const auto strong = weak.get()) {
 				strong->closeBox();
 			}

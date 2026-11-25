@@ -9820,6 +9820,7 @@ bool HistoryWidget::updateCanSendMessage() {
 	if (localOwnership) {
 		Ayu::EnsureLocalChannelBroadcasts(_history);
 	}
+	Ayu::EnsureLocalGiveaways(_history);
 	const auto topic = resolveReplyToTopic();
 	const auto allWithoutPolls = Data::AllSendRestrictions()
 		& ~ChatRestriction::SendPolls;

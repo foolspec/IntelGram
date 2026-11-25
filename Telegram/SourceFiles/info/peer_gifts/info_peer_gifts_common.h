@@ -339,7 +339,7 @@ private:
 void SelectGiftToUnpin(
 	std::shared_ptr<ChatHelpers::Show> show,
 	const std::vector<Data::CreditsHistoryEntry> &pinned,
-	Fn<void(Data::SavedStarGiftId)> chosen);
+	Fn<void(const Data::CreditsHistoryEntry &)> chosen);
 
 [[nodiscard]] QColor BurnedBadgeBg();
 

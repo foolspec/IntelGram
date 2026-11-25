@@ -626,6 +626,34 @@ void LocalStarsAccountSettings::setLocalStarsWithdrawn(int val) {
 	AyuSettings::save();
 }
 
+void LocalStarsAccountSettings::setLocalPaidReactions(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalPaidReactions(val);
+	if (_localPaidReactions.current() == normalized) return;
+	_localPaidReactions = normalized;
+	AyuSettings::save();
+}
+
+void LocalStarsAccountSettings::setLocalBoosts(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalBoosts(val);
+	if (_localBoosts.current() == normalized) return;
+	_localBoosts = normalized;
+	AyuSettings::save();
+}
+
+void LocalStarsAccountSettings::setLocalGiveaways(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalGiveaways(val);
+	if (_localGiveaways.current() == normalized) return;
+	_localGiveaways = normalized;
+	AyuSettings::save();
+}
+
+void LocalStarsAccountSettings::setLocalBusiness(const QString &val) {
+	const auto normalized = val.left(Ayu::kMaxLocalBusinessLength);
+	if (_localBusiness.current() == normalized) return;
+	_localBusiness = normalized;
+	AyuSettings::save();
+}
+
 void to_json(nlohmann::json &j, const LocalStarsAccountSettings &s) {
 	j = nlohmann::json{
 		{"localPremium", s._localPremium.current()},
@@ -634,6 +662,10 @@ void to_json(nlohmann::json &j, const LocalStarsAccountSettings &s) {
 		{"localGifts", s._localGifts.current()},
 		{"localStarsEarnings", s._localStarsEarnings.current()},
 		{"localStarsWithdrawn", s._localStarsWithdrawn.current()},
+		{"localPaidReactions", s._localPaidReactions.current()},
+		{"localBoosts", s._localBoosts.current()},
+		{"localGiveaways", s._localGiveaways.current()},
+		{"localBusiness", s._localBusiness.current()},
 	};
 }
 
@@ -658,6 +690,19 @@ void from_json(const nlohmann::json &j, LocalStarsAccountSettings &s) {
 		j.value("localStarsWithdrawn", defaults._localStarsWithdrawn.current()),
 		0,
 		Ayu::kMaxLocalStarsBalance);
+	s._localPaidReactions = Ayu::NormalizeLocalPaidReactions(j.value(
+		"localPaidReactions",
+		defaults._localPaidReactions.current()));
+	s._localBoosts = Ayu::NormalizeLocalBoosts(j.value(
+		"localBoosts",
+		defaults._localBoosts.current()));
+	s._localGiveaways = Ayu::NormalizeLocalGiveaways(j.value(
+		"localGiveaways",
+		defaults._localGiveaways.current()));
+	s._localBusiness = j.value(
+		"localBusiness",
+		defaults._localBusiness.current()).left(
+			Ayu::kMaxLocalBusinessLength);
 }
 
 AyuSettings::AyuSettings()
@@ -900,6 +945,10 @@ LocalStarsAccountSettings &AyuSettings::localStars(uint64 userId) {
 	it->second->_localGifts = legacy->second->_localGifts.current();
 	it->second->_localStarsEarnings = legacy->second->_localStarsEarnings.current();
 	it->second->_localStarsWithdrawn = legacy->second->_localStarsWithdrawn.current();
+	it->second->_localPaidReactions = legacy->second->_localPaidReactions.current();
+	it->second->_localBoosts = legacy->second->_localBoosts.current();
+	it->second->_localGiveaways = legacy->second->_localGiveaways.current();
+	it->second->_localBusiness = legacy->second->_localBusiness.current();
 	settings._localStarsAccounts.erase(legacy);
 	save();
 

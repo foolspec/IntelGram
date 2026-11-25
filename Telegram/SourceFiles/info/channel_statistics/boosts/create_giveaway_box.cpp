@@ -9,6 +9,9 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 
 #include "api/api_credits.h"
 #include "api/api_premium.h"
+#include "ayu/ayu_settings.h"
+#include "ayu/ui/local_channel_ownership.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "base/call_delayed.h"
 #include "base/unixtime.h"
 #include "countries/countries_instance.h"
@@ -23,9 +26,11 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "info/statistics/info_statistics_list_controllers.h"
 #include "lang/lang_keys.h"
 #include "main/main_session.h"
+#include "main/session/session_show.h"
 #include "payments/payments_checkout_process.h" // Payments::CheckoutProcess
 #include "payments/payments_form.h" // Payments::InvoicePremiumGiftCode
 #include "settings/settings_common.h"
+#include "settings/settings_credits_graphics.h"
 #include "settings/sections/settings_premium.h" // Settings::ShowPremium
 #include "ui/boxes/choose_date_time.h"
 #include "ui/boxes/confirm_box.h"
@@ -1534,7 +1539,90 @@ void CreateGiveawayBox(
 					.cancelled = cancel,
 				}));
 			} else {
-				Payments::CheckoutProcess::Start(std::move(invoice), done);
+				const auto users = isSpecific
+					? int(state->selectedToAward.size())
+					: state->sliderValue.current();
+				const auto months = isCredits
+					? 0
+					: state->apiOptions.monthsFromPreset(
+						durationGroup->current());
+				const auto credits = isCredits
+					? creditsOption(creditsGroup->current()).credits
+					: uint64(0);
+				auto channels = std::vector<uint64>();
+				channels.push_back(peerToChannel(peer->id).bare);
+				for (const auto channel : state->selectedToSubscribe) {
+					channels.push_back(peerToChannel(channel->id).bare);
+				}
+				const auto record = Ayu::LocalGiveawayRecord{
+					.channelId = peerToChannel(peer->id).bare,
+					.date = base::unixtime::now(),
+					.untilDate = state->dateValue.current(),
+					.quantity = users,
+					.months = months,
+					.credits = int64(credits),
+					.prize = state->additionalPrize.current(),
+					.countries = state->countriesValue.current(),
+					.channels = std::move(channels),
+					.onlyNewSubscribers = (membersGroup->current()
+						== GiveawayType::OnlyNewMembers),
+					.showWinners = state->showWinners.current(),
+				};
+				const auto session = &peer->session();
+				const auto finish = [=](bool success) {
+					if (!success) {
+						done(Payments::CheckoutResult::Cancelled);
+						return;
+					}
+					auto stored = record;
+					stored.uid = Ayu::AppendLocalGiveaway(session, record);
+					if (!isSpecific && stored.uid) {
+						Ayu::AddLocalGiveawayMessage(
+							session->data().history(peer),
+							stored);
+					}
+					done(Payments::CheckoutResult::Paid);
+				};
+				if (isCredits) {
+					const auto total = credits * uint64(users);
+					const auto sessionShow = Main::MakeSessionShow(
+						show,
+						session);
+					Settings::MaybeRequestLocalBalanceIncrease(
+						sessionShow,
+						total,
+						Settings::SmallBalanceStarGift{ peer->id },
+						[=](Settings::SmallBalanceResult result) {
+							if (result
+									!= Settings::SmallBalanceResult::Already
+								&& result
+									!= Settings::SmallBalanceResult::Success) {
+								finish(false);
+								return;
+							}
+							auto *settings
+								= &AyuSettings::localStars(session);
+							settings->setLocalStarsBalance(
+								settings->localStarsBalance()
+									- int(total));
+							finish(true);
+						});
+				} else {
+					const auto cancel = [=](Fn<void()> close) {
+						if (weak) {
+							state->confirmButtonBusy = false;
+						}
+						close();
+					};
+					show->show(Ui::MakeConfirmBox({
+						.text = tr::lng_giveaway_start_sure(tr::now),
+						.confirmed = [=](Fn<void()> close) {
+							close();
+							finish(true);
+						},
+						.cancelled = cancel,
+					}));
+				}
 			}
 		});
 		box->addButton(std::move(button));

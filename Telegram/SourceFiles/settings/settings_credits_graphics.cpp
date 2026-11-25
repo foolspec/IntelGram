@@ -1864,7 +1864,10 @@ void FillUniqueGiftMenu(
 				auto already = ids(list);
 				if (list.size() >= limit) {
 					Info::PeerGifts::SelectGiftToUnpin(show, list, [=](
-							Data::SavedStarGiftId id) {
+							const Data::CreditsHistoryEntry &chosen) {
+						const auto id = EntryToSavedStarGiftId(
+							session,
+							chosen);
 						auto copy = already;
 						const auto i = ranges::find(copy, id);
 						const auto replaced = (i != end(copy))
@@ -1899,6 +1902,76 @@ void FillUniqueGiftMenu(
 			}, st.pin ? st.pin : &st::menuIconPin);
 		}
 	}
+	if (unique
+		&& e.localGift
+		&& e.savedToProfile
+		&& e.pinnedSavedGifts) {
+		if (e.giftPinned) {
+			menu->addAction(tr::lng_context_unpin_from_top(tr::now), [=] {
+				Ayu::UpdateLocalGift(
+					session,
+					e.stargiftId,
+					e.date.toSecsSinceEpoch(),
+					e.description.text,
+					[](Ayu::LocalGiftRecord &record) {
+						record.pinned = false;
+					});
+			}, st.unpin ? st.unpin : &st::menuIconUnpin);
+		} else {
+			menu->addAction(tr::lng_context_pin_to_top(tr::now), [=] {
+				const auto pinLocal = [=] {
+					Ayu::UpdateLocalGift(
+						session,
+						e.stargiftId,
+						e.date.toSecsSinceEpoch(),
+						e.description.text,
+						[](Ayu::LocalGiftRecord &record) {
+							record.pinned = true;
+						});
+				};
+				const auto list = e.pinnedSavedGifts();
+				const auto &appConfig = show->session().appConfig();
+				const auto limit = appConfig.pinnedGiftsLimit();
+				if (list.size() >= limit) {
+					Info::PeerGifts::SelectGiftToUnpin(
+						show,
+						list,
+						[=](const Data::CreditsHistoryEntry &chosen) {
+							const auto chosenId = EntryToSavedStarGiftId(
+								session,
+								chosen);
+							if (chosenId) {
+								using GiftAction = Data::GiftUpdate::Action;
+								show->session().data().notifyGiftUpdate({
+									.id = chosenId,
+									.action = GiftAction::Unpin,
+								});
+								session->recentSharedGifts().togglePinned(
+									show,
+									giftChannel
+										? giftChannel
+										: session->user(),
+									chosenId,
+									false,
+									chosen.uniqueGift);
+							} else {
+								Ayu::UpdateLocalGift(
+									session,
+									chosen.stargiftId,
+									chosen.date.toSecsSinceEpoch(),
+									chosen.description.text,
+									[](Ayu::LocalGiftRecord &record) {
+										record.pinned = false;
+									});
+							}
+							pinLocal();
+						});
+				} else {
+					pinLocal();
+				}
+			}, st.pin ? st.pin : &st::menuIconPin);
+		}
+	}
 	if (unique) {
 		const auto local = u"nft/"_q + unique->slug;
 		const auto url = show->session().createInternalLinkFull(local);
@@ -1924,6 +1997,32 @@ void FillUniqueGiftMenu(
 		} else {
 			menu->addAction(tr::lng_gift_menu_show(tr::now), [=] {
 				ToggleStarGiftSaved(show, savedId, true);
+			}, st.show ? st.show : &st::menuIconShowInChat);
+		}
+	}
+
+	if (e.localGift && type == SavedStarGiftMenuType::List) {
+		if (e.savedToProfile) {
+			menu->addAction(tr::lng_gift_menu_hide(tr::now), [=] {
+				Ayu::UpdateLocalGift(
+					session,
+					e.stargiftId,
+					e.date.toSecsSinceEpoch(),
+					e.description.text,
+					[](Ayu::LocalGiftRecord &record) {
+						record.hidden = true;
+					});
+			}, st.hide ? st.hide : &st::menuIconStealth);
+		} else {
+			menu->addAction(tr::lng_gift_menu_show(tr::now), [=] {
+				Ayu::UpdateLocalGift(
+					session,
+					e.stargiftId,
+					e.date.toSecsSinceEpoch(),
+					e.description.text,
+					[](Ayu::LocalGiftRecord &record) {
+						record.hidden = false;
+					});
 			}, st.show ? st.show : &st::menuIconShowInChat);
 		}
 	}
@@ -1974,9 +2073,9 @@ void FillUniqueGiftMenu(
 			}
 		}, st.transfer ? st.transfer : &st::menuIconReplace);
 	}
-	const auto wear = host->isSelf()
+	const auto wear = !e.localGift && (host->isSelf()
 		? e.in
-		: (host->isChannel() && host->asChannel()->canEditEmoji());
+		: (host->isChannel() && host->asChannel()->canEditEmoji()));
 	if (wear) {
 		const auto name = UniqueGiftName(*unique);
 		const auto now = host->emojiStatusId().collectible;
@@ -1992,7 +2091,7 @@ void FillUniqueGiftMenu(
 			}, st.wear ? st.wear : &st::menuIconNftWear);
 		}
 	}
-	if (ShowResellButton(&show->session(), e)) {
+	if (!e.localGift && ShowResellButton(&show->session(), e)) {
 		const auto can = CanResellGift(&show->session(), e);
 		const auto inResale = (unique->starsForResale > 0);
 		const auto editPrice = (inResale
@@ -2835,10 +2934,23 @@ void GenericCreditsEntryBody(
 	const auto canToggle = starGiftCanManage
 		&& !e.giftTransferred
 		&& !e.giftRefunded
-		&& !e.converted
-		&& !e.localGift;
+		&& !e.converted;
 	const auto toggleVisibility = [=, weak = base::make_weak(box)](bool save) {
 		if (e.localGift) {
+			Ayu::UpdateLocalGift(
+				&show->session(),
+				e.stargiftId,
+				e.date.toSecsSinceEpoch(),
+				e.description.text,
+				[=](Ayu::LocalGiftRecord &record) {
+					record.hidden = !save;
+				});
+			show->showToast((save
+				? tr::lng_gift_display_done
+				: tr::lng_gift_display_done_hide)(tr::now));
+			if (const auto strong = weak.get()) {
+				strong->closeBox();
+			}
 			return;
 		}
 		const auto showSection = !e.fromGiftsList;
@@ -2890,6 +3002,7 @@ void GenericCreditsEntryBody(
 				.unique = e.uniqueGift,
 				.stars = e.credits.ton() ? 0 : int(e.credits.whole()),
 				.document = starGiftSticker,
+				.resellTitle = e.giftTitle,
 				.limitedLeft = e.limitedLeft,
 				.limitedCount = e.limitedCount,
 			},
@@ -2908,6 +3021,9 @@ void GenericCreditsEntryBody(
 				|| (e.starsUpgradedBySender
 					&& !e.giftUpgradeSeparate
 					&& !e.anonymous)),
+			.localGift = e.localGift,
+			.localDate = e.date.toSecsSinceEpoch(),
+			.localMessage = e.description.text,
 		});
 	};
 
@@ -3605,7 +3721,7 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
 		.starsConverted = data.manageId
 			? int(data.starsConverted)
 			: int(Ayu::LocalGiftConvertValue(data.info.stars)),
-		.starsToUpgrade = data.manageId ? int(data.info.starsToUpgrade) : 0,
+		.starsToUpgrade = int(data.info.starsToUpgrade),
 		.starsUpgradedBySender = int(data.starsUpgradedBySender),
 		.starsForDetailsRemove = int(data.starsForDetailsRemove),
 		.giftNumber = data.giftNum,

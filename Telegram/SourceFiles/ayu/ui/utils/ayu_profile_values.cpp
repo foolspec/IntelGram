@@ -10,6 +10,8 @@
 #include "apiwrap.h"
 #include "ayu/ayu_settings.h"
 #include "ayu/utils/telegram_helpers.h"
+#include "base/random.h"
+#include "base/unixtime.h"
 #include "base/weak_ptr.h"
 #include "boxes/abstract_box.h"
 #include "boxes/peers/edit_peer_common.h"
@@ -601,6 +603,13 @@ std::vector<LocalGiftRecord> ParseLocalGifts(const QString &raw) {
 		if (!giftId || stars < 0) {
 			continue;
 		}
+		auto collections = std::vector<int>();
+		for (const auto &collection : object.value(u"col"_q).toArray()) {
+			const auto id = collection.toVariant().toInt();
+			if (id > 0) {
+				collections.push_back(id);
+			}
+		}
 		result.push_back({
 			.giftId = giftId,
 			.stars = stars,
@@ -608,6 +617,24 @@ std::vector<LocalGiftRecord> ParseLocalGifts(const QString &raw) {
 			.message = object.value(u"msg"_q).toString().left(
 				kMaxLocalGiftMessageLength),
 			.anonymous = object.value(u"anon"_q).toBool(),
+			.upgraded = object.value(u"upg"_q).toBool(),
+			.pinned = object.value(u"pin"_q).toBool(),
+			.hidden = object.value(u"hid"_q).toBool(),
+			.collections = std::move(collections),
+			.modelName = object.value(u"mdl"_q).toString().left(
+				kMaxLocalGiftAttributeLength),
+			.modelRarity = object.value(u"mrar"_q).toVariant().toInt(),
+			.patternName = object.value(u"pat"_q).toString().left(
+				kMaxLocalGiftAttributeLength),
+			.patternRarity = object.value(u"prar"_q).toVariant().toInt(),
+			.backdropName = object.value(u"bkn"_q).toString().left(
+				kMaxLocalGiftAttributeLength),
+			.backdropId = object.value(u"bkid"_q).toVariant().toInt(),
+			.backdropCenter = uint32(object.value(u"bkc"_q).toVariant().toULongLong()),
+			.backdropEdge = uint32(object.value(u"bke"_q).toVariant().toULongLong()),
+			.backdropPattern = uint32(object.value(u"bkp"_q).toVariant().toULongLong()),
+			.backdropText = uint32(object.value(u"bkt"_q).toVariant().toULongLong()),
+			.number = object.value(u"num"_q).toVariant().toInt(),
 		});
 		if (result.size() >= kMaxLocalGiftsCount) {
 			break;
@@ -633,6 +660,69 @@ QString SerializeLocalGifts(const std::vector<LocalGiftRecord> &records) {
 		}
 		if (record.anonymous) {
 			object.insert(u"anon"_q, true);
+		}
+		if (record.upgraded) {
+			object.insert(u"upg"_q, true);
+			if (!record.modelName.isEmpty()) {
+				object.insert(
+					u"mdl"_q,
+					record.modelName.left(kMaxLocalGiftAttributeLength));
+			}
+			if (record.modelRarity) {
+				object.insert(u"mrar"_q, record.modelRarity);
+			}
+			if (!record.patternName.isEmpty()) {
+				object.insert(
+					u"pat"_q,
+					record.patternName.left(kMaxLocalGiftAttributeLength));
+			}
+			if (record.patternRarity) {
+				object.insert(u"prar"_q, record.patternRarity);
+			}
+			if (!record.backdropName.isEmpty()) {
+				object.insert(
+					u"bkn"_q,
+					record.backdropName.left(kMaxLocalGiftAttributeLength));
+			}
+			if (record.backdropId) {
+				object.insert(u"bkid"_q, record.backdropId);
+			}
+			if (record.backdropCenter) {
+				object.insert(
+					u"bkc"_q,
+					QJsonValue(qint64(record.backdropCenter)));
+			}
+			if (record.backdropEdge) {
+				object.insert(
+					u"bke"_q,
+					QJsonValue(qint64(record.backdropEdge)));
+			}
+			if (record.backdropPattern) {
+				object.insert(
+					u"bkp"_q,
+					QJsonValue(qint64(record.backdropPattern)));
+			}
+			if (record.backdropText) {
+				object.insert(
+					u"bkt"_q,
+					QJsonValue(qint64(record.backdropText)));
+			}
+			if (record.number) {
+				object.insert(u"num"_q, record.number);
+			}
+		}
+		if (record.pinned) {
+			object.insert(u"pin"_q, true);
+		}
+		if (record.hidden) {
+			object.insert(u"hid"_q, true);
+		}
+		if (!record.collections.empty()) {
+			auto collections = QJsonArray();
+			for (const auto id : record.collections) {
+				collections.append(id);
+			}
+			object.insert(u"col"_q, std::move(collections));
 		}
 		array.append(std::move(object));
 	}
@@ -685,6 +775,376 @@ void RemoveLocalGift(
 	records.erase(i);
 	AyuSettings::localStars(session).setLocalGifts(
 		SerializeLocalGifts(records));
+}
+
+void UpdateLocalGift(
+		not_null<Main::Session*> session,
+		uint64 giftId,
+		int64 date,
+		const QString &message,
+		Fn<void(LocalGiftRecord &record)> mutate) {
+	auto records = ParseLocalGifts(
+		AyuSettings::localStars(session).localGifts());
+	const auto i = ranges::find_if(records, [&](const LocalGiftRecord &r) {
+		return r.giftId == giftId
+			&& r.date == date
+			&& r.message == message;
+	});
+	if (i == end(records)) {
+		return;
+	}
+	mutate(*i);
+	AyuSettings::localStars(session).setLocalGifts(
+		SerializeLocalGifts(records));
+}
+
+std::vector<LocalPaidReaction> ParseLocalPaidReactions(const QString &raw) {
+	auto result = std::vector<LocalPaidReaction>();
+	const auto document = QJsonDocument::fromJson(raw.toUtf8());
+	if (!document.isArray()) {
+		return result;
+	}
+	for (const auto &value : document.array()) {
+		if (!value.isObject()) {
+			continue;
+		}
+		const auto object = value.toObject();
+		const auto peerId = object.value(u"p"_q).toVariant().toULongLong();
+		const auto count = object.value(u"c"_q).toVariant().toLongLong();
+		if (!peerId || count <= 0) {
+			continue;
+		}
+		result.push_back({
+			.peerId = peerId,
+			.msgId = object.value(u"m"_q).toVariant().toInt(),
+			.count = count,
+			.date = object.value(u"d"_q).toVariant().toLongLong(),
+		});
+		if (result.size() >= kMaxLocalPaidReactionsCount) {
+			break;
+		}
+	}
+	return result;
+}
+
+QString SerializeLocalPaidReactions(
+		const std::vector<LocalPaidReaction> &reactions) {
+	auto array = QJsonArray();
+	for (const auto &reaction : reactions) {
+		if (!reaction.peerId || reaction.count <= 0) {
+			continue;
+		}
+		auto object = QJsonObject();
+		object.insert(u"p"_q, QJsonValue(qint64(reaction.peerId)));
+		object.insert(u"m"_q, QJsonValue(int(reaction.msgId)));
+		object.insert(u"c"_q, QJsonValue(qint64(reaction.count)));
+		object.insert(u"d"_q, QJsonValue(qint64(reaction.date)));
+		array.append(std::move(object));
+	}
+	return QString::fromUtf8(
+		QJsonDocument(array).toJson(QJsonDocument::Compact));
+}
+
+QString NormalizeLocalPaidReactions(QString reactions) {
+	auto parsed = ParseLocalPaidReactions(reactions);
+	auto serialized = SerializeLocalPaidReactions(parsed);
+	while (serialized.size() > kMaxLocalPaidReactionsLength
+		&& !parsed.empty()) {
+		parsed.erase(parsed.begin());
+		serialized = SerializeLocalPaidReactions(parsed);
+	}
+	return serialized;
+}
+
+void AppendLocalPaidReaction(
+		not_null<Main::Session*> session,
+		LocalPaidReaction reaction) {
+	if (!reaction.peerId || reaction.count <= 0) {
+		return;
+	}
+	auto reactions = ParseLocalPaidReactions(
+		AyuSettings::localStars(session).localPaidReactions());
+	reactions.push_back(std::move(reaction));
+	while (reactions.size() > kMaxLocalPaidReactionsCount) {
+		reactions.erase(reactions.begin());
+	}
+	AyuSettings::localStars(session).setLocalPaidReactions(
+		SerializeLocalPaidReactions(reactions));
+}
+
+std::vector<LocalBoostRecord> ParseLocalBoosts(const QString &raw) {
+	auto result = std::vector<LocalBoostRecord>();
+	const auto document = QJsonDocument::fromJson(raw.toUtf8());
+	if (!document.isArray()) {
+		return result;
+	}
+	for (const auto &value : document.array()) {
+		if (!value.isObject()) {
+			continue;
+		}
+		const auto object = value.toObject();
+		const auto channelId = object.value(u"ch"_q).toVariant().toULongLong();
+		const auto slot = object.value(u"s"_q).toVariant().toInt();
+		if (!channelId || slot < 1 || slot > kLocalBoostSlotsTotal) {
+			continue;
+		}
+		if (ranges::contains(result, slot, &LocalBoostRecord::slot)) {
+			continue;
+		}
+		result.push_back({ .channelId = channelId, .slot = slot });
+	}
+	return result;
+}
+
+QString SerializeLocalBoosts(
+		const std::vector<LocalBoostRecord> &records) {
+	auto array = QJsonArray();
+	for (const auto &record : records) {
+		if (!record.channelId || record.slot < 1) {
+			continue;
+		}
+		auto object = QJsonObject();
+		object.insert(u"ch"_q, QJsonValue(qint64(record.channelId)));
+		object.insert(u"s"_q, record.slot);
+		array.append(std::move(object));
+	}
+	return QString::fromUtf8(
+		QJsonDocument(array).toJson(QJsonDocument::Compact));
+}
+
+QString NormalizeLocalBoosts(QString boosts) {
+	return SerializeLocalBoosts(ParseLocalBoosts(boosts));
+}
+
+std::vector<LocalBoostRecord> LocalBoosts(
+		not_null<Main::Session*> session) {
+	return ParseLocalBoosts(
+		AyuSettings::localStars(session).localBoosts());
+}
+
+void SetLocalBoosts(
+		not_null<Main::Session*> session,
+		std::vector<LocalBoostRecord> records) {
+	AyuSettings::localStars(session).setLocalBoosts(
+		SerializeLocalBoosts(records));
+}
+
+void AssignLocalBoostSlot(
+		not_null<Main::Session*> session,
+		uint64 channelId,
+		int slot) {
+	if (!channelId || slot < 1 || slot > kLocalBoostSlotsTotal) {
+		return;
+	}
+	auto records = LocalBoosts(session);
+	records.erase(
+		ranges::remove_if(records, [&](const LocalBoostRecord &record) {
+			return record.slot == slot;
+		}),
+		end(records));
+	records.push_back({ .channelId = channelId, .slot = slot });
+	SetLocalBoosts(session, std::move(records));
+}
+
+void ReleaseLocalBoostSlot(
+		not_null<Main::Session*> session,
+		int slot) {
+	auto records = LocalBoosts(session);
+	const auto removed = ranges::remove_if(
+		records,
+		[&](const LocalBoostRecord &record) {
+			return record.slot == slot;
+		});
+	if (removed == end(records)) {
+		return;
+	}
+	records.erase(removed, end(records));
+	SetLocalBoosts(session, std::move(records));
+}
+
+int LocalBoostCountFor(
+		not_null<Main::Session*> session,
+		uint64 channelId) {
+	const auto records = LocalBoosts(session);
+	return int(ranges::count(
+		records,
+		channelId,
+		&LocalBoostRecord::channelId));
+}
+
+std::vector<int> LocalBoostSlotsFor(
+		not_null<Main::Session*> session,
+		uint64 channelId) {
+	const auto records = LocalBoosts(session);
+	auto result = std::vector<int>();
+	for (const auto &record : records) {
+		if (record.channelId == channelId) {
+			result.push_back(record.slot);
+		}
+	}
+	return result;
+}
+
+LocalBoostLevel AdjustLocalBoostLevel(
+		not_null<Main::Session*> session,
+		uint64 channelId,
+		LocalBoostLevel server) {
+	const auto mine = LocalBoostCountFor(session, channelId);
+	auto result = LocalBoostLevel{
+		.level = server.level,
+		.boosts = server.boosts + mine,
+		.thisLevelBoosts = server.thisLevelBoosts + mine,
+		.nextLevelBoosts = server.nextLevelBoosts,
+		.mine = mine,
+	};
+	if (result.nextLevelBoosts > 0
+		&& result.boosts >= result.nextLevelBoosts) {
+		result.level = server.level + 1;
+		result.thisLevelBoosts = result.boosts - result.nextLevelBoosts;
+		result.nextLevelBoosts = 0;
+	}
+	return result;
+}
+
+std::vector<LocalGiveawayRecord> ParseLocalGiveaways(const QString &raw) {
+	auto result = std::vector<LocalGiveawayRecord>();
+	const auto document = QJsonDocument::fromJson(raw.toUtf8());
+	if (!document.isArray()) {
+		return result;
+	}
+	for (const auto &value : document.array()) {
+		if (!value.isObject()) {
+			continue;
+		}
+		const auto object = value.toObject();
+		const auto uid = object.value(u"u"_q).toVariant().toLongLong();
+		const auto channelId = object.value(u"ch"_q).toVariant().toULongLong();
+		if (!uid || !channelId) {
+			continue;
+		}
+		auto countries = std::vector<QString>();
+		for (const auto &country : object.value(u"ct"_q).toArray()) {
+			const auto code = country.toString();
+			if (!code.isEmpty()) {
+				countries.push_back(code);
+			}
+		}
+		auto channels = std::vector<uint64>();
+		for (const auto &channel : object.value(u"chs"_q).toArray()) {
+			const auto id = channel.toVariant().toULongLong();
+			if (id) {
+				channels.push_back(id);
+			}
+		}
+		result.push_back({
+			.uid = uid,
+			.channelId = channelId,
+			.date = object.value(u"d"_q).toVariant().toLongLong(),
+			.untilDate = object.value(u"until"_q).toVariant().toLongLong(),
+			.quantity = object.value(u"q"_q).toVariant().toInt(),
+			.months = object.value(u"mo"_q).toVariant().toInt(),
+			.credits = object.value(u"cr"_q).toVariant().toLongLong(),
+			.prize = object.value(u"pr"_q).toString().left(
+				kMaxLocalGiveawayPrizeLength),
+			.countries = std::move(countries),
+			.channels = std::move(channels),
+			.onlyNewSubscribers = object.value(u"new"_q).toBool(),
+			.showWinners = object.value(u"win"_q).toBool(),
+		});
+		if (result.size() >= kMaxLocalGiveawaysCount) {
+			break;
+		}
+	}
+	return result;
+}
+
+QString SerializeLocalGiveaways(
+		const std::vector<LocalGiveawayRecord> &records) {
+	auto array = QJsonArray();
+	for (const auto &record : records) {
+		if (!record.uid || !record.channelId) {
+			continue;
+		}
+		auto object = QJsonObject();
+		object.insert(u"u"_q, QJsonValue(qint64(record.uid)));
+		object.insert(u"ch"_q, QJsonValue(qint64(record.channelId)));
+		object.insert(u"d"_q, QJsonValue(qint64(record.date)));
+		object.insert(u"until"_q, QJsonValue(qint64(record.untilDate)));
+		if (record.quantity) {
+			object.insert(u"q"_q, record.quantity);
+		}
+		if (record.months) {
+			object.insert(u"mo"_q, record.months);
+		}
+		if (record.credits) {
+			object.insert(u"cr"_q, QJsonValue(qint64(record.credits)));
+		}
+		if (!record.prize.isEmpty()) {
+			object.insert(
+				u"pr"_q,
+				record.prize.left(kMaxLocalGiveawayPrizeLength));
+		}
+		if (!record.countries.empty()) {
+			auto countries = QJsonArray();
+			for (const auto &country : record.countries) {
+				countries.append(country);
+			}
+			object.insert(u"ct"_q, std::move(countries));
+		}
+		if (!record.channels.empty()) {
+			auto channels = QJsonArray();
+			for (const auto channel : record.channels) {
+				channels.append(QJsonValue(qint64(channel)));
+			}
+			object.insert(u"chs"_q, std::move(channels));
+		}
+		if (record.onlyNewSubscribers) {
+			object.insert(u"new"_q, true);
+		}
+		if (record.showWinners) {
+			object.insert(u"win"_q, true);
+		}
+		array.append(std::move(object));
+	}
+	return QString::fromUtf8(
+		QJsonDocument(array).toJson(QJsonDocument::Compact));
+}
+
+QString NormalizeLocalGiveaways(QString giveaways) {
+	auto parsed = ParseLocalGiveaways(giveaways);
+	auto serialized = SerializeLocalGiveaways(parsed);
+	while (serialized.size() > kMaxLocalGiveawaysLength && !parsed.empty()) {
+		parsed.erase(parsed.begin());
+		serialized = SerializeLocalGiveaways(parsed);
+	}
+	return serialized;
+}
+
+std::vector<LocalGiveawayRecord> LocalGiveaways(
+		not_null<Main::Session*> session) {
+	return ParseLocalGiveaways(
+		AyuSettings::localStars(session).localGiveaways());
+}
+
+int64 AppendLocalGiveaway(
+		not_null<Main::Session*> session,
+		LocalGiveawayRecord record) {
+	if (!record.channelId) {
+		return 0;
+	}
+	if (!record.uid) {
+		record.uid = int64(base::unixtime::now()) * 1000000
+			+ int64(base::RandomIndex(1000000));
+	}
+	const auto uid = record.uid;
+	auto records = LocalGiveaways(session);
+	records.push_back(std::move(record));
+	while (records.size() > kMaxLocalGiveawaysCount) {
+		records.erase(records.begin());
+	}
+	AyuSettings::localStars(session).setLocalGiveaways(
+		SerializeLocalGiveaways(records));
+	return uid;
 }
 
 int64 LocalGiftConvertValue(int64 stars) {

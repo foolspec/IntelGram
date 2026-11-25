@@ -1,6 +1,7 @@
 #include "ayu/ui/local_channel_ownership.h"
 
 #include "ayu/data/intelgram_vault.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "base/timer.h"
 #include "base/unixtime.h"
 #include "boxes/peers/edit_peer_info_box.h"
@@ -94,6 +95,11 @@ struct LocalOwnershipState {
 };
 
 struct RuntimeBroadcast {
+	qint64 uid = 0;
+	FullMsgId fullId;
+};
+
+struct RuntimeGiveaway {
 	qint64 uid = 0;
 	FullMsgId fullId;
 };
@@ -474,6 +480,29 @@ void SaveState(
 	static auto result
 		= std::map<History*, std::vector<RuntimeBroadcast>>();
 	return result;
+}
+
+[[nodiscard]] std::map<History*, std::vector<RuntimeGiveaway>>
+		&RuntimeGiveaways() {
+	static auto result
+		= std::map<History*, std::vector<RuntimeGiveaway>>();
+	return result;
+}
+
+void CleanRuntimeGiveaways(not_null<History*> history) {
+	const auto i = RuntimeGiveaways().find(history);
+	if (i == RuntimeGiveaways().end()) {
+		return;
+	}
+	auto &runtime = i->second;
+	runtime.erase(
+		std::remove_if(
+			runtime.begin(),
+			runtime.end(),
+			[=](const RuntimeGiveaway &entry) {
+				return !history->owner().message(entry.fullId);
+			}),
+		runtime.end());
 }
 
 [[nodiscard]] LocalBroadcast *FindPost(
@@ -1052,6 +1081,92 @@ void EnsureLocalChannelBroadcasts(not_null<History*> history) {
 			history,
 			Data::HistoryUpdate::Flag::MessageSent);
 	}
+}
+
+void AddLocalGiveawayMessage(
+		not_null<History*> history,
+		const LocalGiveawayRecord &record) {
+	const auto session = &history->session();
+	auto channels = std::vector<not_null<ChannelData*>>();
+	for (const auto id : record.channels) {
+		channels.push_back(session->data().channel(ChannelId(id)));
+	}
+	if (channels.empty()) {
+		channels.push_back(session->data().channel(
+			ChannelId(record.channelId)));
+	}
+	auto flags = MessageFlag();
+	if (history->peer->isBroadcast()) {
+		flags |= MessageFlag::Post | MessageFlag::HasViews;
+	}
+	const auto item = history->addNewLocalMessage({
+		.id = history->owner().nextLocalMessageId(),
+		.flags = flags,
+		.date = TimeId(record.date),
+	}, TextWithEntities(), MTP_messageMediaEmpty());
+	item->overrideMedia(std::make_unique<Data::MediaGiveawayStart>(
+		item,
+		Data::GiveawayStart{
+			.channels = std::move(channels),
+			.countries = record.countries,
+			.additionalPrize = record.prize,
+			.untilDate = TimeId(record.untilDate),
+			.quantity = record.quantity,
+			.months = record.months,
+			.credits = uint64(record.credits),
+			.all = !record.onlyNewSubscribers,
+		}));
+	RuntimeGiveaways()[history].push_back({
+		.uid = record.uid,
+		.fullId = item->fullId(),
+	});
+	history->session().changes().historyUpdated(
+		history,
+		Data::HistoryUpdate::Flag::MessageSent);
+}
+
+void EnsureLocalGiveaways(not_null<History*> history) {
+	const auto channel = history->peer->asChannel();
+	if (!channel) {
+		return;
+	}
+	const auto channelId = peerToChannel(channel->id).bare;
+	const auto session = &history->session();
+	CleanRuntimeGiveaways(history);
+	auto &runtime = RuntimeGiveaways()[history];
+	for (const auto &record : LocalGiveaways(session)) {
+		if (record.channelId != channelId) {
+			continue;
+		}
+		const auto exists = std::any_of(
+			runtime.begin(),
+			runtime.end(),
+			[&](const RuntimeGiveaway &entry) {
+				return entry.uid == record.uid;
+			});
+		if (!exists) {
+			AddLocalGiveawayMessage(history, record);
+		}
+	}
+}
+
+bool IsLocalGiveaway(HistoryItem *item) {
+	if (!item) {
+		return false;
+	}
+	const auto history = item->history();
+	CleanRuntimeGiveaways(history);
+	const auto i = RuntimeGiveaways().find(history);
+	if (i == RuntimeGiveaways().end()) {
+		return false;
+	}
+	const auto fullId = item->fullId();
+	return std::any_of(
+		i->second.begin(),
+		i->second.end(),
+		[&](const RuntimeGiveaway &entry) {
+			return entry.fullId == fullId;
+		});
 }
 
 LocalChannelBroadcastResult HandleLocalChannelBroadcast(

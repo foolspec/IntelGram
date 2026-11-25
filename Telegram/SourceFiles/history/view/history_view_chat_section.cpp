@@ -765,6 +765,7 @@ bool ChatWidget::computeAreComments() const {
 
 void ChatWidget::setupComposeControls() {
 	Ayu::EnsureLocalChannelBroadcasts(_history);
+	Ayu::EnsureLocalGiveaways(_history);
 	auto topicWriteRestrictions = rpl::single(
 	) | rpl::then(session().changes().topicUpdates(
 		Data::TopicUpdate::Flag::Closed

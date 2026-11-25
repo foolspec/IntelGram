@@ -119,6 +119,9 @@ struct StarGiftUpgradeArgs {
 	bool canAddComment = false;
 	bool canAddMyComment = false;
 	bool addDetailsDefault = false;
+	bool localGift = false;
+	int64 localDate = 0;
+	QString localMessage;
 };
 void ShowStarGiftUpgradeBox(StarGiftUpgradeArgs &&args);
 

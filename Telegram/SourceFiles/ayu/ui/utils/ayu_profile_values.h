@@ -50,9 +50,18 @@ constexpr auto kMaxLocalStarsCardNameLength = 64;
 constexpr auto kMaxLocalGiftsCount = 200;
 constexpr auto kMaxLocalGiftsLength = 65536;
 constexpr auto kMaxLocalGiftMessageLength = 128;
+constexpr auto kMaxLocalGiftAttributeLength = 128;
 constexpr auto kMaxLocalStarsEarningsCount = 1000;
 constexpr auto kMaxLocalStarsEarningsLength = 65536;
 constexpr auto kLocalStarsProceedsMaturitySecs = 21 * 86400;
+constexpr auto kMaxLocalPaidReactionsCount = 1000;
+constexpr auto kMaxLocalPaidReactionsLength = 65536;
+constexpr auto kMaxLocalBoostsLength = 4096;
+constexpr auto kLocalBoostSlotsTotal = 4;
+constexpr auto kMaxLocalGiveawaysCount = 200;
+constexpr auto kMaxLocalGiveawaysLength = 65536;
+constexpr auto kMaxLocalGiveawayPrizeLength = 128;
+constexpr auto kMaxLocalBusinessLength = 65536;
 
 enum class LocalStarsEarningSource {
 	MiniApps = 0,
@@ -97,6 +106,21 @@ struct LocalGiftRecord {
 	int64 date = 0;
 	QString message;
 	bool anonymous = false;
+	bool upgraded = false;
+	bool pinned = false;
+	bool hidden = false;
+	std::vector<int> collections;
+	QString modelName;
+	int modelRarity = 0;
+	QString patternName;
+	int patternRarity = 0;
+	QString backdropName;
+	int backdropId = 0;
+	uint32 backdropCenter = 0;
+	uint32 backdropEdge = 0;
+	uint32 backdropPattern = 0;
+	uint32 backdropText = 0;
+	int number = 0;
 };
 
 [[nodiscard]] std::vector<LocalGiftRecord> ParseLocalGifts(
@@ -107,6 +131,96 @@ struct LocalGiftRecord {
 void AppendLocalGift(
 	not_null<Main::Session*> session,
 	LocalGiftRecord record);
+void UpdateLocalGift(
+	not_null<Main::Session*> session,
+	uint64 giftId,
+	int64 date,
+	const QString &message,
+	Fn<void(LocalGiftRecord &record)> mutate);
+
+struct LocalPaidReaction {
+	uint64 peerId = 0;
+	int32 msgId = 0;
+	int64 count = 0;
+	int64 date = 0;
+};
+
+[[nodiscard]] std::vector<LocalPaidReaction> ParseLocalPaidReactions(
+	const QString &raw);
+[[nodiscard]] QString SerializeLocalPaidReactions(
+	const std::vector<LocalPaidReaction> &reactions);
+[[nodiscard]] QString NormalizeLocalPaidReactions(QString reactions);
+void AppendLocalPaidReaction(
+	not_null<Main::Session*> session,
+	LocalPaidReaction reaction);
+
+struct LocalBoostRecord {
+	uint64 channelId = 0;
+	int slot = 0;
+};
+
+[[nodiscard]] std::vector<LocalBoostRecord> ParseLocalBoosts(
+	const QString &raw);
+[[nodiscard]] QString SerializeLocalBoosts(
+	const std::vector<LocalBoostRecord> &records);
+[[nodiscard]] QString NormalizeLocalBoosts(QString boosts);
+[[nodiscard]] std::vector<LocalBoostRecord> LocalBoosts(
+	not_null<Main::Session*> session);
+void SetLocalBoosts(
+	not_null<Main::Session*> session,
+	std::vector<LocalBoostRecord> records);
+void AssignLocalBoostSlot(
+	not_null<Main::Session*> session,
+	uint64 channelId,
+	int slot);
+void ReleaseLocalBoostSlot(
+	not_null<Main::Session*> session,
+	int slot);
+[[nodiscard]] int LocalBoostCountFor(
+	not_null<Main::Session*> session,
+	uint64 channelId);
+[[nodiscard]] std::vector<int> LocalBoostSlotsFor(
+	not_null<Main::Session*> session,
+	uint64 channelId);
+
+struct LocalBoostLevel {
+	int level = 0;
+	int boosts = 0;
+	int thisLevelBoosts = 0;
+	int nextLevelBoosts = 0;
+	int mine = 0;
+};
+
+[[nodiscard]] LocalBoostLevel AdjustLocalBoostLevel(
+	not_null<Main::Session*> session,
+	uint64 channelId,
+	LocalBoostLevel server);
+
+struct LocalGiveawayRecord {
+	int64 uid = 0;
+	uint64 channelId = 0;
+	int64 date = 0;
+	int64 untilDate = 0;
+	int quantity = 0;
+	int months = 0;
+	int64 credits = 0;
+	QString prize;
+	std::vector<QString> countries;
+	std::vector<uint64> channels;
+	bool onlyNewSubscribers = false;
+	bool showWinners = false;
+};
+
+[[nodiscard]] std::vector<LocalGiveawayRecord> ParseLocalGiveaways(
+	const QString &raw);
+[[nodiscard]] QString SerializeLocalGiveaways(
+	const std::vector<LocalGiveawayRecord> &records);
+[[nodiscard]] QString NormalizeLocalGiveaways(QString giveaways);
+[[nodiscard]] std::vector<LocalGiveawayRecord> LocalGiveaways(
+	not_null<Main::Session*> session);
+[[nodiscard]] int64 AppendLocalGiveaway(
+	not_null<Main::Session*> session,
+	LocalGiveawayRecord record);
 
 [[nodiscard]] QString NormalizeLocalProfileName(QString name);
 [[nodiscard]] QString NormalizeLocalProfileId(QString id);
