@@ -62,7 +62,7 @@ env:
   SOURCE_TAG: v6.7.8
   RELEASE_NAME: Collectibles, Boosts & Giveaways
   RELEASE_SLUG: collectibles-boosts-giveaways
-  PATCH_SHA256: 2e34e5cfefd1b778259aa7b2a980282b63100228fa1b2a3be7c6112d319af767
+  PATCH_SHA256: f7ee0e76cfe3cf574bddeb52f71ef5bd41f21aa773bc4379846676e2065eddca
   LIB_UI_COMMIT: b9a30917daf2bd8fdc17ccd9682acca178882b7b
   LIB_UI_REF: codex/intelgram-liquid-bounce-20260726
 
