@@ -17881,7 +17881,7 @@ index b68e35d70..2809fb4f5 100644
  	bool fromGiftSlug : 1 = false;
  	bool soldOutInfo : 1 = false;
 diff --git a/Telegram/SourceFiles/data/data_message_reactions.cpp b/Telegram/SourceFiles/data/data_message_reactions.cpp
-index 5caa80abc..4585432a3 100644
+index 5caa80abc..82ebc46fd 100644
 --- a/Telegram/SourceFiles/data/data_message_reactions.cpp
 +++ b/Telegram/SourceFiles/data/data_message_reactions.cpp
 @@ -44,8 +44,11 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
@@ -18000,7 +18000,7 @@ index 5caa80abc..4585432a3 100644
 +	settings->setLocalStarsBalance(balance - send.count);
 +	Ayu::AppendLocalPaidReaction(session, {
 +		.peerId = item->history()->peer->id.value,
-+		.msgId = item->id.bare,
++		.msgId = int32(item->id.bare),
 +		.count = send.count,
 +		.date = base::unixtime::now(),
 +	});
