@@ -896,6 +896,7 @@ void SessionNavigation::resolveBoostState(
 					.boosts = counters.boosts,
 					.thisLevelBoosts = counters.thisLevelBoosts,
 					.nextLevelBoosts = counters.nextLevelBoosts,
+					.mine = counters.mine,
 				});
 			counters.level = adjusted.level;
 			counters.boosts = adjusted.boosts;
@@ -921,7 +922,46 @@ void SessionNavigation::resolveBoostState(
 		}
 	}).fail([=](const MTP::Error &error) {
 		_boostStateResolving = nullptr;
-		showToast(u"Error: "_q + error.type());
+		if (!AyuSettings::localStars(_session).localPremium()) {
+			showToast(u"Error: "_q + error.type());
+			return;
+		}
+		const auto boosted = std::make_shared<bool>();
+		const auto submit = [=](Fn<void(Ui::BoostCounters)> done) {
+			applyBoost(channel, [=](Ui::BoostCounters counters) {
+				*boosted = true;
+				done(counters);
+			});
+		};
+		const auto lifting = base::take(_boostsToLift);
+		const auto channelId = peerToChannel(channel->id).bare;
+		const auto adjusted = Ayu::AdjustLocalBoostLevel(
+			_session,
+			channelId,
+			Ayu::LocalBoostLevel());
+		channel->updateLevelHint(adjusted.level);
+		const auto counters = Ui::BoostCounters{
+			.level = adjusted.level,
+			.boosts = adjusted.boosts,
+			.thisLevelBoosts = adjusted.thisLevelBoosts,
+			.nextLevelBoosts = adjusted.nextLevelBoosts,
+			.mine = adjusted.mine,
+		};
+		const auto box = uiShow()->show(Box(Ui::BoostBox, Ui::BoostBoxData{
+			.name = channel->name(),
+			.boost = counters,
+			.features = LookupBoostFeatures(channel),
+			.lifting = lifting,
+			.allowMulti = (BoostsForGift(_session) > 0),
+			.group = channel->isMegagroup(),
+		}, submit));
+		if (lifting) {
+			box->boxClosing() | rpl::on_next([=] {
+				if (*boosted) {
+					channel->updateFullForced();
+				}
+			}, box->lifetime());
+		}
 	}).send();
 }
 
@@ -1206,12 +1246,63 @@ void SessionNavigation::applyLocalBoost(
 	}
 	if (other.empty()) {
 		if (!already.empty()) {
-			uiShow()->show(
-				Box(Ui::BoostBoxAlready, channel->isMegagroup()));
-		} else {
-			uiShow()->show(
-				Box(Ui::GiftedNoBoostsBox, channel->isMegagroup()));
+			const auto name = channel->name();
+			const auto refresh = [=](Fn<void(Ui::BoostCounters)> done) {
+				_api.request(MTPpremium_GetBoostsStatus(
+					channel->input()
+				)).done([=](const MTPpremium_BoostsStatus &result) {
+					const auto server = ParseBoostCounters(result);
+					const auto adjusted = Ayu::AdjustLocalBoostLevel(
+						_session,
+						channelId,
+						Ayu::LocalBoostLevel{
+							.level = server.level,
+							.boosts = server.boosts,
+							.thisLevelBoosts = server.thisLevelBoosts,
+							.nextLevelBoosts = server.nextLevelBoosts,
+							.mine = server.mine,
+						});
+					channel->updateLevelHint(adjusted.level);
+					done(Ui::BoostCounters{
+						.level = adjusted.level,
+						.boosts = adjusted.boosts,
+						.thisLevelBoosts = adjusted.thisLevelBoosts,
+						.nextLevelBoosts = adjusted.nextLevelBoosts,
+						.mine = adjusted.mine,
+					});
+				}).fail([=] {
+					const auto adjusted = Ayu::AdjustLocalBoostLevel(
+						_session,
+						channelId,
+						Ayu::LocalBoostLevel());
+					channel->updateLevelHint(adjusted.level);
+					done(Ui::BoostCounters{
+						.level = adjusted.level,
+						.boosts = adjusted.boosts,
+						.thisLevelBoosts = adjusted.thisLevelBoosts,
+						.nextLevelBoosts = adjusted.nextLevelBoosts,
+						.mine = adjusted.mine,
+					});
+				}).send();
+			};
+			uiShow()->show(Ui::MakeConfirmBox({
+				.text = tr::ayu_LocalBoostRemoveConfirm(
+					tr::now,
+					lt_channel,
+					name),
+				.confirmed = [=] {
+					Ayu::ReleaseLocalBoostSlot(_session, already.front());
+					refresh(done);
+				},
+				.cancelled = [=] {
+					done({});
+				},
+				.confirmText = tr::ayu_LocalBoostRemove(),
+			}));
+			return;
 		}
+		uiShow()->show(
+			Box(Ui::GiftedNoBoostsBox, channel->isMegagroup()));
 		done({});
 		return;
 	}
@@ -1273,6 +1364,7 @@ void SessionNavigation::applyBoostsChecked(
 					.boosts = server.boosts,
 					.thisLevelBoosts = server.thisLevelBoosts,
 					.nextLevelBoosts = server.nextLevelBoosts,
+					.mine = server.mine,
 				});
 			channel->updateLevelHint(adjusted.level);
 			done(Ui::BoostCounters{

@@ -1497,7 +1497,7 @@ base::weak_qptr<Ui::RpWidget> Premium::createPinnedToTop(
 		}
 
 		if (AyuSettings::localStars(&controller()->session()).localPremium()) {
-			return tr::ayu_LocalPremiumNotice(tr::rich);
+			return tr::lng_premium_summary_user_about(tr::rich);
 		}
 
 		return rpl::conditional(
@@ -1687,16 +1687,17 @@ base::weak_qptr<Ui::RpWidget> Premium::createPinnedToBottom(
 	}();
 
 	_subscribe = CreateSubscribeButton({
-		controller(),
-		content,
-		[ref = _state->ref] { return ref; },
-		std::move(buttonText),
-		std::nullopt,
-		[=, options = session->api().premium().subscriptionOptions()] {
+		.controller = controller(),
+		.parent = content,
+		.computeRef = [ref = _state->ref] { return ref; },
+		.text = std::move(buttonText),
+		.computeOption = [=] {
 			const auto value = _state->radioGroup->current();
+			const auto options
+				= session->api().premium().subscriptionOptions();
 			return (value < options.size() && value >= 0)
-				? options[value].botUrl
-				: QString();
+				? options[value]
+				: Data::PremiumSubscriptionOption{};
 		},
 	});
 #if 0
@@ -2000,7 +2001,8 @@ not_null<Ui::GradientButton*> CreateSubscribeButton(
 			resolveWindow,
 			promo = args.showPromo,
 			computeRef = args.computeRef,
-			computeBotUrl = args.computeBotUrl] {
+			computeBotUrl = args.computeBotUrl,
+			computeOption = args.computeOption] {
 		const auto window = resolveWindow(
 			&show->session());
 		if (!window) {
@@ -2012,10 +2014,14 @@ not_null<Ui::GradientButton*> CreateSubscribeButton(
 		// Local-only: the purchase is simulated on this device instead
 		// of opening PremiumBot, so no message is sent and no real
 		// payment happens.
-		StartLocalPremiumPurchase(
-			show,
-			window,
-			computeBotUrl ? computeBotUrl() : QString());
+		if (computeOption) {
+			StartLocalPremiumPurchase(show, window, computeOption());
+		} else {
+			StartLocalPremiumPurchase(
+				show,
+				window,
+				computeBotUrl ? computeBotUrl() : QString());
+		}
 	});
 
 	const auto &st = st::premiumPreviewBox.button;
@@ -2023,6 +2029,12 @@ not_null<Ui::GradientButton*> CreateSubscribeButton(
 
 	const auto premium = &show->session().api().premium();
 	premium->reload();
+	premium->statusTextValue(
+	) | rpl::map([=] {
+		return premium->subscriptionOptions().empty();
+	}) | rpl::on_next([=](bool noOptions) {
+		result->setDisabled(noOptions);
+	}, result->lifetime());
 	const auto computeCost = [=] {
 		const auto amount = premium->monthlyAmount();
 		const auto currency = premium->monthlyCurrency();

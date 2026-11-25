@@ -19,6 +19,8 @@
 #include "main/main_session.h"
 #include "platform/platform_translate_provider.h"
 #include "rpl/combine.h"
+#include "rpl/map.h"
+#include "base/unixtime.h"
 #include "window/window_controller.h"
 
 #include <algorithm>
@@ -582,9 +584,30 @@ bool LocalStarsAccountSettings::hasLocalStars() const {
 	return current != defaults;
 }
 
+bool LocalStarsAccountSettings::localPremium() const {
+	return _localPremium.current()
+		&& (!_localPremiumUntil.current()
+			|| _localPremiumUntil.current() > base::unixtime::now());
+}
+
+rpl::producer<bool> LocalStarsAccountSettings::localPremiumValue() const {
+	return rpl::combine(
+		_localPremium.value(),
+		_localPremiumUntil.value()
+	) | rpl::map([](bool premium, int64 until) {
+		return premium && (!until || until > base::unixtime::now());
+	});
+}
+
 void LocalStarsAccountSettings::setLocalPremium(bool val) {
 	if (_localPremium.current() == val) return;
 	_localPremium = val;
+	AyuSettings::save();
+}
+
+void LocalStarsAccountSettings::setLocalPremiumUntil(int64 val) {
+	if (_localPremiumUntil.current() == val) return;
+	_localPremiumUntil = val;
 	AyuSettings::save();
 }
 
@@ -599,7 +622,7 @@ void LocalStarsAccountSettings::setLocalStarsBalance(int val) {
 }
 
 void LocalStarsAccountSettings::setLocalStarsActivity(const QString &val) {
-	const auto normalized = val.left(Ayu::kMaxLocalStarsActivityLength);
+	const auto normalized = Ayu::NormalizeLocalStarsActivity(val);
 	if (_localStarsActivity.current() == normalized) return;
 	_localStarsActivity = normalized;
 	AyuSettings::save();
@@ -609,6 +632,27 @@ void LocalStarsAccountSettings::setLocalGifts(const QString &val) {
 	const auto normalized = Ayu::NormalizeLocalGifts(val);
 	if (_localGifts.current() == normalized) return;
 	_localGifts = normalized;
+	AyuSettings::save();
+}
+
+void LocalStarsAccountSettings::setLocalStarsCardTitle(const QString &val) {
+	const auto normalized = val.left(Ayu::kMaxLocalStarsCardNameLength);
+	if (_localStarsCardTitle.current() == normalized) return;
+	_localStarsCardTitle = normalized;
+	AyuSettings::save();
+}
+
+void LocalStarsAccountSettings::setLocalEarnClaims(const QString &val) {
+	const auto normalized = val.left(Ayu::kMaxLocalStarsActivityLength);
+	if (_localEarnClaims.current() == normalized) return;
+	_localEarnClaims = normalized;
+	AyuSettings::save();
+}
+
+void LocalStarsAccountSettings::setLocalGiftSerials(const QString &val) {
+	const auto normalized = val.left(Ayu::kMaxLocalStarsActivityLength);
+	if (_localGiftSerials.current() == normalized) return;
+	_localGiftSerials = normalized;
 	AyuSettings::save();
 }
 
@@ -654,35 +698,61 @@ void LocalStarsAccountSettings::setLocalBusiness(const QString &val) {
 	AyuSettings::save();
 }
 
+void LocalStarsAccountSettings::setLocalPremiumGifts(const QString &val) {
+	const auto normalized = Ayu::NormalizeLocalPremiumGifts(val);
+	if (_localPremiumGifts.current() == normalized) return;
+	_localPremiumGifts = normalized;
+	AyuSettings::save();
+}
+
 void to_json(nlohmann::json &j, const LocalStarsAccountSettings &s) {
 	j = nlohmann::json{
 		{"localPremium", s._localPremium.current()},
+		{"localPremiumUntil", s._localPremiumUntil.current()},
 		{"localStarsBalance", s._localStarsBalance.current()},
 		{"localStarsActivity", s._localStarsActivity.current()},
 		{"localGifts", s._localGifts.current()},
+		{"localStarsCardTitle", s._localStarsCardTitle.current()},
+		{"localEarnClaims", s._localEarnClaims.current()},
+		{"localGiftSerials", s._localGiftSerials.current()},
 		{"localStarsEarnings", s._localStarsEarnings.current()},
 		{"localStarsWithdrawn", s._localStarsWithdrawn.current()},
 		{"localPaidReactions", s._localPaidReactions.current()},
 		{"localBoosts", s._localBoosts.current()},
 		{"localGiveaways", s._localGiveaways.current()},
 		{"localBusiness", s._localBusiness.current()},
+		{"localPremiumGifts", s._localPremiumGifts.current()},
 	};
 }
 
 void from_json(const nlohmann::json &j, LocalStarsAccountSettings &s) {
 	LocalStarsAccountSettings defaults;
 	s._localPremium = j.value("localPremium", defaults._localPremium.current());
+	s._localPremiumUntil = j.value(
+		"localPremiumUntil",
+		defaults._localPremiumUntil.current());
 	s._localStarsBalance = std::clamp(
 		j.value("localStarsBalance", defaults._localStarsBalance.current()),
 		0,
 		Ayu::kMaxLocalStarsBalance);
-	s._localStarsActivity = j.value(
+	s._localStarsActivity = Ayu::NormalizeLocalStarsActivity(j.value(
 		"localStarsActivity",
-		defaults._localStarsActivity.current()).left(
-			Ayu::kMaxLocalStarsActivityLength);
+		defaults._localStarsActivity.current()));
 	s._localGifts = Ayu::NormalizeLocalGifts(j.value(
 		"localGifts",
 		defaults._localGifts.current()));
+	s._localStarsCardTitle = j.value(
+		"localStarsCardTitle",
+		defaults._localStarsCardTitle.current()).left(
+			Ayu::kMaxLocalStarsCardNameLength);
+	s._localEarnClaims = j.value(
+		"localEarnClaims",
+		defaults._localEarnClaims.current()).left(
+			Ayu::kMaxLocalStarsActivityLength);
+	s._localGiftSerials = j.value(
+		"localGiftSerials",
+		defaults._localGiftSerials.current()).left(
+			Ayu::kMaxLocalStarsActivityLength);
 	s._localStarsEarnings = Ayu::NormalizeLocalStarsEarnings(j.value(
 		"localStarsEarnings",
 		defaults._localStarsEarnings.current()));
@@ -703,6 +773,9 @@ void from_json(const nlohmann::json &j, LocalStarsAccountSettings &s) {
 		"localBusiness",
 		defaults._localBusiness.current()).left(
 			Ayu::kMaxLocalBusinessLength);
+	s._localPremiumGifts = Ayu::NormalizeLocalPremiumGifts(j.value(
+		"localPremiumGifts",
+		defaults._localPremiumGifts.current()));
 }
 
 AyuSettings::AyuSettings()
@@ -927,8 +1000,7 @@ LocalStarsAccountSettings &AyuSettings::localStars(uint64 userId) {
 	}
 	const auto legacy = settings._localStarsAccounts.find(0);
 	if (legacy == settings._localStarsAccounts.end()
-		|| !legacy->second->hasLocalStars()
-		|| it->second->hasLocalStars()) {
+		|| !legacy->second->hasLocalStars()) {
 		return *it->second;
 	}
 	const auto window = Core::App().activeWindow();
@@ -939,16 +1011,87 @@ LocalStarsAccountSettings &AyuSettings::localStars(uint64 userId) {
 	if (!session || session->userId().bare != userId) {
 		return *it->second;
 	}
-	it->second->_localPremium = legacy->second->_localPremium.current();
-	it->second->_localStarsBalance = legacy->second->_localStarsBalance.current();
-	it->second->_localStarsActivity = legacy->second->_localStarsActivity.current();
-	it->second->_localGifts = legacy->second->_localGifts.current();
-	it->second->_localStarsEarnings = legacy->second->_localStarsEarnings.current();
-	it->second->_localStarsWithdrawn = legacy->second->_localStarsWithdrawn.current();
-	it->second->_localPaidReactions = legacy->second->_localPaidReactions.current();
-	it->second->_localBoosts = legacy->second->_localBoosts.current();
-	it->second->_localGiveaways = legacy->second->_localGiveaways.current();
-	it->second->_localBusiness = legacy->second->_localBusiness.current();
+	const auto &from = *legacy->second;
+	auto &to = *it->second;
+	to._localPremium = to._localPremium.current()
+		|| from._localPremium.current();
+	to._localPremiumUntil = std::max(
+		to._localPremiumUntil.current(),
+		from._localPremiumUntil.current());
+	to._localStarsBalance = std::clamp(
+		to._localStarsBalance.current() + from._localStarsBalance.current(),
+		0,
+		Ayu::kMaxLocalStarsBalance);
+	to._localStarsWithdrawn = std::max(
+		to._localStarsWithdrawn.current(),
+		from._localStarsWithdrawn.current());
+	auto earnings = Ayu::ParseLocalStarsEarnings(
+		to._localStarsEarnings.current());
+	const auto legacyEarnings = Ayu::ParseLocalStarsEarnings(
+		from._localStarsEarnings.current());
+	earnings.insert(
+		end(earnings),
+		begin(legacyEarnings),
+		end(legacyEarnings));
+	ranges::sort(earnings, ranges::less(), &Ayu::LocalStarsEarning::date);
+	to._localStarsEarnings = Ayu::NormalizeLocalStarsEarnings(
+		Ayu::SerializeLocalStarsEarnings(earnings));
+	auto gifts = Ayu::ParseLocalGifts(to._localGifts.current());
+	const auto legacyGifts = Ayu::ParseLocalGifts(
+		from._localGifts.current());
+	gifts.insert(end(gifts), begin(legacyGifts), end(legacyGifts));
+	to._localGifts = Ayu::NormalizeLocalGifts(
+		Ayu::SerializeLocalGifts(gifts));
+	auto activity = Ayu::ParseLocalStarsActivity(
+		to._localStarsActivity.current());
+	const auto legacyActivity = Ayu::ParseLocalStarsActivity(
+		from._localStarsActivity.current());
+	activity.insert(
+		end(activity),
+		begin(legacyActivity),
+		end(legacyActivity));
+	ranges::sort(activity, ranges::less(), &Ayu::LocalStarsActivityEntry::date);
+	to._localStarsActivity = Ayu::NormalizeLocalStarsActivity(
+		Ayu::SerializeLocalStarsActivity(activity));
+	if (to._localStarsCardTitle.current().isEmpty()) {
+		to._localStarsCardTitle = from._localStarsCardTitle.current();
+	}
+	if (to._localEarnClaims.current().isEmpty()) {
+		to._localEarnClaims = from._localEarnClaims.current();
+	}
+	if (to._localGiftSerials.current().isEmpty()) {
+		to._localGiftSerials = from._localGiftSerials.current();
+	}
+	if (to._localPaidReactions.current().isEmpty()) {
+		to._localPaidReactions = from._localPaidReactions.current();
+	}
+	if (to._localBoosts.current().isEmpty()) {
+		to._localBoosts = from._localBoosts.current();
+	}
+	if (to._localGiveaways.current().isEmpty()) {
+		to._localGiveaways = from._localGiveaways.current();
+	}
+	if (to._localBusiness.current().isEmpty()) {
+		to._localBusiness = from._localBusiness.current();
+	}
+	auto premiumGifts = Ayu::ParseLocalPremiumGifts(
+		to._localPremiumGifts.current());
+	const auto legacyPremiumGifts = Ayu::ParseLocalPremiumGifts(
+		from._localPremiumGifts.current());
+	for (const auto &gift : legacyPremiumGifts) {
+		const auto i = ranges::find_if(
+			premiumGifts,
+			[&](const Ayu::LocalPremiumGift &existing) {
+				return existing.peerId == gift.peerId;
+			});
+		if (i != end(premiumGifts)) {
+			i->until = std::max(i->until, gift.until);
+		} else {
+			premiumGifts.push_back(gift);
+		}
+	}
+	to._localPremiumGifts = Ayu::NormalizeLocalPremiumGifts(
+		Ayu::SerializeLocalPremiumGifts(premiumGifts));
 	settings._localStarsAccounts.erase(legacy);
 	save();
 

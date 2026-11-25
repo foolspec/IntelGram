@@ -77,6 +77,7 @@ struct CreditsHistoryEntry final {
 	uint64 bareEntryOwnerId = 0;
 	uint64 giftChannelSavedId = 0;
 	uint64 stargiftId = 0;
+	uint64 localUid = 0;
 	QString giftPrepayUpgradeHash;
 	QString giftTitle;
 	std::shared_ptr<UniqueGift> uniqueGift;

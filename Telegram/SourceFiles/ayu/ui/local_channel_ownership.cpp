@@ -1,7 +1,9 @@
 #include "ayu/ui/local_channel_ownership.h"
 
+#include "apiwrap.h"
 #include "ayu/data/intelgram_vault.h"
 #include "ayu/ui/utils/ayu_profile_values.h"
+#include "base/random.h"
 #include "base/timer.h"
 #include "base/unixtime.h"
 #include "boxes/peers/edit_peer_info_box.h"
@@ -1125,6 +1127,58 @@ void AddLocalGiveawayMessage(
 		Data::HistoryUpdate::Flag::MessageSent);
 }
 
+void AddLocalGiveawayResultsMessage(
+		not_null<History*> history,
+		const LocalGiveawayRecord &record) {
+	const auto session = &history->session();
+	const auto channel = session->data().channel(ChannelId(record.channelId));
+	auto winners = std::vector<not_null<PeerData*>>();
+	for (const auto id : record.winners) {
+		winners.push_back(session->data().user(UserId(id)));
+	}
+	const auto launchId = [&] {
+		const auto i = RuntimeGiveaways().find(history);
+		if (i == RuntimeGiveaways().end()) {
+			return MsgId(0);
+		}
+		for (const auto &entry : i->second) {
+			if (entry.uid == record.uid) {
+				return entry.fullId.msg;
+			}
+		}
+		return MsgId(0);
+	}();
+	auto flags = MessageFlag();
+	if (history->peer->isBroadcast()) {
+		flags |= MessageFlag::Post | MessageFlag::HasViews;
+	}
+	const auto item = history->addNewLocalMessage({
+		.id = history->owner().nextLocalMessageId(),
+		.flags = flags,
+		.date = TimeId(record.untilDate ? record.untilDate : record.date),
+	}, TextWithEntities(), MTP_messageMediaEmpty());
+	item->overrideMedia(std::make_unique<Data::MediaGiveawayResults>(
+		item,
+		Data::GiveawayResults{
+			.channel = channel,
+			.winners = std::move(winners),
+			.additionalPrize = record.prize,
+			.untilDate = TimeId(record.untilDate),
+			.launchId = launchId,
+			.winnersCount = record.quantity,
+			.months = record.months,
+			.credits = uint64(record.credits),
+			.all = !record.onlyNewSubscribers,
+		}));
+	RuntimeGiveaways()[history].push_back({
+		.uid = record.uid,
+		.fullId = item->fullId(),
+	});
+	history->session().changes().historyUpdated(
+		history,
+		Data::HistoryUpdate::Flag::MessageSent);
+}
+
 void EnsureLocalGiveaways(not_null<History*> history) {
 	const auto channel = history->peer->asChannel();
 	if (!channel) {
@@ -1134,7 +1188,7 @@ void EnsureLocalGiveaways(not_null<History*> history) {
 	const auto session = &history->session();
 	CleanRuntimeGiveaways(history);
 	auto &runtime = RuntimeGiveaways()[history];
-	for (const auto &record : LocalGiveaways(session)) {
+	for (auto record : LocalGiveaways(session)) {
 		if (record.channelId != channelId) {
 			continue;
 		}
@@ -1144,7 +1198,48 @@ void EnsureLocalGiveaways(not_null<History*> history) {
 			[&](const RuntimeGiveaway &entry) {
 				return entry.uid == record.uid;
 			});
-		if (!exists) {
+		const auto expired = record.untilDate
+			&& (record.untilDate <= base::unixtime::now());
+		if (expired && !record.resultsPosted) {
+			if (record.winners.empty()) {
+				const auto mgInfo = channel->mgInfo.get();
+				if (!mgInfo || mgInfo->lastParticipants.empty()) {
+					if (mgInfo) {
+						session->api().chatParticipants().requestLast(
+							channel);
+					}
+					if (!exists) {
+						AddLocalGiveawayMessage(history, record);
+					}
+					continue;
+				}
+				auto pool = std::vector<not_null<UserData*>>();
+				for (const auto user : mgInfo->lastParticipants) {
+					if (!user->isBot() && !user->isSelf()) {
+						pool.push_back(user);
+					}
+				}
+				for (auto i = int(pool.size()) - 1; i > 0; --i) {
+					std::swap(pool[i], pool[base::RandomIndex(i + 1)]);
+				}
+				const auto count = std::min(
+					int(pool.size()),
+					std::max(record.quantity, 0));
+				for (auto i = 0; i < count; ++i) {
+					record.winners.push_back(pool[i]->id.bare);
+				}
+			}
+			record.resultsPosted = true;
+			UpdateLocalGiveaway(session, record);
+			AddLocalGiveawayResultsMessage(history, record);
+			continue;
+		}
+		if (exists) {
+			continue;
+		}
+		if (record.resultsPosted) {
+			AddLocalGiveawayResultsMessage(history, record);
+		} else {
 			AddLocalGiveawayMessage(history, record);
 		}
 	}

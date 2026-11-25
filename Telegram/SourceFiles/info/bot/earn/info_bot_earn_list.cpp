@@ -135,9 +135,9 @@ void AddHeader(
 	result.currentBalance = CreditsAmount(proceeds.total);
 	result.availableBalance = CreditsAmount(proceeds.available);
 	result.overallRevenue = CreditsAmount(proceeds.lifetime);
-	result.usdRate = session->appConfig().currencyWithdrawRate();
+	result.usdRate = session->appConfig().starsWithdrawRate() / 100.;
 	result.isWithdrawalEnabled = true;
-	if (!proceeds.available && proceeds.nextMaturity) {
+	if (proceeds.nextMaturity) {
 		result.nextWithdrawalAt = base::unixtime::parse(
 			TimeId(proceeds.nextMaturity));
 	}

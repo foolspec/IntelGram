@@ -405,29 +405,40 @@ class LocalStarsAccountSettings {
 public:
 	[[nodiscard]] bool hasLocalStars() const;
 
-	[[nodiscard]] bool localPremium() const { return _localPremium.current(); }
+	[[nodiscard]] bool localPremium() const;
+	[[nodiscard]] int64 localPremiumUntil() const { return _localPremiumUntil.current(); }
 	[[nodiscard]] int localStarsBalance() const { return _localStarsBalance.current(); }
 	[[nodiscard]] const QString &localStarsActivity() const { return _localStarsActivity.current(); }
 	[[nodiscard]] const QString &localGifts() const { return _localGifts.current(); }
+	[[nodiscard]] const QString &localStarsCardTitle() const { return _localStarsCardTitle.current(); }
+	[[nodiscard]] const QString &localEarnClaims() const { return _localEarnClaims.current(); }
+	[[nodiscard]] const QString &localGiftSerials() const { return _localGiftSerials.current(); }
 	[[nodiscard]] const QString &localStarsEarnings() const { return _localStarsEarnings.current(); }
 	[[nodiscard]] int localStarsWithdrawn() const { return _localStarsWithdrawn.current(); }
 	[[nodiscard]] const QString &localPaidReactions() const { return _localPaidReactions.current(); }
 	[[nodiscard]] const QString &localBoosts() const { return _localBoosts.current(); }
 	[[nodiscard]] const QString &localGiveaways() const { return _localGiveaways.current(); }
 	[[nodiscard]] const QString &localBusiness() const { return _localBusiness.current(); }
+	[[nodiscard]] const QString &localPremiumGifts() const { return _localPremiumGifts.current(); }
 
 	void setLocalPremium(bool val);
+	void setLocalPremiumUntil(int64 val);
 	void setLocalStarsBalance(int val);
 	void setLocalStarsActivity(const QString &val);
 	void setLocalGifts(const QString &val);
+	void setLocalStarsCardTitle(const QString &val);
+	void setLocalEarnClaims(const QString &val);
+	void setLocalGiftSerials(const QString &val);
 	void setLocalStarsEarnings(const QString &val);
 	void setLocalStarsWithdrawn(int val);
 	void setLocalPaidReactions(const QString &val);
 	void setLocalBoosts(const QString &val);
 	void setLocalGiveaways(const QString &val);
 	void setLocalBusiness(const QString &val);
+	void setLocalPremiumGifts(const QString &val);
 
-	[[nodiscard]] rpl::producer<bool> localPremiumValue() const { return _localPremium.value(); }
+	[[nodiscard]] rpl::producer<bool> localPremiumValue() const;
+	[[nodiscard]] rpl::producer<int64> localPremiumUntilValue() const { return _localPremiumUntil.value(); }
 	[[nodiscard]] rpl::producer<bool> localPremiumChanges() const { return _localPremium.changes(); }
 	[[nodiscard]] rpl::producer<int> localStarsBalanceValue() const { return _localStarsBalance.value(); }
 	[[nodiscard]] rpl::producer<int> localStarsBalanceChanges() const { return _localStarsBalance.changes(); }
@@ -435,6 +446,9 @@ public:
 	[[nodiscard]] rpl::producer<QString> localStarsActivityChanges() const { return _localStarsActivity.changes(); }
 	[[nodiscard]] rpl::producer<QString> localGiftsValue() const { return _localGifts.value(); }
 	[[nodiscard]] rpl::producer<QString> localGiftsChanges() const { return _localGifts.changes(); }
+	[[nodiscard]] rpl::producer<QString> localStarsCardTitleValue() const { return _localStarsCardTitle.value(); }
+	[[nodiscard]] rpl::producer<QString> localEarnClaimsValue() const { return _localEarnClaims.value(); }
+	[[nodiscard]] rpl::producer<QString> localGiftSerialsValue() const { return _localGiftSerials.value(); }
 	[[nodiscard]] rpl::producer<QString> localStarsEarningsValue() const { return _localStarsEarnings.value(); }
 	[[nodiscard]] rpl::producer<QString> localStarsEarningsChanges() const { return _localStarsEarnings.changes(); }
 	[[nodiscard]] rpl::producer<int> localStarsWithdrawnValue() const { return _localStarsWithdrawn.value(); }
@@ -447,6 +461,8 @@ public:
 	[[nodiscard]] rpl::producer<QString> localGiveawaysChanges() const { return _localGiveaways.changes(); }
 	[[nodiscard]] rpl::producer<QString> localBusinessValue() const { return _localBusiness.value(); }
 	[[nodiscard]] rpl::producer<QString> localBusinessChanges() const { return _localBusiness.changes(); }
+	[[nodiscard]] rpl::producer<QString> localPremiumGiftsValue() const { return _localPremiumGifts.value(); }
+	[[nodiscard]] rpl::producer<QString> localPremiumGiftsChanges() const { return _localPremiumGifts.changes(); }
 
 	friend void to_json(nlohmann::json &j, const LocalStarsAccountSettings &s);
 	friend void from_json(const nlohmann::json &j, LocalStarsAccountSettings &s);
@@ -455,15 +471,20 @@ private:
 	friend class AyuSettings;
 
 	rpl::variable<bool> _localPremium = false;
+	rpl::variable<int64> _localPremiumUntil = 0;
 	rpl::variable<int> _localStarsBalance = 0;
 	rpl::variable<QString> _localStarsActivity;
 	rpl::variable<QString> _localGifts;
+	rpl::variable<QString> _localStarsCardTitle;
+	rpl::variable<QString> _localEarnClaims;
+	rpl::variable<QString> _localGiftSerials;
 	rpl::variable<QString> _localStarsEarnings;
 	rpl::variable<int> _localStarsWithdrawn = 0;
 	rpl::variable<QString> _localPaidReactions;
 	rpl::variable<QString> _localBoosts;
 	rpl::variable<QString> _localGiveaways;
 	rpl::variable<QString> _localBusiness;
+	rpl::variable<QString> _localPremiumGifts;
 
 };
 

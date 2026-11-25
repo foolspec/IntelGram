@@ -1512,7 +1512,10 @@ void SelectGiftToUnpin(
 				.info = {
 					.id = entry.stargiftId,
 					.unique = entry.uniqueGift,
-					.document = entry.uniqueGift->model.document,
+					.document = entry.uniqueGift
+						? entry.uniqueGift->model.document
+						: session->data().document(
+							entry.bareGiftStickerId),
 				},
 				.pinnedSelection = true,
 			}, GiftButton::Mode::Minimal);

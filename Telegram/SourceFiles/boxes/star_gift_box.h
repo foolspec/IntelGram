@@ -120,6 +120,7 @@ struct StarGiftUpgradeArgs {
 	bool canAddMyComment = false;
 	bool addDetailsDefault = false;
 	bool localGift = false;
+	uint64 localUid = 0;
 	int64 localDate = 0;
 	QString localMessage;
 };

@@ -280,11 +280,12 @@ void Location::setupUnsupported(not_null<Ui::VerticalLayout*> content) {
 }
 
 void Location::save() {
-	const auto fail = [=](QString error) {
-	};
+	const auto show = controller()->uiShow();
 	auto value = _data.current();
 	value.address = value.address.trimmed();
-	controller()->session().data().businessInfo().saveLocation(value, fail);
+	controller()->session().data().businessInfo().saveLocation(
+		value,
+		[=](QString error) { show->showToast(error); });
 }
 
 bool Location::mapSupported() const {

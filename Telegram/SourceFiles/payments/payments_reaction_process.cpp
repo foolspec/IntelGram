@@ -42,7 +42,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 namespace Payments {
 namespace {
 
-constexpr auto kMaxPerReactionFallback = 10'000;
+constexpr auto kMaxPerReactionFallback = 2'500;
 constexpr auto kDefaultPerReaction = 1;
 
 void TryAddingPaidReaction(

@@ -3296,7 +3296,8 @@ std::vector<Data::MessageReaction> HistoryItem::reactionsWithLocal() const {
 		result,
 		Data::ReactionId::Paid(),
 		&Data::MessageReaction::id);
-	if (const auto local = _reactions->localPaidCount()) {
+	if (const auto local = _reactions->localPaidCount()
+			+ _reactions->localPaidCompletedCount()) {
 		if (i != end(result)) {
 			i->my = true;
 			i->count += local;

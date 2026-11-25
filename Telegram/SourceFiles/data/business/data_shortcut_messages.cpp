@@ -553,7 +553,11 @@ void ShortcutMessages::editShortcut(
 		}
 	}
 	if (id < 0) {
+		const auto old = lookupShortcut(id).name;
 		finish();
+		_session->data().businessInfo().renameLocalShortcutMessages(
+			old,
+			name);
 		_session->data().businessInfo().saveLocalShortcuts();
 		return;
 	}
@@ -601,6 +605,10 @@ void ShortcutMessages::cancelRequest(BusinessShortcutId shortcutId) {
 }
 
 void ShortcutMessages::request(BusinessShortcutId shortcutId) {
+	if (shortcutId < 0) {
+		restoreLocal(shortcutId);
+		return;
+	}
 	auto &request = _requests[shortcutId];
 	if (request.requestId || TooEarlyForRequest(request.lastReceived)) {
 		return;
@@ -620,6 +628,28 @@ void ShortcutMessages::request(BusinessShortcutId shortcutId) {
 	}).fail([=] {
 		_requests.remove(shortcutId);
 	}).send();
+}
+
+void ShortcutMessages::restoreLocal(BusinessShortcutId shortcutId) {
+	if (!_localRestored.emplace(shortcutId).second) {
+		return;
+	}
+	const auto i = _shortcuts.list.find(shortcutId);
+	if (i == end(_shortcuts.list)) {
+		return;
+	}
+	for (const auto &text
+		: _session->data().businessInfo().localShortcutMessages(
+			i->second.name)) {
+		const auto item = _history->addNewLocalMessage({
+			.id = _session->data().nextLocalMessageId(),
+			.flags = MessageFlag::BeingSent,
+			.from = _session->userPeerId(),
+			.date = 1,
+			.shortcutId = shortcutId,
+		}, TextWithEntities{ text, {} }, MTP_messageMediaEmpty());
+		item->setRealId(_session->data().nextLocalMessageId());
+	}
 }
 
 void ShortcutMessages::parse(
@@ -754,6 +784,14 @@ void ShortcutMessages::remove(not_null<const HistoryItem*> item) {
 
 	if (!item->isSending() && !item->hasFailed()) {
 		list.itemById.remove(lookupId(item));
+		if (shortcutId < 0) {
+			const auto text = item->originalText().text;
+			if (!text.isEmpty()) {
+				_session->data().businessInfo().removeLocalShortcutMessage(
+					lookupShortcut(shortcutId).name,
+					text);
+			}
+		}
 	}
 	const auto k = ranges::find(list.items, item, &OwnedItem::get);
 	Assert(k != list.items.end());

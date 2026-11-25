@@ -271,6 +271,8 @@ void Greeting::save() {
 	const auto fail = [=](QString error) {
 		if (error == u"BUSINESS_RECIPIENTS_EMPTY"_q) {
 			show->showToast(tr::lng_greeting_recipients_empty(tr::now));
+		} else if (error == u"SHORTCUT_EMPTY"_q) {
+			show->showToast(tr::ayu_BusinessShortcutEmpty(tr::now));
 		} else if (error != u"SHORTCUT_INVALID"_q) {
 			show->showToast(error);
 		}

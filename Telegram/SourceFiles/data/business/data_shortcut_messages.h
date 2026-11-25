@@ -99,6 +99,7 @@ private:
 	};
 
 	void request(BusinessShortcutId shortcutId);
+	void restoreLocal(BusinessShortcutId shortcutId);
 	void parse(
 		BusinessShortcutId shortcutId,
 		const MTPmessages_Messages &list);
@@ -133,6 +134,7 @@ private:
 	base::Timer _clearTimer;
 	base::flat_map<BusinessShortcutId, List> _data;
 	base::flat_map<BusinessShortcutId, Request> _requests;
+	base::flat_set<BusinessShortcutId> _localRestored;
 	rpl::event_stream<BusinessShortcutId> _updates;
 
 	Shortcuts _shortcuts;

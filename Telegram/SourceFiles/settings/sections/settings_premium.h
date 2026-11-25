@@ -23,6 +23,7 @@ class Show;
 
 namespace Data {
 struct StarGift;
+struct PremiumSubscriptionOption;
 } // namespace Data
 
 namespace Ui {
@@ -80,6 +81,7 @@ struct SubscribeButtonArgs final {
 	std::optional<rpl::producer<QString>> text;
 	std::optional<QGradientStops> gradientStops;
 	Fn<QString()> computeBotUrl; // nullable
+	Fn<Data::PremiumSubscriptionOption()> computeOption;
 	std::shared_ptr<ChatHelpers::Show> show;
 	bool showPromo = false;
 };

@@ -433,6 +433,7 @@ public:
 
 	[[nodiscard]] bool localPaidData() const;
 	[[nodiscard]] int localPaidCount() const;
+	[[nodiscard]] int localPaidCompletedCount() const;
 	[[nodiscard]] PeerId localPaidShownPeer() const;
 	bool clearCloudData();
 

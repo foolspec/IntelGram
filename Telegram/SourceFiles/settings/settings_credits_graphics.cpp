@@ -305,6 +305,10 @@ void ConvertLocalStarGift(
 		const Data::CreditsHistoryEntry &e,
 		int stars,
 		Fn<void(bool)> done) {
+	if (e.uniqueGift) {
+		done(false);
+		return;
+	}
 	const auto settings = &AyuSettings::localStars(&show->session());
 	settings->setLocalStarsBalance(settings->localStarsBalance() + stars);
 	Ayu::AppendLocalStarsEarning(&show->session(), {
@@ -312,11 +316,21 @@ void ConvertLocalStarGift(
 		.amount = stars,
 		.source = Ayu::LocalStarsEarningSource::Convert,
 	});
-	Ayu::RemoveLocalGift(
-		&show->session(),
-		e.stargiftId,
-		base::unixtime::serialize(e.date),
-		e.description.text);
+	Ayu::AppendLocalStarsActivity(&show->session(), {
+		.date = base::unixtime::now(),
+		.amount = stars,
+		.kind = Ayu::LocalStarsActivityKind::Converted,
+		.note = e.giftTitle,
+	});
+	if (e.localUid) {
+		Ayu::RemoveLocalGift(&show->session(), e.localUid);
+	} else {
+		Ayu::RemoveLocalGift(
+			&show->session(),
+			e.stargiftId,
+			base::unixtime::serialize(e.date),
+			e.description.text);
+	}
 	if (const auto window = show->resolveWindow()) {
 		window->showSettings(Settings::CreditsId());
 	}
@@ -429,7 +443,12 @@ void AddViewMediaHandler(
 
 // Title of the pre-saved demo card shown in the local checkout, e.g.
 // "AMEX •••• 10005".
-[[nodiscard]] QString LocalStarsSavedCardTitle() {
+[[nodiscard]] QString LocalStarsSavedCardTitle(
+		not_null<Main::Session*> session) {
+	const auto saved = AyuSettings::localStars(session).localStarsCardTitle();
+	if (!saved.isEmpty()) {
+		return saved;
+	}
 	return u"AMEX •••• "_q
 		+ tr::ayu_LocalStarsCardNumber(tr::now).right(5);
 }
@@ -464,6 +483,8 @@ LocalStarsCheckout *ActiveLocalStarsCheckout = nullptr;
 	return path;
 }
 
+[[nodiscard]] QPainterPath StarPath(QPointF center, float64 radius);
+
 [[nodiscard]] QImage LocalStarsCheckoutThumbnail() {
 	const auto ratio = style::DevicePixelRatio();
 	auto result = QImage(
@@ -487,26 +508,29 @@ LocalStarsCheckout *ActiveLocalStarsCheckout = nullptr;
 		p.drawPath(SparklePath(QPointF(68, 60), 4.5));
 		p.drawPath(SparklePath(QPointF(12, 62), 3));
 		const auto center = QPointF(size.width() / 2., size.height() / 2.);
-		auto gold = QLinearGradient(
-			QPointF(center.x(), center.y() - 24),
-			QPointF(center.x(), center.y() + 24));
-		gold.setColorAt(0, QColor(0xFF, 0xD9, 0x55));
-		gold.setColorAt(1, QColor(0xF5, 0x9E, 0x0B));
-		p.setBrush(gold);
-		p.drawPath(SparklePath(center, 24));
+		auto violet = QLinearGradient(
+			QPointF(center.x(), center.y() - 26),
+			QPointF(center.x(), center.y() + 26));
+		violet.setColorAt(0, QColor(0xC4, 0xB5, 0xFD));
+		violet.setColorAt(0.5, QColor(0x8B, 0x5C, 0xF6));
+		violet.setColorAt(1, QColor(0x63, 0x66, 0xF1));
+		p.setBrush(violet);
+		p.drawPath(StarPath(center, 26));
 	}
 	result = Images::Round(std::move(result), ImageRoundRadius::Large);
 	result.setDevicePixelRatio(ratio);
 	return result;
 }
 
-void FillLocalCheckoutMethod(Payments::Ui::PaymentMethodDetails &method) {
+void FillLocalCheckoutMethod(
+		not_null<Main::Session*> session,
+		Payments::Ui::PaymentMethodDetails &method) {
 	method.native.supported = true;
 	method.native.canSaveInformation = true;
 	method.savedMethods = {
 		Payments::Ui::PaymentMethodSaved{
 			u"intelgram-local-card"_q,
-			LocalStarsSavedCardTitle(),
+			LocalStarsSavedCardTitle(session),
 		},
 	};
 	method.savedMethodIndex = 0;
@@ -514,6 +538,7 @@ void FillLocalCheckoutMethod(Payments::Ui::PaymentMethodDetails &method) {
 }
 
 void SaveLocalCheckoutCard(
+		not_null<Main::Session*> session,
 		Payments::Ui::PaymentMethodDetails &method,
 		const Payments::Ui::UncheckedCardDetails &data) {
 	auto digits = QString();
@@ -531,15 +556,17 @@ void SaveLocalCheckoutCard(
 		: digits.startsWith(u"6"_q)
 		? u"Discover"_q
 		: u"Card"_q;
+	const auto title = brand
+		+ u" •••• "_q
+		+ (digits.size() > 4 ? digits.right(4) : digits);
 	method.savedMethods = {
 		Payments::Ui::PaymentMethodSaved{
 			u"intelgram-local-card"_q,
-			brand
-				+ u" •••• "_q
-				+ (digits.size() > 4 ? digits.right(4) : digits),
+			title,
 		},
 	};
 	method.savedMethodIndex = 0;
+	AyuSettings::localStars(session).setLocalStarsCardTitle(title);
 	if (!data.cardholderName.isEmpty()) {
 		AyuSettings::getInstance().setLocalStarsCardName(
 			data.cardholderName);
@@ -608,7 +635,7 @@ private:
 		_invoice.prices = {
 			Payments::Ui::LabeledPrice{ label, int64(_option.amount) },
 		};
-		FillLocalCheckoutMethod(_method);
+		FillLocalCheckoutMethod(_session, _method);
 	}
 
 	void show() {
@@ -671,6 +698,11 @@ private:
 		auto &settings = AyuSettings::localStars(_session);
 		settings.setLocalStarsBalance(
 			settings.localStarsBalance() + int(_option.credits));
+		Ayu::AppendLocalStarsActivity(_session, {
+			.date = base::unixtime::now(),
+			.amount = int64(_option.credits),
+			.kind = Ayu::LocalStarsActivityKind::TopUp,
+		});
 		if (const auto widget = _fireworks.data()) {
 			Ui::StartFireworks(widget);
 		}
@@ -740,7 +772,7 @@ private:
 		bool) override {
 		// A card entered here is kept only on this device, as the saved
 		// local method for the next top-up.
-		SaveLocalCheckoutCard(_method, data);
+		SaveLocalCheckoutCard(_session, _method, data);
 		showForm();
 	}
 
@@ -916,7 +948,7 @@ private:
 				_option.amount,
 			},
 		};
-		FillLocalCheckoutMethod(_method);
+		FillLocalCheckoutMethod(_session, _method);
 	}
 
 	void show() {
@@ -954,7 +986,12 @@ private:
 		// widget down underneath its own event handler.
 		crl::on_main([this, result] {
 			if (result == Payments::CheckoutResult::Paid) {
-				AyuSettings::localStars(_session).setLocalPremium(true);
+				const auto months = std::max(_option.months, 1);
+				const auto settings = &AyuSettings::localStars(_session);
+				settings->setLocalPremiumUntil(
+					base::unixtime::now()
+						+ int64(months) * 30 * 86400);
+				settings->setLocalPremium(true);
 			}
 			if (ActiveLocalPremiumCheckout == this) {
 				ActiveLocalPremiumCheckout = nullptr;
@@ -1044,7 +1081,7 @@ private:
 		bool) override {
 		// A card entered here is kept only on this device, as the saved
 		// local method for the next checkout.
-		SaveLocalCheckoutCard(_method, data);
+		SaveLocalCheckoutCard(_session, _method, data);
 		showForm();
 	}
 
@@ -1330,7 +1367,7 @@ void FillCreditOptions(
 		const auto buttonHeight = st.height + rect::m::sum::v(st.padding);
 		const auto minCredits = (!options.empty()
 				&& (minimumCredits > CreditsAmount(options.back().credits)))
-			? CreditsAmount()
+			? CreditsAmount(options.back().credits)
 			: minimumCredits;
 		for (auto i = 0; i < options.size(); i++) {
 			const auto &option = options[i];
@@ -1395,10 +1432,16 @@ void FillCreditOptions(
 					width - price->width() - st.padding.left(),
 					buttonHeight);
 			}, button->lifetime());
+			const auto sent = std::make_shared<bool>(false);
 			button->setClickedCallback([=] {
 				if (localIntelGramTopup) {
 					const auto weak = base::make_weak(button);
 					if (!peer->isSelf()) {
+						const auto session = &show->session();
+						if (*sent) {
+							return;
+						}
+						*sent = true;
 						MaybeRequestLocalBalanceIncrease(
 							show,
 							uint64(option.credits),
@@ -1406,32 +1449,29 @@ void FillCreditOptions(
 							[=](SmallBalanceResult result) {
 								if (result == SmallBalanceResult::Cancelled
 									|| result == SmallBalanceResult::Blocked) {
+									*sent = false;
 									return;
 								}
 								const auto settings
-									= &AyuSettings::localStars(&show->session());
+									= &AyuSettings::localStars(session);
 								settings->setLocalStarsBalance(
 									settings->localStarsBalance()
 										- int(option.credits));
-								if (const auto window
-										= ChatHelpers::ResolveWindowDefault()(
-											&show->session())) {
-									window->showToast({
-										.title = tr::lng_gift_sent_title(
-											tr::now),
-										.text = tr::lng_gift_sent_about(
-											tr::now,
-											lt_count,
-											option.credits,
-											tr::rich),
-									});
-								} else {
-									show->showToast(
-										tr::lng_gift_sent_about(
-											tr::now,
-											lt_count,
-											option.credits));
-								}
+								const auto note
+									= tr::ayu_LocalStarsGiftStarsEntry(
+										tr::now,
+										lt_name,
+										peer->shortName());
+								Ayu::AppendLocalStarsActivity(session, {
+									.date = base::unixtime::now(),
+									.amount = int64(option.credits),
+									.kind = Ayu::LocalStarsActivityKind::GiftSent,
+									.note = note,
+								});
+								show->showToast({
+									.title = tr::lng_gift_sent_title(tr::now),
+									.text = TextWithEntities{ note },
+								});
 								if (const auto strong = weak.get()) {
 									strong->window()->setFocus();
 								}
@@ -1816,6 +1856,22 @@ void ProcessReceivedSubscriptions(
 	// (owner->isChannel() && !owner->asChannel()->canTransferGifts());
 }
 
+void UpdateLocalGiftByEntry(
+		not_null<Main::Session*> session,
+		const Data::CreditsHistoryEntry &e,
+		Fn<void(Ayu::LocalGiftRecord &record)> mutate) {
+	if (e.localUid) {
+		Ayu::UpdateLocalGift(session, e.localUid, std::move(mutate));
+	} else {
+		Ayu::UpdateLocalGift(
+			session,
+			e.stargiftId,
+			e.date.toSecsSinceEpoch(),
+			e.description.text,
+			std::move(mutate));
+	}
+}
+
 void FillUniqueGiftMenu(
 		std::shared_ptr<ChatHelpers::Show> show,
 		not_null<Ui::PopupMenu*> menu,
@@ -1902,17 +1958,14 @@ void FillUniqueGiftMenu(
 			}, st.pin ? st.pin : &st::menuIconPin);
 		}
 	}
-	if (unique
-		&& e.localGift
+	if (e.localGift
 		&& e.savedToProfile
 		&& e.pinnedSavedGifts) {
 		if (e.giftPinned) {
 			menu->addAction(tr::lng_context_unpin_from_top(tr::now), [=] {
-				Ayu::UpdateLocalGift(
+				UpdateLocalGiftByEntry(
 					session,
-					e.stargiftId,
-					e.date.toSecsSinceEpoch(),
-					e.description.text,
+					e,
 					[](Ayu::LocalGiftRecord &record) {
 						record.pinned = false;
 					});
@@ -1920,11 +1973,9 @@ void FillUniqueGiftMenu(
 		} else {
 			menu->addAction(tr::lng_context_pin_to_top(tr::now), [=] {
 				const auto pinLocal = [=] {
-					Ayu::UpdateLocalGift(
+					UpdateLocalGiftByEntry(
 						session,
-						e.stargiftId,
-						e.date.toSecsSinceEpoch(),
-						e.description.text,
+						e,
 						[](Ayu::LocalGiftRecord &record) {
 							record.pinned = true;
 						});
@@ -1955,11 +2006,9 @@ void FillUniqueGiftMenu(
 									false,
 									chosen.uniqueGift);
 							} else {
-								Ayu::UpdateLocalGift(
+								UpdateLocalGiftByEntry(
 									session,
-									chosen.stargiftId,
-									chosen.date.toSecsSinceEpoch(),
-									chosen.description.text,
+									chosen,
 									[](Ayu::LocalGiftRecord &record) {
 										record.pinned = false;
 									});
@@ -1972,7 +2021,7 @@ void FillUniqueGiftMenu(
 			}, st.pin ? st.pin : &st::menuIconPin);
 		}
 	}
-	if (unique) {
+	if (unique && !e.localGift) {
 		const auto local = u"nft/"_q + unique->slug;
 		const auto url = show->session().createInternalLinkFull(local);
 		menu->addAction(tr::lng_context_copy_link(tr::now), [=] {
@@ -2004,22 +2053,18 @@ void FillUniqueGiftMenu(
 	if (e.localGift && type == SavedStarGiftMenuType::List) {
 		if (e.savedToProfile) {
 			menu->addAction(tr::lng_gift_menu_hide(tr::now), [=] {
-				Ayu::UpdateLocalGift(
+				UpdateLocalGiftByEntry(
 					session,
-					e.stargiftId,
-					e.date.toSecsSinceEpoch(),
-					e.description.text,
+					e,
 					[](Ayu::LocalGiftRecord &record) {
 						record.hidden = true;
 					});
 			}, st.hide ? st.hide : &st::menuIconStealth);
 		} else {
 			menu->addAction(tr::lng_gift_menu_show(tr::now), [=] {
-				Ayu::UpdateLocalGift(
+				UpdateLocalGiftByEntry(
 					session,
-					e.stargiftId,
-					e.date.toSecsSinceEpoch(),
-					e.description.text,
+					e,
 					[](Ayu::LocalGiftRecord &record) {
 						record.hidden = false;
 					});
@@ -2937,11 +2982,9 @@ void GenericCreditsEntryBody(
 		&& !e.converted;
 	const auto toggleVisibility = [=, weak = base::make_weak(box)](bool save) {
 		if (e.localGift) {
-			Ayu::UpdateLocalGift(
+			UpdateLocalGiftByEntry(
 				&show->session(),
-				e.stargiftId,
-				e.date.toSecsSinceEpoch(),
-				e.description.text,
+				e,
 				[=](Ayu::LocalGiftRecord &record) {
 					record.hidden = !save;
 				});
@@ -2975,7 +3018,7 @@ void GenericCreditsEntryBody(
 
 	const auto canUpgrade = e.stargiftId
 		&& e.canUpgradeGift
-		&& (e.in || giftToSelf || giftToChannelCanManage)
+		&& (e.in || giftToSelf || giftToChannelCanManage || e.localGift)
 		&& !e.uniqueGift;
 	const auto canUpgradeFree = canUpgrade && (e.starsUpgradedBySender > 0);
 	const auto canGiftUpgrade = !e.uniqueGift
@@ -2991,7 +3034,7 @@ void GenericCreditsEntryBody(
 		}
 		*upgradeGuard = true;
 		const auto savedId = EntryToSavedStarGiftId(&window->session(), e);
-		const auto openWhenDone = (giftToChannel || canGiftUpgrade)
+		const auto openWhenDone = (giftToChannel || canGiftUpgrade || e.localGift)
 			? window->session().data().peer(PeerId(e.bareGiftOwnerId)).get()
 			: starGiftSender;
 		using namespace Ui;
@@ -3022,6 +3065,7 @@ void GenericCreditsEntryBody(
 					&& !e.giftUpgradeSeparate
 					&& !e.anonymous)),
 			.localGift = e.localGift,
+			.localUid = e.localUid,
 			.localDate = e.date.toSecsSinceEpoch(),
 			.localMessage = e.description.text,
 		});
@@ -3712,6 +3756,7 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
 		.bareEntryOwnerId = chatGiftPeer ? chatGiftPeer->id.value : 0,
 		.giftChannelSavedId = data.manageId.chatSavedId(),
 		.stargiftId = data.info.id,
+		.localUid = data.localUid,
 		.giftPrepayUpgradeHash = data.giftPrepayUpgradeHash,
 		.giftTitle = data.info.resellTitle,
 		.uniqueGift = data.info.unique,
@@ -3720,6 +3765,8 @@ Data::CreditsHistoryEntry SavedStarGiftEntry(
 		.limitedLeft = data.info.limitedLeft,
 		.starsConverted = data.manageId
 			? int(data.starsConverted)
+			: data.info.unique
+			? 0
 			: int(Ayu::LocalGiftConvertValue(data.info.stars)),
 		.starsToUpgrade = int(data.info.starsToUpgrade),
 		.starsUpgradedBySender = int(data.starsUpgradedBySender),
@@ -4008,7 +4055,7 @@ void SmallBalanceBox(
 		SmallBalanceSource source,
 		Fn<void()> paid,
 		bool useLocalBalance) {
-	Expects(show->session().credits().loaded());
+	Expects(useLocalBalance || show->session().credits().loaded());
 
 	auto credits = CreditsAmount(wholeCredits);
 
@@ -4545,6 +4592,17 @@ void AddWithdrawalWidget(
 			});
 			return 0ULL;
 		}
+		if (localWithdrawn) {
+			const auto available = Ayu::ComputeLocalStarsProceeds(
+				session,
+				AyuSettings::localStars(session).localStarsWithdrawn(),
+				base::unixtime::now()).available;
+			if (int64(amount) > available) {
+				show->showToast(
+					tr::ayu_LocalStarsWithdrawTooMuch(tr::now));
+				return 0ULL;
+			}
+		}
 		return amount;
 	};
 	if (localWithdrawn) {
@@ -4553,21 +4611,45 @@ void AddWithdrawalWidget(
 			if (!amount) {
 				return;
 			}
+			const auto rate = session->appConfig().starsWithdrawRate()
+				/ 100.;
 			controller->uiShow()->show(Ui::MakeConfirmBox({
 				.text = tr::ayu_LocalStarsWithdrawConfirm(
 					tr::now,
 					lt_count,
-					amount * 1.),
+					amount * 1.,
+					lt_usd,
+					Info::ChannelEarn::ToUsd(
+						CreditsAmount(amount),
+						rate,
+						2)),
 				.confirmed = [=](Fn<void()> close) {
 					close();
 					const auto settings = &AyuSettings::localStars(session);
+					const auto available = Ayu::ComputeLocalStarsProceeds(
+						session,
+						settings->localStarsWithdrawn(),
+						base::unixtime::now()).available;
+					const auto withdraw = int(std::min(
+						int64(amount),
+						available));
+					if (!withdraw) {
+						return;
+					}
+					settings->setLocalStarsBalance(
+						settings->localStarsBalance() - withdraw);
 					settings->setLocalStarsWithdrawn(
-						settings->localStarsWithdrawn() + int(amount));
+						settings->localStarsWithdrawn() + withdraw);
+					Ayu::AppendLocalStarsActivity(session, {
+						.date = base::unixtime::now(),
+						.amount = withdraw,
+						.kind = Ayu::LocalStarsActivityKind::Withdrawn,
+					});
 					controller->uiShow()->showToast(
 						tr::ayu_LocalStarsWithdrawn(
 							tr::now,
 							lt_count,
-							amount * 1.,
+							withdraw * 1.,
 							tr::rich));
 					localWithdrawn();
 				},
@@ -4683,6 +4765,14 @@ void MaybeRequestLocalBalanceIncrease(
 	const auto state = std::make_shared<State>();
 
 	const auto session = &show->session();
+	if (CreditsAmount(credits)
+		<= CreditsAmount(
+			AyuSettings::localStars(session).localStarsBalance())) {
+		if (const auto onstack = done) {
+			onstack(SmallBalanceResult::Already);
+		}
+		return;
+	}
 	session->credits().load();
 	session->credits().loadedValue(
 	) | rpl::filter(rpl::mappers::_1) | rpl::on_next([=] {
@@ -4698,7 +4788,12 @@ void MaybeRequestLocalBalanceIncrease(
 			const auto success = [=] {
 				state->success = true;
 				if (const auto onstack = done) {
-					onstack(SmallBalanceResult::Success);
+					const auto balance = CreditsAmount(
+						AyuSettings::localStars(
+							session).localStarsBalance());
+					onstack((CreditsAmount(credits) <= balance)
+						? SmallBalanceResult::Success
+						: SmallBalanceResult::Cancelled);
 				}
 			};
 			const auto box = show->show(Box(
@@ -4738,12 +4833,14 @@ void LocalEarnStarsBox(
 	Ui::AddSkip(content);
 	const auto buttons = content->add(
 		object_ptr<Ui::VerticalLayout>(content));
+	const auto today = base::unixtime::now() / 86400;
 	const auto options = std::vector<std::pair<QString, int>>{
 		{ tr::ayu_LocalEarnQuest(tr::now), 50 },
 		{ tr::ayu_LocalEarnGame(tr::now), 25 },
 		{ tr::ayu_LocalEarnAd(tr::now), 10 },
 	};
-	for (const auto &[title, stars] : options) {
+	for (auto i = 0; i < int(options.size()); ++i) {
+		const auto &[title, stars] = options[i];
 		const auto button = buttons->add(
 			object_ptr<Ui::SettingsButton>(
 				buttons,
@@ -4751,7 +4848,7 @@ void LocalEarnStarsBox(
 				st::creditsTopupButton));
 		const auto reward = Ui::CreateChild<Ui::FlatLabel>(
 			button,
-			u"+%1 Stars"_q.arg(stars),
+			tr::ayu_LocalEarnReward(tr::now, lt_count, stars),
 			st::creditsTopupPrice);
 		button->widthValue() | rpl::on_next([=](int width) {
 			reward->moveToRight(
@@ -4759,7 +4856,19 @@ void LocalEarnStarsBox(
 				st::creditsTopupButton.padding.top());
 		}, button->lifetime());
 		Ui::ToggleChildrenVisibility(button, true);
+		const auto refresh = [=] {
+			const auto claimed = Ayu::LocalEarnClaimDay(session, i) >= today;
+			button->setDisabled(claimed);
+			reward->setText(claimed
+				? tr::ayu_LocalEarnClaimed(tr::now)
+				: tr::ayu_LocalEarnReward(tr::now, lt_count, stars));
+		};
+		refresh();
 		button->setClickedCallback([=] {
+			if (Ayu::LocalEarnClaimDay(session, i) >= today) {
+				return;
+			}
+			Ayu::SetLocalEarnClaimDay(session, i, today);
 			const auto settings = &AyuSettings::localStars(session);
 			settings->setLocalStarsBalance(
 				settings->localStarsBalance() + stars);
@@ -4768,11 +4877,17 @@ void LocalEarnStarsBox(
 				.amount = stars,
 				.source = Ayu::LocalStarsEarningSource::MiniApps,
 			});
+			Ayu::AppendLocalStarsActivity(session, {
+				.date = base::unixtime::now(),
+				.amount = stars,
+				.kind = Ayu::LocalStarsActivityKind::Earned,
+			});
 			box->uiShow()->showToast(tr::lng_gift_got_stars(
 				tr::now,
 				lt_count,
 				stars,
 				tr::rich));
+			refresh();
 		});
 	}
 	Ui::AddSkip(content);
@@ -4795,6 +4910,19 @@ void StartLocalPremiumPurchase(
 	LocalPremiumCheckout::Start(
 		std::move(show),
 		option,
+		window->widget().get());
+}
+
+void StartLocalPremiumPurchase(
+		std::shared_ptr<Main::SessionShow> show,
+		not_null<Window::SessionController*> window,
+		Data::PremiumSubscriptionOption option) {
+	if (!option.amount) {
+		option = LocalPremiumOptionForBotUrl(&show->session(), QString());
+	}
+	LocalPremiumCheckout::Start(
+		std::move(show),
+		std::move(option),
 		window->widget().get());
 }
 

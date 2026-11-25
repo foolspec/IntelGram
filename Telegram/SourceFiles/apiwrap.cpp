@@ -4252,6 +4252,21 @@ void ApiWrap::sendMessage(
 			.effectId = action.options.effectId,
 			.suggest = HistoryMessageSuggestInfo(action.options),
 		}, sending, media);
+		if (action.options.shortcutId < 0) {
+			lastMessage->setRealId(_session->data().nextLocalMessageId());
+			_session->data().businessInfo().saveLocalShortcutMessage(
+				_session->data().shortcutMessages().lookupShortcut(
+					action.options.shortcutId).name,
+				sending.text);
+			if (clearCloudDraft) {
+				history->finishSavingCloudDraft(
+					draftTopicRootId,
+					draftMonoforumPeerId,
+					base::unixtime::now());
+			}
+			isFirst = false;
+			continue;
+		}
 		const auto done = [=](
 				const MTPUpdates &result,
 				const MTP::Response &response) {

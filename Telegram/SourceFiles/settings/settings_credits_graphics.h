@@ -22,6 +22,7 @@ struct Boost;
 struct CreditsHistoryEntry;
 struct SubscriptionEntry;
 struct GiftCode;
+struct PremiumSubscriptionOption;
 struct CreditTopupOption;
 struct SavedStarGift;
 class SavedStarGiftId;
@@ -331,6 +332,11 @@ void StartLocalPremiumPurchase(
 	std::shared_ptr<::Main::SessionShow> show,
 	not_null<Window::SessionController*> window,
 	const QString &botUrl);
+
+void StartLocalPremiumPurchase(
+	std::shared_ptr<::Main::SessionShow> show,
+	not_null<Window::SessionController*> window,
+	Data::PremiumSubscriptionOption option);
 
 void AddMiniStars(
 	not_null<Ui::VerticalLayout*> content,

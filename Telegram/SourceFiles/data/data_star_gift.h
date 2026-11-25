@@ -266,6 +266,7 @@ private:
 struct SavedStarGift {
 	StarGift info;
 	SavedStarGiftId manageId;
+	uint64 localUid = 0;
 	std::vector<int> collectionIds;
 	TextWithEntities message;
 	int64 starsConverted = 0;

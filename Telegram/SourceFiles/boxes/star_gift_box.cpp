@@ -1242,10 +1242,18 @@ void SendLocalStarGift(
 	const auto stars = gift.info.stars;
 	const auto message = details.text.text;
 	const auto anonymous = details.anonymous;
-	const auto self = peer->isSelf();
 	const auto show = Main::MakeSessionShow(
 		window->uiShow(),
 		&window->session());
+	if (Ayu::ParseLocalGifts(
+		AyuSettings::localStars(&window->session()).localGifts()
+	).size() >= Ayu::kMaxLocalGiftsCount) {
+		show->show(Ui::MakeInformBox(tr::ayu_LocalGiftsFull(tr::now)));
+		if (const auto onstack = done) {
+			onstack(Payments::CheckoutResult::Cancelled);
+		}
+		return;
+	}
 	Settings::MaybeRequestLocalBalanceIncrease(
 		show,
 		uint64(cost),
@@ -1258,32 +1266,123 @@ void SendLocalStarGift(
 				}
 				return;
 			}
-			const auto settings = &AyuSettings::localStars(&window->session());
+			const auto session = &window->session();
+			const auto settings = &AyuSettings::localStars(session);
 			settings->setLocalStarsBalance(
-				settings->localStarsBalance() - int(cost));
-			if (self) {
-				Ayu::AppendLocalGift(&window->session(), {
-					.giftId = giftId,
-					.stars = stars,
+				settings->localStarsBalance() - int(stars));
+			const auto finish = [=] {
+				if (const auto onstack = done) {
+					onstack(Payments::CheckoutResult::Paid);
+				}
+			};
+			const auto appendActivity = [=](int64 spent) {
+				Ayu::AppendLocalStarsActivity(session, {
 					.date = base::unixtime::now(),
-					.message = message,
-					.anonymous = anonymous,
-					.upgraded = details.upgraded,
-					.modelName = gift.info.resellTitle,
-					.patternName = gift.info.resellTitle,
-					.backdropName = gift.info.resellTitle,
-					.backdropCenter = 0xFF1B2A4A,
-					.backdropEdge = 0xFF0D1424,
-					.backdropPattern = 0xFFF5A623,
-					.backdropText = 0xFFFFFFFF,
-					.number = details.upgraded
-						? int(base::RandomIndex(100000)) + 1
-						: 0,
+					.amount = spent,
+					.kind = Ayu::LocalStarsActivityKind::GiftSent,
+					.note = gift.info.resellTitle,
 				});
+			};
+			auto record = Ayu::LocalGiftRecord{
+				.giftId = giftId,
+				.stickerId = uint64(gift.info.document->id),
+				.recipientId = peer->isSelf() ? 0 : peer->id.bare,
+				.title = gift.info.resellTitle,
+				.stars = stars,
+				.date = base::unixtime::now(),
+				.message = message,
+				.anonymous = anonymous,
+				.upgraded = details.upgraded,
+				.backdropCenter = 0xFF1B2A4A,
+				.backdropEdge = 0xFF0D1424,
+				.backdropPattern = 0xFFF5A623,
+				.backdropText = 0xFFFFFFFF,
+				.number = details.upgraded
+					? Ayu::NextLocalGiftSerial(session, giftId)
+					: 0,
+			};
+			if (!details.upgraded) {
+				appendActivity(stars);
+				Ayu::AppendLocalGift(session, std::move(record));
+				finish();
+				return;
 			}
-			if (const auto onstack = done) {
-				onstack(Payments::CheckoutResult::Paid);
-			}
+			session->api().request(MTPpayments_GetStarGiftUpgradePreview(
+				MTP_long(giftId)
+			)).done([=](const MTPpayments_StarGiftUpgradePreview &result) mutable {
+				auto models = std::vector<Data::UniqueGiftModel>();
+				auto patterns = std::vector<Data::UniqueGiftPattern>();
+				auto backdrops = std::vector<Data::UniqueGiftBackdrop>();
+				for (const auto &attribute
+					: result.data().vsample_attributes().v) {
+					attribute.match([&](const MTPDstarGiftAttributeModel &data) {
+						models.push_back(Api::FromTL(session, data));
+					}, [&](const MTPDstarGiftAttributePattern &data) {
+						patterns.push_back(Api::FromTL(session, data));
+					}, [&](const MTPDstarGiftAttributeBackdrop &data) {
+						backdrops.push_back(Api::FromTL(data));
+					}, [](const auto &) {});
+				}
+				if (!models.empty()) {
+					const auto &model = models[
+						base::RandomIndex(models.size())];
+					record.modelName = model.name;
+					record.modelRarity = model.rarityValue;
+				}
+				if (!patterns.empty()) {
+					const auto &pattern = patterns[
+						base::RandomIndex(patterns.size())];
+					record.patternName = pattern.name;
+					record.patternRarity = pattern.rarityValue;
+				}
+				if (!backdrops.empty()) {
+					const auto &backdrop = backdrops[
+						base::RandomIndex(backdrops.size())];
+					record.backdropName = backdrop.name;
+					record.backdropId = backdrop.id;
+					record.backdropCenter = uint32(
+						backdrop.centerColor.rgba());
+					record.backdropEdge = uint32(
+						backdrop.edgeColor.rgba());
+					record.backdropPattern = uint32(
+						backdrop.patternColor.rgba());
+					record.backdropText = uint32(
+						backdrop.textColor.rgba());
+				}
+				const auto currentPrice = [](
+						const std::vector<UpgradePrice> &prices) {
+					if (prices.empty()) {
+						return INT_MAX;
+					}
+					const auto now = base::unixtime::now();
+					const auto i = ranges::upper_bound(
+						prices,
+						now,
+						ranges::less(),
+						&UpgradePrice::date);
+					return (i == begin(prices))
+						? i->stars
+						: (i - 1)->stars;
+				};
+				const auto fee = std::min({
+					int(gift.info.starsToUpgrade),
+					currentPrice(ParsePrices(result.data().vprices())),
+					currentPrice(
+						ParsePrices(result.data().vnext_prices())),
+				});
+				settings->setLocalStarsBalance(
+					settings->localStarsBalance() - fee);
+				appendActivity(stars + fee);
+				Ayu::AppendLocalGift(session, std::move(record));
+				finish();
+			}).fail([=] {
+				settings->setLocalStarsBalance(
+					settings->localStarsBalance()
+						- int(gift.info.starsToUpgrade));
+				appendActivity(stars + gift.info.starsToUpgrade);
+				Ayu::AppendLocalGift(session, std::move(record));
+				finish();
+			}).send();
 		});
 }
 
@@ -1296,6 +1395,16 @@ void SendGift(
 	const auto processNonPanelPaymentFormFactory
 		= Payments::ProcessNonPanelPaymentFormFactory(window, done);
 	v::match(details.descriptor, [&](const GiftTypePremium &gift) {
+		if (!peer->isSelf()) {
+			Ayu::AddLocalPremiumGift(
+				&window->session(),
+				peer->id.bare,
+				std::max(gift.months, 1));
+			if (const auto onstack = done) {
+				onstack(Payments::CheckoutResult::Paid);
+			}
+			return;
+		}
 		if (details.byStars && gift.stars) {
 			auto invoice = Payments::InvoicePremiumGiftCode{
 				.purpose = Payments::InvoicePremiumGiftCodeUsers{
@@ -1886,7 +1995,7 @@ void GiftBox(
 	};
 	if (peer->isUser() && !peer->isSelf() && !premiumDisallowed) {
 		const auto premiumClickHandlerFilter = [=](const auto &...) {
-			Settings::ShowPremium(window, u"gift_send"_q);
+			Settings::ShowGiftPremium(window, peer, 30, false);
 			return false;
 		};
 
@@ -3847,20 +3956,17 @@ void UpgradeLocalStarGift(
 		auto model = Data::UniqueGiftModel{
 			.document = args.stargift.document,
 		};
-		model.name = args.stargift.resellTitle;
 		if (!args.models.empty()) {
 			model = args.models[base::RandomIndex(args.models.size())];
 		}
 		auto pattern = Data::UniqueGiftPattern{
 			.document = args.stargift.document,
 		};
-		pattern.name = args.stargift.resellTitle;
 		if (!args.patterns.empty()) {
 			pattern = args.patterns[
 				base::RandomIndex(args.patterns.size())];
 		}
 		auto backdrop = Data::UniqueGiftBackdrop{};
-		backdrop.name = args.stargift.resellTitle;
 		backdrop.centerColor = QColor(0x1b, 0x2a, 0x4a);
 		backdrop.edgeColor = QColor(0x0d, 0x14, 0x24);
 		backdrop.patternColor = QColor(0xf5, 0xa6, 0x23);
@@ -3869,7 +3975,25 @@ void UpgradeLocalStarGift(
 			backdrop = args.backdrops[
 				base::RandomIndex(args.backdrops.size())];
 		}
-		const auto number = int(base::RandomIndex(100000)) + 1;
+		const auto number = Ayu::NextLocalGiftSerial(
+			session,
+			args.stargift.id);
+		const auto ownerId = [&] {
+			const auto records = Ayu::ParseLocalGifts(
+				AyuSettings::localStars(session).localGifts());
+			const auto i = ranges::find_if(
+				records,
+				[&](const Ayu::LocalGiftRecord &record) {
+					return args.localUid
+						? (record.uid == args.localUid)
+						: (record.giftId == uint64(args.stargift.id)
+							&& record.date == args.localDate
+							&& record.message == args.localMessage);
+				});
+			return (i != end(records) && i->recipientId)
+				? PeerId(i->recipientId)
+				: session->userPeerId();
+		}();
 		const auto result = std::make_shared<Data::GiftUpgradeResult>(
 			Data::GiftUpgradeResult{
 				.info = args.stargift,
@@ -3878,43 +4002,52 @@ void UpgradeLocalStarGift(
 			});
 		result->info.unique = std::make_shared<Data::UniqueGift>(
 			Data::UniqueGift{
-				.id = uint64(args.stargift.id) * 1000000007ULL
-					+ uint64(args.localDate),
+				.id = args.localUid
+					? args.localUid
+					: uint64(args.stargift.id) * 1000000007ULL
+						+ uint64(args.localDate),
 				.initialGiftId = args.stargift.id,
-				.slug = u"local-%1-%2"_q
-					.arg(args.stargift.id)
-					.arg(args.localDate),
+				.slug = args.localUid
+					? u"local-%1"_q.arg(args.localUid)
+					: u"local-%1-%2"_q
+						.arg(args.stargift.id)
+						.arg(args.localDate),
 				.title = args.stargift.resellTitle,
-				.ownerId = session->userPeerId(),
+				.ownerId = ownerId,
 				.releasedBy = session->user(),
 				.number = number,
 				.model = model,
 				.pattern = pattern,
 				.backdrop = backdrop,
 			});
-		Ayu::UpdateLocalGift(
-			session,
-			args.stargift.id,
-			args.localDate,
-			args.localMessage,
-			[&](Ayu::LocalGiftRecord &record) {
-				record.upgraded = true;
-				record.modelName = model.name;
-				record.modelRarity = model.rarityValue;
-				record.patternName = pattern.name;
-				record.patternRarity = pattern.rarityValue;
-				record.backdropName = backdrop.name;
-				record.backdropId = backdrop.id;
-				record.backdropCenter = uint32(
-					backdrop.centerColor.rgba());
-				record.backdropEdge = uint32(
-					backdrop.edgeColor.rgba());
-				record.backdropPattern = uint32(
-					backdrop.patternColor.rgba());
-				record.backdropText = uint32(
-					backdrop.textColor.rgba());
-				record.number = number;
-			});
+		const auto mutate = [&](Ayu::LocalGiftRecord &record) {
+			record.upgraded = true;
+			record.modelName = model.name;
+			record.modelRarity = model.rarityValue;
+			record.patternName = pattern.name;
+			record.patternRarity = pattern.rarityValue;
+			record.backdropName = backdrop.name;
+			record.backdropId = backdrop.id;
+			record.backdropCenter = uint32(
+				backdrop.centerColor.rgba());
+			record.backdropEdge = uint32(
+				backdrop.edgeColor.rgba());
+			record.backdropPattern = uint32(
+				backdrop.patternColor.rgba());
+			record.backdropText = uint32(
+				backdrop.textColor.rgba());
+			record.number = number;
+		};
+		if (args.localUid) {
+			Ayu::UpdateLocalGift(session, args.localUid, mutate);
+		} else {
+			Ayu::UpdateLocalGift(
+				session,
+				args.stargift.id,
+				args.localDate,
+				args.localMessage,
+				mutate);
+		}
 		if (const auto onstack = done) {
 			onstack(true, result);
 		}
@@ -5040,7 +5173,7 @@ void SendGiftBox(
 		session,
 		{ .suggestCustomEmoji = true, .allowCustomWithoutPremium = allow });
 	if (stars) {
-		if (costToUpgrade > 0 && !peer->isSelf() && !disallowLimited && !disallowUnique) {
+		if (costToUpgrade > 0 && !disallowLimited && !disallowUnique) {
 			const auto stargiftInfo = stars->info;
 			const auto showing = std::make_shared<bool>();
 			AddDivider(container);

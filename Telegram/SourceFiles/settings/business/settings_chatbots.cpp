@@ -559,6 +559,8 @@ void Chatbots::save() {
 			show->showToast(tr::lng_greeting_recipients_empty(tr::now));
 		} else if (error == u"BOT_BUSINESS_MISSING"_q) {
 			show->showToast(tr::lng_chatbots_not_supported(tr::now));
+		} else {
+			show->showToast(error);
 		}
 	};
 	controller()->session().data().chatbots().save({

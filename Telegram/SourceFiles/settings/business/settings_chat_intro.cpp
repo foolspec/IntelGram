@@ -631,11 +631,10 @@ void ChatIntro::setupContent(
 }
 
 void ChatIntro::save() {
-	const auto fail = [=](QString error) {
-	};
+	const auto show = controller()->uiShow();
 	controller()->session().data().businessInfo().saveChatIntro(
 		_intro.current(),
-		fail);
+		[=](QString error) { show->showToast(error); });
 }
 
 } // namespace

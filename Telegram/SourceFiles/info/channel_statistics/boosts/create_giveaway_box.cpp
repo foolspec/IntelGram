@@ -1554,6 +1554,12 @@ void CreateGiveawayBox(
 				for (const auto channel : state->selectedToSubscribe) {
 					channels.push_back(peerToChannel(channel->id).bare);
 				}
+				auto winners = std::vector<uint64>();
+				if (isSpecific) {
+					for (const auto user : state->selectedToAward) {
+						winners.push_back(user->id.bare);
+					}
+				}
 				const auto record = Ayu::LocalGiveawayRecord{
 					.channelId = peerToChannel(peer->id).bare,
 					.date = base::unixtime::now(),
@@ -1564,6 +1570,7 @@ void CreateGiveawayBox(
 					.prize = state->additionalPrize.current(),
 					.countries = state->countriesValue.current(),
 					.channels = std::move(channels),
+					.winners = std::move(winners),
 					.onlyNewSubscribers = (membersGroup->current()
 						== GiveawayType::OnlyNewMembers),
 					.showWinners = state->showWinners.current(),
@@ -1576,7 +1583,7 @@ void CreateGiveawayBox(
 					}
 					auto stored = record;
 					stored.uid = Ayu::AppendLocalGiveaway(session, record);
-					if (!isSpecific && stored.uid) {
+					if (stored.uid) {
 						Ayu::AddLocalGiveawayMessage(
 							session->data().history(peer),
 							stored);
@@ -1602,9 +1609,14 @@ void CreateGiveawayBox(
 							}
 							auto *settings
 								= &AyuSettings::localStars(session);
+							const auto balance
+								= settings->localStarsBalance();
+							if (total > uint64(balance)) {
+								finish(false);
+								return;
+							}
 							settings->setLocalStarsBalance(
-								settings->localStarsBalance()
-									- int(total));
+								balance - int(total));
 							finish(true);
 						});
 				} else {

@@ -47,6 +47,7 @@ constexpr auto kMaxLocalProfileGiftsLength = 4096;
 constexpr auto kMaxLocalStarsBalance = 1'000'000'000;
 constexpr auto kMaxLocalStarsActivityLength = 6000;
 constexpr auto kMaxLocalStarsCardNameLength = 64;
+constexpr auto kMaxLocalStarsActivityCount = 200;
 constexpr auto kMaxLocalGiftsCount = 200;
 constexpr auto kMaxLocalGiftsLength = 65536;
 constexpr auto kMaxLocalGiftMessageLength = 128;
@@ -66,6 +67,7 @@ constexpr auto kMaxLocalBusinessLength = 65536;
 enum class LocalStarsEarningSource {
 	MiniApps = 0,
 	Convert = 1,
+	PaidReaction = 2,
 };
 
 struct LocalStarsEarning {
@@ -93,15 +95,57 @@ void AppendLocalStarsEarning(
 	not_null<Main::Session*> session,
 	int64 withdrawn,
 	int64 now);
+enum class LocalStarsActivityKind {
+	TopUp = 0,
+	GiftSent = 1,
+	Earned = 2,
+	Withdrawn = 3,
+	Converted = 4,
+};
+
+struct LocalStarsActivityEntry {
+	int64 date = 0;
+	int64 amount = 0;
+	LocalStarsActivityKind kind = LocalStarsActivityKind::TopUp;
+	QString note;
+};
+
+[[nodiscard]] std::vector<LocalStarsActivityEntry> ParseLocalStarsActivity(
+	const QString &raw);
+[[nodiscard]] QString SerializeLocalStarsActivity(
+	const std::vector<LocalStarsActivityEntry> &entries);
+[[nodiscard]] QString NormalizeLocalStarsActivity(QString activity);
+void AppendLocalStarsActivity(
+	not_null<Main::Session*> session,
+	LocalStarsActivityEntry entry);
+
+[[nodiscard]] int64 LocalEarnClaimDay(
+	not_null<Main::Session*> session,
+	int index);
+void SetLocalEarnClaimDay(
+	not_null<Main::Session*> session,
+	int index,
+	int64 day);
+[[nodiscard]] int NextLocalGiftSerial(
+	not_null<Main::Session*> session,
+	uint64 giftId);
+
 [[nodiscard]] int64 LocalGiftConvertValue(int64 stars);
 void RemoveLocalGift(
 	not_null<Main::Session*> session,
 	uint64 giftId,
 	int64 date,
 	const QString &message);
+void RemoveLocalGift(
+	not_null<Main::Session*> session,
+	uint64 uid);
 
 struct LocalGiftRecord {
+	uint64 uid = 0;
 	uint64 giftId = 0;
+	uint64 stickerId = 0;
+	uint64 recipientId = 0;
+	QString title;
 	int64 stars = 0;
 	int64 date = 0;
 	QString message;
@@ -136,6 +180,10 @@ void UpdateLocalGift(
 	uint64 giftId,
 	int64 date,
 	const QString &message,
+	Fn<void(LocalGiftRecord &record)> mutate);
+void UpdateLocalGift(
+	not_null<Main::Session*> session,
+	uint64 uid,
 	Fn<void(LocalGiftRecord &record)> mutate);
 
 struct LocalPaidReaction {
@@ -207,8 +255,10 @@ struct LocalGiveawayRecord {
 	QString prize;
 	std::vector<QString> countries;
 	std::vector<uint64> channels;
+	std::vector<uint64> winners;
 	bool onlyNewSubscribers = false;
 	bool showWinners = false;
+	bool resultsPosted = false;
 };
 
 [[nodiscard]] std::vector<LocalGiveawayRecord> ParseLocalGiveaways(
@@ -221,6 +271,30 @@ struct LocalGiveawayRecord {
 [[nodiscard]] int64 AppendLocalGiveaway(
 	not_null<Main::Session*> session,
 	LocalGiveawayRecord record);
+void UpdateLocalGiveaway(
+	not_null<Main::Session*> session,
+	const LocalGiveawayRecord &record);
+[[nodiscard]] int LocalGiveawayBoosts(
+	not_null<Main::Session*> session,
+	uint64 channelId);
+
+struct LocalPremiumGift {
+	uint64 peerId = 0;
+	int64 until = 0;
+};
+
+[[nodiscard]] std::vector<LocalPremiumGift> ParseLocalPremiumGifts(
+	const QString &raw);
+[[nodiscard]] QString SerializeLocalPremiumGifts(
+	const std::vector<LocalPremiumGift> &gifts);
+[[nodiscard]] QString NormalizeLocalPremiumGifts(QString gifts);
+[[nodiscard]] bool HasLocalPremiumGift(
+	not_null<Main::Session*> session,
+	uint64 peerId);
+void AddLocalPremiumGift(
+	not_null<Main::Session*> session,
+	uint64 peerId,
+	int months);
 
 [[nodiscard]] QString NormalizeLocalProfileName(QString name);
 [[nodiscard]] QString NormalizeLocalProfileId(QString id);

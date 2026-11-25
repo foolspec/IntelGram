@@ -688,7 +688,18 @@ rpl::producer<BadgeType> BadgeValueFromFlags(Peer peer) {
 
 rpl::producer<BadgeType> BadgeValueForPeer(not_null<PeerData*> peer) {
 	if (const auto user = peer->asUser()) {
-		return BadgeValueFromFlags<UserDataFlag>(user);
+		const auto session = &peer->session();
+		return rpl::combine(
+			BadgeValueFromFlags<UserDataFlag>(user),
+			AyuSettings::localStars(session).localPremiumGiftsValue()
+		) | rpl::map([=](BadgeType base, const QString &) {
+			if (base != BadgeType::None) {
+				return base;
+			}
+			return Ayu::HasLocalPremiumGift(session, peer->id.bare)
+				? BadgeType::Premium
+				: BadgeType::None;
+		});
 	} else if (const auto channel = peer->asChannel()) {
 		return BadgeValueFromFlags<ChannelDataFlag>(channel);
 	}

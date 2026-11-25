@@ -1918,6 +1918,15 @@ void Reactions::sendPaidRequest(
 		.count = send.count,
 		.date = base::unixtime::now(),
 	});
+	if (const auto channel = item->history()->peer->asChannel()) {
+		if (channel->amCreator()) {
+			Ayu::AppendLocalStarsEarning(session, {
+				.date = base::unixtime::now(),
+				.amount = send.count,
+				.source = Ayu::LocalStarsEarningSource::PaidReaction,
+			});
+		}
+	}
 	sendPaidFinish(item, send, true);
 }
 
@@ -2240,6 +2249,25 @@ bool MessageReactions::change(
 			.my = IsMyTop(data, peer, paindTopNow, min),
 		});
 	}
+	for (const auto &record : Ayu::ParseLocalPaidReactions(
+			AyuSettings::localStars(
+				&_item->history()->session()).localPaidReactions())) {
+		if (record.peerId != uint64(_item->history()->peer->id.value)
+			|| record.msgId != _item->id.bare) {
+			continue;
+		}
+		const auto mine = ranges::find_if(
+			paidTop,
+			[](const TopPaid &entry) { return entry.my != 0; });
+		if (mine != end(paidTop)) {
+			mine->count += uint32(record.count);
+		} else {
+			paidTop.push_back({
+				.count = uint32(record.count),
+				.my = 1,
+			});
+		}
+	}
 	if (paidTop.empty()) {
 		if (_paid && !_paid->top.empty()) {
 			changed = true;
@@ -2327,9 +2355,6 @@ void MessageReactions::scheduleSendPaid(
 		_paid->scheduledShownPeer = *shownPeer;
 		_paid->scheduledPrivacySet = true;
 	}
-	if (count > 0) {
-		_item->history()->session().credits().lock(CreditsAmount(count));
-	}
 	_item->history()->owner().reactions().schedulePaid(_item);
 }
 
@@ -2340,10 +2365,6 @@ int MessageReactions::scheduledPaid() const {
 void MessageReactions::cancelScheduledPaid() {
 	if (_paid) {
 		if (_paid->scheduledFlag) {
-			if (const auto amount = int(_paid->scheduled)) {
-				_item->history()->session().credits().unlock(
-					CreditsAmount(amount));
-			}
 			_paid->scheduled = 0;
 			_paid->scheduledFlag = 0;
 			_paid->scheduledShownPeer = 0;
@@ -2390,6 +2411,24 @@ void MessageReactions::finishPaidSending(
 	_paid->sendingFlag = 0;
 	_paid->sendingShownPeer = 0;
 	_paid->sendingPrivacySet = 0;
+	if (success && send.count > 0) {
+		const auto peer = send.shownPeer
+			? _item->history()->owner().peer(*send.shownPeer).get()
+			: nullptr;
+		const auto i = ranges::find_if(_paid->top, [](const TopPaid &top) {
+			return top.my;
+		});
+		if (i != end(_paid->top)) {
+			i->count += uint32(send.count);
+			i->peer = peer;
+		} else {
+			_paid->top.push_back({
+				.peer = peer,
+				.count = uint32(send.count),
+				.my = 1,
+			});
+		}
+	}
 	if (!_paid->scheduledFlag && _paid->top.empty()) {
 		_paid = nullptr;
 	} else if (!send.count) {
@@ -2402,14 +2441,6 @@ void MessageReactions::finishPaidSending(
 				: nullptr;
 		}
 	}
-	if (const auto amount = send.count) {
-		const auto credits = &_item->history()->session().credits();
-		if (success) {
-			credits->withdrawLocked(CreditsAmount(amount));
-		} else {
-			credits->unlock(CreditsAmount(amount));
-		}
-	}
 }
 
 bool MessageReactions::localPaidData() const {
@@ -2418,6 +2449,19 @@ bool MessageReactions::localPaidData() const {
 
 int MessageReactions::localPaidCount() const {
 	return _paid ? (_paid->scheduled + _paid->sending) : 0;
+}
+
+int MessageReactions::localPaidCompletedCount() const {
+	if (!_paid) {
+		return 0;
+	}
+	auto result = 0;
+	for (const auto &entry : _paid->top) {
+		if (entry.my) {
+			result += entry.count;
+		}
+	}
+	return result;
 }
 
 PeerId MessageReactions::localPaidShownPeer() const {

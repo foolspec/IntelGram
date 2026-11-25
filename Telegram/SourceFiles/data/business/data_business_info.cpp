@@ -24,6 +24,8 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 namespace Data {
 namespace {
 
+constexpr auto kMaxLocalShortcutMessages = 100;
+
 [[nodiscard]] MTPBusinessWorkHours ToMTP(const WorkingHours &data) {
 	const auto list = data.intervals.normalized().list;
 	const auto proj = [](const WorkingInterval &data) {
@@ -390,6 +392,105 @@ void BusinessInfo::saveLocalShortcuts() {
 	WriteLocalBusiness(session, object);
 }
 
+void BusinessInfo::saveLocalShortcutMessage(
+		const QString &name,
+		const QString &text) {
+	const auto session = &_owner->session();
+	if (name.isEmpty()
+		|| text.isEmpty()
+		|| !AyuSettings::localStars(session).localPremium()) {
+		return;
+	}
+	auto object = ReadLocalBusiness(session);
+	auto all = object.value(u"scm"_q).toObject();
+	auto list = all.value(name).toArray();
+	list.append(text);
+	while (list.size() > kMaxLocalShortcutMessages) {
+		list.removeFirst();
+	}
+	all.insert(name, std::move(list));
+	object.insert(u"scm"_q, std::move(all));
+	WriteLocalBusiness(session, object);
+}
+
+std::vector<QString> BusinessInfo::localShortcutMessages(
+		const QString &name) {
+	const auto session = &_owner->session();
+	const auto object = ReadLocalBusiness(session);
+	const auto all = object.value(u"scm"_q).toObject();
+	auto result = std::vector<QString>();
+	for (const auto &value : all.value(name).toArray()) {
+		const auto text = value.toString();
+		if (!text.isEmpty()) {
+			result.push_back(text);
+		}
+	}
+	return result;
+}
+
+void BusinessInfo::removeLocalShortcutMessage(
+		const QString &name,
+		const QString &text) {
+	const auto session = &_owner->session();
+	if (name.isEmpty()
+		|| text.isEmpty()
+		|| !AyuSettings::localStars(session).localPremium()) {
+		return;
+	}
+	auto object = ReadLocalBusiness(session);
+	auto all = object.value(u"scm"_q).toObject();
+	auto list = all.value(name).toArray();
+	for (auto i = 0; i < list.size(); ++i) {
+		if (list.at(i).toString() == text) {
+			list.removeAt(i);
+			break;
+		}
+	}
+	if (list.isEmpty()) {
+		all.remove(name);
+	} else {
+		all.insert(name, std::move(list));
+	}
+	object.insert(u"scm"_q, std::move(all));
+	WriteLocalBusiness(session, object);
+}
+
+void BusinessInfo::renameLocalShortcutMessages(
+		const QString &from,
+		const QString &to) {
+	const auto session = &_owner->session();
+	if (from.isEmpty()
+		|| to.isEmpty()
+		|| from == to
+		|| !AyuSettings::localStars(session).localPremium()) {
+		return;
+	}
+	auto object = ReadLocalBusiness(session);
+	auto all = object.value(u"scm"_q).toObject();
+	if (!all.contains(from) || all.contains(to)) {
+		return;
+	}
+	all.insert(to, all.take(from));
+	object.insert(u"scm"_q, std::move(all));
+	WriteLocalBusiness(session, object);
+}
+
+void BusinessInfo::clearLocalShortcutMessages(const QString &name) {
+	const auto session = &_owner->session();
+	if (name.isEmpty()
+		|| !AyuSettings::localStars(session).localPremium()) {
+		return;
+	}
+	auto object = ReadLocalBusiness(session);
+	auto all = object.value(u"scm"_q).toObject();
+	if (!all.contains(name)) {
+		return;
+	}
+	all.remove(name);
+	object.insert(u"scm"_q, std::move(all));
+	WriteLocalBusiness(session, object);
+}
+
 void BusinessInfo::saveWorkingHours(
 		WorkingHours data,
 		Fn<void(QString)> fail) {
@@ -526,6 +627,12 @@ void BusinessInfo::saveAwaySettings(
 	if (was == data) {
 		return;
 	}
+	if (data && !data.shortcutId) {
+		if (fail) {
+			fail(u"SHORTCUT_EMPTY"_q);
+		}
+		return;
+	}
 	const auto session = &_owner->session();
 	if (AyuSettings::localStars(session).localPremium()) {
 		auto object = ReadLocalBusiness(session);
@@ -577,6 +684,12 @@ void BusinessInfo::saveGreetingSettings(
 		Fn<void(QString)> fail) {
 	const auto &was = _greetingSettings;
 	if (was == data) {
+		return;
+	}
+	if (data && !data.shortcutId) {
+		if (fail) {
+			fail(u"SHORTCUT_EMPTY"_q);
+		}
 		return;
 	}
 	const auto session = &_owner->session();

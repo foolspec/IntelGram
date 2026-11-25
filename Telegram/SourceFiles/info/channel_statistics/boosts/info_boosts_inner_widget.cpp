@@ -310,6 +310,7 @@ void InnerWidget::fill() {
 				.boosts = status.overview.boostCount,
 				.thisLevelBoosts = status.overview.currentLevelBoostCount,
 				.nextLevelBoosts = status.overview.nextLevelBoostCount,
+				.mine = status.overview.mine,
 			});
 		status.overview.level = adjusted.level;
 		status.overview.boostCount = adjusted.boosts;
@@ -408,6 +409,66 @@ void InnerWidget::fill() {
 			});
 		}
 
+		Ui::AddSkip(inner);
+		Ui::AddDividerText(
+			inner,
+			tr::lng_boosts_prepaid_giveaway_title_subtext());
+		Ui::AddSkip(inner);
+	}
+
+	const auto localGiveaways = Ayu::LocalGiveaways(&_peer->session());
+	const auto channelId = peerToChannel(_peer->id).bare;
+	auto hasLocalGiveaways = false;
+	for (const auto &record : localGiveaways) {
+		if (record.channelId == channelId) {
+			hasLocalGiveaways = true;
+			break;
+		}
+	}
+	if (hasLocalGiveaways) {
+		const auto multiplier = Api::PremiumGiftCodeOptions(_peer)
+			.giveawayBoostsPerPremium();
+		Ui::AddSkip(inner);
+		AddHeader(inner, tr::lng_boosts_prepaid_giveaway_title);
+		Ui::AddSkip(inner);
+		for (const auto &g : localGiveaways) {
+			if (g.channelId != channelId) {
+				continue;
+			}
+			using namespace Giveaway;
+			inner->add(object_ptr<GiveawayTypeRow>(
+				inner,
+				g.credits
+					? GiveawayTypeRow::Type::PrepaidCredits
+					: GiveawayTypeRow::Type::Prepaid,
+				g.credits ? st::colorIndexOrange : g.uid,
+				g.credits
+					? tr::lng_boosts_prepaid_giveaway_single()
+					: tr::lng_boosts_prepaid_giveaway_quantity(
+						lt_count,
+						rpl::single(g.quantity) | tr::to_count()),
+				g.credits
+					? tr::lng_boosts_prepaid_giveaway_credits_status(
+						lt_count,
+						rpl::single(g.quantity) | tr::to_count(),
+						lt_amount,
+						tr::lng_prize_credits_amount(
+							lt_count_decimal,
+							rpl::single(g.credits) | tr::to_count()))
+					: tr::lng_boosts_prepaid_giveaway_moths(
+						lt_count,
+						rpl::single(g.months) | tr::to_count()),
+				Info::Statistics::CreateBadge(
+					st::statisticsDetailsBottomCaptionStyle,
+					QString::number(g.quantity * multiplier),
+					st::boostsListBadgeHeight,
+					st::boostsListBadgeTextPadding,
+					st::premiumButtonBg2,
+					st::premiumButtonFg,
+					1.,
+					st::boostsListMiniIconPadding,
+					st::boostsListMiniIcon)));
+		}
 		Ui::AddSkip(inner);
 		Ui::AddDividerText(
 			inner,

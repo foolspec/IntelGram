@@ -11,6 +11,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include "api/api_earn.h"
 #include "api/api_statistics.h"
 #include "ayu/ayu_settings.h"
+#include "ayu/ui/utils/ayu_profile_values.h"
 #include "base/call_delayed.h"
 #include "boxes/gift_credits_box.h"
 #include "boxes/gift_premium_box.h"
@@ -76,6 +77,58 @@ namespace Settings {
 namespace {
 
 using namespace Builder;
+
+[[nodiscard]] std::vector<Data::CreditsHistoryEntry> LocalStarsHistoryEntries(
+		not_null<Main::Session*> session) {
+	auto result = std::vector<Data::CreditsHistoryEntry>();
+	const auto activity = Ayu::ParseLocalStarsActivity(
+		AyuSettings::localStars(session).localStarsActivity());
+	auto index = 0;
+	for (const auto &entry : activity) {
+		const auto in = (entry.kind == Ayu::LocalStarsActivityKind::TopUp)
+			|| (entry.kind == Ayu::LocalStarsActivityKind::Earned)
+			|| (entry.kind == Ayu::LocalStarsActivityKind::Converted);
+		auto title = QString();
+		switch (entry.kind) {
+		case Ayu::LocalStarsActivityKind::TopUp:
+			title = tr::ayu_LocalStarsPurchaseEntry(
+				tr::now,
+				lt_amount,
+				entry.amount);
+			break;
+		case Ayu::LocalStarsActivityKind::GiftSent:
+			title = entry.note;
+			break;
+		case Ayu::LocalStarsActivityKind::Earned:
+			title = tr::ayu_LocalStarsEarnEntry(
+				tr::now,
+				lt_amount,
+				entry.amount);
+			break;
+		case Ayu::LocalStarsActivityKind::Withdrawn:
+			title = tr::ayu_LocalStarsWithdrawEntry(
+				tr::now,
+				lt_amount,
+				entry.amount);
+			break;
+		case Ayu::LocalStarsActivityKind::Converted:
+			title = tr::ayu_LocalStarsConvertEntry(
+				tr::now,
+				lt_amount,
+				entry.amount);
+			break;
+		}
+		result.push_back({
+			.id = u"local-%1"_q.arg(index++),
+			.title = title,
+			.date = base::unixtime::parse(TimeId(entry.date)),
+			.credits = CreditsAmount(entry.amount),
+			.in = in,
+			.peerType = Data::CreditsHistoryEntry::PeerType::PremiumBot,
+		});
+	}
+	return result;
+}
 
 void BuildCurrencyWithdrawalSection(
 	not_null<Ui::VerticalLayout*> content,
@@ -283,12 +336,33 @@ void Credits::setupHistory(not_null<Ui::VerticalLayout*> container) {
 			const Data::CreditsStatusSlice &inSlice,
 			const Data::CreditsStatusSlice &outSlice) {
 		const auto inner = content;
-		if (fullSlice.list.empty()) {
+		auto full = fullSlice;
+		auto in = inSlice;
+		auto out = outSlice;
+		const auto local = LocalStarsHistoryEntries(
+			&controller()->session());
+		for (const auto &entry : local) {
+			full.list.push_back(entry);
+			if (entry.in) {
+				in.list.push_back(entry);
+			} else {
+				out.list.push_back(entry);
+			}
+		}
+		const auto byDate = [](
+				const Data::CreditsHistoryEntry &a,
+				const Data::CreditsHistoryEntry &b) {
+			return a.date > b.date;
+		};
+		ranges::sort(full.list, byDate);
+		ranges::sort(in.list, byDate);
+		ranges::sort(out.list, byDate);
+		if (full.list.empty()) {
 			return;
 		}
-		const auto hasOneTab = inSlice.list.empty() && outSlice.list.empty();
-		const auto hasIn = !inSlice.list.empty();
-		const auto hasOut = !outSlice.list.empty();
+		const auto hasOneTab = in.list.empty() && out.list.empty();
+		const auto hasIn = !in.list.empty();
+		const auto hasOut = !out.list.empty();
 		const auto fullTabText = tr::lng_credits_summary_history_tab_full(
 			tr::now);
 		const auto inTabText = tr::lng_credits_summary_history_tab_in(
@@ -389,7 +463,7 @@ void Credits::setupHistory(not_null<Ui::VerticalLayout*> container) {
 
 		Info::Statistics::AddCreditsHistoryList(
 			window->uiShow(),
-			fullSlice,
+			full,
 			fullWrap->entity(),
 			entryClicked,
 			self,
@@ -397,7 +471,7 @@ void Credits::setupHistory(not_null<Ui::VerticalLayout*> container) {
 			true);
 		Info::Statistics::AddCreditsHistoryList(
 			window->uiShow(),
-			inSlice,
+			in,
 			inWrap->entity(),
 			entryClicked,
 			self,
@@ -405,7 +479,7 @@ void Credits::setupHistory(not_null<Ui::VerticalLayout*> container) {
 			false);
 		Info::Statistics::AddCreditsHistoryList(
 			window->uiShow(),
-			outSlice,
+			out,
 			outWrap->entity(),
 			std::move(entryClicked),
 			self,

@@ -23,6 +23,16 @@ public:
 	void applyLocalBusinessSettings();
 	void restoreLocalShortcuts();
 	void saveLocalShortcuts();
+	void saveLocalShortcutMessage(const QString &name, const QString &text);
+	[[nodiscard]] std::vector<QString> localShortcutMessages(
+		const QString &name);
+	void removeLocalShortcutMessage(
+		const QString &name,
+		const QString &text);
+	void renameLocalShortcutMessages(
+		const QString &from,
+		const QString &to);
+	void clearLocalShortcutMessages(const QString &name);
 
 	void saveWorkingHours(WorkingHours data, Fn<void(QString)> fail);
 	void saveChatIntro(ChatIntro data, Fn<void(QString)> fail);
