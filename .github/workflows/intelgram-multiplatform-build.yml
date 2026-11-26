@@ -883,15 +883,19 @@ jobs:
             --title "IntelGram $PRODUCT_VERSION - $RELEASE_NAME" \
             --notes "## IntelGram $PRODUCT_VERSION $RELEASE_NAME
 
-          Gift Stars to friends with the native gift flow — it deducts from the on-device balance, with the native sent confirmation and insufficient-balance state. Buy and send gifts with local Stars at Telegram's native star prices, including the optional upgrade fee; self-purchases land in the local inventory.
+          Upgrade a gift to a collectible with the native Upgrade action: the upgrade fee comes out of your Stars balance, and the gift gains a generated model, pattern, and backdrop. Paid Stars reactions deduct from your balance and display on the message. Boost channels from the native Boost UI using Premium boosts, and the channel level reflects your boosts. Create Premium and Stars giveaways from the native giveaway flow; they complete and appear in the channel as giveaways.
           
-          The profile Gifts tab shows locally owned gifts in Telegram's native grid, with detail popups and All Gifts / Collectibles filtering, up to 200 gifts. Stars Balance and proceeds show available, total, and lifetime proceeds fed by local activity, with the 21-day maturity rule and a local Fragment-style withdrawal flow. View Statistics is fed by on-device Stars earnings, and Earn Stars from Mini Apps credits 50 (Demo Quest), 25 (Demo Game), and 10 (Demo Ad) Stars to the local balance.
+          Business greeting, away, working hours, location, and intro settings now save, and quick-reply shortcuts persist across restarts. Gifts can join collections and can be hidden or pinned, all from the native gift menu. Gifting to a friend now shows the gift under their profile, with Stars gifts deducted from your balance and recorded in your Stars history.
           
-          The Stars checkout invoice now carries a cover thumbnail, matching Telegram's real checkout layout. Local Premium purchase: every Subscribe button runs the native plan picker and checkout panel with the demo American Express card; after paying, the Premium badge, subscribed state, and Premium features appear as if the account owns Premium. Local Business subscription uses the same flow and unlocks the Business section and its feature screens.
+          Stars live in Telegram's native My Stars screen, with Top Up Balance listing Telegram's 15 Stars packages and prices, from 100 to 150,000 Stars. Tapping a package opens Telegram's checkout panel with the saved American Express card already on file; Pay adds the Stars to your balance, and the checkout invoice carries a cover thumbnail.
           
-          Local profile clones, NFT collections, Stars, gifts, earnings, and Premium are now scoped per account — switching accounts keeps each account's local state separate.
-          
-          Honest limits: there is no simulated bot chat; Business setting saves are still rejected by Telegram's server without a real subscription; converting a local gift returns an estimated 50% of its star price; gifting Premium to others is untouched.
+          Gift Stars to friends and buy/send gifts with Stars at Telegram's native star prices. Owned gifts show in the profile Gifts tab in Telegram's native grid, up to 200 gifts. Stars Balance and proceeds follow the 21-day maturity rule with a Fragment-style withdrawal flow. Earn Stars from Mini Apps: Daily Quest 50, Mini Game 25, Watch Ad 10.
 
-          No real card details are collected, no payment provider is contacted, and no Telegram payment, gift-transfer, or subscription API is invoked. Built from the official AyuGram Desktop $SOURCE_TAG upstream source." \
+          Premium and Business purchases run the native plan picker and checkout panel with the saved card; the badge, subscribed state, and features then appear as if the account owns them. Each account keeps its own profile clone and NFT collections, its own Stars balance, gifts, earnings, and Premium — switching accounts restores the right setup.
+
+          This release also fixes the rough edges found in the v22 audit: converting a gift now returns 85% of its star price, matching Telegram; Stars history is recorded in a proper activity ledger instead of staying empty; Premium now expires as expected; and the in-app update log finally describes the 1:1 checkout and the new gift, Premium, and Business features.
+          
+          Honest limits: there is no simulated bot chat; collectibles can't be worn, transferred, resold, or crafted; a gifted Premium badge shows on the friend's profile, but Premium features stay with your own account; local giveaways don't appear in channel statistics.
+
+          No real card details are collected, no payment provider is contacted, and no Telegram payment, gift-transfer, or subscription API is invoked. Built from the official AyuGram Desktop v6.7.8 upstream source."
             "${RELEASE_ASSETS[@]}"
