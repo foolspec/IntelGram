@@ -897,5 +897,5 @@ jobs:
           
           Honest limits: there is no simulated bot chat; collectibles can't be worn, transferred, resold, or crafted; a gifted Premium badge shows on the friend's profile, but Premium features stay with your own account; local giveaways don't appear in channel statistics.
 
-          No real card details are collected, no payment provider is contacted, and no Telegram payment, gift-transfer, or subscription API is invoked. Built from the official AyuGram Desktop v6.7.8 upstream source."
+          No real card details are collected, no payment provider is contacted, and no Telegram payment, gift-transfer, or subscription API is invoked. Built from the official AyuGram Desktop v6.7.8 upstream source." \
             "${RELEASE_ASSETS[@]}"
